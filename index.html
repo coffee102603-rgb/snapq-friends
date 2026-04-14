@@ -39,49 +39,49 @@ function sttStop(){if(sttRec){sttRec.stop();sttRec=null}}
 const CATS=[
 {id:'daily',icon:'🗣️',name:'일상 수다',en:'Daily Chat',desc:'느긋하게 일상 영어, 왕초보도 OK',level:'GENTLE',lc:'#4ADE80',
 chars:[
-{id:'margaret',e:'👵',n:'Margaret',a:67,c:'Vermont',j:'은퇴 영어교사',pitch:'이해될 때까지 천천히 반복!',rate:.75,ok:1,tags:['커피','강아지','정원'],
+{id:'margaret',e:'👵',n:'Margaret',a:67,c:'Vermont',photo:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80',j:'은퇴 영어교사',pitch:'이해될 때까지 천천히 반복!',rate:.75,ok:1,tags:['커피','강아지','정원'],
 intro:[{en:"Oh, hello dear! I'm Margaret.",kr:"안녕하세요! 마가렛이에요."},{en:"I'm a retired English teacher from Vermont.",kr:"버몬트 은퇴 영어교사예요."},{en:"I love coffee, gardening, and my dog Biscuit.",kr:"커피, 정원, 강아지 비스킷을 좋아해요."},{en:"I'll speak slowly and help you every step.",kr:"천천히 도와줄게요."}],
 question:{en:"Do you like cats or dogs?",kr:"고양이? 강아지?"},answers:{dogs:"I have a dog named Biscuit!",cats:"Cats are lovely too!"},
 topics:[{name:'Morning Coffee',icon:'☕',rounds:[{ss:[{en:"I had the most wonderful cup of coffee this morning.",kr:"오늘 아침 정말 멋진 커피를 마셨어요."},{en:"It was a new blend from a small shop in town.",kr:"마을 작은 가게 새 블렌드였어요."}],q:{t:"What did Margaret have?",k:"뭘 마셨나요?",o:["Tea","Coffee","Juice","Milk"],a:1},ex:{en:"the most wonderful",kr:"가장 멋진"}},{ss:[{en:"The owner told me it comes all the way from Colombia.",kr:"콜롬비아에서 온 거래요."},{en:"He roasts the beans himself every morning.",kr:"매일 아침 직접 로스팅해요."},{en:"You can taste the difference when it's fresh.",kr:"신선하면 맛이 달라요."}],q:{t:"Where are the beans from?",k:"원두는 어디서?",o:["Brazil","Ethiopia","Colombia","Kenya"],a:2},ex:{en:"all the way from",kr:"~에서 먼 길을"}}]},{name:'My Garden',icon:'🌿',rounds:[{ss:[{en:"I spent the whole morning in my garden today.",kr:"오늘 아침 내내 정원에서 보냈어요."},{en:"The tomatoes are finally turning red!",kr:"토마토가 드디어 빨갛게!"}],q:{t:"What is turning red?",k:"뭐가 빨갛게?",o:["Roses","Apples","Tomatoes","Peppers"],a:2},ex:{en:"finally turning",kr:"드디어 ~하고 있다"}}]}]},
-{id:'ethan',e:'👦',n:'Ethan',a:14,c:'Phoenix',j:'중학생',pitch:'게임/유튜브 슬랭 마스터!',rate:.85,ok:1,tags:['게임','유튜브','피자'],
+{id:'ethan',e:'👦',n:'Ethan',a:14,c:'Phoenix',photo:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&q=80',j:'중학생',pitch:'게임/유튜브 슬랭 마스터!',rate:.85,ok:1,tags:['게임','유튜브','피자'],
 intro:[{en:"Hey! What's up! I'm Ethan.",kr:"야! 안녕! 나 이든이야."},{en:"I'm fourteen, from Phoenix.",kr:"열네 살, 피닉스."},{en:"I love video games and pizza!",kr:"게임이랑 피자!"}],
 question:{en:"Do you play video games?",kr:"게임 해?"},answers:{yes:"Awesome! Let's play!",no:"I can teach you!"},
 topics:[{name:'My Favorite Game',icon:'🎮',rounds:[{ss:[{en:"Dude, I played this amazing game last night.",kr:"야, 어젯밤에 대박 게임 했어."},{en:"It's called Star Quest and it's so cool.",kr:"스타퀘스트, 완전 쩔어."}],q:{t:"What's the game called?",k:"게임 이름은?",o:["Space War","Star Quest","Moon Run","Sky Fight"],a:1},ex:{en:"so cool",kr:"완전 쩔어"}}]}]}
 ]},
 {id:'travel',icon:'✈️',name:'여행 영어',en:'Travel English',desc:'전 세계 여행 블로거와 실전 영어!',level:'GENTLE',lc:'#F59E0B',carousel:true,
 chars:[
-{id:'jake',e:'🧑',n:'Jake',a:26,c:'NYC·LA·Hawaii',j:'미국 여행 블로거',pitch:'공항, 우버, 팁문화 완전정복!',rate:.85,ok:0,tags:['미국','공항','팁'],flag:'🇺🇸',dest:'미국',photo:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80',hot:'인기 1위!',intro:[],question:{},answers:{},topics:[]},
-{id:'emmaT',e:'👩',n:'Emma',a:25,c:'London·Paris',j:'유럽 배낭여행러',pitch:'기차표, 호스텔, 박물관 영어!',rate:.85,ok:0,tags:['유럽','런던','파리'],flag:'🇬🇧',dest:'유럽',photo:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
-{id:'james',e:'🧔',n:'James',a:29,c:'Sydney·Melbourne',j:'호주 워홀러',pitch:'워홀, 농장, 쉐어하우스 영어!',rate:.85,ok:0,tags:['호주','워홀','서핑'],flag:'🇦🇺',dest:'호주',photo:'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=400&q=80',hot:'워홀 필수!',intro:[],question:{},answers:{},topics:[]},
-{id:'lily',e:'👩',n:'Lily',a:24,c:'Bali·Bangkok·Cebu',j:'동남아 블로거',pitch:'리조트, 투어예약, 흥정 영어!',rate:.8,ok:0,tags:['발리','방콕','세부'],flag:'🇵🇭',dest:'동남아',photo:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
-{id:'ryan',e:'🧑',n:'Ryan',a:27,c:'Vancouver·Toronto',j:'캐나다 유학생',pitch:'어학연수, 홈스테이 생활영어!',rate:.85,ok:0,tags:['캐나다','유학','스키'],flag:'🇨🇦',dest:'캐나다',photo:'https://images.unsplash.com/photo-1609825488888-3a766db05542?w=400&q=80',hot:'유학 인기!',intro:[],question:{},answers:{},topics:[]},
-{id:'daniel',e:'👨‍💼',n:'Daniel',a:32,c:'Hong Kong·Singapore',j:'아시아 비즈니스',pitch:'비즈미팅, 쇼핑, 딤섬 주문!',rate:.9,ok:0,tags:['홍콩','싱가포르'],flag:'🇭🇰',dest:'홍콩',photo:'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
-{id:'amara',e:'👩',n:'Amara',a:28,c:'Cape Town·Safari',j:'아프리카 가이드',pitch:'사파리 투어, 자연, 안전 영어!',rate:.85,ok:0,tags:['아프리카','사파리'],flag:'🇿🇦',dest:'아프리카',photo:'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
+{id:'jake',e:'🧑',n:'Jake',a:32,c:'NYC·LA·Hawaii',j:'미국 여행 블로거',pitch:'공항, 우버, 팁문화 완전정복!',rate:.85,ok:0,tags:['미국','공항','팁'],flag:'🇺🇸',dest:'미국',photo:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80',hot:'인기 1위!',intro:[],question:{},answers:{},topics:[]},
+{id:'emmaT',e:'👩',n:'Emma',a:22,c:'London·Paris',j:'유럽 배낭여행러',pitch:'기차표, 호스텔, 박물관 영어!',rate:.85,ok:0,tags:['유럽','런던','파리'],flag:'🇬🇧',dest:'유럽',photo:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
+{id:'james',e:'🧔',n:'James',a:35,c:'Sydney·Melbourne',j:'호주 워홀러',pitch:'워홀, 농장, 쉐어하우스 영어!',rate:.85,ok:0,tags:['호주','워홀','서핑'],flag:'🇦🇺',dest:'호주',photo:'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=400&q=80',hot:'워홀 필수!',intro:[],question:{},answers:{},topics:[]},
+{id:'lily',e:'👩',n:'Lily',a:28,c:'Bali·Bangkok·Cebu',j:'동남아 블로거',pitch:'리조트, 투어예약, 흥정 영어!',rate:.8,ok:0,tags:['발리','방콕','세부'],flag:'🇵🇭',dest:'동남아',photo:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
+{id:'ryan',e:'🧑',n:'Ryan',a:20,c:'Vancouver·Toronto',j:'캐나다 유학생',pitch:'어학연수, 홈스테이 생활영어!',rate:.85,ok:0,tags:['캐나다','유학','스키'],flag:'🇨🇦',dest:'캐나다',photo:'https://images.unsplash.com/photo-1609825488888-3a766db05542?w=400&q=80',hot:'유학 인기!',intro:[],question:{},answers:{},topics:[]},
+{id:'daniel',e:'👨‍💼',n:'Daniel',a:45,c:'Hong Kong·Singapore',j:'아시아 비즈니스',pitch:'비즈미팅, 쇼핑, 딤섬 주문!',rate:.9,ok:0,tags:['홍콩','싱가포르'],flag:'🇭🇰',dest:'홍콩',photo:'https://images.unsplash.com/photo-1536599018102-9f803c140fc1?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
+{id:'amara',e:'👩',n:'Amara',a:31,c:'Cape Town·Safari',j:'아프리카 가이드',pitch:'사파리 투어, 자연, 안전 영어!',rate:.85,ok:0,tags:['아프리카','사파리'],flag:'🇿🇦',dest:'아프리카',photo:'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
 {id:'miaNZ',e:'👩',n:'Mia',a:26,c:'Auckland·Queenstown',j:'NZ 어드벤처',pitch:'번지점프, 캠핑, 렌터카!',rate:.85,ok:0,tags:['뉴질랜드','모험'],flag:'🇳🇿',dest:'뉴질랜드',photo:'https://images.unsplash.com/photo-1469521669194-babb45599def?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
 ]},
 {id:'food',icon:'🍳',name:'요리 영어',en:'Cooking English',desc:'레시피, 쿠킹클래스, 음식 대화',level:'GENTLE',lc:'#F59E0B',
 chars:[
-{id:'sofia',e:'👩‍🍳',n:'Sofia',a:31,c:'Miami',j:'쿠바계 셰프',pitch:'음식으로 쉽게 영어 시작!',rate:.8,ok:1,tags:['요리','맛집','라틴'],
+{id:'sofia',e:'👩‍🍳',n:'Sofia',a:31,c:'Miami',photo:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&q=80',j:'쿠바계 셰프',pitch:'음식으로 쉽게 영어 시작!',rate:.8,ok:1,tags:['요리','맛집','라틴'],
 intro:[{en:"Hola! I mean, hello! I'm Sofia.",kr:"올라! 안녕하세요! 소피아예요."},{en:"I'm a chef in Miami.",kr:"마이애미 셰프예요."},{en:"My husband is Korean!",kr:"남편이 한국 사람이에요!"}],
 question:{en:"What's your favorite food?",kr:"좋아하는 음식은?"},answers:{korean:"I love Korean food too!",pizza:"Pizza is great!"},
 topics:[{name:'My Best Recipe',icon:'🍲',rounds:[{ss:[{en:"Today I'll tell you about my grandmother's recipe.",kr:"할머니 레시피를 알려줄게요."},{en:"It's called Ropa Vieja — old clothes in Spanish!",kr:"로파 비에하 — '낡은 옷'이에요!"}],q:{t:"What does Ropa Vieja mean?",k:"로파 비에하 뜻은?",o:["New dish","Old clothes","Hot soup","Red meat"],a:1},ex:{en:"It means",kr:"~라는 뜻"}}]}]}
 ]},
 {id:'medical',icon:'🏥',name:'병원 & 건강',en:'Medical English',desc:'진료예약, 증상설명, 약국, 응급상황',level:'CASUAL',lc:'#EF4444',
-chars:[{id:'jenny',e:'👩‍⚕️',n:'Jenny',a:34,c:'LA',j:'UCLA 간호사',pitch:'한영 이중언어! 의료영어 전문!',rate:.85,ok:0,tags:['건강','의료','미국생활'],intro:[],question:{},answers:{},topics:[]}]},
+chars:[{id:'jenny',e:'👩‍⚕️',n:'Jenny',a:34,c:'LA',photo:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=80',j:'UCLA 간호사',pitch:'한영 이중언어! 의료영어 전문!',rate:.85,ok:0,tags:['건강','의료','미국생활'],intro:[],question:{},answers:{},topics:[]}]},
 {id:'finance',icon:'💰',name:'은행 & 금융',en:'Banking & Finance',desc:'계좌개설, 환전, 투자상담, 비즈니스',level:'FAST',lc:'#F59E0B',
-chars:[{id:'david',e:'👨‍💼',n:'David',a:42,c:'Chicago',j:'Goldman Sachs VP',pitch:'네이티브 속도 비즈니스 영어!',rate:.95,ok:0,tags:['금융','투자','와인'],intro:[],question:{},answers:{},topics:[]}]},
+chars:[{id:'david',e:'👨‍💼',n:'David',a:42,c:'Chicago',photo:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80',j:'Goldman Sachs VP',pitch:'네이티브 속도 비즈니스 영어!',rate:.95,ok:0,tags:['금융','투자','와인'],intro:[],question:{},answers:{},topics:[]}]},
 {id:'tech',icon:'💻',name:'IT & 테크',en:'Tech English',desc:'코딩 토론, 스타트업, 실리콘밸리 영어',level:'FAST',lc:'#3B82F6',
-chars:[{id:'priya',e:'👩‍💻',n:'Priya',a:26,c:'SF',j:'Google 엔지니어',pitch:'실리콘밸리 실무 영어!',rate:.9,ok:0,tags:['AI','스타트업','테크'],intro:[],question:{},answers:{},topics:[]}]},
+chars:[{id:'priya',e:'👩‍💻',n:'Priya',a:26,c:'SF',photo:'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&q=80',j:'Google 엔지니어',pitch:'실리콘밸리 실무 영어!',rate:.9,ok:0,tags:['AI','스타트업','테크'],intro:[],question:{},answers:{},topics:[]}]},
 {id:'kculture',icon:'🎤',name:'K-Culture',en:'Hallyu English',desc:'K-pop 토크, 드라마 리뷰, 한류 소개',level:'CASUAL',lc:'#EC4899',
-chars:[{id:'mia',e:'👩‍🎤',n:'Mia',a:19,c:'NYC',j:'NYU 미디어학과',pitch:'트렌디한 진짜 미국 영어!',rate:.9,ok:0,tags:['K-pop','뷰티','SNS'],intro:[],question:{},answers:{},topics:[]}]},
+chars:[{id:'mia',e:'👩‍🎤',n:'Mia',a:19,c:'NYC',photo:'https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=400&q=80',j:'NYU 미디어학과',pitch:'트렌디한 진짜 미국 영어!',rate:.9,ok:0,tags:['K-pop','뷰티','SNS'],intro:[],question:{},answers:{},topics:[]}]},
 {id:'sports',icon:'🏋️',name:'스포츠 & 라이프',en:'Sports & Lifestyle',desc:'헬스, 서핑, 캠핑, 편한 브로 대화',level:'CASUAL',lc:'#10B981',
-chars:[{id:'alex',e:'🧑‍🦱',n:'Alex',a:24,c:'LA',j:'UCLA 체대',pitch:'편한 브로 대화!',rate:.9,ok:0,tags:['스포츠','서핑','캠핑'],intro:[],question:{},answers:{},topics:[]}]},
+chars:[{id:'alex',e:'🧑‍🦱',n:'Alex',a:24,c:'LA',photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',j:'UCLA 체대',pitch:'편한 브로 대화!',rate:.9,ok:0,tags:['스포츠','서핑','캠핑'],intro:[],question:{},answers:{},topics:[]}]},
 {id:'campus',icon:'🎓',name:'유학 & 캠퍼스',en:'Campus English',desc:'수업등록, 교수면담, 기숙사, 동아리',level:'CASUAL',lc:'#6366F1',
-chars:[{id:'emma',e:'👩',n:'Emma',a:20,c:'Boston',j:'Harvard 학생',pitch:'캠퍼스 라이프 완전정복!',rate:.85,ok:0,tags:['유학','기숙사','동아리'],intro:[],question:{},answers:{},topics:[]}]},
+chars:[{id:'emma',e:'👩',n:'Emma',a:20,c:'Boston',photo:'https://images.unsplash.com/photo-1562774053-701939374585?w=400&q=80',j:'Harvard 학생',pitch:'캠퍼스 라이프 완전정복!',rate:.85,ok:0,tags:['유학','기숙사','동아리'],intro:[],question:{},answers:{},topics:[]}]},
 {id:'biz',icon:'💼',name:'비즈니스',en:'Business English',desc:'이메일, 회의, 협상, 보고서 영어',level:'FAST',lc:'#8B5CF6',
 chars:[
-{id:'kevin',e:'👨‍💼',n:'Kevin',a:36,c:'NYC',j:'Samsung→Google',pitch:'면접관 경험 500회+!',rate:.9,ok:0,tags:['면접','연봉협상'],intro:[],question:{},answers:{},topics:[]},
-{id:'rachel',e:'👩‍💼',n:'Rachel',a:29,c:'London',j:'영국 컨설팅',pitch:'이메일/미팅 영어 전문!',rate:.85,ok:0,tags:['이메일','미팅'],intro:[],question:{},answers:{},topics:[]},
+{id:'kevin',e:'👨‍💼',n:'Kevin',a:36,c:'NYC',photo:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80',j:'Samsung→Google',pitch:'면접관 경험 500회+!',rate:.9,ok:0,tags:['면접','연봉협상'],intro:[],question:{},answers:{},topics:[]},
+{id:'rachel',e:'👩‍💼',n:'Rachel',a:29,c:'London',photo:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80',j:'영국 컨설팅',pitch:'이메일/미팅 영어 전문!',rate:.85,ok:0,tags:['이메일','미팅'],intro:[],question:{},answers:{},topics:[]},
 ]},
 ];
 function findChar(id){for(const cat of CATS)for(const ch of cat.chars)if(ch.id===id)return ch;return null}
@@ -197,25 +197,29 @@ ${ch.hot?`<div style="display:inline-block;background:#EF4444;color:#fff;font-si
 });
 h+=`</div></div>`;
 } else {
-// ── NORMAL category cards ──
-h+=`<div class="fadeUp d${Math.min(ci%5+1,5)}" style="background:linear-gradient(135deg,${cat.lc}10,${cat.lc}18);border:1px solid ${cat.lc}35;border-radius:18px;padding:16px;margin-bottom:10px">
-<div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-<div style="font-size:24px;width:44px;height:44px;border-radius:12px;background:${cat.lc}20;display:flex;align-items:center;justify-content:center">${cat.icon}</div>
+// ── ALL categories now use photo carousel! ──
+h+=`<div class="fadeUp d${Math.min(ci%5+1,5)}" style="background:linear-gradient(135deg,${cat.lc}10,${cat.lc}18);border:1px solid ${cat.lc}35;border-radius:18px;padding:16px;margin-bottom:14px">
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+<div style="font-size:24px;width:44px;height:44px;border-radius:12px;background:${cat.lc}25;display:flex;align-items:center;justify-content:center">${cat.icon}</div>
 <div style="flex:1">
-<div style="font-size:15px;font-weight:700">${cat.name} <span style="color:${cat.lc};font-size:11px;opacity:.8">${cat.en}</span></div>
+<div style="font-size:16px;font-weight:700;color:#fff">${cat.name} <span style="color:${cat.lc};font-size:12px">${cat.en}</span></div>
 <div style="color:#D1D5DB;font-size:12px;margin-top:2px">${cat.desc}</div>
 </div>
-<span style="background:${lc}20;color:${lc};font-size:10px;padding:3px 8px;border-radius:8px;font-weight:600">${cat.level}</span>
+<span style="background:${lc}25;color:${lc};font-size:11px;padding:3px 8px;border-radius:8px;font-weight:600">${cat.level}</span>
 </div>
-<div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px">`;
-
+<div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory">`;
 cat.chars.forEach(ch=>{
-h+=`<button onclick="${ch.ok?`S.char='${ch.id}';go('video')`:''}" style="flex-shrink:0;width:${cat.chars.length>1?'48%':'100%'};background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:12px;text-align:center;${ch.ok?'':'opacity:.4'}">
-<div style="font-size:32px;margin-bottom:4px">${ch.e}</div>
-<div style="font-size:13px;font-weight:600">${ch.n}</div>
-<div style="color:#E5E7EB;font-size:11px">${ch.a}세 · ${ch.c}</div>
-<div style="color:${cat.lc};font-size:11px;margin-top:4px;font-weight:500">${ch.pitch}</div>
-${!ch.ok?'<div style="color:#9CA3AF;font-size:11px;margin-top:4px">🔒 Coming Soon</div>':''}
+const hasPhoto=ch.photo;
+h+=`<button onclick="${ch.ok?`S.char='${ch.id}';go('video')`:''}" style="flex-shrink:0;width:${cat.chars.length>1?'150px':'90%'};height:200px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:2px solid rgba(255,255,255,.2);${ch.ok?'':'opacity:.55'}">
+${hasPhoto?`<div style="position:absolute;inset:0;background:url('${ch.photo}') center/cover"></div>`:`<div style="position:absolute;inset:0;background:linear-gradient(135deg,${cat.lc}30,${cat.lc}10)"></div>`}
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 15%,rgba(0,0,0,.85) 100%)"></div>
+<div style="position:absolute;bottom:0;left:0;right:0;padding:12px;text-align:center">
+<div style="font-size:28px;margin-bottom:2px">${ch.e}</div>
+<div style="font-size:15px;font-weight:700;color:#fff">${ch.n}</div>
+<div style="font-size:11px;color:#E5E7EB;margin-top:2px">${ch.a}세 · ${ch.c}</div>
+<div style="font-size:10px;color:${cat.lc};font-weight:600;margin-top:3px">${ch.pitch}</div>
+${!ch.ok?'<div style="color:#9CA3AF;font-size:10px;margin-top:3px">🔒 Coming Soon</div>':''}
+</div>
 </button>`;
 });
 h+=`</div></div>`;
@@ -234,52 +238,63 @@ function rPro(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;
 
 <div class="fadeUp" style="color:#C4B5FD;font-size:12px;font-weight:700;margin-bottom:10px;padding-left:4px;letter-spacing:.05em">📝 시험 대비</div>
 
-<button class="fadeUp d1" onclick="go('opic')" style="width:100%;background:#1E1040;border:2px solid #8B5CF680;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
-<div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:#8B5CF625;display:flex;align-items:center;justify-content:center">🎤</div>
-<div style="flex:1">
-<div style="font-size:17px;font-weight:800;color:#fff">OPIc 대비</div>
-<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Eva 면접관 · Survey 10주제 · 콤보+롤플레이</div>
-<div style="color:#C4B5FD;font-size:13px;font-weight:700;margin-top:6px">"실제 OPIc 그대로! IM2→IH 집중 코스"</div>
-</div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
+<div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory">
+<button class="fadeUp d1" onclick="go('opic')" style="flex-shrink:0;width:200px;height:240px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:2px solid #8B5CF680">
+<div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=400&q=80') center/cover"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(139,92,246,.3) 0%,rgba(0,0,0,.9) 100%)"></div>
+<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;text-align:center">
+<div style="font-size:28px;margin-bottom:4px">🎤</div>
+<div style="font-size:18px;font-weight:800;color:#fff">OPIc</div>
+<div style="color:#E5E7EB;font-size:11px;margin-top:4px">Eva · Survey 10주제</div>
+<div style="color:#C4B5FD;font-size:11px;font-weight:700;margin-top:4px">"IM2→IH 집중 코스"</div>
+<div style="display:inline-block;background:#8B5CF6;color:#fff;font-size:10px;padding:3px 10px;border-radius:8px;font-weight:700;margin-top:6px">5-5 ~ 6-6</div>
+</div></button>
+<button class="fadeUp d2" onclick="go('toefl')" style="flex-shrink:0;width:200px;height:240px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:2px solid #3B82F680">
+<div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1523050854058-8df90110c476?w=400&q=80') center/cover"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(59,130,246,.3) 0%,rgba(0,0,0,.9) 100%)"></div>
+<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;text-align:center">
+<div style="font-size:28px;margin-bottom:4px">📘</div>
+<div style="font-size:18px;font-weight:800;color:#fff">TOEFL</div>
+<div style="color:#E5E7EB;font-size:11px;margin-top:4px">4 Tasks · 독립형+통합형</div>
+<div style="color:#93C5FD;font-size:11px;font-weight:700;margin-top:4px">"읽기→듣기→말하기 통합"</div>
+<div style="display:inline-block;background:#3B82F6;color:#fff;font-size:10px;padding:3px 10px;border-radius:8px;font-weight:700;margin-top:6px">Task 1~4</div>
+</div></button>
+<button class="fadeUp d3" onclick="go('ielts')" style="flex-shrink:0;width:200px;height:240px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:2px solid #16A34A80">
+<div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1607237138185-eedd9c632b0b?w=400&q=80') center/cover"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(22,163,106,.3) 0%,rgba(0,0,0,.9) 100%)"></div>
+<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;text-align:center">
+<div style="font-size:28px;margin-bottom:4px">📗</div>
+<div style="font-size:18px;font-weight:800;color:#fff">IELTS</div>
+<div style="color:#E5E7EB;font-size:11px;margin-top:4px">Part 1~3 · Cue Card</div>
+<div style="color:#6EE7B7;font-size:11px;font-weight:700;margin-top:4px">"Band 7.0 롱턴 특훈"</div>
+<div style="display:inline-block;background:#16A34A;color:#fff;font-size:10px;padding:3px 10px;border-radius:8px;font-weight:700;margin-top:6px">Part 1~3</div>
+</div></button>
+</div>
 
-<button class="fadeUp d2" onclick="go('toefl')" style="width:100%;background:#0C1A3D;border:2px solid #3B82F680;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
-<div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:22px;width:52px;height:52px;border-radius:14px;background:#3B82F625;display:flex;align-items:center;justify-content:center">📘</div>
-<div style="flex:1">
-<div style="font-size:17px;font-weight:800;color:#fff">TOEFL Speaking</div>
-<div style="color:#D1D5DB;font-size:12px;margin-top:3px">4 Tasks · 독립형+통합형(읽기+강의)</div>
-<div style="color:#93C5FD;font-size:13px;font-weight:700;margin-top:6px">"Task별 전략! 읽기→듣기→말하기 통합 훈련"</div>
-</div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
+<div class="fadeUp d4" style="color:#FCD34D;font-size:12px;font-weight:700;margin:12px 0 10px 4px;letter-spacing:.05em">💼 취업 & 비즈니스</div>
 
-<button class="fadeUp d3" onclick="go('ielts')" style="width:100%;background:#082520;border:2px solid #16A34A80;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
-<div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:22px;width:52px;height:52px;border-radius:14px;background:#16A34A25;display:flex;align-items:center;justify-content:center">📗</div>
-<div style="flex:1">
-<div style="font-size:17px;font-weight:800;color:#fff">IELTS Speaking</div>
-<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Part 1~3 · Cue Card · 심화 토론</div>
-<div style="color:#6EE7B7;font-size:13px;font-weight:700;margin-top:6px">"Band 7.0 목표! 2분 롱턴 집중 특훈"</div>
-</div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
-
-<div class="fadeUp d4" style="color:#FCD34D;font-size:12px;font-weight:700;margin:16px 0 10px 4px;letter-spacing:.05em">💼 취업 & 비즈니스</div>
-
-<button class="fadeUp d4" onclick="go('interview')" style="width:100%;background:#0C1A3D;border:2px solid #3B82F680;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
-<div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:#3B82F625;display:flex;align-items:center;justify-content:center">👔</div>
-<div style="flex:1">
-<div style="font-size:17px;font-weight:800;color:#fff">영어면접 대비</div>
-<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Kevin · 면접 500회+ · STAR 기법 · 6카테고리</div>
-<div style="color:#93C5FD;font-size:13px;font-weight:700;margin-top:6px">"삼성·구글·골드만 실전 면접! 합격까지!"</div>
-</div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
-
-<button class="fadeUp d5" onclick="go('pres')" style="width:100%;background:#082520;border:2px solid #4ADE8080;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
-<div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:#4ADE8025;display:flex;align-items:center;justify-content:center">📊</div>
-<div style="flex:1">
-<div style="font-size:17px;font-weight:800;color:#fff">프레젠테이션 연습</div>
-<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Priya 코치 + David Q&A · 4유형</div>
-<div style="color:#6EE7B7;font-size:13px;font-weight:700;margin-top:6px">"실리콘밸리 스타일! 자소서부터 VC 피칭까지"</div>
-</div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
+<div style="display:flex;gap:10px;overflow-x:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory">
+<button class="fadeUp d4" onclick="go('interview')" style="flex-shrink:0;width:200px;height:240px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:2px solid #3B82F680">
+<div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&q=80') center/cover"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(59,130,246,.3) 0%,rgba(0,0,0,.9) 100%)"></div>
+<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;text-align:center">
+<div style="font-size:28px;margin-bottom:4px">👔</div>
+<div style="font-size:18px;font-weight:800;color:#fff">영어면접</div>
+<div style="color:#E5E7EB;font-size:11px;margin-top:4px">Kevin · STAR · 6카테고리</div>
+<div style="color:#93C5FD;font-size:11px;font-weight:700;margin-top:4px">"삼성·구글 실전 면접!"</div>
+<div style="display:inline-block;background:#3B82F6;color:#fff;font-size:10px;padding:3px 10px;border-radius:8px;font-weight:700;margin-top:6px">15문제</div>
+</div></button>
+<button class="fadeUp d5" onclick="go('pres')" style="flex-shrink:0;width:200px;height:240px;scroll-snap-align:start;position:relative;border-radius:16px;overflow:hidden;border:2px solid #4ADE8080">
+<div style="position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1475721027785-f74eccf877e2?w=400&q=80') center/cover"></div>
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(74,222,128,.3) 0%,rgba(0,0,0,.9) 100%)"></div>
+<div style="position:absolute;bottom:0;left:0;right:0;padding:16px;text-align:center">
+<div style="font-size:28px;margin-bottom:4px">📊</div>
+<div style="font-size:18px;font-weight:800;color:#fff">프레젠테이션</div>
+<div style="color:#E5E7EB;font-size:11px;margin-top:4px">Priya 코치 + David Q&A</div>
+<div style="color:#6EE7B7;font-size:11px;font-weight:700;margin-top:4px">"자소서부터 VC 피칭!"</div>
+<div style="display:inline-block;background:#4ADE80;color:#052E16;font-size:10px;padding:3px 10px;border-radius:8px;font-weight:700;margin-top:6px">4유형</div>
+</div></button>
+</div>
 </div>`}
 
 // ── FRIENDS LIST ──
