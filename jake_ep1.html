@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<title>SnapTalk — Jake Ep.1 JFK Airport</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#0a0b14;overflow-x:hidden;font-family:'Pretendard','Apple SD Gothic Neo',sans-serif;color:#f1f5f9}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:#1e2035;border-radius:4px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-14px)}to{opacity:1;transform:translateX(0)}}
+@keyframes typing{from{width:0}to{width:100%}}
+@keyframes blink{50%{border-color:transparent}}
+.fu{animation:fadeUp .4s ease both}
+.si{animation:slideIn .35s ease both}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script>
+var R=React,e=R.createElement,us=R.useState,ue=R.useEffect,ur=R.useRef,uc=R.useCallback;
+
+/* ═══ DIALOGUE — 12문장, 3청크, 별표 3개 (청크당 1개) ═══ */
+var DL=[
+// Chunk 1: 기내 → 입국심사대
+{id:0,sp:"jake",en:"We just landed at JFK! Grab your passport and follow me to immigration.",ko:"JFK에 도착했어! 여권 챙기고 입국심사대로 따라와.",star:0,sw:""},
+{id:1,sp:"you",en:"Okay, I'm a little nervous. Is immigration strict here?",ko:"알겠어, 좀 긴장되네. 여기 입국심사 엄격해?",star:0,sw:""},
+{id:2,sp:"jake",en:"Don't worry, just answer their questions honestly. It's pretty simple.",ko:"걱정 마, 질문에 솔직하게 대답하면 돼. 꽤 간단해.",star:1,sw:"answer honestly"},
+{id:3,sp:"you",en:"Got it. I'll keep my documents ready.",ko:"알겠어. 서류 준비해 놓을게.",star:0,sw:""},
+// Chunk 2: 입국심사관
+{id:4,sp:"officer",en:"Good afternoon. What's the purpose of your visit?",ko:"안녕하세요. 방문 목적이 뭔가요?",star:1,sw:"purpose of your visit"},
+{id:5,sp:"you",en:"I'm here for sightseeing. I'll be staying for ten days.",ko:"관광 왔어요. 열흘 머물 예정이에요.",star:0,sw:""},
+{id:6,sp:"officer",en:"Where will you be staying?",ko:"어디에서 머무실 건가요?",star:0,sw:""},
+{id:7,sp:"you",en:"At a hotel near Times Square. Here's my reservation.",ko:"타임스퀘어 근처 호텔이요. 여기 예약 확인서예요.",star:0,sw:""},
+// Chunk 3: 수하물 → 밖으로
+{id:8,sp:"jake",en:"Nice! You passed! Now let's go pick up our luggage at baggage claim.",ko:"통과했어! 이제 수하물 찾는 곳에서 짐 찾으러 가자.",star:0,sw:""},
+{id:9,sp:"you",en:"Which carousel is ours? I can't find the screen.",ko:"우리 캐러셀이 어디야? 화면을 못 찾겠어.",star:0,sw:""},
+{id:10,sp:"jake",en:"It's carousel number five. I see our bags coming out now!",ko:"5번이야. 우리 가방 나오고 있어!",star:0,sw:""},
+{id:11,sp:"you",en:"Great, I got mine! Let's head outside and catch a taxi.",ko:"좋아, 내 거 찾았어! 밖으로 나가서 택시 타자.",star:1,sw:"catch a taxi"},
+];
+
+var CHK=[{s:0,e:3,t:"기내 → 입국심사대"},{s:4,e:7,t:"입국심사관과 대화"},{s:8,e:11,t:"수하물 → 공항 밖으로"}];
+
+var QZ=[
+[{q:"Jake가 뭘 챙기라고 했나요?",a:"여권 (passport)",o:["여권 (passport)","비행기표 (ticket)","지갑 (wallet)","가방 (bag)"]},
+ {q:"'솔직하게 대답하다'는?",a:"answer honestly",o:["answer honestly","speak loudly","talk slowly","reply quickly"]}],
+[{q:"심사관이 처음 물어본 것은?",a:"방문 목적",o:["방문 목적","이름","나이","직업"]},
+ {q:"'관광'을 영어로?",a:"sightseeing",o:["sightseeing","shopping","business","studying"]}],
+[{q:"수하물 찾는 곳은?",a:"baggage claim",o:["baggage claim","check-in","boarding gate","duty free"]},
+ {q:"'택시를 타다'는?",a:"catch a taxi",o:["catch a taxi","ride a bus","take a train","call a car"]}],
+];
+
+var STEX=DL.filter(function(d){return d.star}).map(function(d){return{en:d.sw,id:d.id}});
+// 대화방 Jake 오프닝
+var JAKE_OPENS=[
+  "Hey! Let's practice what we learned at the airport. Try using the star expressions!",
+  "Ready to talk? Use 'answer honestly', 'purpose of your visit', or 'catch a taxi' in a sentence!",
+  "Great job getting through immigration! Now let's practice those key phrases together."
+];
+
+/* TTS */
+function speak(t,r){r=r||0.82;return new Promise(function(res){if(!window.speechSynthesis){res();return}window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(t);u.lang="en-US";u.rate=r;u.onend=res;u.onerror=res;window.speechSynthesis.speak(u)})}
+
+function si(s){
+  if(s==="jake")return{em:"🧔",c:"#3b82f6"};
+  if(s==="officer")return{em:"👮",c:"#ef4444"};
+  return{em:"🧑",c:"#f59e0b"};
+}
+
+var C={bg:"#0a0b14",cd:"#12131f",bd:"#1e2035",jk:"#3b82f6",yu:"#f59e0b",of:"#ef4444",gn:"#22c55e",st:"#fbbf24",wh:"#f1f5f9",gy:"#64748b",gl:"#94a3b8",gd:"#334155",ac:"#8b5cf6"};
+
+function App(){
+var _=us("intro"),scr=_[0],setSc=_[1];
+var _1=us(0),ci=_1[0],setCi=_1[1];
+var _2=us(0),li=_2[0],setLi=_2[1];
+var _3=us({}),sk=_3[0],setSk=_3[1];
+var _4=us(0),qi=_4[0],setQi=_4[1];
+var _5=us(null),qa=_5[0],setQa=_5[1];
+var _6=us(0),qs=_6[0],setQs=_6[1];
+var _7=us([]),ws=_7[0],setWs=_7[1];
+var _8=us({}),wh=_8[0],setWh=_8[1];
+var _9=us([]),cm=_9[0],setCm=_9[1];
+var _10=us({}),sc=_10[0],setSc2=_10[1];
+var _11=us(false),ln=_11[0],setLn=_11[1];
+var _12=us(null),pl=_12[0],setPl=_12[1];
+var _13=us(true),an=_13[0],setAn=_13[1];
+var cr=ur(null);var rr=ur(null);
+
+var go=function(fn){setAn(false);setTimeout(function(){fn();setAn(true)},200)};
+var play=function(l){setPl(l.id);speak(l.en).then(function(){setPl(null)})};
+
+// STT
+var stt=uc(function(){
+  var SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){alert("음성인식 미지원 브라우저입니다.");return}
+  var r=new SR();r.lang="en-US";r.interimResults=false;
+  r.onresult=function(ev){
+    var t=ev.results[0][0].transcript;
+    setCm(function(p){return p.concat({sp:"you",t:t,tm:new Date()})});
+    setLn(false);
+    // Jake 자동 응답
+    setTimeout(function(){
+      var rs=["Great job! 발음 좋아지고 있어!","That's exactly right!","Good try! 한번 더!","Perfect! You're a natural!","Almost! Try again!"];
+      var rp=rs[Math.floor(Math.random()*rs.length)];
+      setCm(function(p){return p.concat({sp:"jake",t:rp,tm:new Date()})});
+      speak(rp,.85);
+    },1000);
+  };
+  r.onerror=function(){setLn(false)};
+  r.onend=function(){setLn(false)};
+  rr.current=r;setLn(true);r.start();
+},[]);
+
+ue(function(){if(cr.current)cr.current.scrollIntoView({behavior:"smooth"})},[cm]);
+
+// Jake 대화방 진입시 먼저 말걸기
+var initChat=function(){
+  var opener=JAKE_OPENS[Math.floor(Math.random()*JAKE_OPENS.length)];
+  setCm([{sp:"jake",t:opener,tm:new Date()}]);
+  setSc2({});
+  setTimeout(function(){speak(opener,.82)},500);
+};
+
+var pg={background:C.bg,minHeight:"100vh",maxWidth:440,margin:"0 auto",position:"relative"};
+var hd={display:"flex",alignItems:"center",gap:10,padding:"16px 20px 12px",borderBottom:"1px solid "+C.bd};
+var bk={background:"none",border:"none",color:C.gl,fontSize:14,cursor:"pointer",padding:"4px 8px"};
+var cd={background:C.cd,borderRadius:14,border:"1px solid "+C.bd,padding:16,marginBottom:12};
+var bt={width:"100%",padding:"14px",borderRadius:12,border:"none",fontSize:15,fontWeight:700,cursor:"pointer",transition:"all .2s"};
+var bdg=function(b,c){return{fontSize:10,fontWeight:700,padding:"3px 8px",borderRadius:6,background:b,color:c}};
+
+/* ═══ INTRO ═══ */
+if(scr==="intro")return e("div",{style:pg},e("div",{style:{opacity:an?1:0,transition:"opacity .3s"}},
+  e("div",{style:{position:"relative",height:200,overflow:"hidden",background:"linear-gradient(135deg,#0c1445,#1a237e 40%,#1565c0)"}},
+    e("div",{style:{position:"absolute",top:20,right:30,fontSize:44,animation:"bounce 3s ease infinite"}},"✈️"),
+    e("div",{style:{position:"absolute",bottom:45,left:20,fontSize:32}},"🏙️"),
+    e("div",{style:{position:"absolute",bottom:45,left:65,fontSize:24}},"🗽"),
+    e("div",{style:{position:"absolute",bottom:45,right:40,fontSize:28}},"🏢"),
+    e("div",{style:{position:"absolute",bottom:0,left:0,right:0,height:44,background:"linear-gradient(0deg,#1a1a2e,#16213e)",borderTop:"2px dashed rgba(255,255,255,.15)"}}),
+    e("div",{style:{position:"absolute",top:12,left:14,display:"flex",alignItems:"center",gap:6}},
+      e("span",{style:{background:"rgba(59,130,246,.35)",color:"#93c5fd",fontSize:11,fontWeight:800,padding:"4px 12px",borderRadius:6}},"EP.1"),
+      e("span",{style:{color:"#e2e8f0",fontSize:14,fontWeight:700}},"JFK Airport")),
+    e("div",{style:{position:"absolute",bottom:14,left:"50%",transform:"translateX(-50%)",textAlign:"center"}},
+      e("div",{style:{fontSize:48}},"🧔"),
+      e("div",{style:{background:"rgba(59,130,246,.85)",color:"#fff",fontSize:11,fontWeight:700,padding:"3px 12px",borderRadius:8,marginTop:3}},"🇺🇸 Jake (32)"))
+  ),
+  e("div",{style:{padding:"18px 20px"}},
+    e("h1",{style:{fontSize:21,fontWeight:800,marginBottom:4}},"✈️ JFK 공항 도착"),
+    e("p",{style:{fontSize:12,color:C.gl,marginBottom:16,lineHeight:1.5}},"비행기가 활주로에 착륙합니다. 뉴욕 스카이라인이 보입니다."),
+    e("div",{className:"fu",style:Object.assign({},cd,{borderColor:C.jk+"25"})},
+      e("div",{style:{display:"flex",gap:10}},
+        e("div",{style:{fontSize:30}},"🧔"),
+        e("div",{style:{flex:1}},
+          e("p",{style:{fontSize:13,lineHeight:1.6,margin:0}},"Hey! Ready for our first trip? Let's land at JFK Airport in New York City!"),
+          e("p",{style:{fontSize:11,color:C.gy,marginTop:6}},"첫 여행 준비됐어? JFK 공항에 착륙하자!")))),
+    e("div",{className:"fu",style:Object.assign({},cd,{borderColor:C.ac+"20"})},
+      e("div",{style:{fontSize:13,fontWeight:700,color:C.ac,marginBottom:8}},"📖 학습 순서"),
+      ["🎧 리스닝 — 2문장씩 듣고 퀴즈","📋 화이트보드 — 핵심표현 리뷰","💬 대화방 — Jake와 직접 대화"].map(function(t,i){
+        return e("div",{key:i,style:{fontSize:12,color:C.gl,padding:"6px 0",borderBottom:i<2?"1px solid "+C.bd:"none",display:"flex",gap:8}},
+          e("span",{style:{fontWeight:700,color:C.gy,width:18}},i+1),t)})),
+    e("button",{onClick:function(){go(function(){setSc("listening");setCi(0);setLi(0);setSk({})})},
+      style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.jk+",#2563eb)",color:"#fff",marginTop:8,boxShadow:"0 4px 20px "+C.jk+"40"})},"🎧 리스닝 시작!")
+  )
+));
+
+/* ═══ LISTENING ═══ */
+if(scr==="listening"){
+  var ck=CHK[ci],tot=ck.e-ck.s+1,cg=ck.s+li,cl=DL[cg],vis=DL.slice(ck.s,cg+1),isL=li>=tot-1,sp=si(cl.sp);
+  return e("div",{style:pg},e("div",{style:{opacity:an?1:0,transition:"opacity .3s"}},
+    e("div",{style:hd},
+      e("button",{onClick:function(){go(function(){setSc("intro")})},style:bk},"←"),
+      e("div",{style:{fontSize:14,fontWeight:700,flex:1}},"🎧 "+(ci+1)+"/3: "+ck.t),
+      e("span",{style:bdg(C.jk+"20",C.jk)},(li+1)+"/"+tot)),
+    // 미니씬
+    e("div",{style:{margin:"10px 20px",borderRadius:12,height:85,background:"linear-gradient(135deg,#0f172a,#1e293b)",border:"1px solid "+C.bd,position:"relative",overflow:"hidden"}},
+      e("div",{style:{position:"absolute",top:6,left:10,fontSize:9,color:C.gy,fontWeight:600}},"🛂 JFK — "+ck.t),
+      e("div",{style:{position:"absolute",bottom:8,left:0,right:0,display:"flex",justifyContent:"space-around",padding:"0 16px"}},
+        ["jake","officer","you"].map(function(w){var s=si(w),a=cl.sp===w;
+          return e("div",{key:w,style:{textAlign:"center",transition:"all .3s",transform:a?"scale(1.2) translateY(-3px)":""}},
+            e("div",{style:{fontSize:a?26:20}},s.em),
+            a?e("div",{style:{width:6,height:6,borderRadius:"50%",background:s.c,margin:"3px auto 0",animation:"pulse .6s infinite"}}):null)
+        })
+      )
+    ),
+    // 누적 대사
+    e("div",{style:{padding:"0 20px",maxHeight:290,overflowY:"auto"}},
+      vis.map(function(l,i){var s=si(l.sp),ic=i===vis.length-1,iy=l.sp==="you";
+        return e("div",{key:l.id,className:ic?"fu":"",style:{marginBottom:10,display:"flex",flexDirection:iy?"row-reverse":"row",gap:8,opacity:ic?1:.45}},
+          e("div",{style:{fontSize:24,flexShrink:0}},s.em),
+          e("div",{style:{background:ic?s.c+"12":C.cd,border:"1px solid "+(ic?s.c+"30":C.bd),borderRadius:iy?"14px 14px 4px 14px":"14px 14px 14px 4px",padding:"10px 14px",maxWidth:"78%"}},
+            e("p",{style:{fontSize:14,margin:0,lineHeight:1.6,fontWeight:500}},l.en),
+            sk[l.id]?e("p",{style:{fontSize:11,color:C.gl,margin:"6px 0 0",borderTop:"1px solid "+C.bd,paddingTop:6}},l.ko):
+              e("button",{onClick:function(){var id=l.id;setSk(function(p){var n=Object.assign({},p);n[id]=true;return n})},
+                style:{background:C.yu+"12",border:"1px solid "+C.yu+"25",borderRadius:6,color:C.yu,fontSize:10,fontWeight:600,padding:"3px 10px",marginTop:6,cursor:"pointer"}},"👆 한글 보기"),
+            l.star?e("div",{style:{marginTop:6,padding:"5px 10px",background:"rgba(251,191,36,.2)",borderRadius:6,fontSize:12,color:"#fde047",fontWeight:700}},"⭐ "+l.sw):null
+          ))
+      })
+    ),
+    // 하단
+    e("div",{style:{padding:"10px 20px 24px",borderTop:"1px solid "+C.bd,marginTop:6}},
+      e("button",{onClick:function(){play(cl)},
+        style:Object.assign({},bt,{background:sp.c+"15",color:sp.c,border:"1px solid "+sp.c+"30",marginBottom:8,padding:"12px"})},
+        pl===cl.id?"🔊 재생 중...":"🔊 다시 듣기"),
+      !isL?e("button",{onClick:function(){go(function(){setLi(function(p){return p+1})})},
+        style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.jk+",#2563eb)",color:"#fff"})},"다음 문장 →"):
+        e("button",{onClick:function(){go(function(){setSc("quiz");setQi(0);setQa(null)})},
+          style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.gn+",#16a34a)",color:"#fff"})},"✅ 퀴즈 풀기!")
+    )
+  ));
+}
+
+/* ═══ QUIZ ═══ */
+if(scr==="quiz"){
+  var qS=QZ[ci],cQ=qS[qi],iC=qa===cQ.a,ans=qa!==null;
+  return e("div",{style:pg},e("div",{style:{opacity:an?1:0,transition:"opacity .3s"}},
+    e("div",{style:hd},
+      e("div",{style:{fontSize:15,fontWeight:700,flex:1}},"📝 Quiz "+(ci+1)),
+      e("span",{style:bdg(C.gn+"20",C.gn)},"Q"+(qi+1)+"/"+qS.length)),
+    e("div",{style:{padding:20}},
+      e("div",{className:"fu",style:Object.assign({},cd,{textAlign:"center"})},
+        e("div",{style:{fontSize:36,marginBottom:10}},"🤔"),
+        e("p",{style:{fontSize:16,fontWeight:700,lineHeight:1.5}},cQ.q)),
+      e("div",{style:{display:"flex",flexDirection:"column",gap:8,marginTop:16}},
+        cQ.o.map(function(o,i){
+          var sl=qa===o,cr2=o===cQ.a;
+          var b=C.cd,bd2=C.bd,tc=C.wh;
+          if(ans&&cr2){b=C.gn+"18";bd2=C.gn+"50";tc=C.gn}
+          else if(ans&&sl&&!cr2){b=C.of+"18";bd2=C.of+"50";tc=C.of}
+          return e("button",{key:i,className:"fu",
+            onClick:function(){if(!ans){setQa(o);if(o===cQ.a)setQs(function(p){return p+1})}},
+            style:{width:"100%",padding:"14px 16px",borderRadius:12,border:"1px solid "+bd2,background:b,color:tc,fontSize:14,fontWeight:500,cursor:ans?"default":"pointer",textAlign:"left",animationDelay:i*70+"ms",transition:"all .2s"}},
+            String.fromCharCode(65+i)+". "+o+(ans&&cr2?" ✅":"")+(ans&&sl&&!cr2?" ❌":""))
+        })
+      ),
+      ans?e("div",{className:"fu",style:{marginTop:16}},
+        e("div",{style:Object.assign({},cd,{borderColor:(iC?C.gn:C.of)+"30",textAlign:"center"})},
+          e("div",{style:{fontSize:28}},iC?"🎉":"😅"),
+          e("p",{style:{fontSize:14,fontWeight:700,color:iC?C.gn:C.of,marginTop:4}},iC?"정답!":"오답! 정답: "+cQ.a)),
+        e("button",{onClick:function(){
+          if(qi<qS.length-1){go(function(){setQi(function(p){return p+1});setQa(null)})}
+          else if(ci<2){go(function(){setCi(function(p){return p+1});setLi(0);setSc("listening");setSk({})})}
+          else{go(function(){setSc("whiteboard")})}
+        },style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.jk+",#2563eb)",color:"#fff",marginTop:10})},
+          qi<qS.length-1?"다음 문제 →":ci<2?"Chunk "+(ci+2)+" 리스닝 →":"📋 화이트보드 리뷰 →")
+      ):null
+    )
+  ));
+}
+
+/* ═══ WHITEBOARD — 라벨 제거 ═══ */
+if(scr==="whiteboard"){
+  var hC=Object.keys(wh).filter(function(k){return wh[k]}).length;
+  return e("div",{style:pg},e("div",{style:{opacity:an?1:0,transition:"opacity .3s"}},
+    e("div",{style:hd},
+      e("div",{style:{fontSize:15,fontWeight:700,flex:1}},"📋 화이트보드 리뷰"),
+      e("span",{style:bdg(C.st+"20",C.st)},hC+" 형광")),
+    e("div",{style:{padding:"8px 20px 24px",maxHeight:"calc(100vh - 70px)",overflowY:"auto"}},
+      e("p",{style:{fontSize:11,color:C.gy,marginBottom:10}},"👆 터치=한글  |  💛 형광펜  |  💾 저장  |  ▶️ 듣기"),
+      DL.map(function(l,i){
+        var s=si(l.sp),hl=wh[l.id],sv=ws.indexOf(l.id)>=0;
+        return e("div",{key:l.id,className:"si",style:Object.assign({},cd,{animationDelay:i*35+"ms",borderColor:hl?C.st+"40":C.bd,background:hl?"rgba(251,191,36,.06)":C.cd,padding:12})},
+          // 상단: 아이콘 + 형광/저장 (라벨 제거!)
+          e("div",{style:{display:"flex",alignItems:"center",gap:6,marginBottom:6}},
+            e("span",{style:{fontSize:16}},s.em),
+            l.star?e("span",{style:{fontSize:13}},"⭐"):null,
+            e("div",{style:{marginLeft:"auto",display:"flex",gap:5}},
+              e("button",{onClick:function(){var id=l.id;setWh(function(p){var n=Object.assign({},p);n[id]=!n[id];return n})},
+                style:{background:"none",border:"none",fontSize:14,cursor:"pointer",opacity:hl?1:.3}},"💛"),
+              e("button",{onClick:function(){var id=l.id;if(ws.indexOf(id)<0)setWs(function(p){return p.concat(id)})},
+                style:{background:"none",border:"none",fontSize:14,cursor:"pointer",opacity:sv?1:.3}},"💾"))
+          ),
+          // 영어 + 듣기
+          e("div",{style:{display:"flex",alignItems:"center",gap:6}},
+            e("p",{style:{fontSize:14,margin:0,lineHeight:1.6,flex:1,fontWeight:500}},l.en),
+            e("button",{onClick:function(){play(l)},
+              style:{background:s.c+"15",border:"1px solid "+s.c+"20",borderRadius:8,width:30,height:30,display:"flex",alignItems:"center",justifyContent:"center",cursor:"pointer",fontSize:13,flexShrink:0}},
+              pl===l.id?"🔊":"▶️")),
+          // 한글
+          sk["w"+l.id]?e("p",{style:{fontSize:12,color:C.gl,margin:"8px 0 0",borderTop:"1px solid "+C.bd,paddingTop:6}},l.ko):
+            e("button",{onClick:function(){var k="w"+l.id;setSk(function(p){var n=Object.assign({},p);n[k]=true;return n})},
+              style:{background:C.yu+"08",border:"1px dashed "+C.yu+"25",borderRadius:8,color:C.yu,fontSize:11,fontWeight:600,padding:"4px 12px",marginTop:8,cursor:"pointer",width:"100%"}},"👆 한글 뜻 보기"),
+          // 핵심표현 (밝게!)
+          l.star?e("div",{style:{marginTop:6,padding:"5px 10px",background:"rgba(251,191,36,.2)",borderRadius:6,fontSize:12,color:"#fde047",fontWeight:700,display:"inline-block"}},"⭐ "+l.sw):null
+        )
+      }),
+      e("button",{onClick:function(){go(function(){setSc("chatroom");initChat()})},
+        style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.yu+",#d97706)",color:"#fff",marginTop:10})},"💬 대화방으로!")
+    )
+  ));
+}
+
+/* ═══ CHATROOM — Jake 먼저 말걸기 + TTS + 타이핑 ═══ */
+if(scr==="chatroom"){
+  var ckC=Object.values(sc).filter(Boolean).length,allC=ckC>=3;
+  return e("div",{style:pg},e("div",{style:{opacity:an?1:0,transition:"opacity .3s",display:"flex",flexDirection:"column",height:"100vh"}},
+    e("div",{style:hd},
+      e("button",{onClick:function(){go(function(){setSc("whiteboard")})},style:bk},"←"),
+      e("div",{style:{flex:1}},
+        e("div",{style:{fontSize:14,fontWeight:700}},"💬 Jake와 대화"),
+        e("div",{style:{fontSize:10,color:C.gy}},"⭐ 별표표현 "+ckC+"/"+STEX.length+" 완료")),
+      allC?e("span",{style:Object.assign({},bdg(C.gn+"20",C.gn),{animation:"pulse 1.5s infinite"})},"🎉"):null),
+    // 별표 체크
+    e("div",{style:{padding:"6px 20px",borderBottom:"1px solid "+C.bd,overflowX:"auto",display:"flex",gap:6,flexShrink:0}},
+      STEX.map(function(x,i){var ck=sc[x.id];
+        return e("button",{key:i,onClick:function(){var id=x.id;setSc2(function(p){var n=Object.assign({},p);n[id]=!n[id];return n})},
+          style:{flexShrink:0,padding:"6px 14px",borderRadius:20,background:ck?C.gn+"18":"rgba(251,191,36,.15)",border:"1px solid "+(ck?C.gn:C.st)+"35",color:ck?C.gn:"#fde047",fontSize:11,fontWeight:700,cursor:"pointer",textDecoration:ck?"line-through":"none",whiteSpace:"nowrap"}},
+          (ck?"✅ ":"⭐ ")+x.en)
+      })
+    ),
+    // 채팅
+    e("div",{style:{flex:1,overflowY:"auto",padding:"12px 20px"}},
+      cm.map(function(m,i){var me=m.sp==="you";var s=si(m.sp);
+        return e("div",{key:i,className:"si",style:{display:"flex",flexDirection:me?"row-reverse":"row",gap:8,marginBottom:10,animationDelay:i*50+"ms"}},
+          e("div",{style:{fontSize:22,flexShrink:0}},s.em),
+          e("div",{style:{background:me?C.yu+"12":C.jk+"12",border:"1px solid "+(me?C.yu:C.jk)+"22",borderRadius:me?"14px 14px 4px 14px":"14px 14px 14px 4px",padding:"10px 14px",maxWidth:"78%"}},
+            e("p",{style:{fontSize:13,margin:0,lineHeight:1.5}},m.t)))
+      }),
+      e("div",{ref:cr})
+    ),
+    // 입력
+    e("div",{style:{padding:"10px 20px 24px",borderTop:"1px solid "+C.bd,background:C.bg,flexShrink:0}},
+      allC?e("div",{className:"fu",style:{background:C.gn+"12",border:"1px solid "+C.gn+"25",borderRadius:12,padding:12,marginBottom:10,textAlign:"center"}},
+        e("div",{style:{fontSize:30}},"🎉🎊🎉"),
+        e("p",{style:{fontSize:14,fontWeight:700,color:C.gn,margin:"6px 0"}},"축하합니다! 별표표현 완료!"),
+        e("button",{onClick:function(){go(function(){setSc("complete")})},
+          style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.gn+",#16a34a)",color:"#fff",marginTop:6,padding:"11px"})},"🏆 에피소드 완료!")
+      ):null,
+      e("div",{style:{display:"flex",gap:10,alignItems:"center"}},
+        e("button",{onClick:stt,disabled:ln,
+          style:{width:54,height:54,borderRadius:"50%",border:"none",background:ln?"linear-gradient(135deg,"+C.of+",#dc2626)":"linear-gradient(135deg,"+C.yu+",#d97706)",color:"#fff",fontSize:22,cursor:"pointer",animation:ln?"pulse .8s infinite":"none",flexShrink:0,boxShadow:ln?"0 0 16px "+C.of+"50":"0 4px 12px "+C.yu+"40"}},
+          ln?"⏹️":"🎤"),
+        e("span",{style:{fontSize:12,color:ln?C.of:C.gy,fontWeight:ln?600:400}},
+          ln?"🔴 듣고 있어요...":"🎤 버튼을 눌러 영어로 말해보세요"))
+    )
+  ));
+}
+
+/* ═══ COMPLETE ═══ */
+if(scr==="complete"){
+  var hN=Object.keys(wh).filter(function(k){return wh[k]}).length;
+  var sN=Object.values(sc).filter(Boolean).length;
+  return e("div",{style:pg},e("div",{style:{opacity:an?1:0,transition:"opacity .3s",padding:"40px 20px",textAlign:"center"}},
+    e("div",{className:"fu",style:{fontSize:60,marginBottom:14}},"🏆"),
+    e("h1",{className:"fu",style:{fontSize:23,fontWeight:800,marginBottom:8,animationDelay:".1s"}},"Episode 1 Complete!"),
+    e("p",{className:"fu",style:{fontSize:13,color:C.gl,marginBottom:24,lineHeight:1.6,animationDelay:".2s"}},"JFK Airport를 무사히 통과했어요!",e("br"),"Jake와 뉴욕 모험이 시작됩니다! 🗽"),
+    e("div",{className:"fu",style:Object.assign({},cd,{textAlign:"left",animationDelay:".3s"})},
+      e("div",{style:{fontSize:14,fontWeight:700,color:C.jk,marginBottom:10}},"📊 성적표"),
+      [{l:"퀴즈",v:qs+"/6",i:"📝"},{l:"형광",v:hN+"개",i:"💛"},{l:"저장",v:ws.length+"개",i:"💾"},{l:"별표표현",v:sN+"/3",i:"⭐"}].map(function(it,i){
+        return e("div",{key:i,style:{display:"flex",justifyContent:"space-between",padding:"8px 0",borderBottom:i<3?"1px solid "+C.bd:"none"}},
+          e("span",{style:{fontSize:12,color:C.gl}},it.i+" "+it.l),
+          e("span",{style:{fontSize:14,fontWeight:700}},it.v))
+      })
+    ),
+    e("div",{className:"fu",style:Object.assign({},cd,{borderColor:C.yu+"20",animationDelay:".4s"})},
+      e("div",{style:{fontSize:11,fontWeight:700,color:C.yu}},"🔜 Next Episode"),
+      e("p",{style:{fontSize:15,fontWeight:700,margin:"4px 0 0"}},"Ep.2 — Times Square 🌃"),
+      e("p",{style:{fontSize:11,color:C.gy,marginTop:2}},"첫날밤, 뉴욕의 불빛 속으로!"),
+      e("div",{style:Object.assign({},bdg(C.gd,C.gy),{marginTop:8,display:"inline-block"})},"COMING SOON")),
+    e("button",{onClick:function(){go(function(){setSc("intro");setCi(0);setLi(0);setSk({});setQs(0);setWs([]);setWh({});setSc2({})})},
+      style:Object.assign({},bt,{background:"linear-gradient(135deg,"+C.jk+",#2563eb)",color:"#fff",marginTop:12})},"🔄 다시 학습하기")
+  ));
+}
+
+return null;
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(e(App));
+</script>
+</body>
+</html>
