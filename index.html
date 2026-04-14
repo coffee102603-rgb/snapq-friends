@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>SnapQ Friends — Friends First. Fluency Follows.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',-apple-system,system-ui,sans-serif;background:#0F0A1F;color:#fff;overflow-x:hidden;-webkit-text-size-adjust:100%}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;-webkit-tap-highlight-color:transparent}
+.screen{min-height:100dvh;display:none;flex-direction:column}
+.screen.active{display:flex}
+.btn{background:linear-gradient(135deg,#8B5CF6,#6366F1);color:#fff;border:none;border-radius:16px;padding:14px 32px;font-size:16px;font-weight:700;transition:transform .15s}
+.btn:active{transform:scale(.95)}
+.btn-green{background:linear-gradient(135deg,#4ADE80,#16A34A)}
+.btn-pink{background:linear-gradient(135deg,#EC4899,#F43F5E)}
+.btn-orange{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+.tag{background:rgba(139,92,246,.2);color:#C4B5FD;padding:3px 10px;border-radius:20px;font-size:12px;display:inline-block;margin:2px}
+
+/* Scene */
+.scene{position:relative;width:100%;height:420px;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.scene-bg{position:absolute;inset:0;z-index:0}
+.scene-grad{position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.45) 100%)}
+.scene-char{position:absolute;top:50%;left:50%;transform:translate(-50%,-45%);z-index:3}
+.scene-label{position:absolute;top:12px;left:14px;z-index:5;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);padding:5px 14px;border-radius:20px;font-size:12px;font-weight:500;display:flex;align-items:center;gap:6px}
+.scene-label .dot{width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 6px #4ADE80}
+.scene-sub{position:absolute;bottom:0;left:0;right:0;z-index:6;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);padding:14px 18px;text-align:center}
+.scene-sub .en{font-size:16px;font-weight:600;line-height:1.7}
+.scene-sub .kr{color:#C4B5FD;font-size:13px;margin-top:3px}
+.scene-sub .wave{display:flex;justify-content:center;gap:3px;margin-top:8px}
+.scene-sub .wave span{width:3px;border-radius:2px;background:#A78BFA}
+
+.word{transition:color .15s}
+.word-done{color:#A78BFA}
+.word-current{color:#fff;font-weight:800;text-shadow:0 0 12px rgba(167,139,250,.6)}
+.word-upcoming{color:rgba(255,255,255,.3)}
+
+/* Floating icons */
+.scene-icon{position:absolute;pointer-events:none;opacity:.18}
+
+/* Nav */
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(15,10,31,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-around;padding:8px 0 12px}
+.nav button{background:none;border:none;color:#6B7280;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button.active{color:#A78BFA}
+.nav button .icon{font-size:20px}
+
+/* Animations */
+@keyframes glow{0%,100%{box-shadow:0 0 24px #8B5CF640}50%{box-shadow:0 0 48px #8B5CF680}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(5deg)}}
+@keyframes wave0{0%{height:4px;opacity:.4}100%{height:14px;opacity:1}}
+@keyframes wave1{0%{height:6px;opacity:.5}100%{height:12px;opacity:1}}
+@keyframes wave2{0%{height:3px;opacity:.3}100%{height:16px;opacity:1}}
+</style>
+</head>
+<body>
+<div id="app" style="max-width:420px;margin:0 auto"></div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// SnapQ Friends — GitHub Pages Version with TTS
+// ════════════════════════════════════════════════════════════════
+
+const $ = id => document.getElementById(id);
+const app = document.getElementById('app');
+
+// ── State ────────────────────────────────────────────────────
+let state = {
+  screen: 'intro',
+  friend: null,
+  coins: 100,
+  speaking: false,
+  wordIndex: -1,
+};
+
+// ── TTS Engine (Full — works on real browsers!) ──────────────
+const TTS = {
+  voice: null,
+  ready: false,
+  keepAliveId: null,
+
+  loadVoice() {
+    const voices = speechSynthesis.getVoices();
+    const tests = [
+      v => v.name.includes('Samantha'),
+      v => v.name.includes('Google') && v.lang.startsWith('en-US'),
+      v => v.lang.startsWith('en-US') && v.name.toLowerCase().includes('female'),
+      v => v.lang.startsWith('en-US'),
+      v => v.lang.startsWith('en'),
+    ];
+    for (const t of tests) {
+      const f = voices.find(t);
+      if (f) { this.voice = f; return; }
+    }
+    if (voices.length) this.voice = voices[0];
+  },
+
+  activate() {
+    if (this.ready) return;
+    if (!window.speechSynthesis) return;
+    try {
+      // Unlock AudioContext
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const b = ctx.createBuffer(1, 1, 22050);
+        const s = ctx.createBufferSource();
+        s.buffer = b; s.connect(ctx.destination); s.start(0);
+      } catch(e) {}
+      // Unlock speechSynthesis
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance('hi');
+      u.volume = 0.01; u.rate = 10;
+      speechSynthesis.speak(u);
+      this.ready = true;
+      this.loadVoice();
+      if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = () => this.loadVoice();
+      }
+      // KeepAlive
+      this.keepAliveId = setInterval(() => {
+        if (!speechSynthesis.speaking) {
+          const k = new SpeechSynthesisUtterance('');
+          k.volume = 0; speechSynthesis.speak(k);
+        }
+      }, 10000);
+    } catch(e) {}
+  },
+
+  speak(text, rate = 0.82, pitch = 1.1) {
+    return new Promise(resolve => {
+      if (!speechSynthesis || !this.ready) {
+        // Fallback: visual-only with timing
+        this._visualSpeak(text, rate, resolve);
+        return;
+      }
+      speechSynthesis.cancel();
+      setTimeout(() => {
+        const u = new SpeechSynthesisUtterance(text);
+        if (this.voice) u.voice = this.voice;
+        u.rate = rate; u.pitch = pitch; u.volume = 1;
+        state.speaking = true;
+        const words = text.split(/\s+/);
+        let wi = 0;
+        u.onboundary = (e) => {
+          if (e.name === 'word' && wi < words.length) {
+            state.wordIndex = wi; wi++;
+            updateSubtitle();
+          }
+        };
+        u.onend = () => { state.speaking = false; state.wordIndex = -1; updateSubtitle(); resolve(true); };
+        u.onerror = () => { state.speaking = false; state.wordIndex = -1; resolve(false); };
+        speechSynthesis.speak(u);
+        // Chrome bug fix
+        setTimeout(() => { try{speechSynthesis.pause();speechSynthesis.resume();}catch(e){} }, 80);
+        // Safety timeout
+        setTimeout(() => resolve(true), 20000);
+      }, 50);
+    });
+  },
+
+  _visualSpeak(text, rate, resolve) {
+    const words = text.split(/\s+/);
+    const ms = Math.max(260, 400 / rate);
+    state.speaking = true;
+    let i = 0;
+    const tick = () => {
+      if (i >= words.length) {
+        state.speaking = false; state.wordIndex = -1; updateSubtitle(); resolve(true); return;
+      }
+      state.wordIndex = i; updateSubtitle(); i++;
+      setTimeout(tick, ms);
+    };
+    tick();
+  },
+
+  stop() { try { speechSynthesis?.cancel(); } catch(e) {} state.speaking = false; state.wordIndex = -1; },
+};
+
+// ── Character Data ───────────────────────────────────────────
+const CH = {
+  name:'Margaret',age:67,city:'Vermont',job:'은퇴 영어교사',
+  reason:'한국 문화원 봉사 경력',tags:['여행','강아지','커피','정원','베이킹'],
+  price:10,desc:'이해될 때까지 천천히!',rate:0.78,pitch:1.12,
+  intro:[
+    {en:"Oh, hello dear! I'm Margaret.",kr:"아, 안녕하세요! 저는 마가렛이에요."},
+    {en:"I'm a retired English teacher from Vermont.",kr:"버몬트에서 은퇴한 영어 선생님이에요."},
+    {en:"I volunteered at a Korean cultural center for years.",kr:"한국 문화원에서 수년간 봉사했어요."},
+    {en:"So I speak a little Korean too!",kr:"그래서 한국어도 조금 해요!"},
+    {en:"I love coffee, gardening, and my dog Biscuit.",kr:"커피, 정원 가꾸기, 그리고 제 강아지 비스킷을 좋아해요."},
+    {en:"I'll speak slowly and help you every step.",kr:"천천히 말하고 하나하나 도와줄게요."},
+  ],
+  question:{en:"So tell me, do you like cats or dogs?",kr:"자, 말해봐요. 고양이 좋아해요, 강아지 좋아해요?"},
+  listening:{
+    topic:'Morning Coffee',
+    rounds:[
+      {sentences:[
+        {en:"I had the most wonderful cup of coffee this morning.",kr:"오늘 아침에 정말 멋진 커피 한 잔을 마셨어요."},
+        {en:"It was a new blend from a small shop in town.",kr:"마을에 있는 작은 가게의 새로운 블렌드였어요."},
+      ],q:{text:"What did Margaret have this morning?",kr:"마가렛은 오늘 아침에 뭘 마셨나요?",opts:["Tea","Coffee","Juice","Milk"],ans:1},
+        expr:{en:"the most wonderful",kr:"가장 멋진/훌륭한"}},
+      {sentences:[
+        {en:"The owner told me it comes all the way from Colombia.",kr:"주인이 콜롬비아에서 온 거라고 했어요."},
+        {en:"He roasts the beans himself every single morning.",kr:"그는 매일 아침 직접 원두를 로스팅해요."},
+        {en:"You can really taste the difference when it's fresh.",kr:"신선하면 정말 맛의 차이를 느낄 수 있어요."},
+      ],q:{text:"Where do the coffee beans come from?",kr:"커피 원두는 어디에서 온 건가요?",opts:["Brazil","Ethiopia","Colombia","Kenya"],ans:2},
+        expr:{en:"all the way from",kr:"~에서 먼 길을 건너온"}},
+      {sentences:[
+        {en:"I sat in my garden with Biscuit and just enjoyed the moment.",kr:"비스킷과 함께 정원에 앉아서 그 순간을 즐겼어요."},
+        {en:"The birds were singing and the air smelled like spring.",kr:"새들이 노래하고 공기에서 봄 냄새가 났어요."},
+        {en:"Sometimes the simplest things bring the most joy.",kr:"때때로 가장 단순한 것들이 가장 큰 기쁨을 줘요."},
+      ],q:{text:"Where did Margaret sit with Biscuit?",kr:"마가렛은 비스킷과 어디에 앉았나요?",opts:["Kitchen","Café","Garden","Living room"],ans:2},
+        expr:{en:"the simplest things",kr:"가장 단순한 것들"}},
+    ],
+  },
+};
+
+const BGS = {
+  kitchen:{label:'🍳 주방',css:'linear-gradient(170deg,#FFF8E7 0%,#F5E6C8 30%,#D4B896 60%,#A08060 100%)',icons:['☕','🍪','🫖']},
+  garden:{label:'🌿 정원',css:'linear-gradient(170deg,#87CEEB 0%,#7EC8A0 30%,#4A7C59 60%,#2D5A27 100%)',icons:['🌸','🌻','🦋']},
+  cafe:{label:'☕ 카페',css:'linear-gradient(170deg,#3D2B1F 0%,#5C3D2E 30%,#8B6242 60%,#A47B52 100%)',icons:['☕','📖','🎵']},
+  living:{label:'🏠 거실',css:'linear-gradient(170deg,#4A3728 0%,#6B5040 30%,#8B6F5E 60%,#D4A574 100%)',icons:['🛋️','🖼️','🕯️']},
+};
+
+// ── Margaret SVG ─────────────────────────────────────────────
+function margaretSVG(speaking = false) {
+  return `<svg viewBox="30 70 220 210" width="300" height="285" style="filter:drop-shadow(0 8px 24px rgba(0,0,0,0.5))">
+    <defs><radialGradient id="sk" cx="50%" cy="40%"><stop offset="0%" stop-color="#FDE4D8"/><stop offset="100%" stop-color="#FDBCB4"/></radialGradient>
+    <radialGradient id="gw" cx="50%" cy="50%"><stop offset="0%" stop-color="#C4B5FD" stop-opacity="0.15"/><stop offset="100%" stop-color="#C4B5FD" stop-opacity="0"/></radialGradient></defs>
+    <ellipse cx="140" cy="180" rx="110" ry="100" fill="url(#gw)"/>
+    <ellipse cx="140" cy="148" rx="84" ry="92" fill="#D8D8D8"/>
+    <ellipse cx="140" cy="132" rx="80" ry="76" fill="#EBEBEB"/>
+    <ellipse cx="140" cy="172" rx="66" ry="74" fill="url(#sk)"/>
+    <ellipse cx="117" cy="166" rx="23" ry="19" fill="none" stroke="#7B6245" stroke-width="2.5"/>
+    <ellipse cx="163" cy="166" rx="23" ry="19" fill="none" stroke="#7B6245" stroke-width="2.5"/>
+    <line x1="94" y1="163" x2="78" y2="157" stroke="#7B6245" stroke-width="2"/>
+    <line x1="186" y1="163" x2="202" y2="157" stroke="#7B6245" stroke-width="2"/>
+    <ellipse cx="117" cy="166" rx="6" ry="8" fill="#3E2B1A" class="eye-l"/>
+    <ellipse cx="163" cy="166" rx="6" ry="8" fill="#3E2B1A" class="eye-r"/>
+    <circle cx="120" cy="163" r="2.2" fill="white" opacity=".9" class="eye-shine-l"/>
+    <circle cx="166" cy="163" r="2.2" fill="white" opacity=".9" class="eye-shine-r"/>
+    <path d="M103 148Q117 139 132 148" fill="none" stroke="#C0C0C0" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M148 148Q163 139 177 148" fill="none" stroke="#C0C0C0" stroke-width="2.2" stroke-linecap="round"/>
+    <circle cx="96" cy="188" r="14" fill="#FF9090" opacity="${speaking?.5:.3}"/>
+    <circle cx="184" cy="188" r="14" fill="#FF9090" opacity="${speaking?.5:.3}"/>
+    <path d="M138 179Q140 185 142 179" fill="none" stroke="#DFA09A" stroke-width="1.5"/>
+    <path d="${speaking?'M122 192Q140 218 158 192':'M125 195Q140 210 155 195'}" fill="${speaking?'#C4444450':'none'}" stroke="#C0736C" stroke-width="2.5" stroke-linecap="round" class="mouth"/>
+    <path d="M78 262Q78 240 110 234Q140 228 170 234Q202 240 202 262L202 290 78 290Z" fill="#7C3AED"/>
+    <path d="M114 240Q140 254 166 240" fill="none" stroke="#6D28D9" stroke-width="2"/>
+    ${[108,120,132,144,156,168].map((x,i)=>`<circle cx="${x}" cy="${237+Math.sin(i*.9)*3}" r="3.8" fill="#FFF8DC" stroke="#D4A520" stroke-width=".6" opacity=".85"/>`).join('')}
+  </svg>`;
+}
+
+// ── Scene Builder ────────────────────────────────────────────
+function buildScene(bgKey, subEn, subKr) {
+  const bg = BGS[bgKey] || BGS.kitchen;
+  const icons = bg.icons.map((ic,i) =>
+    `<span class="scene-icon" style="font-size:${26+i*8}px;left:${12+i*32}%;top:${8+i*20}%;animation:float ${5+i*2}s ease-in-out infinite">${ic}</span>`
+  ).join('');
+
+  return `<div class="scene">
+    <div class="scene-bg" style="background:${bg.css}"></div>
+    ${icons}
+    <div class="scene-grad"></div>
+    <div class="scene-char" id="charContainer">${margaretSVG(state.speaking)}</div>
+    <div class="scene-label"><span class="dot"></span>${bg.label}</div>
+    <div class="scene-sub" id="subtitle" style="display:${subEn?'block':'none'}">
+      <div class="en" id="subEn">${formatWords(subEn)}</div>
+      ${subKr?`<div class="kr">${subKr}</div>`:''}
+      <div class="wave" id="waveIndicator" style="display:${state.speaking?'flex':'none'}">
+        ${[0,1,2,3,4].map(i=>`<span style="animation:wave${i%3} ${.3+i*.08}s ease-in-out infinite alternate"></span>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function formatWords(text) {
+  if (!text) return '';
+  return text.split(/\s+/).map((w,i) => {
+    let cls = 'word';
+    if (state.speaking && state.wordIndex >= 0) {
+      if (i < state.wordIndex) cls += ' word-done';
+      else if (i === state.wordIndex) cls += ' word-current';
+      else cls += ' word-upcoming';
+    }
+    return `<span class="${cls}">${w}</span>`;
+  }).join(' ');
+}
+
+function updateSubtitle() {
+  const el = document.getElementById('subEn');
+  const wave = document.getElementById('waveIndicator');
+  const charC = document.getElementById('charContainer');
+  if (el && el.dataset.text) el.innerHTML = formatWords(el.dataset.text);
+  if (wave) wave.style.display = state.speaking ? 'flex' : 'none';
+  if (charC) charC.innerHTML = margaretSVG(state.speaking);
+}
+
+// ── Blink Animation ──────────────────────────────────────────
+setInterval(() => {
+  document.querySelectorAll('.eye-l,.eye-r').forEach(el => {
+    el.setAttribute('ry', '1');
+    setTimeout(() => el.setAttribute('ry', '8'), 150);
+  });
+  document.querySelectorAll('.eye-shine-l,.eye-shine-r').forEach(el => {
+    el.setAttribute('opacity', '0');
+    setTimeout(() => el.setAttribute('opacity', '.9'), 150);
+  });
+}, 3500);
+
+// ── Mouth Animation ──────────────────────────────────────────
+const mouths = [
+  'M125 195Q140 210 155 195',
+  'M122 192Q140 218 158 192',
+  'M127 195Q140 212 153 195',
+  'M130 196Q140 204 150 196',
+  'M125 195Q140 200 155 195',
+];
+let mouthFrame = 0;
+setInterval(() => {
+  if (!state.speaking) return;
+  mouthFrame = (mouthFrame + 1) % mouths.length;
+  document.querySelectorAll('.mouth').forEach(el => {
+    el.setAttribute('d', mouths[mouthFrame]);
+    el.setAttribute('fill', '#C4444450');
+  });
+}, 130);
+
+// ══════════════════════════════════════════════════════════════
+// SCREENS
+// ══════════════════════════════════════════════════════════════
+
+function showScreen(name) {
+  state.screen = name;
+  const renders = { intro: renderIntro, lang: renderLang, profiles: renderProfiles, video: renderVideo, friends: renderFriends, listen: renderListen };
+  if (renders[name]) renders[name]();
+  updateNav();
+}
+
+function renderIntro() {
+  app.innerHTML = `
+  <div style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F0A1F,#1A0F2E 50%,#0D1117);padding:24px;text-align:center;position:relative;overflow:hidden">
+    <div style="position:relative;z-index:1">
+      <div style="font-size:52px;margin-bottom:10px">🌏</div>
+      <h1 style="font-size:38px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px">SnapQ <span style="color:#A78BFA">Friends</span></h1>
+      <p style="font-size:15px;color:#C4B5FD;font-style:italic;font-weight:300;margin-bottom:44px;letter-spacing:.06em">Friends First. Fluency Follows.</p>
+      <button class="btn" style="animation:glow 2s infinite;padding:18px 52px;font-size:19px" onclick="TTS.activate();showScreen('lang')">START 🎉</button>
+      <p style="color:#6B7280;font-size:11px;margin-top:20px">☝️ 터치하면 음성이 활성화됩니다</p>
+    </div>
+  </div>`;
+}
+
+function renderLang() {
+  const flags = {us:`<svg viewBox="0 0 60 40" width="36" height="24"><rect width="60" height="40" fill="#B22234"/>${[0,1,2,3,4,5].map(i=>`<rect y="${i*6.15+3.08}" width="60" height="3.08" fill="white"/>`).join('')}<rect width="24" height="21.54" fill="#3C3B6E"/></svg>`,
+    jp:`<svg viewBox="0 0 60 40" width="36" height="24"><rect width="60" height="40" fill="white"/><circle cx="30" cy="20" r="12" fill="#BC002D"/></svg>`,
+    cn:`<svg viewBox="0 0 60 40" width="36" height="24"><rect width="60" height="40" fill="#DE2910"/><circle cx="12" cy="13" r="5" fill="#FFDE00"/></svg>`,
+    es:`<svg viewBox="0 0 60 40" width="36" height="24"><rect width="60" height="10" fill="#AA151B"/><rect y="10" width="60" height="20" fill="#F1BF00"/><rect y="30" width="60" height="10" fill="#AA151B"/></svg>`};
+  const ls=[{c:'us',n:'English',ok:true},{c:'jp',n:'日本語',s:'もうすぐ!'},{c:'cn',n:'中文',s:'即将推出!'},{c:'es',n:'Español',s:'¡Próximamente!'}];
+  app.innerHTML = `<div style="min-height:100dvh;background:#0F0A1F;padding:48px 24px;text-align:center">
+    <h2 style="font-size:22px;font-weight:700;margin-bottom:8px">🌍 Choose Your Language</h2>
+    <p style="color:#9CA3AF;font-size:14px;margin-bottom:32px">어떤 언어를 배울까요?</p>
+    <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
+      ${ls.map(l=>`<button onclick="${l.ok?`showScreen('profiles')`:''}" style="display:flex;align-items:center;gap:16px;background:${l.ok?'linear-gradient(135deg,#1E1B4B,#312E81)':'rgba(255,255,255,.04)'};border:${l.ok?'2px solid #6366F1':'1px solid rgba(255,255,255,.08)'};border-radius:16px;padding:16px 20px;opacity:${l.ok?1:.45}">
+        <span style="border-radius:6px;overflow:hidden;display:inline-flex;box-shadow:0 1px 3px rgba(0,0,0,.2)">${flags[l.c]}</span>
+        <span style="color:#fff;font-size:18px;font-weight:600;flex:1;text-align:left">${l.n}</span>
+        ${l.s?`<span style="color:#F59E0B;font-size:12px">${l.s}</span>`:''}
+        ${l.ok?`<span style="color:#4ADE80;font-size:22px">→</span>`:''}
+      </button>`).join('')}
+    </div>
+  </div>`;
+}
+
+function renderProfiles() {
+  const all=[
+    {id:'margaret',e:'👵',n:'Margaret',a:67,c:'Vermont',j:'은퇴 영어교사',g:'G',p:10,ok:true},
+    {id:'ethan',e:'👦',n:'Ethan',a:14,c:'Phoenix',j:'중학생',g:'G',p:10},
+    {id:'sofia',e:'👩‍🍳',n:'Sofia',a:31,c:'Miami',j:'셰프',g:'G',p:10},
+    {id:'mia',e:'👩‍🎤',n:'Mia',a:19,c:'NYC',j:'NYU',g:'C',p:20},
+    {id:'jenny',e:'👩‍⚕️',n:'Jenny',a:34,c:'LA',j:'UCLA 간호사',g:'C',p:20},
+    {id:'alex',e:'🧑‍🦱',n:'Alex',a:24,c:'LA',j:'UCLA 체대',g:'C',p:20},
+    {id:'priya',e:'👩‍💻',n:'Priya',a:26,c:'SF',j:'Google',g:'F',p:30},
+    {id:'david',e:'👨‍💼',n:'David',a:42,c:'Chicago',j:'Goldman',g:'F',p:30},
+    {id:'kevin',e:'👨‍💼',n:'Kevin',a:36,c:'NYC',j:'Samsung→Google',g:'F',p:40},
+  ];
+  const gc={G:{l:'🐢 GENTLE 초급',c:'#8B5CF6'},C:{l:'💬 CASUAL 중급',c:'#3B82F6'},F:{l:'🔥 FAST 고급',c:'#EF4444'}};
+  let html = `<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
+    <h2 style="font-size:20px;font-weight:700;text-align:center;margin-bottom:24px">👥 Choose Your Friend</h2>`;
+  ['G','C','F'].forEach(g => {
+    html += `<h3 style="color:${gc[g].c};font-size:13px;font-weight:600;margin-bottom:10px;padding-left:4px">${gc[g].l}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px">`;
+    all.filter(p=>p.g===g).forEach(p => {
+      html += `<button onclick="${p.ok?`showScreen('video')`:''}" style="background:${p.ok?`linear-gradient(150deg,${gc[g].c}18,${gc[g].c}30)`:'rgba(255,255,255,.03)'};border:${p.ok?`2px solid ${gc[g].c}50`:'1px solid rgba(255,255,255,.06)'};border-radius:16px;padding:14px 6px;text-align:center;opacity:${p.ok?1:.35}">
+        <div style="font-size:36px;margin-bottom:4px">${p.e}</div>
+        <div style="color:#fff;font-size:13px;font-weight:600">${p.n}</div>
+        <div style="color:#9CA3AF;font-size:10px">${p.a} · ${p.c}</div>
+        <div style="color:${gc[g].c};font-size:10px;margin-top:4px">${p.p}🪙</div>
+        ${!p.ok?'<div style="color:#6B7280;font-size:9px;margin-top:3px">🔒</div>':''}
+      </button>`;
+    });
+    html += `</div>`;
+  });
+  html += `</div>`;
+  app.innerHTML = html;
+}
+
+// ── Video Screen ─────────────────────────────────────────────
+let videoState = { idx: -1, showQ: false, answered: false, bgKey: 'kitchen', reply: '' };
+
+function renderVideo() {
+  videoState = { idx: -1, showQ: false, answered: false, bgKey: 'kitchen', reply: '' };
+  const line = videoState.idx >= 0 ? CH.intro[videoState.idx] : null;
+  const subEn = videoState.showQ ? (videoState.answered ? videoState.reply : CH.question.en) : (line?.en || '');
+  const subKr = videoState.showQ && !videoState.answered ? CH.question.kr : (!videoState.showQ ? (line?.kr || '') : '');
+
+  app.innerHTML = `<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+    <button onclick="TTS.stop();showScreen('profiles')" style="background:none;color:#9CA3AF;font-size:14px;margin-bottom:12px">← 뒤로</button>
+    <div id="sceneArea">${buildScene(videoState.bgKey, subEn, subKr)}</div>
+    <div style="text-align:center;margin-top:20px" id="videoControls">
+      <button class="btn" onclick="playIntro()">▶ 소개 영상 보기</button>
+    </div>
+    <div style="background:rgba(255,255,255,.05);border-radius:16px;padding:18px;margin-top:20px;border:1px solid rgba(255,255,255,.08)">
+      <div style="margin-bottom:8px">${CH.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <p style="color:#9CA3AF;font-size:13px;line-height:1.7">${CH.name}, ${CH.age}세 · ${CH.city}<br>${CH.job} · ${CH.reason}<br><span style="color:#A78BFA">💡 ${CH.desc}</span></p>
+    </div>
+  </div>`;
+}
+
+async function playIntro() {
+  const ctrl = document.getElementById('videoControls');
+  ctrl.innerHTML = '<p style="color:#6B7280;font-size:13px">🎤 Margaret가 말하고 있어요...</p>';
+
+  for (let i = 0; i < CH.intro.length; i++) {
+    videoState.idx = i;
+    if (i === 2) videoState.bgKey = 'garden';
+    if (i === 4) videoState.bgKey = 'cafe';
+    updateVideoScene();
+    await TTS.speak(CH.intro[i].en, CH.rate, CH.pitch);
+    await new Promise(r => setTimeout(r, 300));
+  }
+
+  videoState.showQ = true;
+  updateVideoScene();
+  await TTS.speak(CH.question.en, CH.rate, CH.pitch);
+
+  ctrl.innerHTML = `<div style="display:flex;gap:12px;justify-content:center">
+    <button class="btn btn-pink" style="padding:12px 28px;font-size:15px" onclick="answerQ('cats')">🐱 Cats!</button>
+    <button class="btn btn-orange" style="padding:12px 28px;font-size:15px" onclick="answerQ('dogs')">🐶 Dogs!</button>
+  </div>`;
+}
+
+async function answerQ(ans) {
+  videoState.answered = true;
+  videoState.reply = ans === 'dogs' ? "Oh wonderful! I have a dog named Biscuit! We'll get along great!" : "Cats are lovely too! My neighbor has the cutest cat!";
+  updateVideoScene();
+  await TTS.speak(videoState.reply, CH.rate, CH.pitch);
+  document.getElementById('videoControls').innerHTML = `<button class="btn btn-green" style="margin-top:8px" onclick="addFriend()">+ Add Friend — ${CH.price}🪙</button>`;
+}
+
+function addFriend() {
+  if (state.coins >= CH.price) {
+    state.coins -= CH.price;
+    state.friend = { int: 1 };
+  }
+  showScreen('friends');
+}
+
+function updateVideoScene() {
+  const line = videoState.idx >= 0 ? CH.intro[videoState.idx] : null;
+  const subEn = videoState.showQ ? (videoState.answered ? videoState.reply : CH.question.en) : (line?.en || '');
+  const subKr = videoState.showQ && !videoState.answered ? CH.question.kr : (!videoState.showQ ? (line?.kr || '') : '');
+  const area = document.getElementById('sceneArea');
+  if (area) {
+    area.innerHTML = buildScene(videoState.bgKey, subEn, subKr);
+    const subEl = document.getElementById('subEn');
+    if (subEl) subEl.dataset.text = subEn;
+  }
+}
+
+// ── Friends Screen ───────────────────────────────────────────
+function renderFriends() {
+  if (!state.friend) {
+    app.innerHTML = `<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:20px">💬 My Friends</h2>
+      <div style="text-align:center;color:#6B7280;margin-top:60px">
+        <div style="font-size:48px;margin-bottom:12px">🤷</div><p>아직 친구가 없어요!</p>
+        <button class="btn" style="margin-top:16px;padding:12px 28px;font-size:14px" onclick="showScreen('profiles')">친구 만들러 가기 →</button>
+      </div></div>`;
+  } else {
+    app.innerHTML = `<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
+      <h2 style="font-size:20px;font-weight:700;margin-bottom:20px">💬 My Friends</h2>
+      <button onclick="showScreen('listen')" style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:16px 18px;text-align:left;width:100%">
+        <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#8B5CF635,#8B5CF615);display:flex;align-items:center;justify-content:center;font-size:30px;border:2px solid #8B5CF650;position:relative">
+          👵
+          <div style="position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:#EF4444;color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #0F0A1F">1</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:16px;font-weight:600;margin-bottom:4px">Margaret <span style="color:#C4B5FD;font-size:12px;margin-left:6px">${'♥'.repeat(Math.min(state.friend.int,5))}${'♡'.repeat(Math.max(5-state.friend.int,0))}</span></div>
+          <div style="color:#9CA3AF;font-size:13px">"Hey dear! I tried a new coffee today..." 💬</div>
+        </div>
+        <div style="color:#6B7280;font-size:11px">방금</div>
+      </button>
+    </div>`;
+  }
+}
+
+// ── Listening Screen ─────────────────────────────────────────
+let listenState = { rnd: 0, phase: 'ready', sel: null, score: 0, saved: [], allS: [] };
+
+function renderListen() {
+  listenState = { rnd: 0, phase: 'ready', sel: null, score: 0, saved: [], allS: [] };
+  updateListen();
+}
+
+function updateListen() {
+  const d = CH.listening;
+  const ls = listenState;
+  const cur = d.rounds[ls.rnd];
+  const bgs = ['cafe','garden','living'];
+  const prev = ls.allS.slice(0, ls.allS.length - (ls.phase === 'listen' ? cur.sentences.length : 0));
+
+  let html = `<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <button onclick="TTS.stop();showScreen('friends')" style="background:none;color:#9CA3AF;font-size:14px">← 뒤로</button>
+      <span style="color:#C4B5FD;font-size:13px;font-weight:600">🎧 ${d.topic} · R${ls.rnd+1}/${d.rounds.length}</span>
+      <span style="color:#FCD34D;font-size:13px">⭐ ${ls.score}</span>
+    </div>
+    <div style="height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:14px">
+      <div style="height:100%;border-radius:2px;background:linear-gradient(90deg,#8B5CF6,#6366F1);width:${((ls.rnd+(ls.phase==='done'?1:0))/d.rounds.length)*100}%;transition:width .5s"></div>
+    </div>`;
+
+  if (ls.phase !== 'done') {
+    html += `<div id="sceneArea">${buildScene(bgs[ls.rnd], ls.phase==='listen'?ls.currentSub?.en||'':'', '')}</div>`;
+  }
+
+  // Prev sentences
+  if ((ls.phase === 'listen' || ls.phase === 'q') && prev.length > 0) {
+    html += `<div style="background:rgba(139,92,246,.08);border-radius:12px;padding:12px;margin-top:12px;border:1px solid rgba(139,92,246,.15)">
+      <div style="color:#9CA3AF;font-size:10px;margin-bottom:6px">📖 이전 대사</div>
+      ${prev.map(s=>`<p style="color:#D1D5DB;font-size:13px;line-height:1.6;margin:3px 0">${s.en}</p>`).join('')}
+    </div>`;
+  }
+
+  if (ls.phase === 'ready') {
+    html += `<div style="text-align:center;margin-top:24px">
+      <p style="color:#C4B5FD;font-size:14px;margin-bottom:6px">Round ${ls.rnd+1}: ${cur.sentences.length}문장!</p>
+      <p style="color:#6B7280;font-size:12px;margin-bottom:20px">${ls.rnd===0?'🔊 소리에 집중하세요!':'📖 이전 문장 텍스트 공개!'}</p>
+      <button class="btn" onclick="playListenRound()">🎧 듣기 시작!</button>
+    </div>`;
+  }
+
+  if (ls.phase === 'q') {
+    html += `<div style="margin-top:16px">
+      <div style="background:rgba(99,102,241,.12);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(99,102,241,.25)">
+        <p style="font-size:15px;font-weight:600;margin-bottom:3px">${cur.q.text}</p>
+        <p style="color:#A78BFA;font-size:12px">${cur.q.kr}</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${cur.q.opts.map((o,i)=>{
+          const isA=i===cur.q.ans,isS=i===ls.sel;
+          const bg=ls.sel===null?'rgba(255,255,255,.07)':isA?'rgba(74,222,128,.18)':isS?'rgba(239,68,68,.18)':'rgba(255,255,255,.04)';
+          const brd=ls.sel===null?'1px solid rgba(255,255,255,.12)':isA?'2px solid #4ADE80':isS?'2px solid #EF4444':'1px solid rgba(255,255,255,.08)';
+          return `<button onclick="${ls.sel===null?`answerListen(${i})`:''}" style="background:${bg};border:${brd};border-radius:12px;padding:12px;color:#fff;font-size:15px;font-weight:500">${o}${ls.sel!==null&&isA?' ✅':''}${isS&&!isA?' ❌':''}</button>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (ls.phase === 'res') {
+    html += `<div style="margin-top:16px">
+      <div style="background:rgba(255,255,255,.04);border-radius:14px;padding:14px;margin-bottom:12px">
+        <div style="color:#9CA3AF;font-size:11px;margin-bottom:6px">📖 해석</div>
+        ${cur.sentences.map(s=>`<div style="margin-bottom:5px"><p style="color:#E5E7EB;font-size:13px">${s.en}</p><p style="color:#A78BFA;font-size:12px">${s.kr}</p></div>`).join('')}
+      </div>
+      <button class="btn btn-orange" style="width:100%" onclick="showListenExpr()">⭐ 핵심 표현 듣기</button>
+    </div>`;
+  }
+
+  if (ls.phase === 'expr') {
+    html += `<div style="margin-top:16px;text-align:center">
+      <div style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.08));border-radius:16px;padding:22px;margin-bottom:16px;border:2px solid rgba(245,158,11,.25)">
+        <div style="font-size:11px;color:#FCD34D;margin-bottom:8px;font-weight:600">⭐ KEY EXPRESSION</div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:4px">"${cur.expr.en}"</div>
+        <div style="color:#FCD34D;font-size:14px">${cur.expr.kr}</div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center">
+        <button class="btn btn-green" style="padding:12px 24px;font-size:14px" onclick="saveListenExpr()">📋 Save + Next</button>
+        <button onclick="nextListenRound()" style="background:rgba(255,255,255,.08);color:#9CA3AF;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 24px;font-size:14px">Skip →</button>
+      </div>
+    </div>`;
+  }
+
+  if (ls.phase === 'done') {
+    html += `<div style="text-align:center;margin-top:32px">
+      <div style="font-size:64px;margin-bottom:12px">${ls.score>=2?'🎉':'💪'}</div>
+      <h2 style="font-size:24px;font-weight:700;margin-bottom:8px">${ls.score>=2?'Amazing!':'Good Try!'}</h2>
+      <p style="color:#C4B5FD;font-size:16px;margin-bottom:12px">Score: ${ls.score}/${d.rounds.length} ${ls.score>=2?'✅ PASS!':''}</p>
+      ${ls.saved.length>0?`<div style="background:rgba(74,222,128,.08);border-radius:14px;padding:14px;margin-bottom:16px;text-align:left;border:1px solid rgba(74,222,128,.15)">
+        <div style="color:#4ADE80;font-size:12px;font-weight:600;margin-bottom:8px">📋 Expression Vault 저장!</div>
+        ${ls.saved.map(e=>`<div style="color:#E5E7EB;font-size:13px;margin-bottom:4px">✦ <strong>${e.en}</strong> — ${e.kr}</div>`).join('')}
+      </div>`:''}
+      <div style="background:rgba(139,92,246,.08);border-radius:14px;padding:14px;margin-bottom:20px;border:1px solid rgba(139,92,246,.15)">
+        <p style="color:#C4B5FD;font-size:13px">🪙 +${ls.score>=2?15:5} &nbsp; ♥ +2</p>
+      </div>
+      <button class="btn" onclick="finishListen()">계속하기 →</button>
+    </div>`;
+  }
+
+  html += `</div>`;
+  app.innerHTML = html;
+  // Store text for word-tracking update
+  const subEl = document.getElementById('subEn');
+  if (subEl && ls.currentSub) subEl.dataset.text = ls.currentSub.en;
+}
+
+async function playListenRound() {
+  const ls = listenState;
+  const cur = CH.listening.rounds[ls.rnd];
+  ls.phase = 'listen'; ls.sel = null;
+  updateListen();
+
+  for (const s of cur.sentences) {
+    ls.allS.push(s);
+    ls.currentSub = s;
+    updateListen();
+    const subEl = document.getElementById('subEn');
+    if (subEl) subEl.dataset.text = s.en;
+    await TTS.speak(s.en, CH.rate, CH.pitch);
+    await new Promise(r => setTimeout(r, 250));
+  }
+  ls.currentSub = null;
+  ls.phase = 'q';
+  updateListen();
+}
+
+function answerListen(i) {
+  const ls = listenState;
+  ls.sel = i;
+  const ok = i === CH.listening.rounds[ls.rnd].q.ans;
+  if (ok) ls.score++;
+  if (navigator.vibrate) navigator.vibrate(ok ? [50] : [80,40,80]);
+  updateListen();
+  setTimeout(() => { ls.phase = 'res'; updateListen(); }, 700);
+}
+
+async function showListenExpr() {
+  listenState.phase = 'expr';
+  updateListen();
+  await TTS.speak(CH.listening.rounds[listenState.rnd].expr.en, 0.7, CH.pitch);
+}
+
+function saveListenExpr() {
+  const e = CH.listening.rounds[listenState.rnd].expr;
+  if (!listenState.saved.find(x => x.en === e.en)) listenState.saved.push(e);
+  nextListenRound();
+}
+
+function nextListenRound() {
+  if (listenState.rnd < CH.listening.rounds.length - 1) {
+    listenState.rnd++;
+    listenState.phase = 'ready';
+    listenState.sel = null;
+  } else {
+    listenState.phase = 'done';
+  }
+  updateListen();
+}
+
+function finishListen() {
+  if (state.friend) state.friend.int++;
+  state.coins += listenState.score >= 2 ? 15 : 5;
+  showScreen('friends');
+}
+
+// ── Nav ──────────────────────────────────────────────────────
+function updateNav() {
+  const show = !['intro','lang'].includes(state.screen);
+  let nav = document.getElementById('mainNav');
+  if (!show) { if (nav) nav.remove(); return; }
+  if (!nav) {
+    nav = document.createElement('div');
+    nav.id = 'mainNav'; nav.className = 'nav';
+    document.body.appendChild(nav);
+  }
+  const items = [{i:'🏠',l:'Home',s:'profiles'},{i:'💬',l:'Friends',s:'friends'},{i:'📋',l:'Vault',s:'vault'},{i:'🪙',l:state.coins,s:'coins'}];
+  nav.innerHTML = items.map(n =>
+    `<button class="${state.screen===n.s?'active':''}" onclick="${n.s==='profiles'||n.s==='friends'?`showScreen('${n.s}')`:''}">
+      <span class="icon">${n.i}</span>${n.l}
+    </button>`
+  ).join('');
+}
+
+// ── Init ─────────────────────────────────────────────────────
+showScreen('intro');
+</script>
+</body>
+</html>
