@@ -59,29 +59,20 @@ chars:[
 {id:'amara',e:'👩',n:'Amara',a:31,c:'Cape Town·Safari',j:'아프리카 가이드',pitch:'사파리 투어, 자연, 안전 영어!',rate:.85,ok:0,tags:['아프리카','사파리'],flag:'🇿🇦',dest:'아프리카',photo:'https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
 {id:'miaNZ',e:'👩',n:'Mia',a:26,c:'Auckland·Queenstown',j:'NZ 어드벤처',pitch:'번지점프, 캠핑, 렌터카!',rate:.85,ok:0,tags:['뉴질랜드','모험'],flag:'🇳🇿',dest:'뉴질랜드',photo:'https://images.unsplash.com/photo-1469521669194-babb45599def?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
 ]},
-{id:'food',icon:'🍳',name:'요리 영어',en:'Cooking English',desc:'레시피, 쿠킹클래스, 음식 대화',level:'GENTLE',lc:'#F59E0B',
+{id:'situational',icon:'🎯',name:'상황별 영어',en:'Situational English',desc:'어떤 상황이 필요해? 골라봐!',level:'ALL',lc:'#EC4899',carousel:true,
 chars:[
-{id:'sofia',e:'👩‍🍳',n:'Sofia',a:31,c:'Miami',photo:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&q=80',j:'쿠바계 셰프',pitch:'음식으로 쉽게 영어 시작!',rate:.8,ok:1,tags:['요리','맛집','라틴'],
+{id:'sofia',e:'👩‍🍳',n:'Sofia',a:31,c:'Miami',photo:'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=400&q=80',j:'쿠바계 셰프',pitch:'레시피, 쿠킹클래스 영어!',rate:.8,ok:1,flag:'🍳',dest:'요리',hot:'',tags:['요리','맛집','라틴'],
 intro:[{en:"Hola! I mean, hello! I'm Sofia.",kr:"올라! 안녕하세요! 소피아예요."},{en:"I'm a chef in Miami.",kr:"마이애미 셰프예요."},{en:"My husband is Korean!",kr:"남편이 한국 사람이에요!"}],
 question:{en:"What's your favorite food?",kr:"좋아하는 음식은?"},answers:{korean:"I love Korean food too!",pizza:"Pizza is great!"},
-topics:[{name:'My Best Recipe',icon:'🍲',rounds:[{ss:[{en:"Today I'll tell you about my grandmother's recipe.",kr:"할머니 레시피를 알려줄게요."},{en:"It's called Ropa Vieja — old clothes in Spanish!",kr:"로파 비에하 — '낡은 옷'이에요!"}],q:{t:"What does Ropa Vieja mean?",k:"로파 비에하 뜻은?",o:["New dish","Old clothes","Hot soup","Red meat"],a:1},ex:{en:"It means",kr:"~라는 뜻"}}]}]}
-]},
-{id:'medical',icon:'🏥',name:'병원 & 건강',en:'Medical English',desc:'진료예약, 증상설명, 약국, 응급상황',level:'CASUAL',lc:'#EF4444',
-chars:[{id:'jenny',e:'👩‍⚕️',n:'Jenny',a:34,c:'LA',photo:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=80',j:'UCLA 간호사',pitch:'한영 이중언어! 의료영어 전문!',rate:.85,ok:0,tags:['건강','의료','미국생활'],intro:[],question:{},answers:{},topics:[]}]},
-{id:'finance',icon:'💰',name:'은행 & 금융',en:'Banking & Finance',desc:'계좌개설, 환전, 투자상담, 비즈니스',level:'FAST',lc:'#F59E0B',
-chars:[{id:'david',e:'👨‍💼',n:'David',a:42,c:'Chicago',photo:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80',j:'Goldman Sachs VP',pitch:'네이티브 속도 비즈니스 영어!',rate:.95,ok:0,tags:['금융','투자','와인'],intro:[],question:{},answers:{},topics:[]}]},
-{id:'tech',icon:'💻',name:'IT & 테크',en:'Tech English',desc:'코딩 토론, 스타트업, 실리콘밸리 영어',level:'FAST',lc:'#3B82F6',
-chars:[{id:'priya',e:'👩‍💻',n:'Priya',a:26,c:'SF',photo:'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&q=80',j:'Google 엔지니어',pitch:'실리콘밸리 실무 영어!',rate:.9,ok:0,tags:['AI','스타트업','테크'],intro:[],question:{},answers:{},topics:[]}]},
-{id:'kculture',icon:'🎤',name:'K-Culture',en:'Hallyu English',desc:'K-pop 토크, 드라마 리뷰, 한류 소개',level:'CASUAL',lc:'#EC4899',
-chars:[{id:'mia',e:'👩‍🎤',n:'Mia',a:19,c:'NYC',photo:'https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=400&q=80',j:'NYU 미디어학과',pitch:'트렌디한 진짜 미국 영어!',rate:.9,ok:0,tags:['K-pop','뷰티','SNS'],intro:[],question:{},answers:{},topics:[]}]},
-{id:'sports',icon:'🏋️',name:'스포츠 & 라이프',en:'Sports & Lifestyle',desc:'헬스, 서핑, 캠핑, 편한 브로 대화',level:'CASUAL',lc:'#10B981',
-chars:[{id:'alex',e:'🧑‍🦱',n:'Alex',a:24,c:'LA',photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',j:'UCLA 체대',pitch:'편한 브로 대화!',rate:.9,ok:0,tags:['스포츠','서핑','캠핑'],intro:[],question:{},answers:{},topics:[]}]},
-{id:'campus',icon:'🎓',name:'유학 & 캠퍼스',en:'Campus English',desc:'수업등록, 교수면담, 기숙사, 동아리',level:'CASUAL',lc:'#6366F1',
-chars:[{id:'emma',e:'👩',n:'Emma',a:20,c:'Boston',photo:'https://images.unsplash.com/photo-1562774053-701939374585?w=400&q=80',j:'Harvard 학생',pitch:'캠퍼스 라이프 완전정복!',rate:.85,ok:0,tags:['유학','기숙사','동아리'],intro:[],question:{},answers:{},topics:[]}]},
-{id:'biz',icon:'💼',name:'비즈니스',en:'Business English',desc:'이메일, 회의, 협상, 보고서 영어',level:'FAST',lc:'#8B5CF6',
-chars:[
-{id:'kevin',e:'👨‍💼',n:'Kevin',a:36,c:'NYC',photo:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80',j:'Samsung→Google',pitch:'면접관 경험 500회+!',rate:.9,ok:0,tags:['면접','연봉협상'],intro:[],question:{},answers:{},topics:[]},
-{id:'rachel',e:'👩‍💼',n:'Rachel',a:29,c:'London',photo:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80',j:'영국 컨설팅',pitch:'이메일/미팅 영어 전문!',rate:.85,ok:0,tags:['이메일','미팅'],intro:[],question:{},answers:{},topics:[]},
+topics:[{name:'My Best Recipe',icon:'🍲',rounds:[{ss:[{en:"Today I'll tell you about my grandmother's recipe.",kr:"할머니 레시피를 알려줄게요."},{en:"It's called Ropa Vieja — old clothes in Spanish!",kr:"로파 비에하 — '낡은 옷'이에요!"}],q:{t:"What does Ropa Vieja mean?",k:"로파 비에하 뜻은?",o:["New dish","Old clothes","Hot soup","Red meat"],a:1},ex:{en:"It means",kr:"~라는 뜻"}}]}]},
+{id:'jenny',e:'👩‍⚕️',n:'Jenny',a:34,c:'LA',photo:'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&q=80',j:'UCLA 간호사',pitch:'진료예약, 증상설명!',rate:.85,ok:0,flag:'🏥',dest:'병원',tags:['건강','의료'],intro:[],question:{},answers:{},topics:[]},
+{id:'david',e:'👨‍💼',n:'David',a:42,c:'Chicago',photo:'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=400&q=80',j:'Goldman Sachs VP',pitch:'계좌, 환전, 투자 영어!',rate:.95,ok:0,flag:'💰',dest:'금융',tags:['금융','투자'],intro:[],question:{},answers:{},topics:[]},
+{id:'priya',e:'👩‍💻',n:'Priya',a:26,c:'SF',photo:'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=400&q=80',j:'Google 엔지니어',pitch:'코딩, 스타트업 영어!',rate:.9,ok:0,flag:'💻',dest:'IT',tags:['AI','스타트업'],intro:[],question:{},answers:{},topics:[]},
+{id:'mia',e:'👩‍🎤',n:'Mia',a:19,c:'NYC',photo:'https://images.unsplash.com/photo-1517154421773-0529f29ea451?w=400&q=80',j:'NYU 미디어학과',pitch:'K-pop, 드라마, SNS!',rate:.9,ok:0,flag:'🎤',dest:'K-pop',tags:['K-pop','뷰티'],intro:[],question:{},answers:{},topics:[]},
+{id:'alex',e:'🧑‍🦱',n:'Alex',a:24,c:'LA',photo:'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=400&q=80',j:'UCLA 체대',pitch:'헬스, 서핑, 캠핑 영어!',rate:.9,ok:0,flag:'🏋️',dest:'스포츠',tags:['스포츠','서핑'],intro:[],question:{},answers:{},topics:[]},
+{id:'emma',e:'👩',n:'Emma',a:20,c:'Boston',photo:'https://images.unsplash.com/photo-1562774053-701939374585?w=400&q=80',j:'Harvard 학생',pitch:'수업, 기숙사, 동아리!',rate:.85,ok:0,flag:'🎓',dest:'유학',tags:['유학','기숙사'],intro:[],question:{},answers:{},topics:[]},
+{id:'kevin',e:'👨‍💼',n:'Kevin',a:36,c:'NYC',photo:'https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&q=80',j:'Samsung→Google',pitch:'이메일, 회의, 협상!',rate:.9,ok:0,flag:'💼',dest:'비즈니스',tags:['면접','비즈니스'],intro:[],question:{},answers:{},topics:[]},
+{id:'rachel',e:'👩‍💼',n:'Rachel',a:29,c:'London',photo:'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&q=80',j:'영국 컨설팅',pitch:'미팅, 보고서 영어!',rate:.85,ok:0,flag:'💼',dest:'비즈니스',tags:['이메일','미팅'],intro:[],question:{},answers:{},topics:[]},
 ]},
 ];
 function findChar(id){for(const cat of CATS)for(const ch of cat.chars)if(ch.id===id)return ch;return null}
@@ -143,8 +134,8 @@ function rMain(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F
 <div style="display:flex;align-items:center;gap:14px"><div style="font-size:36px">👥</div><div style="flex:1">
 <div style="font-size:20px;font-weight:800;color:#fff">Friends Mode</div>
 <div style="color:#C4B5FD;font-size:14px;margin-top:4px;font-weight:600">AI 친구와 캐주얼 영어회화</div>
-<div style="color:#E5E7EB;font-size:13px;margin-top:8px;line-height:1.8">일상 · 여행 · 병원 · 금융 · IT · K-pop · 스포츠 · 유학 · 비즈니스</div>
-<div style="display:inline-block;background:#4ADE80;color:#052E16;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:8px">12 캐릭터 · 9 카테고리</div>
+<div style="color:#E5E7EB;font-size:13px;margin-top:8px;line-height:1.8">🗣️ 일상 수다 · ✈️ 여행 영어 · 🎯 상황별 영어</div>
+<div style="display:inline-block;background:#4ADE80;color:#052E16;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:8px">12 캐릭터 · 3 카테고리</div>
 </div><span style="color:#4ADE80;font-size:24px">→</span></div></button>
 
 <button class="fadeUp d2" onclick="go('pro')" style="width:100%;background:#2D1810;border:2px solid #F59E0B80;border-radius:20px;padding:24px 20px;text-align:left">
