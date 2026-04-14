@@ -25,7 +25,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;-webkit-tap-h
 <div id="app" style="max-width:420px;margin:0 auto"></div>
 <script>
 const app=document.getElementById('app');
-let S={scr:'intro',char:null,fr:{},coins:100,topic:null};
+let S={scr:'intro',char:null,fr:{},coins:100,topic:null,saved:[]};
 
 // ═══ TTS ═══
 function speak(t,r=.85){return new Promise(res=>{if(!window.speechSynthesis){res();return}speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='en-US';u.rate=r;u.onend=res;u.onerror=res;speechSynthesis.speak(u);setTimeout(res,Math.max(t.length*80,3000))})}
@@ -103,7 +103,7 @@ return`<div style="position:relative;width:100%;height:360px;border-radius:20px;
 function go(n){S.scr=n;if(R[n])R[n]();updNav()}
 function updNav(){const sh=!['intro','lang'].includes(S.scr);let n=document.getElementById('nv');if(!sh){if(n)n.remove();return}
 if(!n){n=document.createElement('div');n.id='nv';n.className='nav';document.body.appendChild(n)}
-n.innerHTML=[{i:'🏠',l:'Home',s:'main'},{i:'👥',l:'Friends',s:'friends'},{i:'💼',l:'Pro',s:'pro'},{i:'🪙',l:S.coins,s:'coins'}].map(x=>`<button class="${S.scr===x.s?'on':''}" onclick="${['main','friends','pro'].includes(x.s)?`go('${x.s}')`:''}"><span style="font-size:20px">${x.i}</span>${x.l}</button>`).join('')}
+n.innerHTML=[{i:'🏠',l:'Home',s:'main'},{i:'💬',l:'My Rooms',s:'myrooms'},{i:'📋',l:'Note',s:'notebook'},{i:'🪙',l:S.coins,s:'coins'}].map(x=>`<button class="${S.scr===x.s?'on':''}" onclick="${['main','myrooms','notebook'].includes(x.s)?`go('${x.s}')`:''}"><span style="font-size:20px">${x.i}</span>${x.l}</button>`).join('')}
 
 // ═══════════════════════════════════════════════════════════════
 // SCREENS
@@ -293,15 +293,86 @@ function rPro(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;
 </div>`}
 
 // ── FRIENDS LIST ──
-function rFriends(){const ids=Object.keys(S.fr);let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px"><h2 style="font-size:20px;font-weight:700;margin-bottom:20px">💬 My Friends</h2>`;
+function rMyRooms(){const ids=Object.keys(S.fr);
+let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
+<h2 style="font-size:20px;font-weight:700;margin-bottom:4px">💬 My Rooms</h2>
+<p style="color:#D1D5DB;font-size:12px;margin-bottom:20px">${ids.length}명의 친구</p>`;
 if(!ids.length)h+=`<div style="text-align:center;color:#9CA3AF;margin-top:60px"><div style="font-size:48px;margin-bottom:12px">🤷</div><p>아직 친구가 없어요!</p><button class="b" style="margin-top:16px;padding:12px 28px;font-size:14px" onclick="go('catList')">친구 만들러 가기 →</button></div>`;
-else ids.forEach(id=>{const ch=findChar(id),f=S.fr[id];if(!ch)return;const hearts=Math.min(f.int,5);
-h+=`<button onclick="S.char='${id}';go('topics')" style="width:100%;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:16px 18px;text-align:left;margin-bottom:10px">
-<div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#8B5CF635,#8B5CF615);display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #8B5CF650;position:relative">${ch.e}
-<div style="position:absolute;top:-2px;right:-2px;width:16px;height:16px;border-radius:50%;background:#EF4444;color:white;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #0F0A1F">1</div></div>
-<div style="flex:1"><div style="font-size:15px;font-weight:600">${ch.n} <span style="color:#C4B5FD;font-size:11px">${'♥'.repeat(hearts)}${'♡'.repeat(5-hearts)}</span></div>
-<div style="color:#D1D5DB;font-size:12px">Ready to chat! 💬</div></div></button>`});
+else ids.forEach(id=>{const ch=findChar(id),f=S.fr[id];if(!ch)return;
+const days=Math.floor((Date.now()-(f.last||Date.now()))/(1000*60*60*24));
+const mood=days>=7?'😴':days>=3?'😢':f.int>=3?'😎':'😊';
+const moodMsg=days>=7?'Zzz... 일주일이나!':days>=3?'I miss you~ 보고싶어!':f.int>=3?'Great streak!':'Come chat!';
+const moodBg=days>=3?'rgba(245,158,11,.1)':'rgba(74,222,128,.08)';
+const moodBorder=days>=3?'rgba(245,158,11,.25)':'rgba(74,222,128,.2)';
+f.last=f.last||Date.now();
+h+=`<button onclick="S.char='${id}';go('topics')" style="width:100%;background:${moodBg};border:1px solid ${moodBorder};border-radius:18px;padding:16px 18px;text-align:left;margin-bottom:10px;display:flex;align-items:center;gap:14px">
+<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#8B5CF630,#8B5CF615);display:flex;align-items:center;justify-content:center;font-size:30px;border:2px solid #8B5CF650;position:relative">${ch.e}
+<div style="position:absolute;bottom:-2px;right:-2px;font-size:16px">${mood}</div>
+<div style="position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#EF4444;color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #0F0A1F">1</div></div>
+<div style="flex:1">
+<div style="font-size:16px;font-weight:700">${ch.n}'s Room</div>
+<div style="color:#E5E7EB;font-size:12px;margin-top:2px">${ch.a}세 · ${ch.c}</div>
+<div style="margin-top:6px;font-size:12px;padding:3px 10px;border-radius:8px;display:inline-block;${days>=3?'background:rgba(245,158,11,.15);color:#FCD34D':'background:rgba(74,222,128,.12);color:#4ADE80'}">${mood} ${moodMsg}</div>
+<div style="color:#C4B5FD;font-size:11px;margin-top:4px">📩 새 음성 메시지가 와있어요!</div>
+</div></button>`});
 app.innerHTML=h+`</div>`}
+
+// ═══ NOTEBOOK (암기노트!) ═══
+let NB={mode:'study',qi:0,blanks:2,showKr:{}};
+function rNotebook(){NB={mode:'study',qi:0,blanks:2,showKr:{}};rfNB()}
+function rfNB(){
+let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
+<h2 style="font-size:20px;font-weight:700;margin-bottom:4px">📋 암기노트</h2>
+<p style="color:#D1D5DB;font-size:12px;margin-bottom:16px">${S.saved.length}개 표현 저장됨</p>
+<div style="display:flex;gap:8px;margin-bottom:20px">
+<button onclick="NB.mode='study';rfNB()" style="flex:1;padding:12px;border-radius:14px;font-size:14px;font-weight:700;${NB.mode==='study'?'background:#4F46E5;color:#fff;border:2px solid #6366F1':'background:rgba(255,255,255,.08);color:#D1D5DB;border:1px solid rgba(255,255,255,.15)'}">📖 학습모드</button>
+<button onclick="NB.mode='test';NB.qi=0;rfNB()" style="flex:1;padding:12px;border-radius:14px;font-size:14px;font-weight:700;${NB.mode==='test'?'background:#EF4444;color:#fff;border:2px solid #F87171':'background:rgba(255,255,255,.08);color:#D1D5DB;border:1px solid rgba(255,255,255,.15)'}">🎯 시험모드</button>
+</div>`;
+
+if(S.saved.length===0){
+h+=`<div style="text-align:center;color:#9CA3AF;margin-top:40px"><div style="font-size:48px;margin-bottom:12px">📝</div><p>아직 저장한 표현이 없어요!</p><p style="font-size:12px;margin-top:8px">친구와 대화하면서 표현을 저장해보세요!</p></div>`;
+}else if(NB.mode==='study'){
+// ── STUDY MODE ──
+S.saved.forEach((item,i)=>{
+h+=`<div onclick="NB.showKr[${i}]=!NB.showKr[${i}];rfNB()" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:14px;padding:14px 16px;margin-bottom:8px;cursor:pointer">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:11px;color:#9CA3AF">${item.from||''}</span>
+<button onclick="event.stopPropagation();speak('${item.en.replace(/'/g,"\\'")}',0.75)" style="background:rgba(139,92,246,.2);color:#C4B5FD;font-size:10px;padding:2px 8px;border-radius:6px;margin-left:auto">🔊</button>
+</div>
+<div style="font-size:16px;font-weight:700;color:#fff;margin-top:6px;line-height:1.6">${item.en}</div>
+${NB.showKr[i]?`<div style="color:#FCD34D;font-size:14px;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.1)">→ ${item.kr}</div>`:`<div style="color:#6B7280;font-size:11px;margin-top:4px">👆 터치하면 해석!</div>`}
+</div>`;
+});
+}else{
+// ── TEST MODE ──
+if(NB.qi>=S.saved.length)NB.qi=0;
+const item=S.saved[NB.qi];
+const words=item.en.split(' ');
+const blankCount=Math.min(NB.blanks,words.length-1);
+const blankIdx=[];
+while(blankIdx.length<blankCount){const r=Math.floor(Math.random()*words.length);if(!blankIdx.includes(r))blankIdx.push(r)}
+const display=words.map((w,i)=>blankIdx.includes(i)?`<span style="display:inline-block;min-width:60px;border-bottom:3px solid #6366F1;margin:0 3px;text-align:center;color:transparent">${w}</span>`:w).join(' ');
+
+h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+<span style="color:#C4B5FD;font-size:14px;font-weight:700">Q${NB.qi+1} / ${S.saved.length}</span>
+<div style="display:flex;gap:6px">${['Easy:1','Normal:2','Hard:3'].map((x,i)=>`<button onclick="NB.blanks=${i+1};rfNB()" style="font-size:10px;padding:4px 8px;border-radius:6px;${NB.blanks===i+1?'background:#4F46E5;color:#fff':'background:rgba(255,255,255,.08);color:#9CA3AF'}">${x.split(':')[0]}</button>`).join('')}</div>
+</div>
+
+<div style="background:#FAFAFA;border-radius:16px;padding:20px;margin-bottom:16px;border:2px solid #6366F1">
+<div style="font-size:12px;color:#6B7280;margin-bottom:8px">Korean hint:</div>
+<div style="font-size:15px;color:#374151;margin-bottom:16px;font-weight:600">${item.kr}</div>
+<div style="font-size:20px;font-weight:700;color:#1F2937;line-height:2">${display}</div>
+<div style="color:#9CA3AF;font-size:11px;margin-top:12px">🎤 빈칸을 채워서 전체 문장을 말하세요!</div>
+</div>
+
+<div style="display:flex;gap:8px">
+<button onclick="NB.qi=(NB.qi+1)%S.saved.length;rfNB()" style="flex:1;background:rgba(255,255,255,.1);color:#D1D5DB;border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:12px;font-size:14px;font-weight:600">다음 →</button>
+<button onclick="speak('${item.en.replace(/'/g,"\\'")}',0.75)" style="background:rgba(139,92,246,.2);color:#C4B5FD;border:1px solid rgba(139,92,246,.3);border-radius:14px;padding:12px 20px;font-size:14px">🔊 정답</button>
+</div>`;
+}
+app.innerHTML=h+`</div>`}
+
+function rFriends(){go('myrooms')}
 
 // ── VIDEO / TOPICS / LISTEN (기존 기능) ──
 let _vb=false;
@@ -418,7 +489,7 @@ allS.forEach((s,i)=>{const isK=keyE.find(e=>s.en.includes(e.en));h+=`<div style=
 <div style="flex:1;cursor:pointer" onclick="showKr('${s.kr.replace(/'/g,"\\\\'")}')">
 ${isK?'<span style="background:#F59E0B;color:#fff;font-size:9px;padding:2px 6px;border-radius:4px;font-weight:700">암기필수</span> ':''}<span style="font-size:14px;color:#1F2937;line-height:1.6;${isK?'font-weight:700':''}">${s.en}</span>
 </div>
-<button onclick="this.textContent='✅';this.style.background='#DEF7EC'" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:8px;padding:4px 8px;font-size:11px;color:#374151;font-weight:600;flex-shrink:0">📋저장</button>
+<button onclick="if(!S.saved.find(x=>x.en===this.dataset.en)){S.saved.push({en:this.dataset.en,kr:this.dataset.kr,from:'${ch.n}'})};this.textContent='✅';this.style.background='#DEF7EC'" data-en="${s.en.replace(/"/g,'&quot;')}" data-kr="${s.kr.replace(/"/g,'&quot;')}" style="background:#F3F4F6;border:1px solid #D1D5DB;border-radius:8px;padding:4px 8px;font-size:11px;color:#374151;font-weight:600;flex-shrink:0">📋저장</button>
 </div>`});
 h+=`</div><div id="krBar" style="background:#1E1B4B;border-radius:12px;padding:12px 16px;margin-top:12px;text-align:center;border:1px solid #6366F180"><span style="color:#C4B5FD;font-size:13px">👆 문장을 터치하면 해석이 여기에!</span></div><div style="text-align:center;margin-top:16px"><button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A);padding:14px 36px;font-size:15px" onclick="fL()">✅ 대화하러 가기!</button></div>`}
 if(L.ph==='done'){h+=`<div style="text-align:center;margin-top:24px"><div style="font-size:48px;margin-bottom:8px">${L.sc>=2?'🎉':'💪'}</div><h2 style="font-size:22px;font-weight:700;margin-bottom:6px">${L.sc>=2?'Great!':'Good Try!'}</h2><p style="color:#C4B5FD;font-size:14px;margin-bottom:16px">Score: ${L.sc}/${tp.rounds.length}</p><button class="b" style="background:linear-gradient(135deg,#F59E0B,#EF4444)" onclick="L.ph='board';rfL()">📝 문장 리뷰 →</button></div>`}
@@ -680,7 +751,7 @@ function donePR(){sttStop();PR.ph='done';rfPR()}
 function nextPR(){sttText='';if(PR.step+1>=PT[PR.ti].steps.length)go('pres');else{PR.step++;PR.ph='guide';rfPR()}}
 
 // ═══ REGISTER ═══
-const R={intro:rIntro,lang:rLang,main:rMain,catList:rCatList,pro:rPro,friends:rFriends,video:rVideo,guide:rGuide,topics:rTopics,listen:rListen,chat:rChat,opic:rOpic,opicSurvey:rOpicSurvey,toefl:rToefl,ielts:rIelts,ieltsP1:rIeltsP1,ieltsP2:rIeltsP2,ieltsP3:rIeltsP3,interview:rInterview,pres:rPres};
+const R={intro:rIntro,lang:rLang,main:rMain,catList:rCatList,pro:rPro,myrooms:rMyRooms,friends:rFriends,notebook:rNotebook,video:rVideo,guide:rGuide,topics:rTopics,listen:rListen,chat:rChat,opic:rOpic,opicSurvey:rOpicSurvey,toefl:rToefl,ielts:rIelts,ieltsP1:rIeltsP1,ieltsP2:rIeltsP2,ieltsP3:rIeltsP3,interview:rInterview,pres:rPres};
 go('intro');
 </script>
 </body>
