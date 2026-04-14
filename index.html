@@ -318,7 +318,7 @@ h+=`<button onclick="S.char='${id}';go('topics')" style="width:100%;background:$
 app.innerHTML=h+`</div>`}
 
 // ═══ NOTEBOOK (암기노트!) ═══
-let NB={mode:'study',qi:0,blanks:2,showKr:{}};
+let NB={mode:'study',qi:0,blanks:2,showKr:{},recording:false};
 function rNotebook(){NB={mode:'study',qi:0,blanks:2,showKr:{}};rfNB()}
 function rfNB(){
 let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
@@ -344,33 +344,79 @@ ${NB.showKr[i]?`<div style="color:#FCD34D;font-size:14px;margin-top:6px;padding-
 </div>`;
 });
 }else{
-// ── TEST MODE ──
-if(NB.qi>=S.saved.length)NB.qi=0;
-const item=S.saved[NB.qi];
+// ── TEST MODE (시험!) ──
+const testItems=S.saved.filter(x=>!x.passed);
+if(testItems.length===0){
+h+=`<div style="text-align:center;margin-top:40px"><div style="font-size:64px;margin-bottom:12px">🎉</div><h3 style="font-size:20px;font-weight:700;margin-bottom:8px">ALL CLEAR!</h3><p style="color:#4ADE80;font-size:14px;margin-bottom:20px">${S.saved.length}개 전부 통과!</p><button onclick="S.saved.forEach(x=>x.passed=false);rfNB()" class="b" style="padding:12px 28px;font-size:14px">🔄 다시 도전!</button></div>`;
+}else{
+if(NB.qi>=testItems.length)NB.qi=0;
+const item=testItems[NB.qi];
 const words=item.en.split(' ');
 const blankCount=Math.min(NB.blanks,words.length-1);
 const blankIdx=[];
 while(blankIdx.length<blankCount){const r=Math.floor(Math.random()*words.length);if(!blankIdx.includes(r))blankIdx.push(r)}
-const display=words.map((w,i)=>blankIdx.includes(i)?`<span style="display:inline-block;min-width:60px;border-bottom:3px solid #6366F1;margin:0 3px;text-align:center;color:transparent">${w}</span>`:w).join(' ');
+const display=words.map((w,i)=>blankIdx.includes(i)?`<span style="display:inline-block;min-width:60px;border-bottom:3px solid #EF4444;margin:0 3px;text-align:center;color:transparent">${w}</span>`:w).join(' ');
 
-h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-<span style="color:#C4B5FD;font-size:14px;font-weight:700">Q${NB.qi+1} / ${S.saved.length}</span>
-<div style="display:flex;gap:6px">${['Easy:1','Normal:2','Hard:3'].map((x,i)=>`<button onclick="NB.blanks=${i+1};rfNB()" style="font-size:10px;padding:4px 8px;border-radius:6px;${NB.blanks===i+1?'background:#4F46E5;color:#fff':'background:rgba(255,255,255,.08);color:#9CA3AF'}">${x.split(':')[0]}</button>`).join('')}</div>
+h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+<span style="color:#F87171;font-size:14px;font-weight:700">Q${NB.qi+1} / ${testItems.length} 남음</span>
+<div style="display:flex;gap:6px">${['Easy:1','Normal:2','Hard:3'].map((x,i)=>`<button onclick="NB.blanks=${i+1};rfNB()" style="font-size:10px;padding:4px 8px;border-radius:6px;${NB.blanks===i+1?'background:#EF4444;color:#fff':'background:rgba(255,255,255,.08);color:#9CA3AF'}">${x.split(':')[0]}</button>`).join('')}</div>
 </div>
 
-<div style="background:#FAFAFA;border-radius:16px;padding:20px;margin-bottom:16px;border:2px solid #6366F1">
-<div style="font-size:12px;color:#6B7280;margin-bottom:8px">Korean hint:</div>
-<div style="font-size:15px;color:#374151;margin-bottom:16px;font-weight:600">${item.kr}</div>
+<div style="text-align:center;margin-bottom:12px">
+<div style="height:8px;background:rgba(255,255,255,.1);border-radius:4px;margin-bottom:6px"><div id="testBar" style="height:100%;border-radius:4px;background:#EF4444;width:100%;transition:width .3s"></div></div>
+<span id="testTime" style="font-size:32px;font-weight:800;color:#EF4444">10</span>
+</div>
+
+<div style="background:#FAFAFA;border-radius:16px;padding:20px;margin-bottom:16px;border:2px solid #EF4444">
+<div style="font-size:12px;color:#6B7280;margin-bottom:6px">Korean hint:</div>
+<div style="font-size:15px;color:#374151;margin-bottom:14px;font-weight:600">${item.kr}</div>
 <div style="font-size:20px;font-weight:700;color:#1F2937;line-height:2">${display}</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:12px">🎤 빈칸을 채워서 전체 문장을 말하세요!</div>
 </div>
+
+<div id="testResult" style="text-align:center;min-height:40px;margin-bottom:12px;font-size:14px;color:#D1D5DB"></div>
 
 <div style="display:flex;gap:8px">
-<button onclick="NB.qi=(NB.qi+1)%S.saved.length;rfNB()" style="flex:1;background:rgba(255,255,255,.1);color:#D1D5DB;border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:12px;font-size:14px;font-weight:600">다음 →</button>
-<button onclick="speak('${item.en.replace(/'/g,"\\'")}',0.75)" style="background:rgba(139,92,246,.2);color:#C4B5FD;border:1px solid rgba(139,92,246,.3);border-radius:14px;padding:12px 20px;font-size:14px">🔊 정답</button>
+<button id="testMic" onclick="testRecord()" style="flex:1;background:#EF4444;color:#fff;border-radius:14px;padding:14px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:center;gap:8px">🎤 녹음하고 말하기!</button>
+<button onclick="testPass()" style="background:rgba(74,222,128,.15);color:#4ADE80;border:1px solid rgba(74,222,128,.3);border-radius:14px;padding:14px 16px;font-size:13px;font-weight:600">✅ Pass</button>
 </div>`;
-}
+// Start timer
+setTimeout(()=>startTestTimer(item),100);
+}}
 app.innerHTML=h+`</div>`}
+
+let testTmr=null;
+function startTestTimer(item){
+clearInterval(testTmr);let s=10;
+testTmr=setInterval(()=>{
+s--;const el=document.getElementById('testTime');const bar=document.getElementById('testBar');
+if(el)el.textContent=s;
+if(bar)bar.style.width=(s/10*100)+'%';
+if(el)el.style.color=s>5?'#EF4444':s>2?'#F59E0B':'#EF4444';
+if(s<=0){clearInterval(testTmr);sttStop();
+const res=document.getElementById('testResult');
+if(res)res.innerHTML='<span style="color:#F59E0B">⏰ 시간 초과! 다음으로...</span>';
+setTimeout(()=>{NB.qi++;rfNB()},1500);
+}},1000)}
+
+function testRecord(){
+const btn=document.getElementById('testMic');
+if(NB.recording){sttStop();NB.recording=false;
+if(btn){btn.innerHTML='🎤 녹음하고 말하기!';btn.style.background='#EF4444'}
+const res=document.getElementById('testResult');
+if(res&&sttText)res.innerHTML=`<span style="color:#E5E7EB">🗣 "${sttText}"</span>`;
+}else{NB.recording=true;sttText='';
+if(btn){btn.innerHTML='⏹ 녹음 중... 말하세요!';btn.style.background='#DC2626';btn.style.animation='pulse 1s infinite'}
+sttStart(t=>{const res=document.getElementById('testResult');if(res)res.innerHTML=`<span style="color:#E5E7EB">🗣 "${t}"</span>`});
+}}
+
+function testPass(){
+clearInterval(testTmr);sttStop();NB.recording=false;
+const testItems=S.saved.filter(x=>!x.passed);
+if(testItems[NB.qi])testItems[NB.qi].passed=true;
+const res=document.getElementById('testResult');
+if(res)res.innerHTML='<span style="color:#4ADE80;font-size:18px">✅ PASS!</span>';
+setTimeout(()=>{NB.qi=0;rfNB()},800);
+}
 
 function rFriends(){go('myrooms')}
 
