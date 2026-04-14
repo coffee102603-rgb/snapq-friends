@@ -54,7 +54,10 @@ topics:[{name:'My Favorite Game',icon:'🎮',rounds:[{ss:[{en:"Dude, I played th
 ]},
 {id:'travel',icon:'✈️',name:'여행 영어',en:'Travel English',desc:'전 세계 여행 블로거와 실전 영어!',level:'GENTLE',lc:'#F59E0B',carousel:true,
 chars:[
-{id:'jake',e:'🧑',n:'Jake',a:32,c:'NYC·LA·Hawaii',j:'미국 여행 블로거',pitch:'공항, 우버, 팁문화 완전정복!',rate:.85,ok:1,tags:['미국','공항','팁'],flag:'🇺🇸',dest:'미국',photo:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80',hot:'인기 1위!',intro:[],question:{},answers:{},topics:[]},
+{id:'jake',e:'🧑',n:'Jake',a:32,c:'NYC·LA·Hawaii',j:'미국 여행 블로거',pitch:'공항, 우버, 팁문화 완전정복!',rate:.85,ok:1,tags:['미국','공항','팁'],flag:'🇺🇸',dest:'미국',photo:'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=400&q=80',hot:'인기 1위!',
+intro:[{en:"Hey guys! What's up! I'm Jake.",kr:"여러분! 안녕! 나 제이크야."},{en:"I'm a travel blogger from Korea, living in New York.",kr:"한국에서 온 여행 블로거, 뉴욕 살아."},{en:"I travel all around America and share everything!",kr:"미국 전역을 여행하면서 다 공유해!"},{en:"Airport, Uber, tipping — I'll teach you real American English!",kr:"공항, 우버, 팁문화 — 진짜 미국 영어 알려줄게!"}],
+question:{en:"Have you ever been to America?",kr:"미국 가본 적 있어?"},answers:{yes:"Awesome! Then you'll love this!",no:"No worries! I'll show you everything!"},
+topics:'jake_eps'},
 {id:'emmaT',e:'👩',n:'Emma',a:22,c:'London·Paris',j:'유럽 배낭여행러',pitch:'기차표, 호스텔, 박물관 영어!',rate:.85,ok:0,tags:['유럽','런던','파리'],flag:'🇬🇧',dest:'유럽',photo:'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
 {id:'james',e:'🧔',n:'James',a:35,c:'Sydney·Melbourne',j:'호주 워홀러',pitch:'워홀, 농장, 쉐어하우스 영어!',rate:.85,ok:0,tags:['호주','워홀','서핑'],flag:'🇦🇺',dest:'호주',photo:'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=400&q=80',hot:'워홀 필수!',intro:[],question:{},answers:{},topics:[]},
 {id:'lily',e:'👩',n:'Lily',a:28,c:'Bali·Bangkok·Cebu',j:'동남아 블로거',pitch:'리조트, 투어예약, 흥정 영어!',rate:.8,ok:0,tags:['발리','방콕','세부'],flag:'🇵🇭',dest:'동남아',photo:'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=400&q=80',intro:[],question:{},answers:{},topics:[]},
@@ -101,7 +104,7 @@ return`<div style="position:relative;width:100%;height:360px;border-radius:20px;
 </div></div>`}
 
 // ═══ NAVIGATION ═══
-function go(n){if(n==='video'&&S.char==='jake'){S.scr='jakeEp1';rJakeEp1();updNav();return}S.scr=n;if(R[n])R[n]();updNav()}
+function go(n){S.scr=n;if(R[n])R[n]();updNav()}
 function updNav(){const sh=!['intro','lang'].includes(S.scr);let n=document.getElementById('nv');if(!sh){if(n)n.remove();return}
 if(!n){n=document.createElement('div');n.id='nv';n.className='nav';document.body.appendChild(n)}
 n.innerHTML=[{i:'🏠',l:'Home',s:'main'},{i:'💬',l:'My Rooms',s:'myrooms'},{i:'📋',l:'Note',s:'notebook'},{i:'🪙',l:S.coins,s:'coins'}].map(x=>`<button class="${S.scr===x.s?'on':''}" onclick="${['main','myrooms','notebook'].includes(x.s)?`go('${x.s}')`:''}"><span style="font-size:20px">${x.i}</span>${x.l}</button>`).join('')}
@@ -514,7 +517,46 @@ document.getElementById('guideBtn').style.display='block';
 }
 function nextGuideStep(){}
 
-function rTopics(){const ch=findChar(S.char);if(!ch)return;let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px"><button onclick="go('friends')" style="background:none;color:#D1D5DB;font-size:14px;margin-bottom:12px">← 뒤로</button><h2 style="font-size:18px;font-weight:700;margin-bottom:16px">${ch.e} ${ch.n}의 이야기</h2>`;
+function rTopics(){const ch=findChar(S.char);if(!ch)return;
+// ── JAKE: Episode Playlist! ──
+if(ch.topics==='jake_eps'){
+const eps=[{n:'JFK Airport',loc:'New York',icon:'✈️',star:"I'd like ~, please.",ok:1},
+{n:'Times Square',loc:'Manhattan',icon:'🌃',star:"Can you take me to ~?",ok:0},
+{n:'Central Park',loc:'Manhattan',icon:'🌳',star:"What a beautiful day!",ok:0},
+{n:'Statue of Liberty',loc:'Liberty Island',icon:'🗽',star:"How much is the ticket?",ok:0},
+{n:"Joe's Pizza",loc:'Greenwich Village',icon:'🍕',star:"Can I get ~, please?",ok:0},
+{n:'Brooklyn Bridge',loc:'Brooklyn',icon:'🌉',star:"Let's take a photo!",ok:0},
+{n:'Empire State',loc:'Midtown',icon:'🏙️',star:"The view is amazing!",ok:0},
+{n:'Broadway Show',loc:'Theater District',icon:'🎭',star:"It was totally worth it!",ok:0},
+{n:'SoHo Shopping',loc:'SoHo',icon:'🛍️',star:"Do you have this in ~?",ok:0},
+{n:'JFK Departure',loc:'New York',icon:'👋',star:"I'll definitely come back!",ok:0}];
+let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+<button onclick="go('myrooms')" style="background:none;color:#D1D5DB;font-size:14px;margin-bottom:10px">← My Rooms</button>
+<div style="display:flex;align-items:center;gap:12px;margin-bottom:16px">
+<div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#312E81,#6366F1);display:flex;align-items:center;justify-content:center;font-size:28px;border:2px solid #F59E0B">${ch.e}</div>
+<div><div style="font-size:18px;font-weight:800">🇺🇸 Jake's America Trip</div>
+<div style="color:#F59E0B;font-size:12px;font-weight:600">10 Episodes · NYC Travel Vlog</div></div></div>
+<div style="background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.15);border-radius:14px;padding:12px;margin-bottom:14px">
+<div style="font-size:11px;color:#F59E0B;font-weight:700;margin-bottom:4px">📺 시리즈 소개</div>
+<div style="font-size:12px;color:#E2E8F0;line-height:1.6">한국인 여행 블로거 Jake의 뉴욕 10일 여행기!<br>공항 도착부터 출발까지, 실전 여행 영어를 배워요.</div>
+</div>`;
+eps.forEach((ep,i)=>{
+const locked=!ep.ok;
+h+=`<button onclick="${locked?'':'rJakeEp1()'}" style="width:100%;display:flex;align-items:center;gap:12px;background:${locked?'rgba(255,255,255,.03)':'linear-gradient(135deg,rgba(245,158,11,.08),rgba(99,102,241,.06))'};border:1px solid ${locked?'rgba(255,255,255,.06)':'rgba(245,158,11,.2)'};border-radius:14px;padding:14px 16px;text-align:left;margin-bottom:8px;opacity:${locked?.45:1}">
+<div style="width:36px;height:36px;border-radius:10px;background:${locked?'rgba(255,255,255,.06)':'rgba(245,158,11,.15)'};display:flex;align-items:center;justify-content:center;font-size:${locked?'14px':'18px'};flex-shrink:0">${locked?'🔒':ep.icon}</div>
+<div style="flex:1">
+<div style="display:flex;align-items:center;gap:6px">
+<span style="font-size:11px;font-weight:700;color:${locked?'#64748B':'#F59E0B'}">Ep.${i+1}</span>
+<span style="font-size:14px;font-weight:600;color:${locked?'#64748B':'#fff'}">${ep.n}</span>
+</div>
+<div style="font-size:10px;color:#64748B;margin-top:2px">📍 ${ep.loc}</div>
+<span style="display:inline-block;margin-top:4px;background:${locked?'rgba(255,255,255,.05)':'rgba(245,158,11,.1)'};color:${locked?'#64748B':'#F59E0B'};padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600">⭐ ${ep.star}</span>
+</div>
+${!locked?'<span style="color:#4ADE80;font-size:18px">▶</span>':''}
+</button>`});
+app.innerHTML=h+`</div>`;return}
+// ── Normal topics ──
+let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px"><button onclick="go('friends')" style="background:none;color:#D1D5DB;font-size:14px;margin-bottom:12px">← 뒤로</button><h2 style="font-size:18px;font-weight:700;margin-bottom:16px">${ch.e} ${ch.n}의 이야기</h2>`;
 (ch.topics||[]).forEach((t,i)=>{h+=`<button onclick="S.topic=${i};go('listen')" style="width:100%;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:16px 18px;text-align:left;margin-bottom:10px"><span style="font-size:28px">${t.icon}</span><div style="flex:1"><div style="font-size:15px;font-weight:600">${t.name}</div><div style="color:#D1D5DB;font-size:12px">${t.rounds.length} rounds</div></div><span style="color:#4ADE80;font-size:20px">→</span></button>`});
 app.innerHTML=h+`</div>`}
 
@@ -812,14 +854,14 @@ function jkBlanks(en,n){const ws=en.split(/\s+/),c=[];ws.forEach((w,i)=>{if(w.re
 function jkStartT(){jkStopT();JK.tmr=10;JK.tid=setInterval(()=>{JK.tmr--;if(JK.tmr<=0)jkNx(false);rfJK()},1000)}
 function jkStopT(){if(JK.tid){clearInterval(JK.tid);JK.tid=null}}
 
-function rJakeEp1(){JK={pg:'learn',rnd:0,ph:'listen',qA:null,ti:0,tmr:10,tid:null,df:1,tr:[],td:false,cms:[],su:[false,false,false],sc:0,rec:false};rfJK();setTimeout(()=>jkSpeak(JK_ROUNDS[0].ss[0].en),600)}
+function rJakeEp1(){S.scr='jakeEp1';JK={pg:'learn',rnd:0,ph:'listen',qA:null,ti:0,tmr:10,tid:null,df:1,tr:[],td:false,cms:[],su:[false,false,false],sc:0,rec:false};rfJK();updNav();setTimeout(()=>jkSpeak(JK_ROUNDS[0].ss[0].en),600)}
 
 function rfJK(){
   const stps=['📖 학습','🎯 시험','💬 대화'],si=JK.pg==='learn'?0:JK.pg==='test'?1:2;
   let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
   <div style="display:flex;gap:4px;align-items:center;margin-bottom:10px">${stps.map((_,i)=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<si?'#4ADE80':i===si?'#F59E0B':'rgba(255,255,255,.08)'};${i===si?'height:6px':''}"></div>`).join('')}<span style="font-size:10px;color:#64748B;margin-left:6px">${stps[si]}</span></div>
   <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-    <button onclick="go('catList')" style="background:rgba(255,255,255,.06);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:#94A3B8">←</button>
+    <button onclick="S.char='jake';go('topics')" style="background:rgba(255,255,255,.06);width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;color:#94A3B8">←</button>
     <div style="flex:1"><div style="font-size:10px;font-weight:700;color:#F59E0B;letter-spacing:1px">EP.1 — JAKE'S AMERICA TRIP</div><div style="font-size:17px;font-weight:800;color:#fff">✈️ JFK Airport</div></div>
     <div style="font-size:26px">🧑‍✈️</div>
   </div>`;
@@ -865,7 +907,7 @@ function rfJK(){
     h+='<div id="jkCB" style="min-height:250px;display:flex;flex-direction:column;gap:8px;padding-bottom:70px">';
     if(!JK.cms.length)h+=`<div style="max-width:82%;padding:10px 14px;border-radius:2px 14px 14px 14px;font-size:13px;line-height:1.6;background:#221D40;color:#E2E8F0;align-self:flex-start">Hey! Let's practice what we learned at the airport. Try using the star expressions! 😄</div>`;
     JK.cms.forEach(m=>{h+=`<div style="max-width:82%;padding:10px 14px;border-radius:${m.f==='j'?'2px 14px 14px 14px':'14px 14px 2px 14px'};font-size:13px;line-height:1.6;${m.f==='j'?'background:#221D40;color:#E2E8F0;align-self:flex-start':'background:linear-gradient(135deg,#4338CA,#6366F1);color:#fff;align-self:flex-end'}">${m.t}</div>`;if(m.sys)h+=`<div style="align-self:center;font-size:11px;color:#4ADE80;background:rgba(74,222,128,.08);padding:5px 12px;border-radius:20px">${m.sys}</div>`});
-    if(JK.sc>=3)h+=`<div style="align-self:center;font-size:11px;color:#4ADE80;background:rgba(74,222,128,.08);padding:5px 12px;border-radius:20px">🎉 ALL CLEAR! 별표표현 3/3 완료!</div><div style="text-align:center;margin-top:12px"><button onclick="go('catList')" style="background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;padding:12px 28px;border-radius:14px;font-size:14px;font-weight:700">🏠 홈으로</button></div>`;
+    if(JK.sc>=3)h+=`<div style="align-self:center;font-size:11px;color:#4ADE80;background:rgba(74,222,128,.08);padding:5px 12px;border-radius:20px">🎉 ALL CLEAR! 별표표현 3/3 완료!</div><div style="text-align:center;margin-top:12px"><button onclick="S.char='jake';go('topics')" style="background:linear-gradient(135deg,#F59E0B,#EF4444);color:#fff;padding:12px 28px;border-radius:14px;font-size:14px;font-weight:700">📺 에피소드 목록</button></div>`;
     h+='</div>';
     if(JK.sc<3)h+=`<div style="position:fixed;bottom:62px;left:0;right:0;max-width:420px;margin:0 auto;padding:10px 14px;background:rgba(15,10,31,.95);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;z-index:50"><button onclick="jkTog()" style="width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;${JK.rec?'background:linear-gradient(135deg,#EF4444,#DC2626);animation:pulse 1s infinite;box-shadow:0 4px 20px rgba(239,68,68,.4)':'background:linear-gradient(135deg,#F59E0B,#EF4444);box-shadow:0 4px 16px rgba(245,158,11,.3)'}">🎤</button><span style="font-size:12px;color:#64748B;flex:1">${JK.rec?'<span style="color:#EF4444">● 녹음 중... 영어로 말해보세요</span>':'🎤 버튼을 눌러 영어로 말해보세요'}</span></div>`;
   }
