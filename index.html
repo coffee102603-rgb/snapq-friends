@@ -424,10 +424,118 @@ h+=`</div><div id="krBar" style="background:#1E1B4B;border-radius:12px;padding:1
 if(L.ph==='done'){h+=`<div style="text-align:center;margin-top:24px"><div style="font-size:48px;margin-bottom:8px">${L.sc>=2?'🎉':'💪'}</div><h2 style="font-size:22px;font-weight:700;margin-bottom:6px">${L.sc>=2?'Great!':'Good Try!'}</h2><p style="color:#C4B5FD;font-size:14px;margin-bottom:16px">Score: ${L.sc}/${tp.rounds.length}</p><button class="b" style="background:linear-gradient(135deg,#F59E0B,#EF4444)" onclick="L.ph='board';rfL()">📝 문장 리뷰 →</button></div>`}
 app.innerHTML=h+`</div>`}
 function showKr(kr){const bar=document.getElementById('krBar');if(bar)bar.innerHTML='<span style="color:#FCD34D;font-size:14px">'+kr+'</span>'}
-async function pRnd(){const ch=findChar(S.char),cur=ch.topics[S.topic].rounds[L.r];L.ph='listen';L.sel=null;for(const s of cur.ss){L.as.push(s);L.cs=s;rfL();document.getElementById('sc1').innerHTML=charSc(ch,{en:s.en},true);await speak(s.en,ch.rate);document.getElementById('sc1').innerHTML=charSc(ch,{en:s.en},false);await new Promise(r=>setTimeout(r,300))}L.cs=null;L.ph='q';rfL()}
+async function pRnd(){const ch=findChar(S.char),cur=ch.topics[S.topic].rounds[L.r];L.ph='listen';L.sel=null;for(const s of cur.ss){L.as.push(s);L.cs=s;rfL();const sc=document.getElementById('sc1');if(sc){updSub(sc,ch,s.en,'',true);await speak(s.en,ch.rate);updSub(sc,ch,s.en,'',false)}await new Promise(r=>setTimeout(r,300))}L.cs=null;L.ph='q';rfL()}
 function pA(i){const cur=findChar(S.char).topics[S.topic].rounds[L.r];L.sel=i;if(i===cur.q.a)L.sc++;rfL();setTimeout(()=>{L.ph='res';rfL()},700)}
 function nR(){const tp=findChar(S.char).topics[S.topic];if(L.r<tp.rounds.length-1){L.r++;L.ph='ready';L.sel=null}else L.ph='done';rfL()}
-function fL(){if(S.fr[S.char])S.fr[S.char].int++;S.coins+=L.sc>=2?15:5;go('friends')}
+function fL(){if(S.fr[S.char])S.fr[S.char].int++;S.coins+=L.sc>=2?15:5;go('chat')}
+
+// ═══ CHAT ROOM (대화방!) ═══
+let CT={msgs:[],checked:[false,false,false],keyExprs:[],recording:false};
+function rChat(){
+const ch=findChar(S.char),tp=ch.topics[S.topic];
+CT={msgs:[],checked:[false,false,false],keyExprs:tp.rounds.map(r=>r.ex.en),recording:false};
+const photo=({'margaret':'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80','ethan':'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=600&q=80','sofia':'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=80'})[S.char]||'';
+// Margaret opens
+const openMsg=`Hi! Are you ready to talk? Remember to use the starred expressions!`;
+CT.msgs.push({who:'char',text:openMsg});
+speak(openMsg,ch.rate);
+rfChat(ch,photo);
+}
+
+function rfChat(ch,photo){
+if(!ch)ch=findChar(S.char);
+if(!photo)photo='';
+const allDone=CT.checked.every(c=>c);
+let h=`<div style="min-height:100dvh;background:#0F0A1F">
+<div style="position:relative;min-height:100dvh;${photo?`background:url('${photo}') center/cover`:''};display:flex;flex-direction:column">
+<div style="position:absolute;inset:0;background:rgba(15,10,31,.85);backdrop-filter:blur(4px)"></div>
+<div style="position:relative;z-index:2;flex:1;display:flex;flex-direction:column;max-height:100dvh">
+
+<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.1)">
+<div style="display:flex;align-items:center;gap:10px">
+<div style="width:40px;height:40px;border-radius:50%;background:rgba(139,92,246,.3);border:2px solid #A78BFA;display:flex;align-items:center;justify-content:center;font-size:22px">${ch.e}</div>
+<div><div style="font-size:14px;font-weight:700">${ch.n}</div><div style="font-size:10px;color:#4ADE80">● talking...</div></div>
+</div>
+<button onclick="speechSynthesis.cancel();sttStop();go('friends')" style="background:rgba(255,255,255,.1);color:#D1D5DB;font-size:12px;padding:6px 14px;border-radius:10px">나가기</button>
+</div>
+
+<div style="flex:1;overflow-y:auto;padding:16px 12px" id="chatMsgs">`;
+
+CT.msgs.forEach(m=>{
+const isMe=m.who==='me';
+let text=m.text;
+CT.keyExprs.forEach((expr,ei)=>{
+if(text.toLowerCase().includes(expr.toLowerCase())){
+text=text.replace(new RegExp(expr.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'),`<span style="background:#FEF08A;color:#854D0E;padding:1px 4px;border-radius:3px;font-weight:700">$&</span>`);
+}});
+h+=`<div style="display:flex;${isMe?'justify-content:flex-end':'justify-content:flex-start'};margin-bottom:10px">
+<div style="max-width:78%;padding:12px 16px;border-radius:18px;${isMe?'background:#4F46E5;border-bottom-right-radius:4px':'background:rgba(139,92,246,.25);border-bottom-left-radius:4px'};font-size:14px;line-height:1.7">
+${text}
+</div></div>`;
+if(m.fix)h+=`<div style="display:flex;justify-content:flex-start;margin-bottom:10px"><div style="max-width:78%;padding:10px 14px;border-radius:14px;background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.25);font-size:12px;line-height:1.6;color:#6EE7B7">💡 ${m.fix}</div></div>`;
+});
+
+h+=`</div>
+
+<div style="padding:8px 12px;background:rgba(245,158,11,.08);border-top:1px solid rgba(245,158,11,.2)">
+<div style="display:flex;gap:6px;align-items:center">
+<span style="font-size:10px;color:#F59E0B;font-weight:700;flex-shrink:0">⭐</span>`;
+CT.keyExprs.forEach((expr,i)=>{
+h+=`<span style="font-size:10px;padding:2px 8px;border-radius:6px;${CT.checked[i]?'background:#DEF7EC;color:#065F46;text-decoration:line-through':'background:rgba(255,255,255,.1);color:#D1D5DB'}">${CT.checked[i]?'✅':'⬜'} ${expr}</span>`;
+});
+h+=`</div></div>
+
+${allDone?`
+<div style="padding:16px;text-align:center;background:linear-gradient(135deg,rgba(74,222,128,.15),rgba(245,158,11,.1))">
+<div style="font-size:36px;margin-bottom:4px">🎉</div>
+<div style="font-size:16px;font-weight:700;color:#4ADE80">Amazing! 표현 3개 전부 사용!</div>
+<button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A);margin-top:12px;padding:12px 32px" onclick="go('friends')">✅ 완료!</button>
+</div>`:`
+<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.1)">
+<div style="flex:1;background:rgba(255,255,255,.08);border-radius:20px;padding:10px 16px;font-size:13px;color:#D1D5DB" contenteditable="true" id="chatInput" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">Type here...</div>
+<button onclick="toggleMic()" id="micBtn" style="width:44px;height:44px;border-radius:50%;background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid #FCA5A5">🎙</button>
+<button onclick="sendChat()" style="width:44px;height:44px;border-radius:50%;background:#4F46E5;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">➤</button>
+</div>`}
+
+</div></div></div>`;
+app.innerHTML=h;
+const msgs=document.getElementById('chatMsgs');
+if(msgs)msgs.scrollTop=msgs.scrollHeight;
+}
+
+function sendChat(){
+const input=document.getElementById('chatInput');
+if(!input)return;
+const text=input.textContent.trim();
+if(!text||text==='Type here...')return;
+CT.msgs.push({who:'me',text});
+// Check expressions
+CT.keyExprs.forEach((expr,i)=>{
+if(!CT.checked[i]&&text.toLowerCase().includes(expr.toLowerCase()))CT.checked[i]=true;
+});
+const ch=findChar(S.char);
+rfChat(ch);
+// Margaret responds
+setTimeout(async()=>{
+const responses=["Oh, that's wonderful! Tell me more!","Really? That sounds amazing!","Great job using that expression! What else?","I love hearing about that! Go on!","Wonderful! Can you tell me more details?"];
+const resp=CT.checked.every(c=>c)?"You did it! All three expressions! I'm so proud of you!":responses[Math.floor(Math.random()*responses.length)];
+CT.msgs.push({who:'char',text:resp});
+rfChat(ch);
+await speak(resp,ch.rate);
+},500);
+}
+
+function toggleMic(){
+if(CT.recording){sttStop();CT.recording=false;
+const input=document.getElementById('chatInput');
+if(input&&sttText)input.textContent=sttText;
+const btn=document.getElementById('micBtn');
+if(btn){btn.style.background='#EF4444';btn.textContent='🎙'}
+}else{CT.recording=true;
+const btn=document.getElementById('micBtn');
+if(btn){btn.style.background='#DC2626';btn.textContent='⏹';btn.style.animation='pulse 1s infinite'}
+sttStart(t=>{const input=document.getElementById('chatInput');if(input)input.textContent=t});
+}}
 
 // ═══ PRO: OPIc ═══
 let OP={diff:null,sel:[],qi:0,qs:[],ans:[],ph:'ask',timer:null,sec:0};
@@ -562,7 +670,7 @@ function donePR(){sttStop();PR.ph='done';rfPR()}
 function nextPR(){sttText='';if(PR.step+1>=PT[PR.ti].steps.length)go('pres');else{PR.step++;PR.ph='guide';rfPR()}}
 
 // ═══ REGISTER ═══
-const R={intro:rIntro,lang:rLang,main:rMain,catList:rCatList,pro:rPro,friends:rFriends,video:rVideo,guide:rGuide,topics:rTopics,listen:rListen,opic:rOpic,opicSurvey:rOpicSurvey,toefl:rToefl,ielts:rIelts,ieltsP1:rIeltsP1,ieltsP2:rIeltsP2,ieltsP3:rIeltsP3,interview:rInterview,pres:rPres};
+const R={intro:rIntro,lang:rLang,main:rMain,catList:rCatList,pro:rPro,friends:rFriends,video:rVideo,guide:rGuide,topics:rTopics,listen:rListen,chat:rChat,opic:rOpic,opicSurvey:rOpicSurvey,toefl:rToefl,ielts:rIelts,ieltsP1:rIeltsP1,ieltsP2:rIeltsP2,ieltsP3:rIeltsP3,interview:rInterview,pres:rPres};
 go('intro');
 </script>
 </body>
