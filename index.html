@@ -99,7 +99,7 @@ const IQ={intro:[{en:"Walk me through your resume.",kr:"이력서 설명.",time:
 const PT=[{name:'자기소개 발표',icon:'🏆',en:'Self-Introduction',steps:['Greeting','Background','Experience','Goals']},{name:'비즈니스 보고',icon:'📈',en:'Business Report',steps:['Summary','Metrics','Analysis','Recommendations']},{name:'아이디어 피칭',icon:'💡',en:'Startup Pitch',steps:['Problem','Solution','Market','Business Model']},{name:'학술 발표',icon:'📚',en:'Research',steps:['Introduction','Methodology','Results','Conclusion']}];
 
 // ═══ SCENE ═══
-function charSc(ch,sub,spk){const photos={'margaret':'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80','ethan':'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=600&q=80','sofia':'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=80'};const photo=photos[S.char];const fallback='linear-gradient(170deg,#2D1B4E,#4A2D6E 50%,#6B3FA0)';
+function charSc(ch,sub,spk){const photos={'margaret':'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80','ethan':'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=600&q=80','sofia':'https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=600&q=80','jake':'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&q=80'};const photo=photos[S.char];const fallback='linear-gradient(170deg,#2D1B4E,#4A2D6E 50%,#6B3FA0)';
 return`<div style="position:relative;width:100%;height:360px;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)">${photo?`<div style="position:absolute;inset:0;background:url('${photo}') center/cover"></div>`:`<div style="position:absolute;inset:0;background:${fallback}"></div>`}<div style="position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,rgba(0,0,0,.2) 0%,rgba(0,0,0,.5) 100%)"></div><div class="emoWrap" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);z-index:3;font-size:100px;text-align:center;width:120px;height:120px;display:flex;align-items:center;justify-content:center;${spk?'animation:talk .2s ease-in-out infinite alternate':''}">${ch.e}</div><div class="subBar" style="position:absolute;bottom:0;left:0;right:0;z-index:6;background:rgba(0,0,0,.82);backdrop-filter:blur(12px);padding:12px 16px;text-align:center;display:${sub?'block':'none'}">${sub?`<div style="font-size:15px;font-weight:600;line-height:1.6">${sub.en}</div>${sub.kr?`<div style="color:#C4B5FD;font-size:12px;margin-top:2px">${sub.kr}</div>`:''}`:''}
 </div></div>`}
 
@@ -847,14 +847,14 @@ const JK_ROUNDS=[
 ];
 const JK_ALL=JK_ROUNDS.flatMap(r=>r.ss),JK_STARS=JK_ALL.filter(s=>s.star);
 
-let JK={pg:'learn',rnd:0,ph:'listen',qA:null,ti:0,tmr:10,tid:null,df:1,tr:[],td:false,cms:[],su:[false,false,false],sc:0,rec:false};
+let JK={pg:'learn',rnd:0,ph:'ready',qA:null,rv:0,koShow:{},ti:0,tmr:10,tid:null,df:1,tr:[],td:false,cms:[],su:[false,false,false],sc:0,rec:false};
 
-function jkSpeak(t){speak(t,.85)}
+function jkSpeak(t){return speak(t,.85)}
 function jkBlanks(en,n){const ws=en.split(/\s+/),c=[];ws.forEach((w,i)=>{if(w.replace(/[^a-zA-Z]/g,'').length>=3)c.push(i)});const sh=[...c].sort(()=>Math.random()-.5),bl=new Set(sh.slice(0,Math.min(n,c.length)));return ws.map((w,i)=>({w,b:bl.has(i)}))}
 function jkStartT(){jkStopT();JK.tmr=10;JK.tid=setInterval(()=>{JK.tmr--;if(JK.tmr<=0)jkNx(false);rfJK()},1000)}
 function jkStopT(){if(JK.tid){clearInterval(JK.tid);JK.tid=null}}
 
-function rJakeEp1(){S.scr='jakeEp1';JK={pg:'learn',rnd:0,ph:'listen',qA:null,ti:0,tmr:10,tid:null,df:1,tr:[],td:false,cms:[],su:[false,false,false],sc:0,rec:false};rfJK();updNav();setTimeout(()=>jkSpeak(JK_ROUNDS[0].ss[0].en),600)}
+function rJakeEp1(){S.scr='jakeEp1';JK={pg:'learn',rnd:0,ph:'ready',qA:null,rv:0,koShow:{},ti:0,tmr:10,tid:null,df:1,tr:[],td:false,cms:[],su:[false,false,false],sc:0,rec:false};rfJK();updNav()}
 
 function rfJK(){
   const stps=['📖 학습','🎯 시험','💬 대화'],si=JK.pg==='learn'?0:JK.pg==='test'?1:2;
@@ -868,16 +868,29 @@ function rfJK(){
 
   if(JK.pg==='learn'){
     h+=`<div style="margin:0 0 10px;border-radius:18px;overflow:hidden;position:relative;height:150px"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#1E1B4B,#0F172A 50%,#1E3A5F)"></div><div style="position:absolute;top:42%;left:50%;transform:translate(-50%,-55%);font-size:64px;z-index:1">✈️</div><div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(15,10,31,.85));z-index:2"></div><div style="position:absolute;bottom:0;left:0;right:0;padding:10px 14px;z-index:3"><div style="font-size:10px;color:#F59E0B;font-weight:600">📍 JFK International Airport, New York</div><div style="font-size:12px;color:#94A3B8;margin-top:2px">"Hey guys! Just landed! Let's GO!" 🎬</div></div></div>`;
-    for(let ri=0;ri<=JK.rnd;ri++){const rd=JK_ROUNDS[ri];if(!rd)break;
+    // Previous completed rounds (show all sentences with Korean)
+    for(let ri=0;ri<JK.rnd;ri++){const rd=JK_ROUNDS[ri];if(!rd)break;
+      h+=`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(74,222,128,.12);color:#4ADE80;padding:3px 10px;border-radius:16px;font-size:10px;font-weight:600;margin-bottom:6px">✅ Round ${rd.id}/3</div>`;
+      rd.ss.forEach(s=>{h+=`<div style="display:flex;gap:7px;margin-bottom:4px;opacity:.6"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#312E81,#6366F1);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;margin-top:2px">🧑‍✈️</div><div style="background:#221D40;border-radius:2px 12px 12px 12px;padding:7px 10px;max-width:82%"><div style="font-size:12px;color:#94A3B8;line-height:1.4">${s.en}</div></div></div>`});
+    }
+    // Current round
+    if(JK.rnd<JK_ROUNDS.length){const rd=JK_ROUNDS[JK.rnd];
       h+=`<div style="display:inline-flex;align-items:center;gap:4px;background:rgba(99,102,241,.12);color:#A5B4FC;padding:3px 10px;border-radius:16px;font-size:10px;font-weight:600;margin-bottom:6px">🎬 Round ${rd.id}/3</div>`;
-      rd.ss.forEach(s=>{h+=`<div style="display:flex;gap:7px;margin-bottom:5px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#312E81,#6366F1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px">🧑‍✈️</div><div style="background:#221D40;border-radius:2px 14px 14px 14px;padding:9px 12px;max-width:82%;position:relative"><div style="font-size:13px;font-weight:500;color:#fff;line-height:1.55">${s.en}</div><div style="font-size:10px;color:#64748B;margin-top:1px">${s.ko}</div>${s.star?'<div style="position:absolute;top:-5px;right:-5px;background:#F59E0B;color:#0F0A1F;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;box-shadow:0 2px 6px rgba(245,158,11,.4)">⭐</div>':''}</div><button onclick="jkSpeak(\'${s.en.replace(/'/g,"\\'")}\')" style="width:26px;height:26px;border-radius:50%;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;font-size:12px;align-self:center;flex-shrink:0">🔊</button></div>`});
-      if(ri===JK.rnd){
-        if(JK.ph==='listen') h+=`<div style="text-align:center;margin:8px 0"><button onclick="JK.ph='quiz';JK.qA=null;rfJK()" style="background:#6366F1;color:#fff;padding:9px 22px;border-radius:11px;font-size:12px;font-weight:600">🧩 퀴즈 풀기</button></div>`;
-        else if(JK.ph==='quiz'){const q=rd.quiz;h+=`<div style="margin:8px 0 14px;background:linear-gradient(135deg,#1A1535,#221D40);border:1px solid rgba(99,102,241,.15);border-radius:14px;padding:14px"><div style="font-size:10px;font-weight:700;color:#F59E0B;margin-bottom:6px">🧩 QUIZ — Round ${rd.id}</div><div style="font-size:13px;color:#E2E8F0;margin-bottom:10px">${q.q}</div><div style="display:flex;flex-direction:column;gap:6px">`;
-          q.opts.forEach((o,oi)=>{let bg='rgba(255,255,255,.04)',bc='rgba(255,255,255,.08)',cl='#E2E8F0';if(JK.qA!==null){if(oi===q.ans){bg='rgba(74,222,128,.12)';bc='rgba(74,222,128,.3)';cl='#4ADE80'}else if(oi===JK.qA){bg='rgba(239,68,68,.12)';bc='rgba(239,68,68,.3)';cl='#EF4444'}}
-            h+=`<button onclick="${JK.qA===null?`jkAns(${ri},${oi})`:''}" style="padding:10px 12px;border-radius:10px;background:${bg};border:1px solid ${bc};font-size:12px;color:${cl};text-align:left">${o}</button>`});
-          h+=`</div></div>`}
-      }
+      // Show only revealed sentences
+      for(let si=0;si<JK.rv;si++){const s=rd.ss[si];if(!s)break;
+        const koKey=JK.rnd+'_'+si;const koVisible=JK.koShow[koKey];
+        h+=`<div style="display:flex;gap:7px;margin-bottom:5px"><div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#312E81,#6366F1);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;margin-top:2px">🧑‍✈️</div><div onclick="JK.koShow['${koKey}']=true;rfJK()" style="background:#221D40;border-radius:2px 14px 14px 14px;padding:9px 12px;max-width:82%;position:relative;cursor:pointer"><div style="font-size:13px;font-weight:500;color:#fff;line-height:1.55">${s.en}</div>${koVisible?`<div style="font-size:10px;color:#FCD34D;margin-top:2px">→ ${s.ko}</div>`:`<div style="font-size:9px;color:#64748B;margin-top:2px">👆 터치 = 해석</div>`}${s.star?'<div style="position:absolute;top:-5px;right:-5px;background:#F59E0B;color:#0F0A1F;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;box-shadow:0 2px 6px rgba(245,158,11,.4)">⭐</div>':''}</div><button onclick="jkSpeak(\'${s.en.replace(/'/g,"\\'")}\')" style="width:26px;height:26px;border-radius:50%;background:rgba(99,102,241,.15);display:flex;align-items:center;justify-content:center;font-size:12px;align-self:center;flex-shrink:0">🔊</button></div>`}
+      // Buttons based on phase
+      if(JK.ph==='ready')
+        h+=`<div style="text-align:center;margin:12px 0"><button onclick="jkPlayRound()" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;padding:11px 26px;border-radius:12px;font-size:13px;font-weight:700;box-shadow:0 4px 14px rgba(99,102,241,.3)">🎧 듣기 시작!</button></div>`;
+      else if(JK.ph==='playing')
+        h+=`<div style="text-align:center;margin:8px 0"><div style="color:#A5B4FC;font-size:12px;font-weight:600">🎤 Jake가 말하고 있어요...</div></div>`;
+      else if(JK.ph==='heard')
+        h+=`<div style="text-align:center;margin:10px 0"><button onclick="JK.ph='quiz';JK.qA=null;rfJK()" style="background:#6366F1;color:#fff;padding:9px 22px;border-radius:11px;font-size:12px;font-weight:600">🧩 퀴즈 풀기</button></div>`;
+      else if(JK.ph==='quiz'){const q=rd.quiz;h+=`<div style="margin:8px 0 14px;background:linear-gradient(135deg,#1A1535,#221D40);border:1px solid rgba(99,102,241,.15);border-radius:14px;padding:14px"><div style="font-size:10px;font-weight:700;color:#F59E0B;margin-bottom:6px">🧩 QUIZ — Round ${rd.id}</div><div style="font-size:13px;color:#E2E8F0;margin-bottom:10px">${q.q}</div><div style="display:flex;flex-direction:column;gap:6px">`;
+        q.opts.forEach((o,oi)=>{let bg='rgba(255,255,255,.04)',bc='rgba(255,255,255,.08)',cl='#E2E8F0';if(JK.qA!==null){if(oi===q.ans){bg='rgba(74,222,128,.12)';bc='rgba(74,222,128,.3)';cl='#4ADE80'}else if(oi===JK.qA){bg='rgba(239,68,68,.12)';bc='rgba(239,68,68,.3)';cl='#EF4444'}}
+          h+=`<button onclick="${JK.qA===null?`jkAns(${JK.rnd},${oi})`:''}" style="padding:10px 12px;border-radius:10px;background:${bg};border:1px solid ${bc};font-size:12px;color:${cl};text-align:left">${o}</button>`});
+        h+=`</div></div>`}
     }
     if(JK.rnd>=JK_ROUNDS.length&&JK.ph==='done'){
       h+=`<div style="margin:10px 0;padding:12px;background:linear-gradient(135deg,rgba(245,158,11,.08),rgba(245,158,11,.02));border:1px solid rgba(245,158,11,.15);border-radius:14px"><div style="font-size:10px;font-weight:700;color:#F59E0B;margin-bottom:6px">⭐ 별표표현 저장 완료!</div>`;
@@ -922,7 +935,10 @@ function jkResult(){const ps=JK.tr.filter(r=>r.p).length,fl=JK.tr.filter(r=>!r.p
   h+=`<div style="display:flex;gap:8px;margin-top:12px"><button onclick="JK.pg='test';JK.ti=0;JK.tmr=10;JK.tr=[];JK.td=false;jkStartT();rfJK()" style="flex:1;padding:11px;border-radius:11px;background:rgba(255,255,255,.06);color:#E2E8F0;font-size:13px;font-weight:600">🔄 다시 도전</button><button onclick="jkGoChat()" style="flex:1;padding:11px;border-radius:11px;background:linear-gradient(135deg,#6366F1,#8B5CF6);color:#fff;font-size:13px;font-weight:700;box-shadow:0 4px 14px rgba(99,102,241,.3)">💬 Jake와 대화</button></div></div>`;
   return h}
 
-function jkAns(ri,oi){JK.qA=oi;rfJK();setTimeout(()=>{if(JK_ROUNDS[ri].quiz.ans===oi){S.coins+=5;if(JK.rnd<JK_ROUNDS.length-1){JK.rnd++;JK.ph='listen';JK.qA=null;setTimeout(()=>jkSpeak(JK_ROUNDS[JK.rnd].ss[0].en),300)}else{JK.rnd=JK_ROUNDS.length;JK.ph='done'}}rfJK()},1000)}
+async function jkPlayRound(){JK.ph='playing';JK.rv=0;rfJK();const rd=JK_ROUNDS[JK.rnd];
+  for(let i=0;i<rd.ss.length;i++){JK.rv=i+1;rfJK();await jkSpeak(rd.ss[i].en);await new Promise(r=>setTimeout(r,400))}
+  JK.ph='heard';rfJK()}
+function jkAns(ri,oi){JK.qA=oi;rfJK();setTimeout(()=>{if(JK_ROUNDS[ri].quiz.ans===oi){S.coins+=5;if(JK.rnd<JK_ROUNDS.length-1){JK.rnd++;JK.ph='ready';JK.qA=null;JK.rv=0}else{JK.rnd=JK_ROUNDS.length;JK.ph='done'}}rfJK()},1000)}
 function jkGoTest(){JK.pg='test';JK.ti=0;JK.tmr=10;JK.tr=[];JK.td=false;jkStartT();rfJK()}
 function jkPass(){JK.tr.push({i:JK.ti,p:true});S.coins+=10;JK.ti++;if(JK.ti>=JK_ALL.length)jkFin();else{JK.tmr=10;jkStartT()}rfJK()}
 function jkNx(p){JK.tr.push({i:JK.ti,p:!!p});JK.ti++;if(JK.ti>=JK_ALL.length)jkFin();else{JK.tmr=10;jkStartT()}rfJK()}
