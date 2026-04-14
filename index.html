@@ -320,70 +320,60 @@ const o=Object.keys(ch.answers);document.getElementById('vc').innerHTML=`<div st
 async function ansV(k){const ch=findChar(S.char);document.getElementById('sc1').innerHTML=charSc(ch,{en:ch.answers[k]},true);await speak(ch.answers[k],ch.rate);document.getElementById('sc1').innerHTML=charSc(ch,{en:ch.answers[k]},false);document.getElementById('vc').innerHTML=`<button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A)" onclick="addF()">+ Add Friend — ${ch.price||10}🪙</button>`}
 function addF(){const ch=findChar(S.char);if(!S.fr[S.char]){S.coins-=ch.price||10;S.fr[S.char]={int:1}}go('guide')}
 
-// ═══ GUIDE (친구 추가 직후 가이드!) ═══
-let GD={step:0,done:false};
-function rGuide(){GD={step:0,done:false};playGuide()}
+// ═══ GUIDE (화이트보드 스타일!) ═══
+function rGuide(){playGuide()}
 async function playGuide(){
 const ch=findChar(S.char);
-const steps=[
-{lines:[
-{en:"Yay! We're friends now!",kr:"야호! 우리 친구 됐다! 🎉"},
-{en:"Don't worry, I speak a little Korean too.",kr:"걱정 마, 나 한국어도 조금 해."},
-{en:"I'll help you when it gets hard!",kr:"어려울 때 내가 도와줄게!"},
-]},
-{lines:[
-{en:"Let me explain how our room works!",kr:"우리 방이 어떻게 진행되는지 알려줄게!"},
-{en:"First, listen to my voice message.",kr:"🎧 먼저, 내 음성 메시지를 들어!"},
-{en:"Then, solve three quizzes.",kr:"❓ 그리고 퀴즈 3개를 풀어!"},
-{en:"Memorize the three starred expressions.",kr:"⭐ 별표 표현 3개를 외워!"},
-{en:"Finally, let's talk! Use those expressions!",kr:"💬 마지막으로 대화하자! 그 표현들을 써봐!"},
-]},
-{lines:[
-{en:"Now, here's my ONE rule.",kr:"자, 규칙 딱 하나! ⚡"},
-{en:"Our conversation will NEVER end...",kr:"우리 대화는 절대 끝나지 않아..."},
-{en:"...until those three expressions come out of YOUR mouth!",kr:"...그 3개 표현이 네 입에서 나올 때까지! 😤"},
-{en:"So memorize them well, okay?",kr:"그러니까 잘 외워 와, 알겠지?"},
-]},
-{lines:[
-{en:"If you use all three, I'll be SO proud!",kr:"3개 다 쓰면 내가 엄청 뿌듯해할 거야! ✅"},
-{en:"You can save expressions to your own notebook!",kr:"표현을 네 노트에 저장할 수도 있어! 📋"},
-{en:"Ready? My first message is waiting for you!",kr:"준비됐어? 내 첫 메시지가 기다리고 있어!"},
-]},
+const lines=[
+{en:"Listen to my voice message first!",mark:'blue',icon:'🎧',kr:'내 음성 메시지 먼저 들어!',num:'①'},
+{en:"Memorize the three starred expressions!",mark:'yellow',icon:'⭐',kr:'<span style="background:#FEF08A;color:#854D0E;padding:2px 6px;border-radius:4px;font-weight:800">별표 표현 3개</span> 꼭 외워!',num:'②'},
+{en:"Then come talk with me!",mark:'green',icon:'💬',kr:'그리고 대화하러 들어와!',num:'③'},
+{en:"Our conversation will NOT end...",mark:'red',icon:'⚡',kr:'우리 대화는 끝나지 않아...',num:''},
+{en:"...until you use ALL THREE in our conversation!",mark:'red',icon:'😤',kr:'...그 <span style="background:#FEF08A;color:#854D0E;padding:2px 6px;border-radius:4px;font-weight:800">별표 표현 3개</span>를 대화에서 다 쓸 때까지!',num:'',underline:true},
+{en:"Save important expressions to your notebook!",mark:'gray',icon:'📋',kr:'중요 표현은 <span style="background:#E0E7FF;color:#3730A3;padding:2px 6px;border-radius:4px;font-weight:700">암기노트</span>에 저장해두고 자주 외우렴!',num:''},
 ];
-for(let si=0;si<steps.length;si++){
-const step=steps[si];
-// Show step screen
-let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+const markColors={blue:'#2563EB',yellow:'#D97706',green:'#16A34A',red:'#DC2626',gray:'#6B7280'};
+
+app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
 <div style="text-align:center;margin-bottom:16px">
-<div style="font-size:64px;margin-bottom:8px">${ch.e}</div>
-<div style="font-size:14px;color:#C4B5FD;font-weight:600">${ch.n}'s Room</div>
-<div style="display:flex;justify-content:center;gap:6px;margin-top:12px">${steps.map((_,i)=>`<div style="width:${i===si?'24px':'8px'};height:8px;border-radius:4px;background:${i===si?'#A78BFA':'rgba(255,255,255,.15)'};transition:width .3s"></div>`).join('')}</div>
+<div style="font-size:56px">${ch.e}</div>
+<div style="font-size:15px;color:#C4B5FD;font-weight:600;margin-top:4px">${ch.n}'s Room</div>
 </div>
-<div id="guideLines" style="padding:8px 0"></div>
-${si===steps.length-1?`<div id="guideBtn" style="text-align:center;margin-top:24px;display:none"><button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A);padding:16px 40px;font-size:17px" onclick="go('topics')">🎧 첫 메시지 듣기 →</button></div>`:`<div id="guideBtn" style="text-align:center;margin-top:24px;display:none"><button class="b" style="padding:14px 36px;font-size:15px" onclick="GD.step=${si+1};nextGuideStep()">다음 →</button></div>`}
+<div style="background:#FAFAFA;border-radius:20px;padding:24px 20px;box-shadow:0 4px 24px rgba(0,0,0,.3);border:2px solid #E5E7EB">
+<div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+<div style="width:8px;height:8px;border-radius:50%;background:#EF4444"></div>
+<div style="width:8px;height:8px;border-radius:50%;background:#F59E0B"></div>
+<div style="width:8px;height:8px;border-radius:50%;background:#22C55E"></div>
+<span style="flex:1;text-align:center;font-size:13px;color:#9CA3AF;font-weight:600">📌 How This Room Works</span>
+</div>
+<div id="boardLines"></div>
+</div>
+<div id="guideBtn" style="text-align:center;margin-top:20px;display:none">
+<button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A);padding:16px 40px;font-size:17px" onclick="go('topics')">🎧 첫 메시지 듣기 →</button>
+</div>
 </div>`;
-app.innerHTML=h;
-// Play each line with TTS
-for(let li=0;li<step.lines.length;li++){
-const line=step.lines[li];
-const linesDiv=document.getElementById('guideLines');
-if(linesDiv){
-linesDiv.innerHTML+=`<div class="fadeUp" style="background:rgba(139,92,246,.08);border-radius:14px;padding:14px 16px;margin-bottom:8px;border:1px solid rgba(139,92,246,.15)">
-<div style="font-size:16px;font-weight:600;line-height:1.7;color:#fff">${line.en}</div>
-<div style="color:#C4B5FD;font-size:13px;margin-top:4px">${line.kr}</div>
+
+const board=document.getElementById('boardLines');
+for(let i=0;i<lines.length;i++){
+const l=lines[i];
+const mc=markColors[l.mark];
+const isRule=(l.mark==='red');
+board.innerHTML+=`<div class="fadeUp" style="margin-bottom:${isRule&&i===3?'4px':'12px'};${isRule?'':''}">
+${i===3?'<div style="height:2px;background:linear-gradient(90deg,#DC2626,#F59E0B);border-radius:1px;margin:16px 0 12px"></div>':''}
+<div style="display:flex;gap:10px;align-items:flex-start">
+<span style="font-size:18px;flex-shrink:0;margin-top:2px">${l.icon}</span>
+<div style="flex:1">
+<div style="font-size:15px;font-weight:700;color:${mc};line-height:1.5;${l.underline?'text-decoration:underline wavy #DC2626;text-underline-offset:4px':''}">${l.num?l.num+' ':''}${l.en}</div>
+<div style="font-size:13px;color:#4B5563;margin-top:3px;line-height:1.6">${l.kr}</div>
+</div>
+</div>
 </div>`;
+await speak(l.en,ch.rate||.75);
+await new Promise(r=>setTimeout(r,250));
 }
-await speak(line.en,ch.rate||.75);
-await new Promise(r=>setTimeout(r,300));
+document.getElementById('guideBtn').style.display='block';
 }
-// Show next button
-const btn=document.getElementById('guideBtn');
-if(btn)btn.style.display='block';
-// Wait for user to click next (except last step which has the button too)
-await new Promise(r=>{window._guideNext=r});
-}
-}
-function nextGuideStep(){if(window._guideNext){window._guideNext();window._guideNext=null}}
+function nextGuideStep(){}
 
 function rTopics(){const ch=findChar(S.char);if(!ch)return;let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px"><button onclick="go('friends')" style="background:none;color:#D1D5DB;font-size:14px;margin-bottom:12px">← 뒤로</button><h2 style="font-size:18px;font-weight:700;margin-bottom:16px">${ch.e} ${ch.n}의 이야기</h2>`;
 (ch.topics||[]).forEach((t,i)=>{h+=`<button onclick="S.topic=${i};go('listen')" style="width:100%;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:16px 18px;text-align:left;margin-bottom:10px"><span style="font-size:28px">${t.icon}</span><div style="flex:1"><div style="font-size:15px;font-weight:600">${t.name}</div><div style="color:#D1D5DB;font-size:12px">${t.rounds.length} rounds</div></div><span style="color:#4ADE80;font-size:20px">→</span></button>`});
