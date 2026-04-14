@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0F0A1F">
+<title>SnapQ Friends</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',-apple-system,system-ui,sans-serif;background:#0F0A1F;color:#fff;overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;-webkit-tap-highlight-color:transparent}
+.b{background:linear-gradient(135deg,#8B5CF6,#6366F1);color:#fff;border:none;border-radius:16px;padding:14px 32px;font-size:16px;font-weight:700;transition:transform .15s}.b:active{transform:scale(.95)}
+.bg{background:linear-gradient(135deg,#4ADE80,#16A34A)}.bp{background:linear-gradient(135deg,#EC4899,#F43F5E)}.bo{background:linear-gradient(135deg,#F59E0B,#EF4444)}
+.tg{background:rgba(139,92,246,.2);color:#C4B5FD;padding:3px 10px;border-radius:20px;font-size:12px;display:inline-block;margin:2px}
+.sc{position:relative;width:100%;height:400px;border-radius:20px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4)}
+.nav{position:fixed;bottom:0;left:0;right:0;z-index:100;background:rgba(15,10,31,.96);backdrop-filter:blur(12px);border-top:1px solid rgba(255,255,255,.08);display:flex;justify-content:space-around;padding:8px 0 env(safe-area-inset-bottom,12px)}
+.nav button{background:none;border:none;color:#6B7280;font-size:10px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.nav button.on{color:#A78BFA}
+@keyframes glow{0%,100%{box-shadow:0 0 24px #8B5CF640}50%{box-shadow:0 0 48px #8B5CF680}}
+</style>
+</head>
+<body>
+<div id="app" style="max-width:420px;margin:0 auto"></div>
+<script>
+const $=document.getElementById.bind(document),app=$('app');
+let S={scr:'intro',char:null,fr:{},coins:100,topic:null};
+
+// ═══════════════════════════════════════════════════════════════
+// TTS — 어제 snapq_talk에서 작동한 단순 코드!
+// ═══════════════════════════════════════════════════════════════
+function speak(text,rate=0.85){
+  return new Promise(res=>{
+    if(!window.speechSynthesis){res();return}
+    speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.lang='en-US';u.rate=rate;
+    u.onend=res;u.onerror=res;
+    speechSynthesis.speak(u);
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// CHARACTER DATA — 3명 풀데이터 + 6명 프로필만
+// ═══════════════════════════════════════════════════════════════
+const CHARS={
+margaret:{
+  name:'Margaret',emoji:'👵',age:67,city:'Vermont',job:'은퇴 영어교사',
+  reason:'한국 문화원 봉사 경력',tags:['여행','강아지','커피','정원','베이킹'],
+  price:10,desc:'이해될 때까지 천천히!',target:'영어 왕초보!',rate:.75,
+  level:'GENTLE',color:'#8B5CF6',ok:true,
+  bg:{l:'☕ 카페',c:'linear-gradient(170deg,#3D2B1F,#6B4226 50%,#A47B52)'},
+  intro:[
+    {en:"Oh, hello dear! I'm Margaret.",kr:"아, 안녕하세요! 저는 마가렛이에요."},
+    {en:"I'm a retired English teacher from Vermont.",kr:"버몬트에서 은퇴한 영어 선생님이에요."},
+    {en:"I volunteered at a Korean cultural center for years.",kr:"한국 문화원에서 수년간 봉사했어요."},
+    {en:"So I speak a little Korean too!",kr:"그래서 한국어도 조금 해요!"},
+    {en:"I love coffee, gardening, and my dog Biscuit.",kr:"커피, 정원 가꾸기, 그리고 제 강아지 비스킷을 좋아해요."},
+    {en:"I'll speak slowly and help you every step.",kr:"천천히 말하고 하나하나 도와줄게요."},
+  ],
+  question:{en:"So tell me, do you like cats or dogs?",kr:"고양이 좋아해요, 강아지 좋아해요?"},
+  answers:{dogs:"Oh wonderful! I have a dog named Biscuit!",cats:"Cats are lovely too! My neighbor has the cutest cat!"},
+  topics:[
+    {name:'Morning Coffee',icon:'☕',rounds:[
+      {ss:[{en:"I had the most wonderful cup of coffee this morning.",kr:"오늘 아침에 정말 멋진 커피 한 잔을 마셨어요."},{en:"It was a new blend from a small shop in town.",kr:"마을에 있는 작은 가게의 새로운 블렌드였어요."}],q:{t:"What did Margaret have this morning?",k:"마가렛은 오늘 아침에 뭘 마셨나요?",o:["Tea","Coffee","Juice","Milk"],a:1},ex:{en:"the most wonderful",kr:"가장 멋진"}},
+      {ss:[{en:"The owner told me it comes all the way from Colombia.",kr:"주인이 콜롬비아에서 온 거라고 했어요."},{en:"He roasts the beans himself every single morning.",kr:"그는 매일 아침 직접 원두를 로스팅해요."},{en:"You can really taste the difference when it's fresh.",kr:"신선하면 정말 맛의 차이를 느낄 수 있어요."}],q:{t:"Where do the coffee beans come from?",k:"커피 원두는 어디에서 왔나요?",o:["Brazil","Ethiopia","Colombia","Kenya"],a:2},ex:{en:"all the way from",kr:"~에서 먼 길을 건너온"}},
+      {ss:[{en:"I sat in my garden with Biscuit and just enjoyed the moment.",kr:"비스킷과 함께 정원에 앉아서 그 순간을 즐겼어요."},{en:"The birds were singing and the air smelled like spring.",kr:"새들이 노래하고 공기에서 봄 냄새가 났어요."},{en:"Sometimes the simplest things bring the most joy.",kr:"가장 단순한 것들이 가장 큰 기쁨을 줘요."}],q:{t:"Where did Margaret sit with Biscuit?",k:"마가렛은 비스킷과 어디에 앉았나요?",o:["Kitchen","Café","Garden","Bedroom"],a:2},ex:{en:"the simplest things",kr:"가장 단순한 것들"}},
+    ]},
+    {name:'My Garden',icon:'🌿',rounds:[
+      {ss:[{en:"I spent the whole morning in my garden today.",kr:"오늘 아침 내내 정원에서 보냈어요."},{en:"The tomatoes are finally turning red!",kr:"토마토가 드디어 빨갛게 변하고 있어요!"}],q:{t:"What is turning red?",k:"뭐가 빨갛게 변하고 있나요?",o:["Roses","Apples","Tomatoes","Peppers"],a:2},ex:{en:"finally turning",kr:"드디어 ~하고 있다"}},
+      {ss:[{en:"Biscuit loves to dig holes near the flowers.",kr:"비스킷은 꽃 근처에서 구멍 파는 걸 좋아해요."},{en:"I have to watch him carefully or he ruins everything!",kr:"잘 지켜보지 않으면 다 망쳐놓거든요!"},{en:"But I can never stay mad at that face.",kr:"그래도 그 얼굴 보면 절대 화낼 수 없어요."}],q:{t:"What does Biscuit like to do?",k:"비스킷은 뭘 좋아하나요?",o:["Sleep","Dig holes","Swim","Run"],a:1},ex:{en:"I can never stay mad",kr:"절대 화낼 수 없다"}},
+      {ss:[{en:"My neighbor Mrs. Kim taught me how to grow Korean peppers.",kr:"이웃 김 아주머니가 한국 고추 키우는 법을 가르쳐줬어요."},{en:"They are much spicier than I expected!",kr:"제가 예상했던 것보다 훨씬 매워요!"},{en:"But now I use them in everything I cook.",kr:"근데 이제 요리할 때마다 넣어요."}],q:{t:"Who taught Margaret to grow Korean peppers?",k:"누가 한국 고추 키우는 법을 가르쳐줬나요?",o:["Her sister","Mrs. Kim","A book","YouTube"],a:1},ex:{en:"much spicier than I expected",kr:"예상보다 훨씬 매운"}},
+    ]},
+    {name:'Baking Day',icon:'🧁',rounds:[
+      {ss:[{en:"Every Sunday I bake something special for my neighbors.",kr:"매주 일요일마다 이웃들에게 특별한 걸 구워줘요."},{en:"This week I made blueberry muffins.",kr:"이번 주에는 블루베리 머핀을 만들었어요."}],q:{t:"When does Margaret bake?",k:"마가렛은 언제 빵을 굽나요?",o:["Monday","Friday","Sunday","Saturday"],a:2},ex:{en:"something special",kr:"뭔가 특별한 것"}},
+      {ss:[{en:"The secret is using fresh blueberries, not frozen ones.",kr:"비결은 냉동이 아니라 신선한 블루베리를 쓰는 거예요."},{en:"My grandson always eats three before they even cool down.",kr:"손자가 항상 식기도 전에 세 개를 먹어요."},{en:"I love watching his happy little face.",kr:"행복한 그 작은 얼굴을 보는 게 좋아요."}],q:{t:"How many muffins does her grandson eat?",k:"손자가 머핀을 몇 개 먹나요?",o:["One","Two","Three","Four"],a:2},ex:{en:"before they even cool down",kr:"식기도 전에"}},
+      {ss:[{en:"Baking reminds me of my mother.",kr:"빵을 구우면 어머니가 생각나요."},{en:"She taught me her apple pie recipe when I was ten.",kr:"제가 열 살 때 사과 파이 레시피를 가르쳐줬거든요."},{en:"Some recipes carry love through generations.",kr:"어떤 레시피는 세대를 넘어 사랑을 전해요."}],q:{t:"What recipe did her mother teach her?",k:"어머니가 무슨 레시피를 가르쳐줬나요?",o:["Cookie","Cake","Apple pie","Bread"],a:2},ex:{en:"through generations",kr:"세대를 넘어서"}},
+    ]},
+  ],
+},
+ethan:{
+  name:'Ethan',emoji:'👦',age:14,city:'Phoenix, AZ',job:'중학생',
+  reason:'K-pop으로 한국어 독학',tags:['게임','유튜브','피자','축구','틱톡'],
+  price:10,desc:'쉬운 단어만! 서로 도와주기!',target:'10대와 쉽게 수다!',rate:.85,
+  level:'GENTLE',color:'#8B5CF6',ok:true,
+  bg:{l:'🎮 방',c:'linear-gradient(170deg,#1a1a2e,#16213e 50%,#0f3460)'},
+  intro:[
+    {en:"Hey! What's up! I'm Ethan.",kr:"야! 안녕! 나 이든이야."},
+    {en:"I'm fourteen and I go to school in Phoenix.",kr:"나 열네 살이고 피닉스에서 학교 다녀."},
+    {en:"I started learning Korean because of BTS.",kr:"방탄소년단 때문에 한국어 배우기 시작했어."},
+    {en:"I can say a few words like 안녕 and 감사합니다!",kr:"안녕이랑 감사합니다 같은 거 몇 개 말할 수 있어!"},
+    {en:"I love video games and pizza. Like, a LOT.",kr:"나 비디오 게임이랑 피자 진짜 좋아해. 엄청."},
+    {en:"Let's be friends and help each other!",kr:"우리 친구하고 서로 도와주자!"},
+  ],
+  question:{en:"Hey, do you play video games?",kr:"야, 너 비디오 게임 해?"},
+  answers:{yes:"Awesome! We should play together sometime!",no:"That's cool too! I can teach you some easy ones!"},
+  topics:[
+    {name:'My Favorite Game',icon:'🎮',rounds:[
+      {ss:[{en:"Dude, I played this amazing game last night.",kr:"야, 나 어젯밤에 진짜 대박 게임 했어."},{en:"It's called Star Quest and it's so cool.",kr:"스타 퀘스트라는 건데 완전 쩔어."}],q:{t:"What is the game called?",k:"게임 이름이 뭔가요?",o:["Space War","Star Quest","Moon Run","Sky Fight"],a:1},ex:{en:"so cool",kr:"완전 쩔어/멋져"}},
+      {ss:[{en:"You get to build your own spaceship.",kr:"자기만의 우주선을 만들 수 있어."},{en:"And then you fly around and fight aliens.",kr:"그리고 돌아다니면서 외계인이랑 싸워."},{en:"I stayed up until midnight because I couldn't stop!",kr:"멈출 수가 없어서 자정까지 깨어 있었어!"}],q:{t:"What time did Ethan stay up until?",k:"이든은 몇 시까지 깨어 있었나요?",o:["10 PM","11 PM","Midnight","2 AM"],a:2},ex:{en:"I couldn't stop",kr:"멈출 수가 없었어"}},
+      {ss:[{en:"My mom got so mad at me this morning.",kr:"오늘 아침에 엄마가 엄청 화났어."},{en:"She said I need to stop playing on school nights.",kr:"학교 가는 날 밤에 게임 그만하라고 했어."},{en:"But it was totally worth it. I got the best score ever!",kr:"근데 완전 그만한 가치 있었어. 역대 최고 점수 받았거든!"}],q:{t:"Why was Ethan's mom mad?",k:"이든 엄마는 왜 화났나요?",o:["Bad grades","Stayed up late","Didn't eat","Fought with sister"],a:1},ex:{en:"totally worth it",kr:"완전 그만한 가치가 있어"}},
+    ]},
+  ],
+},
+sofia:{
+  name:'Sofia',emoji:'👩‍🍳',age:31,city:'Miami',job:'셰프 (쿠바계)',
+  reason:'한국인 남편 (시댁에서 배움)',tags:['요리','레시피','맛집','라틴문화'],
+  price:10,desc:'음식으로 쉽게 대화!',target:'음식 좋아하면!',rate:.8,
+  level:'GENTLE',color:'#8B5CF6',ok:true,
+  bg:{l:'🍳 주방',c:'linear-gradient(170deg,#FFF8E7,#D4B896 50%,#A08060)'},
+  intro:[
+    {en:"Hola! I mean, hello! I'm Sofia.",kr:"올라! 아, 안녕하세요! 저는 소피아예요."},
+    {en:"I'm a chef here in Miami. Cuban food is my specialty.",kr:"마이애미에서 셰프로 일하고 있어요. 쿠바 음식이 전문이에요."},
+    {en:"My husband is Korean, so I learned some Korean from his family.",kr:"남편이 한국 사람이라서 시댁 식구들한테 한국어 좀 배웠어요."},
+    {en:"I even know how to make kimchi now!",kr:"이제 김치도 만들 줄 알아요!"},
+    {en:"Food brings people together. That's what I believe.",kr:"음식은 사람을 하나로 만들어줘요. 그게 제 믿음이에요."},
+    {en:"Let's talk about food and become friends!",kr:"음식 얘기하면서 친구 되자구요!"},
+  ],
+  question:{en:"What's your favorite food?",kr:"제일 좋아하는 음식이 뭐예요?"},
+  answers:{korean:"Oh I love Korean food too! My husband makes the best 불고기!",pizza:"Pizza is great! I make a Cuban-style one with mojo sauce!"},
+  topics:[
+    {name:'My Best Recipe',icon:'🍲',rounds:[
+      {ss:[{en:"Today I want to tell you about my grandmother's recipe.",kr:"오늘은 할머니의 레시피에 대해 이야기할게요."},{en:"It's called Ropa Vieja. It means old clothes in Spanish!",kr:"로파 비에하라고 해요. 스페인어로 '낡은 옷'이라는 뜻이에요!"}],q:{t:"What does Ropa Vieja mean?",k:"로파 비에하는 무슨 뜻인가요?",o:["New dish","Old clothes","Hot soup","Red meat"],a:1},ex:{en:"It means",kr:"~라는 뜻이다"}},
+      {ss:[{en:"You cook beef very slowly for many hours.",kr:"소고기를 여러 시간 동안 아주 천천히 요리해요."},{en:"Then you pull it apart with two forks.",kr:"그리고 포크 두 개로 찢어요."},{en:"That's why it looks like old clothes!",kr:"그래서 낡은 옷처럼 보이는 거예요!"}],q:{t:"How do you cook the beef?",k:"소고기를 어떻게 요리하나요?",o:["Fry quickly","Cook slowly","Bake it","Grill it"],a:1},ex:{en:"pull it apart",kr:"찢다/분리하다"}},
+      {ss:[{en:"My husband tried to mix it with kimchi once.",kr:"남편이 한번은 김치랑 섞어 먹어봤어요."},{en:"I was shocked, but honestly? It was delicious!",kr:"놀랐는데, 솔직히? 맛있었어요!"},{en:"Now we call it Cuban-Korean fusion at home.",kr:"이제 집에서 쿠바-한국 퓨전이라고 불러요."}],q:{t:"What did her husband mix with the dish?",k:"남편이 뭐랑 섞었나요?",o:["Salsa","Rice","Kimchi","Cheese"],a:2},ex:{en:"honestly",kr:"솔직히"}},
+    ]},
+  ],
+},
+};
+
+// Non-playable characters (profile only)
+const OTHERS=[
+  {e:'👩‍🎤',n:'Mia',a:19,c:'NYC',g:'C',p:20},{e:'👩‍⚕️',n:'Jenny',a:34,c:'LA',g:'C',p:20},
+  {e:'🧑‍🦱',n:'Alex',a:24,c:'LA',g:'C',p:20},{e:'👩‍💻',n:'Priya',a:26,c:'SF',g:'F',p:30},
+  {e:'👨‍💼',n:'David',a:42,c:'Chicago',g:'F',p:30},{e:'👨‍💼',n:'Kevin',a:36,c:'NYC',g:'F',p:40},
+];
+
+// ═══ Character SVG (simplified, works for all) ═══
+function charSvg(emoji,speaking,color){
+  return `<div style="font-size:120px;text-align:center;filter:drop-shadow(0 8px 24px rgba(0,0,0,.5));line-height:1;${speaking?'animation:talk .3s ease-in-out infinite alternate':''}">
+    ${emoji}
+  </div>
+  <style>@keyframes talk{0%{transform:scale(1) translateY(0)}100%{transform:scale(1.03) translateY(-3px)}}</style>`;
+}
+
+function buildScene(ch,sub,speaking){
+  const bg=ch.bg||{l:'🏠',c:'linear-gradient(170deg,#333,#555)'};
+  return `<div class="sc">
+    <div style="position:absolute;inset:0;background:${bg.c}"></div>
+    <div style="position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 20%,rgba(0,0,0,.15) 60%,rgba(0,0,0,.45) 100%)"></div>
+    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-55%);z-index:3">${charSvg(ch.emoji,speaking)}</div>
+    <div style="position:absolute;top:12px;left:14px;z-index:5;background:rgba(0,0,0,.4);backdrop-filter:blur(8px);padding:5px 14px;border-radius:20px;font-size:12px;display:flex;align-items:center;gap:6px">
+      <span style="width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 6px #4ADE80"></span>${bg.l}
+    </div>
+    ${sub?`<div style="position:absolute;bottom:0;left:0;right:0;z-index:6;background:rgba(0,0,0,.78);backdrop-filter:blur(12px);padding:14px 18px;text-align:center">
+      <div style="font-size:16px;font-weight:600;line-height:1.7">${sub.en}</div>
+      ${sub.kr?`<div style="color:#C4B5FD;font-size:13px;margin-top:3px">${sub.kr}</div>`:''}
+    </div>`:''}
+  </div>`;
+}
+
+// ═══ SCREENS ═══
+function go(n){S.scr=n;R[n]();updNav()}
+
+function rIntro(){app.innerHTML=`<div style="min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:linear-gradient(160deg,#0F0A1F,#1A0F2E 50%,#0D1117);padding:24px;text-align:center">
+  <div style="font-size:52px;margin-bottom:10px">🌏</div>
+  <h1 style="font-size:36px;font-weight:800;letter-spacing:-.02em;margin-bottom:4px">SnapQ <span style="color:#A78BFA">Friends</span></h1>
+  <p style="font-size:15px;color:#C4B5FD;font-style:italic;font-weight:300;margin-bottom:44px;letter-spacing:.06em">Friends First. Fluency Follows.</p>
+  <button class="b" style="animation:glow 2s infinite;padding:18px 52px;font-size:19px" onclick="go('lang')">START 🎉</button>
+  <p style="color:#6B7280;font-size:11px;margin-top:20px">🔊 소리를 켜주세요!</p>
+</div>`}
+
+function rLang(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;padding:48px 24px;text-align:center">
+  <h2 style="font-size:22px;font-weight:700;margin-bottom:8px">🌍 Choose Your Language</h2>
+  <p style="color:#9CA3AF;font-size:14px;margin-bottom:32px">어떤 언어를 배울까요?</p>
+  <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
+    <button onclick="go('profiles')" style="display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#1E1B4B,#312E81);border:2px solid #6366F1;border-radius:16px;padding:16px 20px"><span style="font-size:28px">🇺🇸</span><span style="color:#fff;font-size:18px;font-weight:600;flex:1;text-align:left">English</span><span style="color:#4ADE80;font-size:22px">→</span></button>
+    ${[['🇯🇵','日本語','もうすぐ!'],['🇨🇳','中文','即将推出!'],['🇪🇸','Español','¡Próximamente!']].map(l=>`<button style="display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 20px;opacity:.45"><span style="font-size:28px">${l[0]}</span><span style="color:#fff;font-size:18px;font-weight:600;flex:1;text-align:left">${l[1]}</span><span style="color:#F59E0B;font-size:12px">${l[2]}</span></button>`).join('')}
+  </div>
+</div>`}
+
+function rProfiles(){
+  const gc={GENTLE:{l:'🐢 GENTLE 초급',c:'#8B5CF6'},CASUAL:{l:'💬 CASUAL 중급',c:'#3B82F6'},FAST:{l:'🔥 FAST 고급',c:'#EF4444'}};
+  const playable=Object.entries(CHARS).map(([id,ch])=>({id,...ch}));
+  let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
+    <h2 style="font-size:20px;font-weight:700;text-align:center;margin-bottom:24px">👥 Choose Your Friend</h2>
+    <h3 style="color:#8B5CF6;font-size:13px;font-weight:600;margin:0 0 10px 4px">${gc.GENTLE.l}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px">`;
+  playable.forEach(p=>{
+    h+=`<button onclick="S.char='${p.id}';go('video')" style="background:linear-gradient(150deg,${p.color}18,${p.color}30);border:2px solid ${p.color}50;border-radius:16px;padding:14px 6px;text-align:center">
+      <div style="font-size:36px;margin-bottom:4px">${p.emoji}</div>
+      <div style="color:#fff;font-size:13px;font-weight:600">${p.name}</div>
+      <div style="color:#9CA3AF;font-size:10px">${p.age} · ${p.city}</div>
+      <div style="color:${p.color};font-size:10px;margin-top:4px">${p.price}🪙</div>
+    </button>`;
+  });
+  h+=`</div>`;
+  // CASUAL
+  h+=`<h3 style="color:#3B82F6;font-size:13px;font-weight:600;margin:0 0 10px 4px">${gc.CASUAL.l}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px">`;
+  OTHERS.filter(o=>o.g==='C').forEach(p=>{
+    h+=`<button style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px 6px;text-align:center;opacity:.35">
+      <div style="font-size:36px;margin-bottom:4px">${p.e}</div><div style="color:#fff;font-size:13px;font-weight:600">${p.n}</div>
+      <div style="color:#9CA3AF;font-size:10px">${p.a} · ${p.c}</div><div style="color:#6B7280;font-size:9px;margin-top:4px">🔒 ${p.p}🪙</div></button>`;
+  });
+  h+=`</div>`;
+  // FAST
+  h+=`<h3 style="color:#EF4444;font-size:13px;font-weight:600;margin:0 0 10px 4px">${gc.FAST.l}</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:24px">`;
+  OTHERS.filter(o=>o.g==='F').forEach(p=>{
+    h+=`<button style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px 6px;text-align:center;opacity:.35">
+      <div style="font-size:36px;margin-bottom:4px">${p.e}</div><div style="color:#fff;font-size:13px;font-weight:600">${p.n}</div>
+      <div style="color:#9CA3AF;font-size:10px">${p.a} · ${p.c}</div><div style="color:#6B7280;font-size:9px;margin-top:4px">🔒 ${p.p}🪙</div></button>`;
+  });
+  h+=`</div></div>`;
+  app.innerHTML=h;
+}
+
+// ═══ INTRO VIDEO ═══
+let _vb=false;
+function rVideo(){_vb=false;const ch=CHARS[S.char];
+  app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+    <button onclick="speechSynthesis.cancel();go('profiles')" style="background:none;color:#9CA3AF;font-size:14px;margin-bottom:12px">← 뒤로</button>
+    <div id="sc1">${buildScene(ch,null,false)}</div>
+    <div style="text-align:center;margin-top:20px" id="vc"><button class="b" onclick="playV()">▶ 소개 영상 보기</button></div>
+    <div style="background:rgba(255,255,255,.05);border-radius:16px;padding:18px;margin-top:20px;border:1px solid rgba(255,255,255,.08)">
+      <div style="margin-bottom:8px">${ch.tags.map(t=>`<span class="tg">${t}</span>`).join('')}</div>
+      <p style="color:#9CA3AF;font-size:13px;line-height:1.7">${ch.name}, ${ch.age}세 · ${ch.city}<br>${ch.job} · ${ch.reason}<br><span style="color:#A78BFA">💡 ${ch.desc}</span></p>
+    </div>
+  </div>`}
+
+async function playV(){
+  if(_vb)return;_vb=true;const ch=CHARS[S.char],vc=$('vc');
+  vc.innerHTML=`<p style="color:#C4B5FD;font-size:13px">🎤 ${ch.name}가 말하고 있어요...</p>`;
+  for(const line of ch.intro){
+    $('sc1').innerHTML=buildScene(ch,{en:line.en,kr:line.kr},true);
+    await speak(line.en,ch.rate);
+    $('sc1').innerHTML=buildScene(ch,{en:line.en,kr:line.kr},false);
+    await new Promise(r=>setTimeout(r,400));
+  }
+  $('sc1').innerHTML=buildScene(ch,{en:ch.question.en,kr:ch.question.kr},true);
+  await speak(ch.question.en,ch.rate);
+  $('sc1').innerHTML=buildScene(ch,{en:ch.question.en,kr:ch.question.kr},false);
+  const opts=Object.keys(ch.answers);
+  vc.innerHTML=`<div style="display:flex;gap:12px;justify-content:center">${opts.map((k,i)=>`<button class="b ${i===0?'bp':'bo'}" style="padding:12px 28px;font-size:15px" onclick="ansV('${k}')">${k==='dogs'?'🐶':k==='cats'?'🐱':k==='yes'?'👍':k==='korean'?'🍚':'🍕'} ${k.charAt(0).toUpperCase()+k.slice(1)}!</button>`).join('')}</div>`;
+  _vb=false;
+}
+
+async function ansV(k){
+  const ch=CHARS[S.char],reply=ch.answers[k];
+  $('sc1').innerHTML=buildScene(ch,{en:reply},true);
+  await speak(reply,ch.rate);
+  $('sc1').innerHTML=buildScene(ch,{en:reply},false);
+  $('vc').innerHTML=`<button class="b bg" onclick="addF()">+ Add Friend — ${ch.price}🪙</button>`;
+}
+
+function addF(){const ch=CHARS[S.char];if(S.coins>=ch.price&&!S.fr[S.char]){S.coins-=ch.price;S.fr[S.char]={int:1}}go('friends')}
+
+// ═══ FRIENDS ═══
+function rFriends(){
+  const ids=Object.keys(S.fr);
+  if(ids.length===0){
+    app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px"><h2 style="font-size:20px;font-weight:700;margin-bottom:20px">💬 My Friends</h2>
+    <div style="text-align:center;color:#6B7280;margin-top:60px"><div style="font-size:48px;margin-bottom:12px">🤷</div><p>아직 친구가 없어요!</p>
+    <button class="b" style="margin-top:16px;padding:12px 28px;font-size:14px" onclick="go('profiles')">친구 만들러 가기 →</button></div></div>`;return;
+  }
+  let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px"><h2 style="font-size:20px;font-weight:700;margin-bottom:20px">💬 My Friends</h2>`;
+  ids.forEach(id=>{
+    const ch=CHARS[id],f=S.fr[id],hearts=Math.min(f.int,5);
+    h+=`<button onclick="S.char='${id}';go('topics')" style="display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:16px 18px;text-align:left;width:100%;margin-bottom:10px">
+      <div style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,${ch.color}35,${ch.color}15);display:flex;align-items:center;justify-content:center;font-size:30px;border:2px solid ${ch.color}50;position:relative">${ch.emoji}
+        <div style="position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:#EF4444;color:white;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #0F0A1F">1</div>
+      </div>
+      <div style="flex:1"><div style="font-size:16px;font-weight:600;margin-bottom:4px">${ch.name} <span style="color:#C4B5FD;font-size:12px;margin-left:6px">${'♥'.repeat(hearts)}${'♡'.repeat(5-hearts)}</span></div>
+      <div style="color:#9CA3AF;font-size:13px">"Hey! Ready to chat today?" 💬</div></div></button>`;
+  });
+  app.innerHTML=h+`</div>`;
+}
+
+// ═══ TOPIC SELECT ═══
+function rTopics(){
+  const ch=CHARS[S.char];
+  let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+    <button onclick="go('friends')" style="background:none;color:#9CA3AF;font-size:14px;margin-bottom:12px">← 뒤로</button>
+    <h2 style="font-size:18px;font-weight:700;margin-bottom:4px">${ch.emoji} ${ch.name}의 이야기</h2>
+    <p style="color:#9CA3AF;font-size:12px;margin-bottom:20px">토픽을 선택하세요!</p>
+    <div style="display:flex;flex-direction:column;gap:10px">`;
+  ch.topics.forEach((t,i)=>{
+    h+=`<button onclick="S.topic=${i};go('listen')" style="display:flex;align-items:center;gap:14px;background:rgba(${ch.color.slice(1).match(/../g).map(h=>parseInt(h,16)).join(',')},.08);border:1px solid rgba(${ch.color.slice(1).match(/../g).map(h=>parseInt(h,16)).join(',')},.2);border-radius:16px;padding:16px 18px;text-align:left;width:100%">
+      <span style="font-size:32px">${t.icon}</span>
+      <div><div style="font-size:15px;font-weight:600">${t.name}</div>
+      <div style="color:#9CA3AF;font-size:12px">${t.rounds.length} rounds · ${t.rounds.reduce((a,r)=>a+r.ss.length,0)} sentences</div></div>
+      <span style="color:#4ADE80;font-size:20px;margin-left:auto">→</span>
+    </button>`;
+  });
+  app.innerHTML=h+`</div></div>`;
+}
+
+// ═══ LISTENING ═══
+let L={r:0,ph:'ready',sel:null,sc:0,sv:[],as:[],cs:null};
+function rListen(){L={r:0,ph:'ready',sel:null,sc:0,sv:[],as:[],cs:null};rfL()}
+function rfL(){
+  const ch=CHARS[S.char],topic=ch.topics[S.topic],cur=topic.rounds[L.r];
+  const prev=L.as.slice(0,Math.max(0,L.as.length-(L.ph==='listen'?cur.ss.length:0)));
+  let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <button onclick="speechSynthesis.cancel();go('topics')" style="background:none;color:#9CA3AF;font-size:14px">← 뒤로</button>
+      <span style="color:#C4B5FD;font-size:13px;font-weight:600">🎧 ${topic.name} · R${L.r+1}/${topic.rounds.length}</span>
+      <span style="color:#FCD34D;font-size:13px">⭐ ${L.sc}</span>
+    </div>
+    <div style="height:4px;background:rgba(255,255,255,.08);border-radius:2px;margin-bottom:14px"><div style="height:100%;border-radius:2px;background:linear-gradient(90deg,#8B5CF6,#6366F1);width:${((L.r+(L.ph==='done'?1:0))/topic.rounds.length)*100}%;transition:width .5s"></div></div>`;
+
+  if(L.ph!=='done') h+=`<div id="sc1">${buildScene(ch,L.ph==='listen'?L.cs:null,L.ph==='listen')}</div>`;
+
+  if((L.ph==='listen'||L.ph==='q')&&prev.length>0)
+    h+=`<div style="background:rgba(139,92,246,.08);border-radius:12px;padding:12px;margin-top:12px;border:1px solid rgba(139,92,246,.15)"><div style="color:#9CA3AF;font-size:10px;margin-bottom:6px">📖 이전 대사</div>${prev.map(s=>`<p style="color:#D1D5DB;font-size:13px;line-height:1.6;margin:3px 0">${s.en}</p>`).join('')}</div>`;
+
+  if(L.ph==='ready')
+    h+=`<div style="text-align:center;margin-top:24px"><p style="color:#C4B5FD;font-size:14px;margin-bottom:6px">Round ${L.r+1}: ${cur.ss.length}문장!</p><p style="color:#6B7280;font-size:12px;margin-bottom:20px">${L.r===0?'🔊 소리에 집중하세요!':'📖 이전 문장 텍스트 공개!'}</p><button class="b" onclick="pRnd()">🎧 듣기 시작!</button></div>`;
+
+  if(L.ph==='q')
+    h+=`<div style="margin-top:16px"><div style="background:rgba(99,102,241,.12);border-radius:14px;padding:14px;margin-bottom:12px;border:1px solid rgba(99,102,241,.25)"><p style="font-size:15px;font-weight:600;margin-bottom:3px">${cur.q.t}</p><p style="color:#A78BFA;font-size:12px">${cur.q.k}</p></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">${cur.q.o.map((o,i)=>{const ia=i===cur.q.a,is=i===L.sel;return`<button onclick="${L.sel===null?`pA(${i})`:''}" style="background:${L.sel===null?'rgba(255,255,255,.07)':ia?'rgba(74,222,128,.18)':is?'rgba(239,68,68,.18)':'rgba(255,255,255,.04)'};border:${L.sel===null?'1px solid rgba(255,255,255,.12)':ia?'2px solid #4ADE80':is?'2px solid #EF4444':'1px solid rgba(255,255,255,.08)'};border-radius:12px;padding:12px;color:#fff;font-size:15px;font-weight:500">${o}${L.sel!==null&&ia?' ✅':''}${is&&!ia?' ❌':''}</button>`}).join('')}</div></div>`;
+
+  if(L.ph==='res')
+    h+=`<div style="margin-top:16px"><div style="background:rgba(255,255,255,.04);border-radius:14px;padding:14px;margin-bottom:12px"><div style="color:#9CA3AF;font-size:11px;margin-bottom:6px">📖 해석</div>${cur.ss.map(s=>`<div style="margin-bottom:5px"><p style="color:#E5E7EB;font-size:13px">${s.en}</p><p style="color:#A78BFA;font-size:12px">${s.kr}</p></div>`).join('')}</div><button class="b bo" style="width:100%" onclick="sE()">⭐ 핵심 표현 듣기</button></div>`;
+
+  if(L.ph==='expr')
+    h+=`<div style="margin-top:16px;text-align:center"><div style="background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.08));border-radius:16px;padding:22px;margin-bottom:16px;border:2px solid rgba(245,158,11,.25)"><div style="font-size:11px;color:#FCD34D;margin-bottom:8px;font-weight:600">⭐ KEY EXPRESSION</div><div style="font-size:22px;font-weight:700;margin-bottom:4px">"${cur.ex.en}"</div><div style="color:#FCD34D;font-size:14px">${cur.ex.kr}</div></div><div style="display:flex;gap:10px;justify-content:center"><button class="b bg" style="padding:12px 24px;font-size:14px" onclick="svE()">📋 Save+Next</button><button onclick="nR()" style="background:rgba(255,255,255,.08);color:#9CA3AF;border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 24px;font-size:14px">Skip →</button></div></div>`;
+
+  if(L.ph==='done'){
+    const topic=CHARS[S.char].topics[S.topic];
+    h+=`<div style="text-align:center;margin-top:32px"><div style="font-size:64px;margin-bottom:12px">${L.sc>=2?'🎉':'💪'}</div><h2 style="font-size:24px;font-weight:700;margin-bottom:8px">${L.sc>=2?'Amazing!':'Good Try!'}</h2><p style="color:#C4B5FD;font-size:16px;margin-bottom:12px">Score: ${L.sc}/${topic.rounds.length} ${L.sc>=2?'✅ PASS!':''}</p>${L.sv.length>0?`<div style="background:rgba(74,222,128,.08);border-radius:14px;padding:14px;margin-bottom:16px;text-align:left;border:1px solid rgba(74,222,128,.15)"><div style="color:#4ADE80;font-size:12px;font-weight:600;margin-bottom:8px">📋 Expression Vault!</div>${L.sv.map(e=>`<div style="color:#E5E7EB;font-size:13px;margin-bottom:4px">✦ <b>${e.en}</b> — ${e.kr}</div>`).join('')}</div>`:''}<div style="background:rgba(139,92,246,.08);border-radius:14px;padding:14px;margin-bottom:20px;border:1px solid rgba(139,92,246,.15)"><p style="color:#C4B5FD;font-size:13px">🪙 +${L.sc>=2?15:5} &nbsp; ♥ +2</p></div><button class="b" onclick="fL()">계속하기 →</button></div>`;
+  }
+  app.innerHTML=h+`</div>`;
+}
+
+async function pRnd(){const ch=CHARS[S.char],cur=ch.topics[S.topic].rounds[L.r];L.ph='listen';L.sel=null;
+  for(const s of cur.ss){L.as.push(s);L.cs=s;rfL();
+    $('sc1').innerHTML=buildScene(ch,{en:s.en},true);
+    await speak(s.en,ch.rate);
+    $('sc1').innerHTML=buildScene(ch,{en:s.en},false);
+    await new Promise(r=>setTimeout(r,300));}
+  L.cs=null;L.ph='q';rfL();}
+function pA(i){const ch=CHARS[S.char],cur=ch.topics[S.topic].rounds[L.r];L.sel=i;if(i===cur.q.a)L.sc++;if(navigator.vibrate)navigator.vibrate(i===cur.q.a?[50]:[80,40,80]);rfL();setTimeout(()=>{L.ph='res';rfL()},700)}
+async function sE(){L.ph='expr';rfL();const ch=CHARS[S.char];await speak(ch.topics[S.topic].rounds[L.r].ex.en,.7)}
+function svE(){const e=CHARS[S.char].topics[S.topic].rounds[L.r].ex;if(!L.sv.find(x=>x.en===e.en))L.sv.push(e);nR()}
+function nR(){const ch=CHARS[S.char];if(L.r<ch.topics[S.topic].rounds.length-1){L.r++;L.ph='ready';L.sel=null}else L.ph='done';rfL()}
+function fL(){if(S.fr[S.char])S.fr[S.char].int++;S.coins+=L.sc>=2?15:5;go('friends')}
+
+function updNav(){const sh=!['intro','lang'].includes(S.scr);let n=document.getElementById('nv');if(!sh){if(n)n.remove();return}
+if(!n){n=document.createElement('div');n.id='nv';n.className='nav';document.body.appendChild(n)}
+n.innerHTML=[{i:'🏠',l:'Home',s:'profiles'},{i:'💬',l:'Friends',s:'friends'},{i:'📋',l:'Vault',s:'vault'},{i:'🪙',l:S.coins,s:'coins'}].map(x=>`<button class="${S.scr===x.s?'on':''}" onclick="${['profiles','friends'].includes(x.s)?`go('${x.s}')`:''}"><span style="font-size:20px">${x.i}</span>${x.l}</button>`).join('')}
+
+const R={intro:rIntro,lang:rLang,profiles:rProfiles,video:rVideo,friends:rFriends,topics:rTopics,listen:rListen};
+go('intro');
+</script>
+</body>
+</html>
