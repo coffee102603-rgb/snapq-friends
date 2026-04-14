@@ -115,34 +115,34 @@ function rIntro(){app.innerHTML=`<div style="min-height:100dvh;display:flex;flex
 
 // ── LANGUAGE ──
 function rLang(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;padding:48px 24px;text-align:center">
-<h2 class="fadeUp" style="font-size:22px;font-weight:700;margin-bottom:32px">🌍 Choose Your Language</h2>
+<h2 class="fadeUp" style="font-size:24px;font-weight:700;margin-bottom:32px;color:#fff">Choose Your Language</h2>
 <div style="display:flex;flex-direction:column;gap:12px;max-width:360px;margin:0 auto">
-<button class="fadeUp d1" onclick="go('main')" style="display:flex;align-items:center;gap:16px;background:linear-gradient(135deg,#1E1B4B,#312E81);border:2px solid #6366F1;border-radius:16px;padding:16px 20px"><span style="font-size:28px">🇺🇸</span><span style="color:#fff;font-size:18px;font-weight:600;flex:1;text-align:left">English</span><span style="color:#4ADE80;font-size:22px">→</span></button>
-<button class="fadeUp d2" style="display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 20px;opacity:.45"><span style="font-size:28px">🇯🇵</span><span style="color:#fff;font-size:18px;font-weight:600;flex:1;text-align:left">日本語</span><span style="color:#F59E0B;font-size:12px">もうすぐ!</span></button>
-<button class="fadeUp d3" style="display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:16px 20px;opacity:.45"><span style="font-size:28px">🇨🇳</span><span style="color:#fff;font-size:18px;font-weight:600;flex:1;text-align:left">中文</span><span style="color:#F59E0B;font-size:12px">即将推出!</span></button>
+<button class="fadeUp d1" onclick="go('main')" style="display:flex;align-items:center;gap:16px;background:#1E1B4B;border:2px solid #6366F1;border-radius:16px;padding:18px 20px"><span style="font-size:14px;font-weight:700;color:#fff;background:#3B82F6;padding:6px 10px;border-radius:8px">US</span><span style="color:#fff;font-size:20px;font-weight:700;flex:1;text-align:left">English</span><span style="color:#4ADE80;font-size:22px">→</span></button>
+<button class="fadeUp d2" style="display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px 20px;opacity:.5"><span style="font-size:14px;font-weight:700;color:#fff;background:#EF4444;padding:6px 10px;border-radius:8px">JP</span><span style="color:#fff;font-size:20px;font-weight:700;flex:1;text-align:left">日本語</span><span style="color:#F59E0B;font-size:13px;font-weight:600">もうすぐ!</span></button>
+<button class="fadeUp d3" style="display:flex;align-items:center;gap:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:18px 20px;opacity:.5"><span style="font-size:14px;font-weight:700;color:#fff;background:#EF4444;padding:6px 10px;border-radius:8px">CN</span><span style="color:#fff;font-size:20px;font-weight:700;flex:1;text-align:left">中文</span><span style="color:#F59E0B;font-size:13px;font-weight:600">即将推出!</span></button>
 </div></div>`}
 
 // ── MAIN MENU ──
 function rMain(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;padding:24px 16px 80px">
-<div class="fadeUp" style="text-align:center;margin-bottom:24px">
+<div class="fadeUp" style="text-align:center;margin-bottom:28px">
 <div style="font-size:32px;margin-bottom:4px">🎤</div>
 <h1 style="font-size:28px;font-weight:800;letter-spacing:-.02em">Snap<span style="color:#A78BFA">Talk</span></h1>
-<p style="color:#6B7280;font-size:12px;margin-top:4px">Talk changes everything.</p>
+<p style="color:#9CA3AF;font-size:12px;margin-top:4px">Talk changes everything.</p>
 </div>
-<button class="fadeUp d1" onclick="go('catList')" style="width:100%;background:linear-gradient(135deg,rgba(139,92,246,.12),rgba(99,102,241,.08));border:2px solid rgba(139,92,246,.3);border-radius:20px;padding:24px 20px;text-align:left;margin-bottom:14px">
+<button class="fadeUp d1" onclick="go('catList')" style="width:100%;background:#1E1B4B;border:2px solid #6366F1;border-radius:20px;padding:24px 20px;text-align:left;margin-bottom:14px">
 <div style="display:flex;align-items:center;gap:14px"><div style="font-size:36px">👥</div><div style="flex:1">
-<div style="font-size:18px;font-weight:700">Friends Mode</div>
-<div style="color:#C4B5FD;font-size:13px;margin-top:2px">AI 친구와 캐주얼 영어회화</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:6px">🗣️일상 ✈️여행 🏥병원 💰금융 💻IT 🎤K-pop 🏋️스포츠 🎓유학 💼비즈니스</div>
-<div style="display:inline-block;background:rgba(74,222,128,.15);color:#4ADE80;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;margin-top:6px">12 캐릭터 · 9 카테고리</div>
+<div style="font-size:20px;font-weight:800;color:#fff">Friends Mode</div>
+<div style="color:#C4B5FD;font-size:14px;margin-top:4px;font-weight:600">AI 친구와 캐주얼 영어회화</div>
+<div style="color:#E5E7EB;font-size:13px;margin-top:8px;line-height:1.8">일상 · 여행 · 병원 · 금융 · IT · K-pop · 스포츠 · 유학 · 비즈니스</div>
+<div style="display:inline-block;background:#4ADE80;color:#052E16;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:8px">12 캐릭터 · 9 카테고리</div>
 </div><span style="color:#4ADE80;font-size:24px">→</span></div></button>
 
-<button class="fadeUp d2" onclick="go('pro')" style="width:100%;background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(239,68,68,.06));border:2px solid rgba(245,158,11,.25);border-radius:20px;padding:24px 20px;text-align:left">
+<button class="fadeUp d2" onclick="go('pro')" style="width:100%;background:#2D1810;border:2px solid #F59E0B80;border-radius:20px;padding:24px 20px;text-align:left">
 <div style="display:flex;align-items:center;gap:14px"><div style="font-size:36px">💼</div><div style="flex:1">
-<div style="font-size:18px;font-weight:700">Pro Mode <span style="background:linear-gradient(135deg,#F59E0B,#EF4444);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:13px;margin-left:4px">HOT</span></div>
-<div style="color:#FCD34D;font-size:13px;margin-top:2px">시험 & 취업 대비 전문 모드</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:6px">🎤OPIc 📘TOEFL 📗IELTS 👔면접 📊발표</div>
-<div style="display:inline-block;background:rgba(245,158,11,.15);color:#F59E0B;padding:2px 10px;border-radius:10px;font-size:11px;font-weight:600;margin-top:6px">학원 수준 트레이닝!</div>
+<div style="font-size:20px;font-weight:800;color:#fff">Pro Mode <span style="color:#FCD34D;font-size:14px;font-weight:700;margin-left:4px">HOT</span></div>
+<div style="color:#FCD34D;font-size:14px;margin-top:4px;font-weight:600">시험 & 취업 대비 전문 모드</div>
+<div style="color:#E5E7EB;font-size:13px;margin-top:8px;line-height:1.8">OPIc · TOEFL · IELTS · 면접 · 발표</div>
+<div style="display:inline-block;background:#F59E0B;color:#451A03;padding:4px 12px;border-radius:10px;font-size:12px;font-weight:700;margin-top:8px">학원 수준 트레이닝!</div>
 </div><span style="color:#F59E0B;font-size:24px">→</span></div></button>
 </div>`}
 
@@ -191,53 +191,53 @@ function rPro(){app.innerHTML=`<div style="min-height:100dvh;background:#0F0A1F;
 <p style="color:#FCD34D;font-size:12px;margin-top:4px">Your Score. Your Future.</p>
 </div>
 
-<div class="fadeUp" style="color:#9CA3AF;font-size:11px;font-weight:600;margin-bottom:10px;padding-left:4px">📝 시험 대비</div>
+<div class="fadeUp" style="color:#C4B5FD;font-size:12px;font-weight:700;margin-bottom:10px;padding-left:4px;letter-spacing:.05em">📝 시험 대비</div>
 
-<button class="fadeUp d1" onclick="go('opic')" style="width:100%;background:linear-gradient(135deg,rgba(139,92,246,.1),rgba(139,92,246,.05));border:1px solid rgba(139,92,246,.25);border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
+<button class="fadeUp d1" onclick="go('opic')" style="width:100%;background:#1E1040;border:2px solid #8B5CF680;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
 <div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:rgba(139,92,246,.15);display:flex;align-items:center;justify-content:center">🎤</div>
+<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:#8B5CF625;display:flex;align-items:center;justify-content:center">🎤</div>
 <div style="flex:1">
-<div style="font-size:16px;font-weight:700">OPIc 대비</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:2px">👩‍💼 Eva 면접관 · Survey 10주제 · 콤보+롤플레이</div>
-<div style="color:#A78BFA;font-size:12px;font-weight:600;margin-top:4px">"실제 OPIc 그대로! IM2→IH 집중 코스"</div>
+<div style="font-size:17px;font-weight:800;color:#fff">OPIc 대비</div>
+<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Eva 면접관 · Survey 10주제 · 콤보+롤플레이</div>
+<div style="color:#C4B5FD;font-size:13px;font-weight:700;margin-top:6px">"실제 OPIc 그대로! IM2→IH 집중 코스"</div>
 </div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
 
-<button class="fadeUp d2" onclick="go('toefl')" style="width:100%;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(59,130,246,.05));border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
+<button class="fadeUp d2" onclick="go('toefl')" style="width:100%;background:#0C1A3D;border:2px solid #3B82F680;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
 <div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:22px;width:52px;height:52px;border-radius:14px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center">📘</div>
+<div style="font-size:22px;width:52px;height:52px;border-radius:14px;background:#3B82F625;display:flex;align-items:center;justify-content:center">📘</div>
 <div style="flex:1">
-<div style="font-size:16px;font-weight:700">TOEFL Speaking</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:2px">👩‍🏫 4 Tasks · 독립형+통합형(읽기+강의)</div>
-<div style="color:#60A5FA;font-size:12px;font-weight:600;margin-top:4px">"Task별 전략! 읽기→듣기→말하기 통합 훈련"</div>
+<div style="font-size:17px;font-weight:800;color:#fff">TOEFL Speaking</div>
+<div style="color:#D1D5DB;font-size:12px;margin-top:3px">4 Tasks · 독립형+통합형(읽기+강의)</div>
+<div style="color:#93C5FD;font-size:13px;font-weight:700;margin-top:6px">"Task별 전략! 읽기→듣기→말하기 통합 훈련"</div>
 </div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
 
-<button class="fadeUp d3" onclick="go('ielts')" style="width:100%;background:linear-gradient(135deg,rgba(22,163,106,.1),rgba(22,163,106,.05));border:1px solid rgba(22,163,106,.25);border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
+<button class="fadeUp d3" onclick="go('ielts')" style="width:100%;background:#082520;border:2px solid #16A34A80;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
 <div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:22px;width:52px;height:52px;border-radius:14px;background:rgba(22,163,106,.15);display:flex;align-items:center;justify-content:center">📗</div>
+<div style="font-size:22px;width:52px;height:52px;border-radius:14px;background:#16A34A25;display:flex;align-items:center;justify-content:center">📗</div>
 <div style="flex:1">
-<div style="font-size:16px;font-weight:700">IELTS Speaking</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:2px">👩‍💼 Part 1~3 · Cue Card · 심화 토론</div>
-<div style="color:#6EE7B7;font-size:12px;font-weight:600;margin-top:4px">"Band 7.0 목표! 2분 롱턴 집중 특훈"</div>
+<div style="font-size:17px;font-weight:800;color:#fff">IELTS Speaking</div>
+<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Part 1~3 · Cue Card · 심화 토론</div>
+<div style="color:#6EE7B7;font-size:13px;font-weight:700;margin-top:6px">"Band 7.0 목표! 2분 롱턴 집중 특훈"</div>
 </div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
 
-<div class="fadeUp d4" style="color:#9CA3AF;font-size:11px;font-weight:600;margin:16px 0 10px 4px">💼 취업 & 비즈니스</div>
+<div class="fadeUp d4" style="color:#FCD34D;font-size:12px;font-weight:700;margin:16px 0 10px 4px;letter-spacing:.05em">💼 취업 & 비즈니스</div>
 
-<button class="fadeUp d4" onclick="go('interview')" style="width:100%;background:linear-gradient(135deg,rgba(59,130,246,.1),rgba(59,130,246,.05));border:1px solid rgba(59,130,246,.25);border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
+<button class="fadeUp d4" onclick="go('interview')" style="width:100%;background:#0C1A3D;border:2px solid #3B82F680;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
 <div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:rgba(59,130,246,.15);display:flex;align-items:center;justify-content:center">👔</div>
+<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:#3B82F625;display:flex;align-items:center;justify-content:center">👔</div>
 <div style="flex:1">
-<div style="font-size:16px;font-weight:700">영어면접 대비</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:2px">👨‍💼 Kevin · 면접 500회+ · STAR 기법 · 6카테고리</div>
-<div style="color:#60A5FA;font-size:12px;font-weight:600;margin-top:4px">"삼성·구글·골드만 실전 면접! 합격까지 무한 연습"</div>
+<div style="font-size:17px;font-weight:800;color:#fff">영어면접 대비</div>
+<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Kevin · 면접 500회+ · STAR 기법 · 6카테고리</div>
+<div style="color:#93C5FD;font-size:13px;font-weight:700;margin-top:6px">"삼성·구글·골드만 실전 면접! 합격까지!"</div>
 </div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
 
-<button class="fadeUp d5" onclick="go('pres')" style="width:100%;background:linear-gradient(135deg,rgba(74,222,128,.1),rgba(74,222,128,.05));border:1px solid rgba(74,222,128,.25);border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
+<button class="fadeUp d5" onclick="go('pres')" style="width:100%;background:#082520;border:2px solid #4ADE8080;border-radius:16px;padding:16px;text-align:left;margin-bottom:8px">
 <div style="display:flex;align-items:center;gap:12px">
-<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:rgba(74,222,128,.15);display:flex;align-items:center;justify-content:center">📊</div>
+<div style="font-size:28px;width:52px;height:52px;border-radius:14px;background:#4ADE8025;display:flex;align-items:center;justify-content:center">📊</div>
 <div style="flex:1">
-<div style="font-size:16px;font-weight:700">프레젠테이션 연습</div>
-<div style="color:#9CA3AF;font-size:11px;margin-top:2px">👩‍💻 Priya 코치 + 👨‍💼 David Q&A · 4유형</div>
-<div style="color:#6EE7B7;font-size:12px;font-weight:600;margin-top:4px">"실리콘밸리 스타일! 자소서부터 VC 피칭까지"</div>
+<div style="font-size:17px;font-weight:800;color:#fff">프레젠테이션 연습</div>
+<div style="color:#D1D5DB;font-size:12px;margin-top:3px">Priya 코치 + David Q&A · 4유형</div>
+<div style="color:#6EE7B7;font-size:13px;font-weight:700;margin-top:6px">"실리콘밸리 스타일! 자소서부터 VC 피칭까지"</div>
 </div><span style="color:#4ADE80;font-size:20px">→</span></div></button>
 </div>`}
 
