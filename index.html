@@ -37,16 +37,19 @@ function sttStop(){if(sttRec){sttRec.stop();sttRec=null}}
 
 // ═══ FRIENDS DATA ═══
 const CATS=[
-{id:'daily',icon:'🗣️',name:'일상 수다',en:'Daily Chat',desc:'느긋하게 일상 영어, 왕초보도 OK',level:'GENTLE',lc:'#4ADE80',
+{id:'daily',icon:'🗣️',name:'일상 수다',en:'Daily Chat',desc:'왕초보부터 편한 수다까지!',level:'GENTLE',lc:'#4ADE80',carousel:true,
 chars:[
-{id:'margaret',e:'👵',n:'Margaret',a:67,c:'Vermont',photo:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80',j:'은퇴 영어교사',pitch:'이해될 때까지 천천히 반복!',rate:.75,ok:1,tags:['커피','강아지','정원'],
+{id:'coco',e:'👶',n:'Coco',a:5,c:'California',photo:'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?w=400&q=80',j:'미국 꼬마',pitch:'Apple! Banana! 같이 배우자!',rate:.65,ok:0,flag:'🌈',dest:'왕왕초보',hot:'NEW!',tags:['알파벳','숫자','색깔'],intro:[],question:{},answers:{},topics:[]},
+{id:'sarah',e:'👩‍🏫',n:'Sarah',a:28,c:'Boston',photo:'https://images.unsplash.com/photo-1544717305-2782549b5136?w=400&q=80',j:'유치원 선생님',pitch:'발음교정! TH, R/L 완벽!',rate:.7,ok:0,flag:'🔤',dest:'발음교정',hot:'인기!',tags:['발음','기초','인사'],intro:[],question:{},answers:{},topics:[]},
+{id:'margaret',e:'👵',n:'Margaret',a:67,c:'Vermont',photo:'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&q=80',j:'은퇴 영어교사',pitch:'이해될 때까지 천천히!',rate:.75,ok:1,flag:'☕',dest:'느긋수다',tags:['커피','강아지','정원'],
 intro:[{en:"Oh, hello dear! I'm Margaret.",kr:"안녕하세요! 마가렛이에요."},{en:"I'm a retired English teacher from Vermont.",kr:"버몬트 은퇴 영어교사예요."},{en:"I love coffee, gardening, and my dog Biscuit.",kr:"커피, 정원, 강아지 비스킷을 좋아해요."},{en:"I'll speak slowly and help you every step.",kr:"천천히 도와줄게요."}],
 question:{en:"Do you like cats or dogs?",kr:"고양이? 강아지?"},answers:{dogs:"I have a dog named Biscuit!",cats:"Cats are lovely too!"},
 topics:[{name:'Morning Coffee',icon:'☕',rounds:[{ss:[{en:"I had the most wonderful cup of coffee this morning.",kr:"오늘 아침 정말 멋진 커피를 마셨어요."},{en:"It was a new blend from a small shop in town.",kr:"마을 작은 가게 새 블렌드였어요."}],q:{t:"What did Margaret have?",k:"뭘 마셨나요?",o:["Tea","Coffee","Juice","Milk"],a:1},ex:{en:"the most wonderful",kr:"가장 멋진"}},{ss:[{en:"The owner told me it comes all the way from Colombia.",kr:"콜롬비아에서 온 거래요."},{en:"He roasts the beans himself every morning.",kr:"매일 아침 직접 로스팅해요."},{en:"You can taste the difference when it's fresh.",kr:"신선하면 맛이 달라요."}],q:{t:"Where are the beans from?",k:"원두는 어디서?",o:["Brazil","Ethiopia","Colombia","Kenya"],a:2},ex:{en:"all the way from",kr:"~에서 먼 길을"}}]},{name:'My Garden',icon:'🌿',rounds:[{ss:[{en:"I spent the whole morning in my garden today.",kr:"오늘 아침 내내 정원에서 보냈어요."},{en:"The tomatoes are finally turning red!",kr:"토마토가 드디어 빨갛게!"}],q:{t:"What is turning red?",k:"뭐가 빨갛게?",o:["Roses","Apples","Tomatoes","Peppers"],a:2},ex:{en:"finally turning",kr:"드디어 ~하고 있다"}}]}]},
-{id:'ethan',e:'👦',n:'Ethan',a:14,c:'Phoenix',photo:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&q=80',j:'중학생',pitch:'게임/유튜브 슬랭 마스터!',rate:.85,ok:1,tags:['게임','유튜브','피자'],
+{id:'ethan',e:'👦',n:'Ethan',a:14,c:'Phoenix',photo:'https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?w=400&q=80',j:'중학생',pitch:'게임/유튜브 슬랭!',rate:.85,ok:1,flag:'🎮',dest:'10대 토크',tags:['게임','유튜브','피자'],
 intro:[{en:"Hey! What's up! I'm Ethan.",kr:"야! 안녕! 나 이든이야."},{en:"I'm fourteen, from Phoenix.",kr:"열네 살, 피닉스."},{en:"I love video games and pizza!",kr:"게임이랑 피자!"}],
 question:{en:"Do you play video games?",kr:"게임 해?"},answers:{yes:"Awesome! Let's play!",no:"I can teach you!"},
-topics:[{name:'My Favorite Game',icon:'🎮',rounds:[{ss:[{en:"Dude, I played this amazing game last night.",kr:"야, 어젯밤에 대박 게임 했어."},{en:"It's called Star Quest and it's so cool.",kr:"스타퀘스트, 완전 쩔어."}],q:{t:"What's the game called?",k:"게임 이름은?",o:["Space War","Star Quest","Moon Run","Sky Fight"],a:1},ex:{en:"so cool",kr:"완전 쩔어"}}]}]}
+topics:[{name:'My Favorite Game',icon:'🎮',rounds:[{ss:[{en:"Dude, I played this amazing game last night.",kr:"야, 어젯밤에 대박 게임 했어."},{en:"It's called Star Quest and it's so cool.",kr:"스타퀘스트, 완전 쩔어."}],q:{t:"What's the game called?",k:"게임 이름은?",o:["Space War","Star Quest","Moon Run","Sky Fight"],a:1},ex:{en:"so cool",kr:"완전 쩔어"}}]}]},
+{id:'jason',e:'🧑',n:'Jason',a:22,c:'Portland',photo:'https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=400&q=80',j:'대학생 바리스타',pitch:'카페 주문, 스몰톡 영어!',rate:.85,ok:0,flag:'☕',dest:'카페영어',tags:['카페','주문','잡담'],intro:[],question:{},answers:{},topics:[]},
 ]},
 {id:'travel',icon:'✈️',name:'여행 영어',en:'Travel English',desc:'전 세계 여행 블로거와 실전 영어!',level:'GENTLE',lc:'#F59E0B',carousel:true,
 chars:[
