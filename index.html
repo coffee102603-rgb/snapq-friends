@@ -318,7 +318,72 @@ for(const l of ch.intro){document.getElementById('sc1').innerHTML=charSc(ch,{en:
 document.getElementById('sc1').innerHTML=charSc(ch,{en:ch.question.en,kr:ch.question.kr},true);await speak(ch.question.en,ch.rate);document.getElementById('sc1').innerHTML=charSc(ch,{en:ch.question.en,kr:ch.question.kr},false);
 const o=Object.keys(ch.answers);document.getElementById('vc').innerHTML=`<div style="display:flex;gap:12px;justify-content:center">${o.map((k,i)=>`<button class="b" style="background:linear-gradient(135deg,${i?'#F59E0B,#EF4444':'#EC4899,#F43F5E'});padding:12px 28px;font-size:15px" onclick="ansV('${k}')">${k}!</button>`).join('')}</div>`;_vb=false}
 async function ansV(k){const ch=findChar(S.char);document.getElementById('sc1').innerHTML=charSc(ch,{en:ch.answers[k]},true);await speak(ch.answers[k],ch.rate);document.getElementById('sc1').innerHTML=charSc(ch,{en:ch.answers[k]},false);document.getElementById('vc').innerHTML=`<button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A)" onclick="addF()">+ Add Friend — ${ch.price||10}🪙</button>`}
-function addF(){const ch=findChar(S.char);if(!S.fr[S.char]){S.coins-=ch.price||10;S.fr[S.char]={int:1}}go('friends')}
+function addF(){const ch=findChar(S.char);if(!S.fr[S.char]){S.coins-=ch.price||10;S.fr[S.char]={int:1}}go('guide')}
+
+// ═══ GUIDE (친구 추가 직후 가이드!) ═══
+let GD={step:0,done:false};
+function rGuide(){GD={step:0,done:false};playGuide()}
+async function playGuide(){
+const ch=findChar(S.char);
+const steps=[
+{lines:[
+{en:"Yay! We're friends now!",kr:"야호! 우리 친구 됐다! 🎉"},
+{en:"Don't worry, I speak a little Korean too.",kr:"걱정 마, 나 한국어도 조금 해."},
+{en:"I'll help you when it gets hard!",kr:"어려울 때 내가 도와줄게!"},
+]},
+{lines:[
+{en:"Let me explain how our room works!",kr:"우리 방이 어떻게 진행되는지 알려줄게!"},
+{en:"First, listen to my voice message.",kr:"🎧 먼저, 내 음성 메시지를 들어!"},
+{en:"Then, solve three quizzes.",kr:"❓ 그리고 퀴즈 3개를 풀어!"},
+{en:"Memorize the three starred expressions.",kr:"⭐ 별표 표현 3개를 외워!"},
+{en:"Finally, let's talk! Use those expressions!",kr:"💬 마지막으로 대화하자! 그 표현들을 써봐!"},
+]},
+{lines:[
+{en:"Now, here's my ONE rule.",kr:"자, 규칙 딱 하나! ⚡"},
+{en:"Our conversation will NEVER end...",kr:"우리 대화는 절대 끝나지 않아..."},
+{en:"...until those three expressions come out of YOUR mouth!",kr:"...그 3개 표현이 네 입에서 나올 때까지! 😤"},
+{en:"So memorize them well, okay?",kr:"그러니까 잘 외워 와, 알겠지?"},
+]},
+{lines:[
+{en:"If you use all three, I'll be SO proud!",kr:"3개 다 쓰면 내가 엄청 뿌듯해할 거야! ✅"},
+{en:"You can save expressions to your own notebook!",kr:"표현을 네 노트에 저장할 수도 있어! 📋"},
+{en:"Ready? My first message is waiting for you!",kr:"준비됐어? 내 첫 메시지가 기다리고 있어!"},
+]},
+];
+for(let si=0;si<steps.length;si++){
+const step=steps[si];
+// Show step screen
+let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px">
+<div style="text-align:center;margin-bottom:16px">
+<div style="font-size:64px;margin-bottom:8px">${ch.e}</div>
+<div style="font-size:14px;color:#C4B5FD;font-weight:600">${ch.n}'s Room</div>
+<div style="display:flex;justify-content:center;gap:6px;margin-top:12px">${steps.map((_,i)=>`<div style="width:${i===si?'24px':'8px'};height:8px;border-radius:4px;background:${i===si?'#A78BFA':'rgba(255,255,255,.15)'};transition:width .3s"></div>`).join('')}</div>
+</div>
+<div id="guideLines" style="padding:8px 0"></div>
+${si===steps.length-1?`<div id="guideBtn" style="text-align:center;margin-top:24px;display:none"><button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A);padding:16px 40px;font-size:17px" onclick="go('topics')">🎧 첫 메시지 듣기 →</button></div>`:`<div id="guideBtn" style="text-align:center;margin-top:24px;display:none"><button class="b" style="padding:14px 36px;font-size:15px" onclick="GD.step=${si+1};nextGuideStep()">다음 →</button></div>`}
+</div>`;
+app.innerHTML=h;
+// Play each line with TTS
+for(let li=0;li<step.lines.length;li++){
+const line=step.lines[li];
+const linesDiv=document.getElementById('guideLines');
+if(linesDiv){
+linesDiv.innerHTML+=`<div class="fadeUp" style="background:rgba(139,92,246,.08);border-radius:14px;padding:14px 16px;margin-bottom:8px;border:1px solid rgba(139,92,246,.15)">
+<div style="font-size:16px;font-weight:600;line-height:1.7;color:#fff">${line.en}</div>
+<div style="color:#C4B5FD;font-size:13px;margin-top:4px">${line.kr}</div>
+</div>`;
+}
+await speak(line.en,ch.rate||.75);
+await new Promise(r=>setTimeout(r,300));
+}
+// Show next button
+const btn=document.getElementById('guideBtn');
+if(btn)btn.style.display='block';
+// Wait for user to click next (except last step which has the button too)
+await new Promise(r=>{window._guideNext=r});
+}
+}
+function nextGuideStep(){if(window._guideNext){window._guideNext();window._guideNext=null}}
 
 function rTopics(){const ch=findChar(S.char);if(!ch)return;let h=`<div style="min-height:100dvh;background:#0F0A1F;padding:16px 16px 80px"><button onclick="go('friends')" style="background:none;color:#D1D5DB;font-size:14px;margin-bottom:12px">← 뒤로</button><h2 style="font-size:18px;font-weight:700;margin-bottom:16px">${ch.e} ${ch.n}의 이야기</h2>`;
 (ch.topics||[]).forEach((t,i)=>{h+=`<button onclick="S.topic=${i};go('listen')" style="width:100%;display:flex;align-items:center;gap:14px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:16px;padding:16px 18px;text-align:left;margin-bottom:10px"><span style="font-size:28px">${t.icon}</span><div style="flex:1"><div style="font-size:15px;font-weight:600">${t.name}</div><div style="color:#D1D5DB;font-size:12px">${t.rounds.length} rounds</div></div><span style="color:#4ADE80;font-size:20px">→</span></button>`});
@@ -478,7 +543,7 @@ function donePR(){sttStop();PR.ph='done';rfPR()}
 function nextPR(){sttText='';if(PR.step+1>=PT[PR.ti].steps.length)go('pres');else{PR.step++;PR.ph='guide';rfPR()}}
 
 // ═══ REGISTER ═══
-const R={intro:rIntro,lang:rLang,main:rMain,catList:rCatList,pro:rPro,friends:rFriends,video:rVideo,topics:rTopics,listen:rListen,opic:rOpic,opicSurvey:rOpicSurvey,toefl:rToefl,ielts:rIelts,ieltsP1:rIeltsP1,ieltsP2:rIeltsP2,ieltsP3:rIeltsP3,interview:rInterview,pres:rPres};
+const R={intro:rIntro,lang:rLang,main:rMain,catList:rCatList,pro:rPro,friends:rFriends,video:rVideo,guide:rGuide,topics:rTopics,listen:rListen,opic:rOpic,opicSurvey:rOpicSurvey,toefl:rToefl,ielts:rIelts,ieltsP1:rIeltsP1,ieltsP2:rIeltsP2,ieltsP3:rIeltsP3,interview:rInterview,pres:rPres};
 go('intro');
 </script>
 </body>
