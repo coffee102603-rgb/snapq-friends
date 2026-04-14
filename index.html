@@ -495,7 +495,7 @@ ${allDone?`
 <div style="font-size:16px;font-weight:700;color:#4ADE80">Amazing! 표현 3개 전부 사용!</div>
 <button class="b" style="background:linear-gradient(135deg,#4ADE80,#16A34A);margin-top:12px;padding:12px 32px" onclick="go('friends')">✅ 완료!</button>
 </div>`:`
-<div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-top:1px solid rgba(255,255,255,.1)">
+<div style="display:flex;align-items:center;gap:10px;padding:12px 16px 80px;border-top:1px solid rgba(255,255,255,.1)">
 <div style="flex:1;background:rgba(255,255,255,.08);border-radius:20px;padding:10px 16px;font-size:13px;color:#D1D5DB" contenteditable="true" id="chatInput" onkeydown="if(event.key==='Enter'){event.preventDefault();sendChat()}">Type here...</div>
 <button onclick="toggleMic()" id="micBtn" style="width:44px;height:44px;border-radius:50%;background:#EF4444;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:2px solid #FCA5A5">🎙</button>
 <button onclick="sendChat()" style="width:44px;height:44px;border-radius:50%;background:#4F46E5;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">➤</button>
@@ -531,14 +531,20 @@ await speak(resp,ch.rate);
 
 function toggleMic(){
 if(CT.recording){sttStop();CT.recording=false;
-const input=document.getElementById('chatInput');
-if(input&&sttText)input.textContent=sttText;
 const btn=document.getElementById('micBtn');
-if(btn){btn.style.background='#EF4444';btn.textContent='🎙'}
-}else{CT.recording=true;
+if(btn){btn.style.background='#EF4444';btn.textContent='🎙';btn.style.animation='none'}
+// Auto-send after recording
+if(sttText&&sttText.trim()){
+const input=document.getElementById('chatInput');
+if(input)input.textContent=sttText;
+setTimeout(()=>sendChat(),300);
+}
+}else{CT.recording=true;sttText='';
+const input=document.getElementById('chatInput');
+if(input)input.textContent='🎙 말하는 중...';
 const btn=document.getElementById('micBtn');
 if(btn){btn.style.background='#DC2626';btn.textContent='⏹';btn.style.animation='pulse 1s infinite'}
-sttStart(t=>{const input=document.getElementById('chatInput');if(input)input.textContent=t});
+sttStart(t=>{const input=document.getElementById('chatInput');if(input)input.textContent=t||'🎙 말하는 중...'});
 }}
 
 // ═══ PRO: OPIc ═══
