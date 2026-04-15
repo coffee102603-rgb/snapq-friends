@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>SnapTalk YouTube Lab</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--accent:#FF6B35;--dark:#0a0a16;--card:#181832;--cardL:#222248;--text:#eaeaf4;--muted:#8888aa;--success:#4ade80;--warn:#fbbf24;--purple:#818cf8;--red:#f4364c;--cyan:#22d3ee}
+body{background:var(--dark);color:var(--text);font-family:'Segoe UI',-apple-system,sans-serif;min-height:100vh;overflow-x:hidden}
+.hidden{display:none!important}
+
+/* Header */
+.header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--card)}
+.logo{font-size:18px;font-weight:800;background:linear-gradient(135deg,var(--accent),#ff8f65);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{background:var(--accent);color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:20px;margin-left:4px}
+.back-btn{background:none;border:none;color:var(--text);font-size:16px;cursor:pointer;padding:4px 8px}
+
+/* Video area */
+.video-wrap{position:relative;width:100%;aspect-ratio:16/9;background:#000;overflow:hidden}
+.video-wrap iframe{width:100%;height:100%;border:none}
+.video-overlay{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.85));padding:12px 16px;pointer-events:none}
+.video-overlay *{pointer-events:auto}
+.step-badge{position:absolute;top:8px;left:8px;padding:3px 10px;border-radius:6px;background:rgba(255,107,53,.85);color:#fff;font-size:10px;font-weight:700}
+.rec-badge{position:absolute;top:8px;right:8px;padding:4px 12px;border-radius:6px;background:rgba(244,54,76,.85);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;gap:6px}
+.rec-dot{width:8px;height:8px;border-radius:50%;background:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* Subtitle on video */
+.subtitle-line{color:#fff;font-size:17px;font-weight:700;text-align:center;line-height:1.6;text-shadow:0 2px 14px rgba(0,0,0,.9)}
+.subtitle-ko{color:rgba(255,255,255,.45);font-size:11px;text-align:center;margin-top:3px}
+.gap-word{display:inline-block;border-bottom:3px solid var(--accent);min-width:30px;background:rgba(255,107,53,.15);border-radius:3px;padding:0 3px;color:transparent;margin:0 1px}
+.gap-word.rec{border-color:var(--red);background:rgba(244,54,76,.15)}
+.gap-word.play{border-color:var(--success);background:rgba(74,222,128,.15)}
+.gap-word.revealed{color:var(--success)!important;border-color:var(--success);background:rgba(74,222,128,.1)}
+
+/* Content area */
+.content{max-width:520px;margin:0 auto;padding:12px 16px}
+
+/* Buttons */
+.btn{width:100%;padding:14px;border-radius:12px;border:none;color:#fff;font-weight:700;font-size:15px;cursor:pointer;transition:all .2s}
+.btn-accent{background:linear-gradient(135deg,var(--accent),#ff8f65)}
+.btn-red{background:linear-gradient(135deg,var(--red),var(--accent))}
+.btn-success{background:linear-gradient(135deg,var(--success),var(--cyan))}
+.btn-purple{background:var(--purple)}
+.btn-dark{background:var(--cardL);color:var(--text)}
+.btn-muted{background:var(--cardL);color:var(--muted)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn-row{display:flex;gap:6px}.btn-row .btn{flex:1}
+
+.pill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:700;border:none;cursor:pointer;background:var(--cardL);color:var(--muted)}
+.pill.on{background:rgba(255,107,53,.15);color:var(--accent)}
+
+/* Cards */
+.card{background:var(--card);border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid var(--cardL)}
+.card-expr{cursor:pointer;transition:all .2s}
+.card-expr:active{transform:scale(.98)}
+
+/* Progress bar */
+.progress-wrap{height:5px;background:var(--cardL);border-radius:3px;overflow:hidden;margin-bottom:10px}
+.progress-bar{height:100%;border-radius:3px;transition:width .5s}
+.progress-accent{background:linear-gradient(90deg,var(--accent),#ff8f65)}
+.progress-red{background:linear-gradient(90deg,var(--red),var(--accent))}
+.progress-green{background:linear-gradient(90deg,var(--success),var(--cyan))}
+
+/* Step cards on home */
+.step-card{display:flex;align-items:center;gap:10px;padding:11px 14px;margin-bottom:6px;border-radius:12px;background:var(--card);border:1px solid var(--cardL);cursor:pointer}
+.step-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.step-title{font-size:13px;font-weight:700}
+.step-desc{font-size:11px;color:var(--muted)}
+
+/* Scene label */
+.scene-label{padding:3px 10px;border-radius:10px;background:rgba(0,0,0,.5);color:var(--cyan);font-size:11px;font-weight:600;display:inline-block;margin-bottom:6px}
+
+/* Completion */
+.complete-box{text-align:center;padding:20px;border-radius:14px;background:linear-gradient(135deg,rgba(255,107,53,.08),rgba(74,222,128,.08));border:1px solid rgba(255,107,53,.2);margin-bottom:12px}
+
+/* Info box */
+.info-box{padding:14px;border-radius:12px;margin-bottom:12px;line-height:1.6;font-size:12px}
+.info-green{background:rgba(74,222,128,.06);border:1px solid rgba(74,222,128,.15);color:var(--muted)}
+
+.mt8{margin-top:8px}.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}
+.text-center{text-align:center}
+.text-accent{color:var(--accent);font-weight:700}
+.text-success{color:var(--success);font-weight:700}
+.text-red{color:var(--red);font-weight:700}
+.flex-center{display:flex;gap:6px;justify-content:center}
+</style>
+</head>
+<body>
+
+<!-- ======== HEADER ======== -->
+<div class="header">
+  <div style="display:flex;align-items:center;gap:8px">
+    <button class="back-btn hidden" id="backBtn" onclick="goHome()">←</button>
+    <span class="logo">SnapTalk</span>
+    <span class="badge">YouTube Lab</span>
+  </div>
+  <span id="stepLabel" style="font-size:12px;color:var(--muted)"></span>
+</div>
+
+<!-- ======== VIDEO AREA ======== -->
+<div class="video-wrap" id="videoWrap">
+  <div id="ytPlayer"></div>
+  <div id="stepBadge" class="step-badge hidden"></div>
+  <div id="recBadge" class="rec-badge hidden"><span class="rec-dot"></span> REC</div>
+  <div class="video-overlay" id="videoOverlay">
+    <div id="sceneLabel" class="scene-label hidden"></div>
+    <div id="subtitleEn" class="subtitle-line"></div>
+    <div id="subtitleKo" class="subtitle-ko"></div>
+  </div>
+</div>
+
+<!-- ======== CONTENT AREA ======== -->
+<div class="content" id="content"></div>
+
+<!-- ======== YOUTUBE IFRAME API ======== -->
+<script>
+// Load YouTube IFrame API
+var tag = document.createElement('script');
+tag.src = "https://www.youtube.com/iframe_api";
+document.head.appendChild(tag);
+
+var player;
+var playerReady = false;
+
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('ytPlayer', {
+    width: '100%', height: '100%',
+    videoId: SCRIPT.videoId,
+    playerVars: {
+      playsinline: 1, controls: 0, rel: 0, modestbranding: 1,
+      disablekb: 1, fs: 0, iv_load_policy: 3
+    },
+    events: {
+      onReady: function(e) { playerReady = true; e.target.mute(); },
+      onStateChange: function(e) {}
+    }
+  });
+}
+
+// ======== SCRIPT DATA ========
+const SCRIPT = {
+  title: "NYC First Day — Times Square to Central Park",
+  videoId: "4kYFFoWI4Jg",
+  keyExpressions: [
+    { en: "you gotta see this", ko: "이거 꼭 봐야 해", note: "gotta = got to (구어체)" },
+    { en: "it's totally worth it", ko: "완전 가치가 있어", note: "worth it = ~할 가치가 있는" },
+    { en: "I couldn't believe my eyes", ko: "내 눈을 의심했어", note: "감탄 표현" },
+    { en: "let me show you around", ko: "내가 안내해줄게", note: "show around = 구경시켜주다" },
+    { en: "grab a bite to eat", ko: "간단히 뭐 좀 먹자", note: "grab a bite = 가볍게 먹다" },
+  ],
+  vocabulary: [
+    { word: "stunning", meaning: "놀랍도록 아름다운", pos: "adj" },
+    { word: "iconic", meaning: "상징적인", pos: "adj" },
+    { word: "breathtaking", meaning: "숨 막히는", pos: "adj" },
+    { word: "stroll", meaning: "거닐다", pos: "verb" },
+    { word: "vendor", meaning: "노점상", pos: "noun" },
+    { word: "crowd", meaning: "군중", pos: "noun" },
+  ],
+  // Sentences with video timestamps (seconds from start)
+  sentences: [
+    { en: "Hey guys, welcome to New York City!", ko: "여러분, 뉴욕시에 오신 걸 환영해요!", start: 0, end: 4, scene: "🏙️ Times Square" },
+    { en: "We just arrived at Times Square and honestly, I couldn't believe my eyes.", ko: "타임스퀘어에 도착, 눈을 의심했어요.", start: 4, end: 10, scene: "🏙️ Times Square" },
+    { en: "The lights, the crowds, the energy — it's absolutely stunning.", ko: "조명, 인파, 에너지 — 놀라워요.", start: 10, end: 15, scene: "✨ 야경" },
+    { en: "You gotta see this place at least once in your life.", ko: "인생에 한 번은 꼭 봐야 해요.", start: 15, end: 19, scene: "✨ 야경" },
+    { en: "Okay, let me show you around a little bit.", ko: "좋아요, 안내해드릴게요.", start: 19, end: 22, scene: "🚶 Broadway" },
+    { en: "We're gonna stroll down Broadway and grab a bite to eat.", ko: "브로드웨이를 걸으며 뭐 좀 먹을 거예요.", start: 22, end: 27, scene: "🚶 Broadway" },
+    { en: "I heard there's an amazing pizza place nearby.", ko: "근처에 맛있는 피자집이 있대요.", start: 27, end: 31, scene: "🚶 Broadway" },
+    { en: "This street vendor is selling the most iconic New York hot dogs.", ko: "노점상이 뉴욕 핫도그를 팔아요.", start: 31, end: 36, scene: "🌭 핫도그" },
+    { en: "It's totally worth it — only three bucks!", ko: "완전 가치 있어요 — 3달러!", start: 36, end: 40, scene: "🌭 핫도그" },
+    { en: "Now we're heading to Central Park. The view from here is breathtaking.", ko: "센트럴 파크로. 경치가 숨 막혀요.", start: 40, end: 46, scene: "🌳 Central Park" },
+    { en: "I love how you can escape the city noise in just a few minutes.", ko: "몇 분 만에 도시 소음을 벗어나요.", start: 46, end: 51, scene: "🌳 Central Park" },
+    { en: "If you ever get a chance to visit New York, I highly recommend it.", ko: "뉴욕 방문 기회가 되면, 강추해요.", start: 51, end: 56, scene: "🌅 마무리" },
+    { en: "This has been the best first day ever. See you guys tomorrow!", ko: "최고의 첫날! 내일 또 만나요!", start: 56, end: 60, scene: "🌅 마무리" },
+  ]
+};
+
+const TOTAL_DUR = SCRIPT.sentences[SCRIPT.sentences.length - 1].end;
+
+// ======== STATE ========
+let currentPhase = 0;
+let sentenceRecs = {};
+let dubAudioUrl = null;
+let mediaRecorder = null;
+let recChunks = [];
+let recStream = null;
+let dubTimer = null;
+let dubElapsed = 0;
+let lastSentIdx = -1;
+let gapLevel = 1;
+
+// ======== HELPERS ========
+function $(id) { return document.getElementById(id); }
+function speak(text, rate = 0.82, onEnd) {
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US'; u.rate = rate;
+  if (onEnd) u.onend = onEnd;
+  speechSynthesis.speak(u);
+}
+
+function getSentenceAt(sec) {
+  for (let i = 0; i < SCRIPT.sentences.length; i++) {
+    if (sec >= SCRIPT.sentences[i].start && sec < SCRIPT.sentences[i].end) return i;
+  }
+  return SCRIPT.sentences.length - 1;
+}
+
+function makeGapHTML(text, level, mode = '') {
+  const words = text.split(' ');
+  const pct = level === 1 ? 0.3 : level === 2 ? 0.5 : 0.7;
+  const n = Math.max(1, Math.round(words.length * pct));
+  const picks = new Set();
+  const cands = words.map((w, i) => [w, i]).filter(([w]) => w.length > 2);
+  while (picks.size < n && picks.size < cands.length) {
+    picks.add(cands[Math.floor(Math.random() * cands.length)][1]);
+  }
+  return words.map((w, i) => {
+    if (picks.has(i)) return `<span class="gap-word ${mode}" data-word="${w}">${w}</span>`;
+    return w;
+  }).join(' ');
+}
+
+function setSubtitle(en, ko, scene) {
+  $('subtitleEn').innerHTML = en || '';
+  $('subtitleKo').textContent = ko || '';
+  if (scene) { $('sceneLabel').textContent = scene; $('sceneLabel').classList.remove('hidden'); }
+}
+
+function clearSubtitle() {
+  $('subtitleEn').innerHTML = '';
+  $('subtitleKo').textContent = '';
+  $('sceneLabel').classList.add('hidden');
+}
+
+// ======== NAVIGATION ========
+function goHome() { showPhase(0); }
+
+function showPhase(p) {
+  currentPhase = p;
+  $('backBtn').classList.toggle('hidden', p === 0);
+  $('stepLabel').textContent = p > 0 ? `Step ${p} / 5` : '';
+  $('stepBadge').classList.toggle('hidden', p === 0);
+  $('stepBadge').textContent = p > 0 ? `Step ${p}/5` : '';
+  $('recBadge').classList.add('hidden');
+  clearSubtitle();
+
+  if (playerReady && player.getPlayerState() === 1) player.pauseVideo();
+  if (dubTimer) { clearInterval(dubTimer); dubTimer = null; }
+  speechSynthesis.cancel();
+
+  const renderers = [renderHome, renderPrelearn, renderListen, renderShadow, renderGapfill, renderDubbing];
+  renderers[p]();
+}
+
+// ======== PHASE 0: HOME ========
+function renderHome() {
+  const steps = [
+    [1, '📖', '예습', '핵심 표현 & 단어', '--purple'],
+    [2, '👂', '귀로 듣기', '30초씩 집중 듣기', '--cyan'],
+    [3, '🎙️', '따라하기 & 녹음', '문장별 녹음 비교', '--accent'],
+    [4, '🧩', '빈칸 말하기', '적응형 빈칸 채우기', '--warn'],
+    [5, '🎬', '더빙 스튜디오', '영상+빈칸자막+녹음 동시!', '--success'],
+  ];
+  $('content').innerHTML = `
+    <h2 style="font-size:17px;font-weight:800;margin:12px 0 4px">🗽 ${SCRIPT.title}</h2>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:14px">3분 영상 · 13문장 · 5단계 → 최종 더빙!</p>
+    ${steps.map(([p, icon, t, d, c]) => `
+      <div class="step-card" onclick="showPhase(${p})">
+        <div class="step-icon" style="background:rgba(var(${c === '--accent' ? '255,107,53' : c === '--purple' ? '129,140,248' : c === '--cyan' ? '34,211,238' : c === '--warn' ? '251,191,36' : '74,222,128'}),.12)">${icon}</div>
+        <div style="flex:1"><div class="step-title">Step ${p}. ${t}</div><div class="step-desc">${d}</div></div>
+      </div>
+    `).join('')}
+  `;
+  setSubtitle('🎬 내 목소리로 더빙 완성!', 'Talk changes everything.', '');
+  $('sceneLabel').classList.add('hidden');
+}
+
+// ======== PHASE 1: PRE-LEARN ========
+function renderPrelearn() {
+  $('content').innerHTML = `
+    <div class="flex-center mb12">
+      <button class="pill on" onclick="showExpr()">🗣️ 핵심 표현</button>
+      <button class="pill" onclick="showVocab()">📚 어휘</button>
+    </div>
+    <div id="preContent"></div>
+    <button class="btn btn-accent mt8" onclick="showPhase(2)">예습 완료 → 귀로 듣기 👂</button>
+  `;
+  showExpr();
+  setSubtitle('📖 영상 보기 전, 핵심 표현부터!', '', '');
+}
+
+function showExpr() {
+  $('preContent').innerHTML = SCRIPT.keyExpressions.map((e, i) => `
+    <div class="card card-expr" onclick="speak('${e.en.replace(/'/g, "\\'")}')">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:16px;font-weight:700">"${e.en}"</span><span style="font-size:20px">🔊</span>
+      </div>
+      <p style="font-size:13px;color:var(--accent);font-weight:600;margin:4px 0">${e.ko}</p>
+      <div style="padding:5px 10px;border-radius:8px;background:var(--dark);font-size:11px;color:var(--muted)">💡 ${e.note}</div>
+    </div>
+  `).join('');
+}
+
+function showVocab() {
+  $('preContent').innerHTML = SCRIPT.vocabulary.map(v => `
+    <div class="card card-expr" onclick="speak('${v.word}')" style="display:flex;align-items:center;gap:12px">
+      <div style="flex:1"><span style="font-size:16px;font-weight:800">${v.word}</span>
+      <span style="font-size:10px;color:var(--purple);background:rgba(129,140,248,.12);padding:2px 6px;border-radius:4px;margin-left:4px">${v.pos}</span>
+      <p style="font-size:13px;color:var(--accent);font-weight:600;margin-top:3px">${v.meaning}</p></div>
+      <span style="font-size:20px">🔊</span>
+    </div>
+  `).join('');
+}
+
+// ======== PHASE 2: LISTEN ========
+function renderListen() {
+  let seg = 0;
+  const segments = [[0,1],[2,3],[4,5,6],[7,8],[9,10],[11,12]];
+  const labels = ['🏙️ 0:00~0:30','✨ 0:30~1:00','🚶 1:00~1:30','🌭 1:30~2:00','🌳 2:00~2:30','🌅 2:30~3:00'];
+
+  function renderSeg(s) {
+    seg = s;
+    const idxs = segments[s];
+    const sents = idxs.map(i => SCRIPT.sentences[i]);
+    $('listenContent').innerHTML = sents.map((sent, i) => `
+      <div class="card card-expr" onclick="speak('${sent.en.replace(/'/g, "\\'")}')">
+        <p style="font-size:14px;font-weight:600;margin-bottom:3px">${sent.en}</p>
+        <p style="font-size:11px;color:var(--muted)">${sent.ko}</p>
+      </div>
+    `).join('');
+    setSubtitle(`👂 구간 ${s + 1}`, labels[s], sents[0].scene);
+  }
+
+  $('content').innerHTML = `
+    <div style="display:flex;gap:4px;margin-bottom:10px;overflow-x:auto;flex-wrap:nowrap" id="segBtns">
+      ${labels.map((l, i) => `<button class="pill ${i === 0 ? 'on' : ''}" onclick="document.querySelectorAll('#segBtns .pill').forEach(b=>b.classList.remove('on'));this.classList.add('on');renderListenSeg(${i})">${l}</button>`).join('')}
+    </div>
+    <div class="btn-row mb8">
+      <button class="btn" style="background:var(--cyan)" onclick="playListenSeg()">🔊 듣기</button>
+      <button class="btn btn-dark" onclick="playListenSlow()">🐢 느리게</button>
+    </div>
+    <div id="listenContent"></div>
+    <button class="btn btn-accent mt8" onclick="showPhase(3)">완료 → 따라하기 🎙️</button>
+  `;
+
+  window.renderListenSeg = renderSeg;
+  window.playListenSeg = function() {
+    const idxs = segments[seg];
+    let i = 0;
+    const go = () => { if (i < idxs.length) { speak(SCRIPT.sentences[idxs[i]].en, .82, () => { i++; setTimeout(go, 500); }); } };
+    go();
+  };
+  window.playListenSlow = function() {
+    const idxs = segments[seg];
+    let i = 0;
+    const go = () => { if (i < idxs.length) { speak(SCRIPT.sentences[idxs[i]].en, .55, () => { i++; setTimeout(go, 700); }); } };
+    go();
+  };
+  renderSeg(0);
+}
+
+// ======== PHASE 3: SHADOW ========
+function renderShadow() {
+  let idx = 0;
+  function show() {
+    const s = SCRIPT.sentences[idx];
+    setSubtitle(s.en, s.ko, s.scene);
+    $('shadowProgress').style.width = ((idx + 1) / SCRIPT.sentences.length * 100) + '%';
+    $('shadowCount').textContent = `${idx + 1}/${SCRIPT.sentences.length}`;
+  }
+
+  $('content').innerHTML = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+      <span id="shadowCount" style="font-size:11px;color:var(--muted)">1/${SCRIPT.sentences.length}</span>
+      <div class="progress-wrap" style="flex:1"><div id="shadowProgress" class="progress-bar progress-accent" style="width:8%"></div></div>
+    </div>
+    <div class="flex-center mb12">
+      <button class="pill on" onclick="speak(SCRIPT.sentences[${0}]?.en || '')">🔊 원어민</button>
+      <button class="pill" onclick="speak(SCRIPT.sentences[${0}]?.en || '',.55)">🐢 느리게</button>
+    </div>
+    <div id="shadowActions" class="text-center"></div>
+  `;
+
+  function showActions() {
+    const s = SCRIPT.sentences[idx];
+    $('shadowActions').innerHTML = `
+      <div class="flex-center mb12">
+        <button class="pill on" onclick="speak('${s.en.replace(/'/g, "\\'")}')">🔊 원어민</button>
+        <button class="pill" onclick="speak('${s.en.replace(/'/g, "\\'")}', .55)">🐢 느리게</button>
+      </div>
+      <button class="btn btn-accent mb8" onclick="shadowNext()">다음 문장 →</button>
+    `;
+  }
+
+  window.shadowNext = function() {
+    idx++;
+    if (idx >= SCRIPT.sentences.length) { showPhase(4); return; }
+    show(); showActions();
+  };
+
+  show(); showActions();
+}
+
+// ======== PHASE 4: GAP-FILL ========
+function renderGapfill() {
+  let idx = 0;
+  gapLevel = 1;
+
+  function show() {
+    const s = SCRIPT.sentences[idx];
+    const gapHtml = makeGapHTML(s.en, gapLevel);
+    setSubtitle(gapHtml, s.ko, s.scene);
+    $('gapCount').textContent = `${idx + 1}/${SCRIPT.sentences.length}`;
+    $('gapStars').innerHTML = [1,2,3].map(lv => `<span class="pill ${gapLevel >= lv ? 'on' : ''}" style="padding:4px 8px;font-size:11px">${'⭐'.repeat(lv)}</span>`).join('');
+  }
+
+  $('content').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div id="gapStars" style="display:flex;gap:4px"></div>
+      <span id="gapCount" style="font-size:11px;color:var(--muted)"></span>
+    </div>
+    <div class="flex-center mb8">
+      <button class="pill on" onclick="speak(SCRIPT.sentences[gapIdx()]?.en||'')">🔊 듣기</button>
+      <button class="pill" onclick="revealGaps()">👀 답 보기</button>
+    </div>
+    <p class="text-center mb8" style="font-size:12px;color:var(--muted)">빈칸을 채우며 큰 소리로!</p>
+    <div class="btn-row">
+      <button class="btn btn-success" onclick="gapGood()">😄 잘했어!</button>
+      <button class="btn btn-dark" onclick="gapHard()">😅 어려워</button>
+    </div>
+  `;
+
+  window.gapIdx = () => idx;
+  window.revealGaps = () => document.querySelectorAll('.gap-word').forEach(el => { el.classList.add('revealed'); el.style.color = 'var(--success)'; });
+  window.gapGood = () => { if (gapLevel < 3) gapLevel++; idx++; if (idx >= SCRIPT.sentences.length) { showPhase(5); return; } show(); };
+  window.gapHard = () => { if (gapLevel > 1) gapLevel--; idx++; if (idx >= SCRIPT.sentences.length) { showPhase(5); return; } show(); };
+
+  show();
+}
+
+// ======== PHASE 5: DUBBING STUDIO ========
+function renderDubbing() {
+  dubElapsed = 0; lastSentIdx = -1;
+
+  $('content').innerHTML = `
+    <div id="dubUI"></div>
+  `;
+  showDubReady();
+}
+
+function showDubReady() {
+  $('recBadge').classList.add('hidden');
+  clearSubtitle();
+  setSubtitle('🎬 영상 + 빈칸자막 + 녹음 동시!', '', '');
+
+  $('dubUI').innerHTML = `
+    <div class="info-box info-green">
+      <p style="font-size:14px;font-weight:700;color:var(--success);margin-bottom:6px">🎬 더빙 스튜디오</p>
+      <p>영상이 재생되면서 <strong class="text-accent">빈칸 자막</strong>이 동시에 뜹니다.<br>
+      원래 주인공 음성은 <strong class="text-accent">음소거(MUTE)</strong>되고<br>
+      <strong class="text-accent">내가 직접 말합니다!</strong><br>
+      빈칸은 진행할수록 늘어납니다 (⭐→⭐⭐→⭐⭐⭐)<br>
+      약 ${TOTAL_DUR}초 · ${SCRIPT.sentences.length}문장 연속 녹음</p>
+    </div>
+    <div id="micError" class="hidden" style="padding:10px;border-radius:10px;background:rgba(244,54,76,.1);color:var(--red);font-size:12px;margin-bottom:8px">⚠️ 마이크 허용이 필요해요</div>
+    <button class="btn btn-red mb8" style="font-size:18px" onclick="startDubbing()">🔴 더빙 시작!</button>
+    <button class="btn btn-muted" onclick="goHome()">← 홈</button>
+  `;
+}
+
+async function startDubbing() {
+  try {
+    recStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+  } catch {
+    $('micError').classList.remove('hidden');
+    return;
+  }
+
+  mediaRecorder = new MediaRecorder(recStream);
+  recChunks = [];
+  mediaRecorder.ondataavailable = e => { if (e.data.size > 0) recChunks.push(e.data); };
+  mediaRecorder.onstop = () => {
+    dubAudioUrl = URL.createObjectURL(new Blob(recChunks, { type: 'audio/webm' }));
+    recStream.getTracks().forEach(t => t.stop());
+    showDubDone();
+  };
+
+  // Start recording + video
+  mediaRecorder.start();
+  if (playerReady) {
+    player.seekTo(0);
+    player.mute();
+    player.playVideo();
+  }
+
+  dubElapsed = 0;
+  lastSentIdx = -1;
+  gapLevel = 1;
+
+  $('recBadge').classList.remove('hidden');
+  $('dubUI').innerHTML = `
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:4px">
+      <span id="dubTime">🔴 0초 / ${TOTAL_DUR}초</span>
+      <span id="dubSentCount">1/${SCRIPT.sentences.length} · ⭐1</span>
+    </div>
+    <div class="progress-wrap"><div id="dubProgress" class="progress-bar progress-red" style="width:0%"></div></div>
+    <div class="text-center mt8">
+      <div style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;border-radius:20px;background:rgba(244,54,76,.12);margin-bottom:12px">
+        <span class="rec-dot"></span>
+        <span class="text-red" style="font-size:14px">녹음 중 — 자막 보고 말하세요!</span>
+      </div><br>
+      <button class="btn btn-dark" style="max-width:200px;margin:0 auto" onclick="stopDubbing()">⏹ 녹음 중단</button>
+    </div>
+  `;
+
+  // Sync timer
+  dubTimer = setInterval(() => {
+    dubElapsed++;
+    const progress = (dubElapsed / TOTAL_DUR) * 100;
+    if ($('dubProgress')) $('dubProgress').style.width = progress + '%';
+    if ($('dubTime')) $('dubTime').textContent = `🔴 ${dubElapsed}초 / ${TOTAL_DUR}초`;
+
+    // Get current sentence from video time
+    let currentTime = dubElapsed;
+    if (playerReady && player.getPlayerState() === 1) {
+      currentTime = player.getCurrentTime();
+    }
+
+    const sIdx = getSentenceAt(currentTime);
+    if (sIdx !== lastSentIdx) {
+      lastSentIdx = sIdx;
+      const s = SCRIPT.sentences[sIdx];
+      // Increase gap level as we progress
+      gapLevel = sIdx < 4 ? 1 : sIdx < 9 ? 2 : 3;
+      const gapHtml = makeGapHTML(s.en, gapLevel, 'rec');
+      setSubtitle(gapHtml, s.ko, s.scene);
+      if ($('dubSentCount')) $('dubSentCount').textContent = `${sIdx + 1}/${SCRIPT.sentences.length} · ⭐${gapLevel}`;
+    }
+
+    if (dubElapsed >= TOTAL_DUR) {
+      stopDubbing();
+    }
+  }, 1000);
+}
+
+function stopDubbing() {
+  if (dubTimer) { clearInterval(dubTimer); dubTimer = null; }
+  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+  if (playerReady) player.pauseVideo();
+  $('recBadge').classList.add('hidden');
+}
+
+function showDubDone() {
+  clearSubtitle();
+  setSubtitle('🎬 더빙 완성!', '내 목소리로 NYC 영상을 더빙했어요!', '');
+
+  $('dubUI').innerHTML = `
+    <div class="complete-box">
+      <div style="font-size:42px">🏆🎬</div>
+      <h3 style="font-size:18px;font-weight:800;margin:6px 0">더빙 완성!</h3>
+      <p style="font-size:12px;color:var(--muted)">내 목소리로 NYC 여행 영상을 더빙했어요!</p>
+    </div>
+    <button class="btn btn-success mb8" onclick="playMyDubbing()">▶ 영상 + 내 더빙 동시 재생</button>
+    <button class="btn btn-purple mb8" onclick="downloadDub()">💾 오디오 저장 (다운로드)</button>
+    <button class="btn btn-dark mb8" onclick="showDubReady()">🔄 다시 녹음</button>
+    <button class="btn btn-muted" onclick="goHome()">🏠 홈</button>
+  `;
+}
+
+function playMyDubbing() {
+  if (!dubAudioUrl) return;
+
+  // Play video muted + my audio simultaneously
+  if (playerReady) {
+    player.seekTo(0);
+    player.mute();
+    player.playVideo();
+  }
+
+  const audio = new Audio(dubAudioUrl);
+  audio.play();
+
+  lastSentIdx = -1;
+  gapLevel = 1;
+
+  // Sync subtitles during playback
+  dubTimer = setInterval(() => {
+    let currentTime = 0;
+    if (playerReady && player.getPlayerState() === 1) {
+      currentTime = player.getCurrentTime();
+    }
+
+    const sIdx = getSentenceAt(currentTime);
+    if (sIdx !== lastSentIdx) {
+      lastSentIdx = sIdx;
+      const s = SCRIPT.sentences[sIdx];
+      gapLevel = sIdx < 4 ? 1 : sIdx < 9 ? 2 : 3;
+      setSubtitle(makeGapHTML(s.en, gapLevel, 'play'), s.ko, s.scene);
+    }
+
+    if (playerReady && player.getPlayerState() !== 1) {
+      clearInterval(dubTimer); dubTimer = null;
+    }
+  }, 500);
+
+  audio.onended = () => {
+    if (dubTimer) { clearInterval(dubTimer); dubTimer = null; }
+    if (playerReady) player.pauseVideo();
+  };
+}
+
+function downloadDub() {
+  if (!dubAudioUrl) return;
+  const a = document.createElement('a');
+  a.href = dubAudioUrl; a.download = 'my-nyc-dubbing.webm'; a.click();
+}
+
+// ======== INIT ========
+showPhase(0);
+</script>
+</body>
+</html>
