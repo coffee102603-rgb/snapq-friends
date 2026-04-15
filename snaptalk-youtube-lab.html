@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SnapTalk — Snap Dubbing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#080c18;--bg2:#0f1525;--bg3:#161d30;
+  --text:#f0f0f0;--text2:#a0a8c0;
+  --accent:#FF6B35;--accent2:#FF8F65;
+  --beginner:#22C55E;--intermediate:#F59E0B;--advanced:#EF4444;
+  --radius:16px;--rs:10px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
+button{font-family:inherit;cursor:pointer;border:none;outline:none}
+
+#app{max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;position:relative;overflow:hidden}
+
+/* Bottom Nav */
+#bottomNav{display:flex;height:56px;min-height:56px;background:var(--bg2);border-top:1px solid #1a2040;z-index:100}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;color:var(--text2);font-size:11px;font-weight:500;transition:color .2s}
+.nav-btn.active{color:var(--accent)}
+.nav-btn span.icon{font-size:22px}
+
+.screen{flex:1;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;-webkit-overflow-scrolling:touch}
+.screen.active{display:flex}
+
+/* Home */
+#homeScreen .home-header{padding:16px 16px 0;display:flex;align-items:center;justify-content:space-between}
+.logo-area{display:flex;align-items:center;gap:10px}
+.logo{font-size:22px;font-weight:800;color:var(--accent)}
+.logo-tag{font-size:11px;font-weight:600;color:var(--text2);background:var(--bg3);padding:2px 8px;border-radius:20px}
+.lang-sel{padding:7px 14px;border-radius:20px;background:var(--bg3);font-size:14px;font-weight:700;color:var(--accent);border:1.5px solid rgba(255,107,53,.3)}
+
+.chips{display:flex;gap:8px;padding:14px 16px;overflow-x:auto;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{flex-shrink:0;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;background:var(--bg3);color:var(--text2);border:1.5px solid transparent;transition:all .2s;white-space:nowrap}
+.chip.active{color:#fff;border-color:currentColor}
+
+.feed{padding:0 16px 20px;display:flex;flex-direction:column;gap:14px}
+.card{border-radius:var(--radius);overflow:hidden;background:var(--bg2);cursor:pointer;transition:transform .15s}
+.card:active{transform:scale(.97)}
+.card-thumb{position:relative;width:100%;aspect-ratio:16/9;background:#111;overflow:hidden}
+.card-thumb img{width:100%;height:100%;object-fit:cover}
+.play-overlay{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.7));display:flex;align-items:center;justify-content:center}
+.play-icon{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:22px}
+.card-info{padding:12px 14px}
+.card-title{font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.card-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.badge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+.badge-b{background:rgba(34,197,94,.15);color:var(--beginner)}
+.badge-i{background:rgba(245,158,11,.15);color:var(--intermediate)}
+.badge-a{background:rgba(239,68,68,.15);color:var(--advanced)}
+.card-sen{font-size:11px;color:var(--text2)}
+.empty-state{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;line-height:1.8}
+
+/* Lesson */
+.video-area{width:100%;aspect-ratio:9/16;max-height:52vh;background:#000;position:relative;flex-shrink:0;overflow:hidden}
+.video-area iframe{width:100%;height:100%;border:none}
+.subtitle-overlay{position:absolute;bottom:12px;left:8px;right:8px;text-align:center;z-index:10}
+.subtitle-text{display:inline-block;padding:6px 14px;background:rgba(0,0,0,.75);border-radius:10px;font-size:15px;font-weight:600;line-height:1.5;color:#fff;backdrop-filter:blur(4px)}
+.subtitle-text .blank{display:inline-block;min-width:50px;border-bottom:2.5px solid var(--accent);margin:0 3px}
+.subtitle-text .hint-word{color:var(--accent2)}
+.hint-toggle{position:absolute;top:10px;right:10px;z-index:20;background:rgba(0,0,0,.5);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:#fff;backdrop-filter:blur(6px)}
+.hint-toggle.off{opacity:.5}
+.back-btn{position:absolute;top:10px;left:10px;z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center}
+.progress-bar{display:flex;gap:6px;padding:10px 16px;background:var(--bg2)}
+.step-dot{flex:1;height:5px;border-radius:3px;background:#2a3050;transition:background .3s}
+.step-dot.done{background:var(--beginner)}.step-dot.current{background:var(--accent)}
+.lesson-content{flex:1;overflow-y:auto;padding:14px 16px 20px}
+.lesson-content::-webkit-scrollbar{width:0;display:none}
+
+.expr-card{background:var(--bg3);border-radius:var(--rs);padding:14px;margin-bottom:10px;border-left:3px solid var(--accent)}
+.expr-en{font-size:16px;font-weight:700;margin-bottom:4px}
+.expr-kr{font-size:13px;color:var(--text2);margin-bottom:8px}
+.expr-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.expr-btn{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);transition:all .2s}
+.expr-btn:active{background:var(--accent);color:#fff}
+.expr-note{margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(255,107,53,.08);font-size:12px;color:var(--accent2);display:none}
+.expr-note.show{display:block}
+.step-next-btn{display:block;width:100%;padding:14px;margin-top:14px;border-radius:var(--rs);font-size:15px;font-weight:700;background:linear-gradient(135deg,#7C3AED,#9333EA);color:#fff;text-align:center}
+
+.script-sentence{background:var(--bg3);border-radius:var(--rs);padding:14px;margin-bottom:10px}
+.script-num{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.sc-btn{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);transition:all .15s}
+.sc-btn:active{background:var(--accent);color:#fff}
+.sc-reveal{width:100%;padding:10px;margin-top:8px;border-radius:8px;background:var(--bg2);font-size:14px;line-height:1.6;display:none}
+.sc-reveal.show{display:block}
+
+.speed-row{display:flex;gap:8px;justify-content:center}
+.speed-btn{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;background:var(--bg3);color:var(--text2);transition:all .2s;border:2px solid transparent}
+.speed-btn.active{border-color:var(--accent);color:var(--accent)}
+.voice-status{text-align:center;padding:10px;border-radius:var(--rs);background:var(--bg3)}
+.voice-indicator{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.mic-dot{width:12px;height:12px;border-radius:50%;background:#555;transition:background .2s}
+.mic-dot.listening{background:var(--beginner);animation:pulse 1s infinite}
+.mic-dot.speaking{background:var(--accent);animation:pulse .5s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.dub-display{text-align:center;padding:12px;font-size:18px;font-weight:700;min-height:60px;display:flex;align-items:center;justify-content:center}
+.dub-hint{text-align:center;font-size:13px;color:var(--text2);min-height:20px}
+.star-level{text-align:center;font-size:22px;letter-spacing:4px}
+.dub-btn{padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--bg3);color:var(--text);transition:all .15s}
+.dub-btn:active{transform:scale(.95)}
+.dub-btn.primary{background:var(--accent);color:#fff}
+.dub-btn.start{background:linear-gradient(135deg,var(--accent),#FF8F65);color:#fff;font-size:16px;padding:14px 32px}
+.manual-next{padding:10px 24px;border-radius:20px;background:var(--bg3);color:var(--text2);font-size:13px;font-weight:600;margin:0 auto;display:block}
+
+/* My Room */
+.room-header{padding:16px;font-size:20px;font-weight:800}
+.room-tabs{display:flex;padding:0 16px;gap:8px;margin-bottom:14px}
+.room-tab{flex:1;padding:10px;border-radius:var(--rs);text-align:center;font-size:13px;font-weight:700;background:var(--bg3);color:var(--text2);transition:all .2s}
+.room-tab.active{background:var(--accent);color:#fff}
+.room-list{padding:0 16px 20px}
+.room-item{background:var(--bg2);border-radius:var(--rs);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.room-item-title{font-size:14px;font-weight:700}
+.room-item-sub{font-size:12px;color:var(--text2);margin-top:2px}
+.room-btn{padding:6px 12px;border-radius:8px;font-size:18px;background:var(--bg3);color:var(--text2)}
+
+/* Lang Modal */
+.modal-bg{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center}
+.modal-bg.show{display:flex}
+.modal-sheet{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:430px;max-height:70vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;text-align:center}
+.lang-pair{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--rs);background:var(--bg3);margin-bottom:8px;cursor:pointer;border:2px solid transparent;transition:all .15s}
+.lang-pair:active,.lang-pair.current{border-color:var(--accent);background:rgba(255,107,53,.1)}
+.lang-pair .lp-flags{font-size:20px}
+.lang-pair .lp-text{font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- HOME -->
+  <div id="homeScreen" class="screen active">
+    <div class="home-header">
+      <div class="logo-area"><div class="logo">SnapTalk</div><div class="logo-tag">Snap Dubbing</div></div>
+      <button class="lang-sel" id="langSel" onclick="openLangModal()">🇰🇷→🇺🇸 ▾</button>
+    </div>
+    <div class="chips" id="chipBox"></div>
+    <div class="feed" id="feedBox"></div>
+  </div>
+
+  <!-- LESSON -->
+  <div id="lessonScreen" class="screen">
+    <div class="video-area">
+      <button class="back-btn" onclick="goHome()">←</button>
+      <div id="ytPlayer"></div>
+      <button class="hint-toggle" id="hintToggle" onclick="toggleHint()">🇰🇷 ON</button>
+      <div class="subtitle-overlay" id="subOverlay" style="display:none">
+        <div class="subtitle-text" id="subText"></div>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="step-dot" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+    <div class="lesson-content" id="lessonContent"></div>
+  </div>
+
+  <!-- MY ROOM -->
+  <div id="myRoomScreen" class="screen">
+    <div class="room-header" id="roomHeader">📁 나의 방</div>
+    <div class="room-tabs">
+      <button class="room-tab active" onclick="switchRoomTab('dubs',this)">🎬 나의 더빙</button>
+      <button class="room-tab" onclick="switchRoomTab('notes',this)">📝 나의 노트</button>
+    </div>
+    <div class="room-list" id="roomList"></div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div id="bottomNav">
+    <button class="nav-btn active" onclick="showScreen('home')" id="navHome"><span class="icon">🏠</span> Home</button>
+    <button class="nav-btn" onclick="showScreen('myRoom')" id="navRoom"><span class="icon">📁</span> My Room</button>
+  </div>
+</div>
+
+<!-- LANG MODAL -->
+<div class="modal-bg" id="langModal" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal-sheet">
+    <div class="modal-title">언어 변경</div>
+    <div id="langPairs"></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════
+// FLAGS & LANG CONFIG
+// ═══════════════════════════════════════
+var F = {en:'🇺🇸',ko:'🇰🇷',ja:'🇯🇵',zh:'🇨🇳'};
+var PAIRS = [
+  {n:'ko',t:'en',label:'한국어 → English'},
+  {n:'ko',t:'ja',label:'한국어 → 日本語'},
+  {n:'ko',t:'zh',label:'한국어 → 中文'},
+  {n:'en',t:'ko',label:'English → 한국어'},
+  {n:'en',t:'ja',label:'English → 日本語'},
+  {n:'en',t:'zh',label:'English → 中文'},
+  {n:'ja',t:'ko',label:'日本語 → 한국어'},
+  {n:'ja',t:'en',label:'日本語 → English'},
+  {n:'zh',t:'ko',label:'中文 → 한국어'},
+  {n:'zh',t:'en',label:'中文 → English'}
+];
+
+// State: default ko→en, saved in localStorage
+var S = JSON.parse(localStorage.getItem('snap_lang') || 'null') || {n:'ko',t:'en'};
+
+// ═══════════════════════════════════════
+// CONTENT (multilingual, real YouTube IDs)
+// ═══════════════════════════════════════
+var CONTENT = [
+// ── ENGLISH ──
+{id:1, title:"NYC: What makes it special?", ytId:"4O6qj9JWNzE", diff:"beginner", cat:"interview", tags:["interview","daily"], lang:"en",
+ sentences:[
+  {o:"What makes New York special to you?",t:0,tr:{ko:"뉴욕이 당신에게 특별한 이유는?",ja:"ニューヨークがあなたにとって特別な理由は？",zh:"纽约对你来说有什么特别的？"}},
+  {o:"I think it's the energy of the city.",t:4,tr:{ko:"도시의 에너지 때문인 것 같아요.",ja:"街のエネルギーだと思います。",zh:"我觉得是这座城市的能量。"}},
+  {o:"You can feel it everywhere you go.",t:8,tr:{ko:"어디를 가든 느낄 수 있어요.",ja:"どこに行っても感じられます。",zh:"无论去哪里都能感受到。"}},
+  {o:"There's nothing like it in the world.",t:12,tr:{ko:"세상에 이런 곳은 없어요.",ja:"世界にこんな所はありません。",zh:"世界上没有这样的地方。"}}],
+ expressions:[
+  {o:"What makes ~ special",tr:{ko:"~을 특별하게 만드는 것",ja:"〜を特別にするもの",zh:"是什么让~特别"},note:{ko:"'What makes you happy?' 처럼 활용!",ja:"活用パターン！",zh:"灵活运用！"}},
+  {o:"the energy of ~",tr:{ko:"~의 에너지/활기",ja:"〜のエネルギー",zh:"~的能量"},note:{ko:"분위기 표현할 때",ja:"雰囲気を表す時",zh:"表达氛围时"}},
+  {o:"There's nothing like it",tr:{ko:"이런 건 없어요",ja:"こんなものはない",zh:"没有能比的"},note:{ko:"최고라는 뉘앙스!",ja:"最高というニュアンス！",zh:"表示最好的！"}}]},
+
+{id:2, title:"NYC: Dollar Pizza 🍕", ytId:"ikYVBHLSOpY", diff:"beginner", cat:"food", tags:["food","daily"], lang:"en",
+ sentences:[
+  {o:"Have you ever tried dollar pizza?",t:0,tr:{ko:"1달러 피자 먹어본 적 있어?",ja:"1ドルピザ食べたことある？",zh:"你吃过一美元披萨吗？"}},
+  {o:"It's one of the best deals in the city.",t:4,tr:{ko:"이 도시 최고의 가성비예요.",ja:"この街で一番お得です。",zh:"这是城里最划算的。"}},
+  {o:"The cheese is always perfectly melted.",t:8,tr:{ko:"치즈가 항상 완벽하게 녹아있어요.",ja:"チーズがいつも完璧に溶けています。",zh:"奶酪总是融化得恰到好处。"}},
+  {o:"I could eat it every single day.",t:12,tr:{ko:"매일 먹을 수 있을 것 같아요.",ja:"毎日食べられそうです。",zh:"我每天都能吃。"}}],
+ expressions:[
+  {o:"Have you ever tried ~?",tr:{ko:"~해본 적 있어?",ja:"〜したことある？",zh:"你试过~吗？"},note:{ko:"경험 물어보는 기본 패턴!",ja:"経験を聞くパターン！",zh:"询问经历的句型！"}},
+  {o:"one of the best deals",tr:{ko:"최고의 가성비 중 하나",ja:"一番お得なもの",zh:"最划算的之一"},note:{ko:"추천할 때 유용!",ja:"おすすめする時！",zh:"推荐时用！"}},
+  {o:"I could eat it every day",tr:{ko:"매일 먹을 수 있어",ja:"毎日食べられる",zh:"每天都能吃"},note:{ko:"정말 좋아한다는 뉘앙스",ja:"大好きというニュアンス",zh:"表示非常喜欢"}}]},
+
+// ── KOREAN (real YouTube!) ──
+{id:10, title:"서울 맛집: 떡볶이 🌶️", ytId:"hPM29so2mMc", diff:"beginner", cat:"food", tags:["food","daily"], lang:"ko",
+ sentences:[
+  {o:"여기 떡볶이 진짜 맛있어요.",t:0,tr:{en:"The tteokbokki here is really delicious.",ja:"ここのトッポッキ本当においしいです。",zh:"这里的炒年糕真的很好吃。"}},
+  {o:"매운 거 좋아하세요?",t:4,tr:{en:"Do you like spicy food?",ja:"辛いもの好きですか？",zh:"你喜欢吃辣的吗？"}},
+  {o:"이거 하나에 삼천 원이에요.",t:8,tr:{en:"This is three thousand won each.",ja:"これ一つ3000ウォンです。",zh:"这个一份三千韩元。"}},
+  {o:"꼭 한번 드셔보세요!",t:12,tr:{en:"You must try it!",ja:"ぜひ食べてみてください！",zh:"一定要尝尝！"}}],
+ expressions:[
+  {o:"진짜 맛있어요",tr:{en:"really delicious",ja:"本当においしい",zh:"真的很好吃"},note:{en:"진짜 = really. Super common!",ja:"진짜 = 本当に。めっちゃ使う！",zh:"진짜 = 真的。非常常用！"}},
+  {o:"~좋아하세요?",tr:{en:"Do you like ~?",ja:"〜好きですか？",zh:"你喜欢~吗？"},note:{en:"Polite preference question",ja:"丁寧な好みの質問",zh:"礼貌地询问喜好"}},
+  {o:"꼭 드셔보세요",tr:{en:"You must try it",ja:"ぜひ食べてみて",zh:"一定要试试"},note:{en:"꼭 = must, 드시다 = eat (honorific)",ja:"꼭 = 必ず、드시다 = 食べる(尊敬語)",zh:"꼭 = 一定，드시다 = 吃(敬语)"}}]},
+
+{id:11, title:"카페에서 주문하기 ☕", ytId:"", diff:"beginner", cat:"daily", tags:["daily","food"], lang:"ko",
+ sentences:[
+  {o:"아이스 아메리카노 한 잔 주세요.",t:0,tr:{en:"One iced americano please.",ja:"アイスアメリカーノ一杯ください。",zh:"请给我一杯冰美式。"}},
+  {o:"사이즈는 어떤 걸로 하시겠어요?",t:4,tr:{en:"What size would you like?",ja:"サイズはどうされますか？",zh:"您要什么尺寸？"}},
+  {o:"큰 걸로 할게요.",t:8,tr:{en:"I'll have the large.",ja:"大きいのにします。",zh:"要大杯的。"}},
+  {o:"카드로 결제할게요.",t:12,tr:{en:"I'll pay by card.",ja:"カードで払います。",zh:"我刷卡。"}}],
+ expressions:[
+  {o:"~주세요",tr:{en:"Please give me ~",ja:"〜ください",zh:"请给我~"},note:{en:"Most useful Korean phrase!",ja:"最も便利な韓国語！",zh:"最有用的韩语！"}},
+  {o:"어떤 걸로 하시겠어요?",tr:{en:"Which would you like?",ja:"どれにされますか？",zh:"您要哪个？"},note:{en:"Staff asking your preference",ja:"店員がよく使う表現",zh:"店员常用表达"}},
+  {o:"카드로 결제할게요",tr:{en:"I'll pay by card",ja:"カードで払います",zh:"刷卡付款"},note:{en:"Korea is almost cashless!",ja:"韓国はキャッシュレス！",zh:"韩国几乎无现金！"}}]},
+
+// ── JAPANESE (real YouTube!) ──
+{id:20, title:"東京ラーメン 🍜", ytId:"NXivkUHQpXw", diff:"beginner", cat:"food", tags:["food","travel"], lang:"ja",
+ sentences:[
+  {o:"このラーメン、めちゃくちゃうまい！",t:0,tr:{en:"This ramen is super good!",ko:"이 라면 진짜 맛있어!",zh:"这拉面超级好吃！"}},
+  {o:"おすすめは味噌ラーメンです。",t:4,tr:{en:"The recommendation is miso ramen.",ko:"추천은 미소 라멘이에요.",zh:"推荐味噌拉面。"}},
+  {o:"スープが最高ですね。",t:8,tr:{en:"The soup is the best.",ko:"국물이 최고예요.",zh:"汤头太棒了。"}},
+  {o:"また絶対来ます！",t:12,tr:{en:"I'll definitely come again!",ko:"꼭 또 올게요!",zh:"下次一定还来！"}}],
+ expressions:[
+  {o:"めちゃくちゃ",tr:{en:"super/incredibly",ko:"진짜/엄청",zh:"超级"},note:{en:"Casual slang for 'very'!",ko:"'매우'의 캐주얼 슬랭!",zh:"'非常'的口语说法！"}},
+  {o:"おすすめ",tr:{en:"recommendation",ko:"추천",zh:"推荐"},note:{en:"Must-know restaurant word!",ko:"식당 필수 단어!",zh:"餐厅必知词！"}},
+  {o:"また絶対来ます",tr:{en:"Definitely coming again",ko:"꼭 또 올게요",zh:"一定还来"},note:{en:"絶対 = absolutely!",ko:"絶対 = 반드시!",zh:"絶対 = 绝对！"}}]},
+
+{id:21, title:"渋谷で道を聞く 🗺️", ytId:"", diff:"beginner", cat:"travel", tags:["travel","daily"], lang:"ja",
+ sentences:[
+  {o:"すみません、駅はどこですか？",t:0,tr:{en:"Excuse me, where is the station?",ko:"실례합니다, 역이 어디예요?",zh:"打扰一下，车站在哪里？"}},
+  {o:"まっすぐ行って、右に曲がってください。",t:4,tr:{en:"Go straight and turn right.",ko:"직진해서 오른쪽으로 도세요.",zh:"直走然后右转。"}},
+  {o:"歩いて五分くらいです。",t:8,tr:{en:"About five minutes on foot.",ko:"걸어서 5분 정도예요.",zh:"走路大概五分钟。"}},
+  {o:"ありがとうございます！",t:12,tr:{en:"Thank you very much!",ko:"감사합니다!",zh:"非常感谢！"}}],
+ expressions:[
+  {o:"すみません",tr:{en:"Excuse me",ko:"실례합니다",zh:"打扰一下"},note:{en:"Most versatile Japanese word!",ko:"가장 만능인 일본어!",zh:"最万能的日语！"}},
+  {o:"~はどこですか？",tr:{en:"Where is ~?",ko:"~이 어디예요?",zh:"~在哪里？"},note:{en:"Essential navigation!",ko:"필수 길찾기!",zh:"问路必备！"}},
+  {o:"~くらいです",tr:{en:"It's about ~",ko:"~정도예요",zh:"大概~"},note:{en:"くらい = approximately",ko:"くらい = 대략",zh:"くらい = 大约"}}]},
+
+// ── CHINESE (real YouTube!) ──
+{id:30, title:"北京烤鸭 🦆", ytId:"CDNw9sWFvNk", diff:"beginner", cat:"food", tags:["food"], lang:"zh",
+ sentences:[
+  {o:"这个烤鸭太好吃了！",t:0,tr:{en:"This roast duck is so delicious!",ko:"이 오리구이 너무 맛있어!",ja:"この北京ダック、めちゃおいしい！"}},
+  {o:"你要几只？",t:4,tr:{en:"How many do you want?",ko:"몇 마리 드릴까요?",ja:"何羽にしますか？"}},
+  {o:"皮特别脆，肉特别嫩。",t:8,tr:{en:"Skin is crispy, meat is tender.",ko:"껍질이 바삭하고 고기가 부드러워요.",ja:"皮がパリパリで肉が柔らかい。"}},
+  {o:"我还想再来一次！",t:12,tr:{en:"I want to come again!",ko:"또 오고 싶어요!",ja:"また来たいです！"}}],
+ expressions:[
+  {o:"太~了",tr:{en:"so ~/too ~",ko:"너무 ~해",ja:"〜すぎる"},note:{en:"Most common 'very' pattern!",ko:"가장 흔한 '매우' 패턴!",ja:"最も一般的な'とても'！"}},
+  {o:"特别",tr:{en:"especially",ko:"특별히/특히",ja:"特に"},note:{en:"特别 + adj = emphasis!",ko:"特别 + 형용사 = 강조!",ja:"特别 + 形容詞 = 強調！"}},
+  {o:"还想再~",tr:{en:"want to ~ again",ko:"또 ~하고 싶어",ja:"また〜したい"},note:{en:"Double emphasis for 'again'!",ko:"'다시' 이중 강조!",ja:"'また'の二重強調！"}}]},
+
+{id:31, title:"出租车怎么走 🚕", ytId:"", diff:"beginner", cat:"travel", tags:["travel","daily"], lang:"zh",
+ sentences:[
+  {o:"师傅，去天安门广场。",t:0,tr:{en:"Driver, to Tiananmen Square.",ko:"기사님, 천안문 광장으로 가주세요.",ja:"運転手さん、天安門広場まで。"}},
+  {o:"大概要多长时间？",t:4,tr:{en:"About how long?",ko:"대략 얼마나 걸려요?",ja:"だいたいどのくらい？"}},
+  {o:"二十分钟左右吧。",t:8,tr:{en:"About twenty minutes.",ko:"20분 정도요.",ja:"20分くらいですね。"}},
+  {o:"可以用手机支付吗？",t:12,tr:{en:"Can I pay by phone?",ko:"핸드폰으로 결제할 수 있어요?",ja:"スマホで支払えますか？"}}],
+ expressions:[
+  {o:"师傅",tr:{en:"driver (respectful)",ko:"기사님",ja:"運転手さん"},note:{en:"How to address taxi drivers in China!",ko:"중국 택시기사 호칭!",ja:"中国でのタクシーの呼び方！"}},
+  {o:"大概要多长时间",tr:{en:"About how long",ko:"대략 얼마나 걸려요",ja:"だいたいどのくらい"},note:{en:"Essential travel phrase!",ko:"필수 여행 표현!",ja:"旅行必須フレーズ！"}},
+  {o:"可以~吗？",tr:{en:"Can I ~?",ko:"~할 수 있어요?",ja:"〜できますか？"},note:{en:"Polite request pattern!",ko:"정중한 요청 패턴!",ja:"丁寧なお願いパターン！"}}]}
+];
+
+var CATEGORIES = [
+  {id:"all",label:"⚡ All",color:null},
+  {id:"interview",label:"🎤 Interview",color:"#7C3AED"},
+  {id:"food",label:"🍕 Food",color:"#EF4444"},
+  {id:"travel",label:"✈️ Travel",color:"#0EA5E9"},
+  {id:"daily",label:"☕ Daily",color:"#F59E0B"}
+];
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+var currentFilter = "all";
+var currentLesson = null;
+var currentStep = 1;
+var player = null;
+var ytReady = false;
+var audioCtx = null, analyser = null, micStream = null, mediaRecorder = null, recordedChunks = [];
+var dubState = {idx:0,stars:1,success:0,speed:1.0,running:false,timer:null,hintLvl:0,loop:null,showHint:true,blob:null};
+var savedNotes = JSON.parse(localStorage.getItem('snap_notes')||'[]');
+var savedDubs = JSON.parse(localStorage.getItem('snap_dubs')||'[]');
+var roomTab = 'dubs';
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+function tr(sentence) { return sentence.tr[S.n] || sentence.tr.en || ''; }
+function trE(expr) { return (expr.tr||{})[S.n] || (expr.tr||{}).en || ''; }
+function trN(expr) { return (expr.note||{})[S.n] || (expr.note||{}).en || ''; }
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function() {
+  updateLangButton();
+  renderChips();
+  renderFeed();
+  var tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+});
+window.onYouTubeIframeAPIReady = function() { ytReady = true; };
+document.addEventListener('touchstart', function() {
+  var u = new SpeechSynthesisUtterance(''); u.volume = 0; speechSynthesis.speak(u);
+}, {once:true});
+
+function updateLangButton() {
+  document.getElementById('langSel').textContent = F[S.n] + '→' + F[S.t] + ' ▾';
+}
+
+// ═══════════════════════════════════════
+// LANG MODAL
+// ═══════════════════════════════════════
+function openLangModal() {
+  var m = document.getElementById('langModal');
+  document.getElementById('langPairs').innerHTML = PAIRS.map(function(p) {
+    var isCurrent = p.n===S.n && p.t===S.t;
+    return '<div class="lang-pair' + (isCurrent?' current':'') + '" onclick="switchLang(\'' + p.n + '\',\'' + p.t + '\')">' +
+      '<span class="lp-flags">' + F[p.n] + ' → ' + F[p.t] + '</span>' +
+      '<span class="lp-text">' + p.label + '</span></div>';
+  }).join('');
+  m.classList.add('show');
+}
+function switchLang(n, t) {
+  S = {n:n, t:t};
+  localStorage.setItem('snap_lang', JSON.stringify(S));
+  document.getElementById('langModal').classList.remove('show');
+  updateLangButton();
+  renderChips();
+  renderFeed();
+  showScreen('home');
+}
+
+// ═══════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(function(s) { s.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (name === 'home') {
+    document.getElementById('homeScreen').classList.add('active');
+    document.getElementById('navHome').classList.add('active');
+    stopDubbing(); destroyPlayer();
+  } else if (name === 'lesson') {
+    document.getElementById('lessonScreen').classList.add('active');
+  } else if (name === 'myRoom') {
+    document.getElementById('myRoomScreen').classList.add('active');
+    document.getElementById('navRoom').classList.add('active');
+    renderRoom();
+  }
+}
+function goHome() { stopDubbing(); showScreen('home'); }
+
+// ═══════════════════════════════════════
+// HOME: CHIPS + FEED
+// ═══════════════════════════════════════
+function renderChips() {
+  document.getElementById('chipBox').innerHTML = CATEGORIES.map(function(c) {
+    var isActive = c.id === currentFilter;
+    var style = isActive && c.color ? 'color:'+c.color+';border-color:'+c.color : isActive ? 'color:var(--accent);border-color:var(--accent)' : '';
+    return '<button class="chip' + (isActive?' active':'') + '" style="' + style + '" onclick="setFilter(\'' + c.id + '\')">' + c.label + '</button>';
+  }).join('');
+}
+function setFilter(id) { currentFilter = id; renderChips(); renderFeed(); }
+
+function renderFeed() {
+  var items = CONTENT.filter(function(c) { return c.lang === S.t; });
+  if (currentFilter !== 'all') items = items.filter(function(c) { return c.tags.indexOf(currentFilter) >= 0; });
+  var f = document.getElementById('feedBox');
+  if (!items.length) { f.innerHTML = '<div class="empty-state">' + F[S.t] + ' 콘텐츠 준비중!<br>Coming soon!</div>'; return; }
+  f.innerHTML = items.map(function(item) {
+    var thumb = item.ytId ? 'https://img.youtube.com/vi/' + item.ytId + '/hqdefault.jpg' : '';
+    var dc = item.diff === 'beginner' ? 'b' : item.diff === 'intermediate' ? 'i' : 'a';
+    return '<div class="card" onclick="openLesson(' + item.id + ')">' +
+      '<div class="card-thumb">' + (thumb ? '<img src="'+thumb+'" loading="lazy">' : '<div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:36px">' + F[item.lang] + '</div>') +
+      '<div class="play-overlay"><div class="play-icon">▶</div></div></div>' +
+      '<div class="card-info"><div class="card-title">' + item.title + '</div>' +
+      '<div class="card-meta"><span class="badge badge-' + dc + '">' + item.diff + '</span>' +
+      '<span class="card-sen">' + item.sentences.length + '문장</span>' +
+      '<span style="font-size:18px">' + F[item.lang] + '</span></div></div></div>';
+  }).join('');
+}
+
+// ═══════════════════════════════════════
+// LESSON
+// ═══════════════════════════════════════
+function openLesson(id) {
+  currentLesson = CONTENT.filter(function(c){return c.id===id;})[0];
+  if (!currentLesson) return;
+  currentStep = 1;
+  showScreen('lesson');
+  updateProgress();
+  renderStep1();
+  initPlayer();
+  dubState.showHint = true;
+  document.getElementById('hintToggle').textContent = F[S.n] + ' ON';
+  document.getElementById('hintToggle').classList.remove('off');
+}
+
+function initPlayer() {
+  destroyPlayer();
+  if (!currentLesson.ytId) {
+    document.getElementById('ytPlayer').innerHTML = '<div style="width:100%;height:100%;background:#111;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px">' + F[currentLesson.lang] + ' 영상 준비중</div>';
+    return;
+  }
+  if (!ytReady) { setTimeout(initPlayer, 300); return; }
+  player = new YT.Player('ytPlayer', {
+    videoId: currentLesson.ytId,
+    playerVars: {playsinline:1, controls:0, rel:0, modestbranding:1, fs:0},
+    events: {onReady: function() { player.setVolume(50); }}
+  });
+}
+function destroyPlayer() { if(player&&player.destroy)try{player.destroy();}catch(e){} player=null; document.getElementById('ytPlayer').innerHTML=''; }
+function updateProgress() {
+  ['dot1','dot2','dot3'].forEach(function(id,i) {
+    var step = i+1;
+    document.getElementById(id).className = 'step-dot ' + (currentStep>step?'done':currentStep===step?'current':'');
+  });
+}
+
+// ═══════════════════════════════════════
+// STEP 1: EXPRESSIONS
+// ═══════════════════════════════════════
+function renderStep1() {
+  document.getElementById('subOverlay').style.display = 'none';
+  var L = currentLesson;
+  document.getElementById('lessonContent').innerHTML =
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">📌 핵심 표현</div>' +
+    L.expressions.map(function(ex,i) {
+      return '<div class="expr-card"><div class="expr-en">' + ex.o + '</div><div class="expr-kr">' + trE(ex) + '</div>' +
+        '<div class="expr-actions">' +
+        '<button class="expr-btn" onclick="tts(\'' + ex.o.replace(/'/g,"\\'") + '\',\'' + L.lang + '\')">🔊 듣기</button>' +
+        '<button class="expr-btn" onclick="document.getElementById(\'note'+i+'\').classList.toggle(\'show\')">💡 노트</button>' +
+        '<button class="expr-btn" onclick="saveNote(\'' + ex.o.replace(/'/g,"\\'") + '\',\'' + trE(ex).replace(/'/g,"\\'") + '\')">📌 저장</button>' +
+        '</div><div class="expr-note" id="note' + i + '">' + trN(ex) + '</div></div>';
+    }).join('') +
+    '<button class="step-next-btn" onclick="goStep2()">📖 스크립트 연습 →</button>';
+  if(player&&player.unMute){player.unMute();player.setVolume(50);try{player.playVideo();}catch(e){}}
+}
+
+// ═══════════════════════════════════════
+// STEP 2: SCRIPT PRACTICE
+// ═══════════════════════════════════════
+function goStep2() {
+  currentStep = 2; updateProgress();
+  document.getElementById('subOverlay').style.display = 'none';
+  document.getElementById('lessonContent').innerHTML =
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">📖 스크립트 연습</div><div id="scriptCards">' + renderScriptCard(0) + '</div>';
+  setTimeout(function() { tts(currentLesson.sentences[0].o, currentLesson.lang); }, 500);
+  if(player&&player.unMute){player.unMute();player.setVolume(50);try{player.seekTo(0);player.playVideo();}catch(e){}}
+}
+function renderScriptCard(idx) {
+  var L = currentLesson;
+  if (idx >= L.sentences.length)
+    return '<div style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:10px">✅</div><div style="font-size:16px;font-weight:700;margin-bottom:14px">스크립트 연습 완료!</div><button class="step-next-btn" onclick="goStep3()" style="background:linear-gradient(135deg,var(--accent),#FF8F65)">🎬 더빙 시작!</button></div>';
+  var s = L.sentences[idx];
+  return '<div class="script-sentence"><div class="script-num">' + (idx+1) + ' / ' + L.sentences.length + '</div>' +
+    '<div style="display:flex;flex-wrap:wrap;gap:8px">' +
+    '<button class="sc-btn" onclick="tts(\'' + s.o.replace(/'/g,"\\'") + '\',\'' + L.lang + '\')">🔄 다시 듣기</button>' +
+    '<button class="sc-btn" onclick="document.getElementById(\'scO'+idx+'\').classList.toggle(\'show\')">👀 원문 보기</button>' +
+    '<button class="sc-btn" onclick="document.getElementById(\'scT'+idx+'\').classList.toggle(\'show\')">' + F[S.n] + ' 해석 보기</button>' +
+    '<button class="sc-btn" onclick="nextScript(' + (idx+1) + ')" style="background:var(--accent);color:#fff">➡️ 다음</button>' +
+    '</div><div class="sc-reveal" id="scO' + idx + '" style="font-weight:600">' + s.o + '</div>' +
+    '<div class="sc-reveal" id="scT' + idx + '" style="color:var(--text2)">' + tr(s) + '</div></div>';
+}
+function nextScript(i) {
+  document.getElementById('scriptCards').innerHTML = renderScriptCard(i);
+  if (i < currentLesson.sentences.length) setTimeout(function() { tts(currentLesson.sentences[i].o, currentLesson.lang); }, 300);
+}
+
+// ═══════════════════════════════════════
+// STEP 3: DUBBING
+// ═══════════════════════════════════════
+function goStep3() {
+  currentStep = 3; updateProgress();
+  dubState = {idx:0,stars:1,success:0,speed:1.0,running:false,timer:null,hintLvl:0,loop:null,showHint:true,blob:null};
+  document.getElementById('subOverlay').style.display = 'none';
+  document.getElementById('lessonContent').innerHTML =
+    '<div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">🎬 스냅 더빙</div>' +
+    '<div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div class="speed-row"><button class="speed-btn active" onclick="setSpeed(0.5)">🐢 0.5x</button><button class="speed-btn" onclick="setSpeed(1.0)">🚶 1.0x</button><button class="speed-btn" onclick="setSpeed(1.2)">🏃 1.2x</button></div>' +
+    '<div style="text-align:center;color:var(--text2);font-size:13px;padding:8px">영상이 음소거 재생되고, 각 문장에서 멈춥니다.<br>마이크로 말하면 자동으로 다음 문장으로!</div>' +
+    '<button class="dub-btn start" onclick="startDubbing()" style="margin:0 auto">🎤 더빙 시작</button></div>';
+}
+function setSpeed(s) {
+  dubState.speed = s;
+  if(player&&player.setPlaybackRate) player.setPlaybackRate(s);
+  document.querySelectorAll('.speed-btn').forEach(function(b) {
+    b.classList.toggle('active', b.textContent.indexOf(s===0.5?'0.5':s===1?'1.0':'1.2') >= 0);
+  });
+}
+
+function startDubbing() {
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
+    if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    if(audioCtx.state==='suspended') audioCtx.resume();
+    micStream = stream;
+    analyser = audioCtx.createAnalyser(); analyser.fftSize = 512;
+    audioCtx.createMediaStreamSource(stream).connect(analyser);
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = function(e) { if(e.data.size>0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = function() { dubState.blob = new Blob(recordedChunks,{type:'audio/webm'}); };
+    mediaRecorder.start();
+    dubState.running = true; dubState.idx = 0; dubState.success = 0; dubState.stars = 1;
+    if(player&&player.mute){player.mute();player.setPlaybackRate(dubState.speed);player.seekTo(0);player.playVideo();}
+    renderDubUI(); runDubSentence();
+  }).catch(function() { alert('마이크 권한이 필요합니다!'); });
+}
+
+function renderDubUI() {
+  document.getElementById('lessonContent').innerHTML =
+    '<div style="display:flex;flex-direction:column;gap:12px">' +
+    '<div class="speed-row"><button class="speed-btn' + (dubState.speed===0.5?' active':'') + '" onclick="setSpeed(0.5)">🐢 0.5x</button><button class="speed-btn' + (dubState.speed===1?' active':'') + '" onclick="setSpeed(1)">🚶 1.0x</button><button class="speed-btn' + (dubState.speed===1.2?' active':'') + '" onclick="setSpeed(1.2)">🏃 1.2x</button></div>' +
+    '<div class="voice-status"><div class="voice-indicator"><span class="mic-dot" id="micDot"></span><span id="voiceLabel">대기중...</span></div></div>' +
+    '<div class="star-level" id="starDisp">⭐</div>' +
+    '<div class="dub-display" id="dubDisp"></div>' +
+    '<div class="dub-hint" id="dubHint"></div>' +
+    '<button class="manual-next" id="manualBtn" onclick="manualNext()" style="display:none">말했어요! →</button></div>';
+}
+
+function runDubSentence() {
+  if(!dubState.running) return;
+  var L = currentLesson;
+  if(dubState.idx >= L.sentences.length) { completeDub(); return; }
+  var s = L.sentences[dubState.idx];
+  if(player&&player.pauseVideo){player.seekTo(s.t);setTimeout(function(){if(player&&player.pauseVideo)player.pauseVideo();},300);}
+  showSubtitle(s.o, dubState.stars);
+  var d = document.getElementById('dubDisp'); if(d) d.innerHTML = makeBlanks(s.o, dubState.stars);
+  var h = document.getElementById('dubHint'); if(h) h.textContent = dubState.showHint ? tr(s) : '';
+  var mb = document.getElementById('manualBtn'); if(mb) mb.style.display = 'block';
+  updateVoice('🎤 말해보세요!');
+  dubState.hintLvl = 0; clearHintTimer(); startVoiceDetect(s);
+}
+function showSubtitle(text,sl) { document.getElementById('subOverlay').style.display='block'; document.getElementById('subText').innerHTML=makeBlanks(text,sl); }
+function makeBlanks(text,sl) {
+  var w = text.split(/\s+/); if(w.length<=1) return text;
+  var bc = sl===1?1:sl===2?Math.ceil(w.length*.4):Math.ceil(w.length*.7);
+  var bi = {}; var step = Math.max(1,Math.floor(w.length/bc));
+  for(var i=0;i<bc&&Object.keys(bi).length<w.length;i++) bi[(step*i+Math.floor(step/2))%w.length]=1;
+  return w.map(function(x,i){return bi[i]?'<span class="blank"></span>':x;}).join(' ');
+}
+
+// Voice Detection
+var silenceStart=0, wasSpeaking=false;
+function startVoiceDetect(sentence) {
+  if(dubState.loop) cancelAnimationFrame(dubState.loop);
+  silenceStart=Date.now(); wasSpeaking=false; var spoke=0;
+  startHintTimer(sentence);
+  function detect() {
+    if(!dubState.running||!analyser) return;
+    var data=new Uint8Array(analyser.frequencyBinCount); analyser.getByteFrequencyData(data);
+    var vol=0; for(var i=0;i<data.length;i++)vol+=data[i]; vol/=data.length;
+    var speaking=vol>25;
+    var dot=document.getElementById('micDot');
+    if(dot) dot.className='mic-dot'+(speaking?' speaking':' listening');
+    if(speaking){wasSpeaking=true;spoke++;silenceStart=Date.now();clearHintTimer();updateVoice('🔴 듣고 있어요...');}
+    else if(wasSpeaking&&Date.now()-silenceStart>1500&&spoke>15){
+      dubState.success++;
+      if(dubState.success>=3){dubState.stars=Math.min(3,dubState.stars+1);dubState.success=0;var sd=document.getElementById('starDisp');if(sd)sd.textContent='⭐'.repeat(dubState.stars);}
+      advanceSentence(); return;
+    }
+    dubState.loop=requestAnimationFrame(detect);
+  }
+  dubState.loop=requestAnimationFrame(detect);
+}
+function advanceSentence() {
+  cancelAnimationFrame(dubState.loop); clearHintTimer();
+  if(player&&player.playVideo) player.playVideo();
+  updateVoice('✅ 좋아요!');
+  dubState.idx++;
+  setTimeout(function(){if(player&&player.pauseVideo)player.pauseVideo();runDubSentence();},1200);
+}
+function manualNext() {
+  if(!dubState.running) return;
+  dubState.success++;
+  if(dubState.success>=3){dubState.stars=Math.min(3,dubState.stars+1);dubState.success=0;var sd=document.getElementById('starDisp');if(sd)sd.textContent='⭐'.repeat(dubState.stars);}
+  advanceSentence();
+}
+function updateVoice(txt) { var v=document.getElementById('voiceLabel'); if(v)v.textContent=txt; }
+
+// Progressive Hints
+function startHintTimer(sentence) {
+  clearHintTimer(); dubState.hintLvl=0;
+  var words=sentence.o.split(/\s+/);
+  dubState.timer=setInterval(function(){
+    if(!dubState.running){clearHintTimer();return;}
+    dubState.hintLvl++;
+    if(dubState.hintLvl>words.length){clearHintTimer();tts(sentence.o,currentLesson.lang);updateVoice('💡 전체 힌트 후 넘어갑니다');setTimeout(function(){dubState.idx++;dubState.success=0;runDubSentence();},3000);return;}
+    var hint=words.slice(0,dubState.hintLvl).join(' ');
+    tts(hint,currentLesson.lang);
+    updateVoice('💡 힌트: "'+hint+'..."');
+    var st=document.getElementById('subText');
+    if(st)st.innerHTML=words.map(function(w,i){return i<dubState.hintLvl?'<span class="hint-word">'+w+'</span>':'<span class="blank"></span>';}).join(' ');
+  },3000);
+}
+function clearHintTimer() { if(dubState.timer){clearInterval(dubState.timer);dubState.timer=null;} }
+
+function completeDub() {
+  dubState.running=false; cancelAnimationFrame(dubState.loop); clearHintTimer();
+  if(mediaRecorder&&mediaRecorder.state!=='inactive') mediaRecorder.stop();
+  document.getElementById('subOverlay').style.display='none';
+  if(player&&player.pauseVideo) player.pauseVideo();
+  document.getElementById('lessonContent').innerHTML =
+    '<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px;text-align:center">' +
+    '<div style="font-size:48px">🎉</div><div style="font-size:20px;font-weight:800">더빙 완료!</div>' +
+    '<div style="font-size:13px;color:var(--text2)">' + currentLesson.title + '</div>' +
+    '<div class="star-level">' + '⭐'.repeat(dubState.stars) + '</div>' +
+    '<div style="display:flex;gap:8px"><button class="dub-btn" onclick="playMyDub()">▶ 내 더빙 듣기</button><button class="dub-btn primary" onclick="saveDub()">💾 저장</button></div>' +
+    '<div style="display:flex;gap:8px"><button class="dub-btn" onclick="goStep3()">🔄 다시</button><button class="dub-btn" onclick="goHome()">🏠 홈</button></div></div>';
+}
+function playMyDub() { if(dubState.blob) new Audio(URL.createObjectURL(dubState.blob)).play(); }
+function saveDub() {
+  if(!dubState.blob) return;
+  var r=new FileReader();
+  r.onload=function(){savedDubs.push({title:currentLesson.title,date:new Date().toLocaleDateString(),audioData:r.result,stars:dubState.stars});localStorage.setItem('snap_dubs',JSON.stringify(savedDubs));alert('💾 저장 완료!');};
+  r.readAsDataURL(dubState.blob);
+}
+function stopDubbing() {
+  dubState.running=false;
+  if(dubState.loop)cancelAnimationFrame(dubState.loop); clearHintTimer();
+  if(mediaRecorder&&mediaRecorder.state!=='inactive')try{mediaRecorder.stop();}catch(e){}
+  if(micStream){micStream.getTracks().forEach(function(t){t.stop();});micStream=null;}
+}
+function toggleHint() {
+  dubState.showHint=!dubState.showHint;
+  var btn=document.getElementById('hintToggle');
+  btn.textContent=F[S.n]+' '+(dubState.showHint?'ON':'OFF');
+  btn.classList.toggle('off',!dubState.showHint);
+  var h=document.getElementById('dubHint');
+  if(h&&currentLesson&&dubState.idx<currentLesson.sentences.length) h.textContent=dubState.showHint?tr(currentLesson.sentences[dubState.idx]):'';
+}
+function saveNote(orig,meaning) {
+  if(savedNotes.filter(function(n){return n.en===orig;}).length) return;
+  savedNotes.push({en:orig,kr:meaning,date:new Date().toLocaleDateString()});
+  localStorage.setItem('snap_notes',JSON.stringify(savedNotes));
+  alert('📌 저장 완료!');
+}
+
+// ═══════════════════════════════════════
+// TTS
+// ═══════════════════════════════════════
+function tts(text, lang) {
+  if(!text) return;
+  speechSynthesis.cancel();
+  var u = new SpeechSynthesisUtterance(text);
+  var langMap = {en:'en-US',ko:'ko-KR',ja:'ja-JP',zh:'zh-CN'};
+  u.lang = langMap[lang||S.t] || 'en-US';
+  u.rate = 0.9;
+  var voices = speechSynthesis.getVoices();
+  var v = voices.filter(function(v){return v.lang.indexOf(u.lang)===0;})[0];
+  if(v) u.voice = v;
+  var keepAlive;
+  u.onstart = function(){keepAlive=setInterval(function(){speechSynthesis.pause();speechSynthesis.resume();},10000);};
+  u.onend = function(){clearInterval(keepAlive);};
+  u.onerror = function(){clearInterval(keepAlive);};
+  speechSynthesis.speak(u);
+}
+speechSynthesis.onvoiceschanged = function() { speechSynthesis.getVoices(); };
+
+// ═══════════════════════════════════════
+// MY ROOM
+// ═══════════════════════════════════════
+function switchRoomTab(tab,el) {
+  roomTab=tab;
+  document.querySelectorAll('.room-tab').forEach(function(t){t.classList.remove('active');});
+  el.classList.add('active');
+  renderRoom();
+}
+function renderRoom() {
+  var list = document.getElementById('roomList');
+  if(roomTab==='dubs'){
+    if(!savedDubs.length){list.innerHTML='<div class="empty-state">아직 저장된 더빙이 없어요 🎬<br>숏츠를 골라 더빙해보세요!</div>';return;}
+    list.innerHTML=savedDubs.map(function(d,i){
+      return '<div class="room-item"><div><div class="room-item-title">'+'⭐'.repeat(d.stars||1)+' '+d.title+'</div><div class="room-item-sub">'+d.date+'</div></div><div style="display:flex;gap:8px"><button class="room-btn" onclick="new Audio(savedDubs['+i+'].audioData).play()">▶</button><button class="room-btn" onclick="if(confirm(\'삭제할까요?\')){savedDubs.splice('+i+',1);localStorage.setItem(\'snap_dubs\',JSON.stringify(savedDubs));renderRoom();}">🗑</button></div></div>';
+    }).join('');
+  } else {
+    if(!savedNotes.length){list.innerHTML='<div class="empty-state">아직 저장된 표현이 없어요 📝<br>Step 1에서 📌 저장해보세요!</div>';return;}
+    list.innerHTML=savedNotes.map(function(n,i){
+      return '<div class="room-item"><div><div class="room-item-title">'+n.en+'</div><div class="room-item-sub">'+n.kr+'</div></div><div style="display:flex;gap:8px"><button class="room-btn" onclick="tts(\''+n.en.replace(/'/g,"\\'")+'\')">🔊</button><button class="room-btn" onclick="if(confirm(\'삭제할까요?\')){savedNotes.splice('+i+',1);localStorage.setItem(\'snap_notes\',JSON.stringify(savedNotes));renderRoom();}">🗑</button></div></div>';
+    }).join('');
+  }
+}
+</script>
+</body>
+</html>
