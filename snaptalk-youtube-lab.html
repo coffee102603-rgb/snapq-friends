@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>SnapTalk — Snap Dubbing</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#080c18;--bg2:#0f1525;--bg3:#161d30;--text:#f0f0f0;--text2:#a0a8c0;--accent:#FF6B35;--accent2:#FF8F65;--beginner:#22C55E;--intermediate:#F59E0B;--advanced:#EF4444;--rs:10px}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text)}
+button{font-family:inherit;cursor:pointer;border:none;outline:none;-webkit-user-select:none;user-select:none}
+
+/* ===== ONBOARDING (outside #app, hardcoded HTML) ===== */
+#setup{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#setup.gone{display:none!important}
+#setup h1{font-size:36px;font-weight:800;color:var(--accent);margin-bottom:2px}
+#setup .sub{font-size:13px;color:var(--text2);margin-bottom:36px}
+#setup h2{font-size:15px;font-weight:700;margin-bottom:12px;color:var(--text2)}
+.pick-row{display:flex;gap:10px;margin-bottom:28px;justify-content:center;flex-wrap:wrap}
+.pick-btn{width:72px;height:82px;border-radius:14px;background:var(--bg2);color:var(--text);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;font-weight:600;border:2.5px solid transparent;transition:all .15s;touch-action:manipulation}
+.pick-btn:active{transform:scale(.93)}
+.pick-btn.on{border-color:var(--accent);background:rgba(255,107,53,.12)}
+.pick-btn .fg{font-size:30px;line-height:1}
+#goBtn{width:100%;max-width:300px;padding:16px;border-radius:var(--rs);font-size:17px;font-weight:800;color:#fff;background:#333;pointer-events:none;transition:all .2s;touch-action:manipulation}
+#goBtn.rdy{background:var(--accent);pointer-events:auto}
+
+/* ===== APP ===== */
+#app{max-width:430px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative}
+#bnav{display:flex;height:56px;min-height:56px;background:var(--bg2);border-top:1px solid #1a2040;z-index:100}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;background:none;color:var(--text2);font-size:11px;font-weight:500}.nb.on{color:var(--accent)}.nb .ic{font-size:22px}
+.sc{flex:1;overflow-y:auto;overflow-x:hidden;display:none;flex-direction:column;-webkit-overflow-scrolling:touch}.sc.on{display:flex}
+
+/* Home */
+.hh{padding:16px 16px 0;display:flex;align-items:center;justify-content:space-between}
+.la{display:flex;align-items:center;gap:10px}.lg{font-size:22px;font-weight:800;color:var(--accent)}.lt{font-size:11px;font-weight:600;color:var(--text2);background:var(--bg3);padding:2px 8px;border-radius:20px}
+.ls{padding:6px 14px;border-radius:20px;background:var(--bg3);font-size:14px;font-weight:700;color:var(--accent);border:1.5px solid rgba(255,107,53,.3);touch-action:manipulation}
+.chips{display:flex;gap:8px;padding:14px 16px;overflow-x:auto;scrollbar-width:none}.chips::-webkit-scrollbar{display:none}
+.ch{flex-shrink:0;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;background:var(--bg3);color:var(--text2);border:1.5px solid transparent;transition:all .2s;white-space:nowrap;touch-action:manipulation}.ch.on{color:#fff;border-color:currentColor}
+.feed{padding:0 16px 20px;display:flex;flex-direction:column;gap:14px}
+.cd{border-radius:16px;overflow:hidden;background:var(--bg2);cursor:pointer;transition:transform .15s;touch-action:manipulation}.cd:active{transform:scale(.97)}
+.ct{position:relative;width:100%;aspect-ratio:16/9;background:#111;overflow:hidden}.ct img{width:100%;height:100%;object-fit:cover}
+.po{position:absolute;inset:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.7));display:flex;align-items:center;justify-content:center}
+.pi{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;font-size:22px}
+.ci{padding:12px 14px}.cn{font-size:15px;font-weight:700;margin-bottom:6px;line-height:1.3}
+.cm{display:flex;gap:8px;align-items:center}.bd{font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;text-transform:uppercase}
+.bd-b{background:rgba(34,197,94,.15);color:var(--beginner)}.bd-i{background:rgba(245,158,11,.15);color:var(--intermediate)}.bd-a{background:rgba(239,68,68,.15);color:var(--advanced)}
+.cs{font-size:11px;color:var(--text2)}.lf{font-size:18px}
+.empty{text-align:center;padding:40px 20px;color:var(--text2);font-size:14px;line-height:1.8}
+
+/* Lesson */
+.va{width:100%;aspect-ratio:9/16;max-height:52vh;background:#000;position:relative;flex-shrink:0;overflow:hidden}.va iframe{width:100%;height:100%;border:none}
+.so{position:absolute;bottom:12px;left:8px;right:8px;text-align:center;z-index:10}
+.stt{display:inline-block;padding:6px 14px;background:rgba(0,0,0,.75);border-radius:10px;font-size:15px;font-weight:600;line-height:1.5;color:#fff}.stt .bl{display:inline-block;min-width:50px;border-bottom:2.5px solid var(--accent);margin:0 3px}.stt .hw{color:var(--accent2)}
+.ht{position:absolute;top:10px;right:10px;z-index:20;background:rgba(0,0,0,.5);border-radius:20px;padding:4px 12px;font-size:11px;font-weight:600;color:#fff;touch-action:manipulation}.ht.off{opacity:.5}
+.bb{position:absolute;top:10px;left:10px;z-index:20;width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.5);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.pb{display:flex;gap:6px;padding:10px 16px;background:var(--bg2)}.sd{flex:1;height:5px;border-radius:3px;background:#2a3050;transition:.3s}.sd.dn{background:var(--beginner)}.sd.cr{background:var(--accent)}
+.lc{flex:1;overflow-y:auto;padding:14px 16px 20px}.lc::-webkit-scrollbar{width:0;display:none}
+.ec{background:var(--bg3);border-radius:var(--rs);padding:14px;margin-bottom:10px;border-left:3px solid var(--accent)}
+.ee{font-size:16px;font-weight:700;margin-bottom:4px}.ek{font-size:13px;color:var(--text2);margin-bottom:8px}
+.ea{display:flex;gap:8px;flex-wrap:wrap}
+.eb{padding:5px 12px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);touch-action:manipulation}.eb:active{background:var(--accent);color:#fff}
+.en{margin-top:8px;padding:8px 10px;border-radius:8px;background:rgba(255,107,53,.08);font-size:12px;color:var(--accent2);display:none}.en.sh{display:block}
+.snb{display:block;width:100%;padding:14px;margin-top:14px;border-radius:var(--rs);font-size:15px;font-weight:700;background:linear-gradient(135deg,#7C3AED,#9333EA);color:#fff;text-align:center;touch-action:manipulation}
+.ss{background:var(--bg3);border-radius:var(--rs);padding:14px;margin-bottom:10px}
+.sn2{font-size:11px;font-weight:700;color:var(--accent);margin-bottom:6px}
+.scl{display:flex;flex-wrap:wrap;gap:8px}
+.sb{padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;background:var(--bg2);color:var(--text2);touch-action:manipulation}.sb:active{background:var(--accent);color:#fff}
+.rv{width:100%;padding:10px;margin-top:8px;border-radius:8px;background:var(--bg2);font-size:14px;line-height:1.6;display:none}.rv.sh{display:block}
+.spr{display:flex;gap:8px;justify-content:center}
+.spb{padding:8px 18px;border-radius:20px;font-size:13px;font-weight:700;background:var(--bg3);color:var(--text2);border:2px solid transparent;touch-action:manipulation}.spb.on{border-color:var(--accent);color:var(--accent)}
+.vs{text-align:center;padding:10px;border-radius:var(--rs);background:var(--bg3)}
+.vi{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600}
+.mic{width:12px;height:12px;border-radius:50%;background:#555;transition:.2s}.mic.li{background:var(--beginner);animation:pu 1s infinite}.mic.sp{background:var(--accent);animation:pu .5s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.4}}
+.dsd{text-align:center;padding:12px;font-size:18px;font-weight:700;min-height:60px;display:flex;align-items:center;justify-content:center}
+.dhk{text-align:center;font-size:13px;color:var(--text2);min-height:20px}
+.sl{text-align:center;font-size:22px;letter-spacing:4px}
+.da{padding:10px 18px;border-radius:var(--rs);font-size:13px;font-weight:700;background:var(--bg3);color:var(--text);touch-action:manipulation}.da:active{transform:scale(.95)}.da.pm{background:var(--accent);color:#fff}
+.da.big{background:linear-gradient(135deg,var(--accent),#FF8F65);color:#fff;font-size:16px;padding:14px 32px}
+.mn{padding:10px 24px;border-radius:20px;background:var(--bg3);color:var(--text2);font-size:13px;font-weight:600;margin:0 auto;display:block;touch-action:manipulation}
+.rh{padding:16px;font-size:20px;font-weight:800}
+.rts{display:flex;padding:0 16px;gap:8px;margin-bottom:14px}
+.rt{flex:1;padding:10px;border-radius:var(--rs);text-align:center;font-size:13px;font-weight:700;background:var(--bg3);color:var(--text2);touch-action:manipulation}.rt.on{background:var(--accent);color:#fff}
+.rl{padding:0 16px 20px}
+.ri{background:var(--bg2);border-radius:var(--rs);padding:14px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.rin{flex:1}.rit{font-size:14px;font-weight:700}.ris{font-size:12px;color:var(--text2);margin-top:2px}
+.rb{padding:6px 12px;border-radius:8px;font-size:18px;background:var(--bg3);color:var(--text2);touch-action:manipulation}
+.mo{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);display:none;align-items:flex-end;justify-content:center}.mo.sh{display:flex}
+.ms{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-width:430px;max-height:70vh;overflow-y:auto}
+.mt2{font-size:16px;font-weight:700;margin-bottom:16px;text-align:center}
+.mp{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--rs);background:var(--bg3);margin-bottom:8px;cursor:pointer;border:2px solid transparent;touch-action:manipulation}.mp:active,.mp.cur{border-color:var(--accent);background:rgba(255,107,53,.1)}.mpf{font-size:20px}.mpt{font-size:14px;font-weight:600}
+</style>
+</head>
+<body>
+
+<!-- ===== ONBOARDING: 100% hardcoded HTML, no JS generation ===== -->
+<div id="setup">
+  <h1>SnapTalk</h1>
+  <div class="sub">Talk changes everything.</div>
+
+  <h2>I speak...</h2>
+  <div class="pick-row" id="nRow">
+    <button class="pick-btn" ontouchend="pickN('ko',this)" onclick="pickN('ko',this)"><span class="fg">🇰🇷</span>한국어</button>
+    <button class="pick-btn" ontouchend="pickN('en',this)" onclick="pickN('en',this)"><span class="fg">🇺🇸</span>English</button>
+    <button class="pick-btn" ontouchend="pickN('ja',this)" onclick="pickN('ja',this)"><span class="fg">🇯🇵</span>日本語</button>
+    <button class="pick-btn" ontouchend="pickN('zh',this)" onclick="pickN('zh',this)"><span class="fg">🇨🇳</span>中文</button>
+  </div>
+
+  <h2>I want to learn...</h2>
+  <div class="pick-row" id="tRow">
+    <button class="pick-btn" ontouchend="pickT('ko',this)" onclick="pickT('ko',this)"><span class="fg">🇰🇷</span>한국어</button>
+    <button class="pick-btn" ontouchend="pickT('en',this)" onclick="pickT('en',this)"><span class="fg">🇺🇸</span>English</button>
+    <button class="pick-btn" ontouchend="pickT('ja',this)" onclick="pickT('ja',this)"><span class="fg">🇯🇵</span>日本語</button>
+    <button class="pick-btn" ontouchend="pickT('zh',this)" onclick="pickT('zh',this)"><span class="fg">🇨🇳</span>中文</button>
+  </div>
+
+  <button id="goBtn" ontouchend="gogo()" onclick="gogo()">Start! →</button>
+</div>
+
+<!-- ===== MAIN APP ===== -->
+<div id="app">
+  <div id="hm" class="sc on">
+    <div class="hh"><div class="la"><div class="lg">SnapTalk</div><div class="lt">Snap Dubbing</div></div><button class="ls" id="lsel" onclick="openLP()"></button></div>
+    <div class="chips" id="cC"></div><div class="feed" id="fC"></div>
+  </div>
+  <div id="les" class="sc">
+    <div class="va"><button class="bb" onclick="goH()">←</button><div id="yp"></div>
+      <button class="ht" id="htB" onclick="togHint()"></button>
+      <div class="so" id="sO" style="display:none"><div class="stt" id="sT"></div></div></div>
+    <div class="pb"><div class="sd" id="d1"></div><div class="sd" id="d2"></div><div class="sd" id="d3"></div></div>
+    <div class="lc" id="lC"></div>
+  </div>
+  <div id="mr" class="sc">
+    <div class="rh" id="mrH"></div><div class="rts"><button class="rt on" onclick="srTab('d',this)" id="rtD"></button><button class="rt" onclick="srTab('n',this)" id="rtN"></button></div><div class="rl" id="rL"></div>
+  </div>
+  <div id="bnav"><button class="nb on" onclick="nav('h')" id="nH"><span class="ic">🏠</span>Home</button><button class="nb" onclick="nav('r')" id="nR"><span class="ic">📁</span>My Room</button></div>
+</div>
+<div class="mo" id="lM"><div class="ms"><div class="mt2" id="lMt"></div><div id="lPs"></div></div></div>
+
+<script>
+var F={en:'🇺🇸',ko:'🇰🇷',ja:'🇯🇵',zh:'🇨🇳'};
+
+// ========== ONBOARDING ==========
+var _n='',_t='';
+var S=null;
+try{S=JSON.parse(localStorage.getItem('stl'));}catch(e){}
+if(S&&S.n&&S.t){document.getElementById('setup').classList.add('gone');}
+
+function pickN(c,el){
+  _n=c;
+  document.querySelectorAll('#nRow .pick-btn').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  checkReady();
+}
+function pickT(c,el){
+  _t=c;
+  document.querySelectorAll('#tRow .pick-btn').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  checkReady();
+}
+function checkReady(){
+  var ok=_n&&_t&&_n!==_t;
+  document.getElementById('goBtn').className=ok?'rdy':'';
+  document.getElementById('goBtn').id='goBtn';
+  if(ok)document.getElementById('goBtn').classList.add('rdy');
+}
+function gogo(){
+  if(!_n||!_t||_n===_t)return;
+  S={n:_n,t:_t};
+  localStorage.setItem('stl',JSON.stringify(S));
+  document.getElementById('setup').classList.add('gone');
+  initApp();
+}
+
+// ========== UI TEXT ==========
+var UI={
+en:{s1:'Key expressions',s2:'Script practice',s3:'Snap dubbing',listen:'Listen',showT:'Show text',showM:'Meaning',next:'Next',sDone:'Practice done!',go3:'Start dubbing!',save:'Save',saved:'Saved!',speak:'Speak now!',lng:'Listening...',hint:'Hint:',fhint:'Full hint',great:'Great!',wait:'Ready...',done:'Dubbing done!',play:'Play my dub',again:'Again',home:'Home',noD:'No dubs yet',noN:'No notes yet',dT:'My dubs',nT:'My notes',room:'My Room',hOn:'ON',hOff:'OFF',sents:'sentences',sw:'Switch language',note:'Tip',sv:'Save'},
+ko:{s1:'핵심 표현',s2:'스크립트 연습',s3:'스냅 더빙',listen:'듣기',showT:'원문 보기',showM:'해석 보기',next:'다음',sDone:'연습 완료!',go3:'더빙 시작!',save:'저장',saved:'저장 완료!',speak:'말해보세요!',lng:'듣고 있어요...',hint:'힌트:',fhint:'전체 힌트',great:'좋아요!',wait:'대기중...',done:'더빙 완료!',play:'내 더빙 듣기',again:'다시',home:'홈',noD:'더빙이 없어요',noN:'표현이 없어요',dT:'나의 더빙',nT:'나의 노트',room:'나의 방',hOn:'ON',hOff:'OFF',sents:'문장',sw:'언어 변경',note:'노트',sv:'저장'},
+ja:{s1:'重要表現',s2:'スクリプト練習',s3:'スナップ吹替',listen:'聞く',showT:'原文',showM:'訳',next:'次へ',sDone:'練習完了！',go3:'吹替スタート！',save:'保存',saved:'保存しました！',speak:'話して！',lng:'聞いています...',hint:'ヒント:',fhint:'全文ヒント',great:'すごい！',wait:'待機中...',done:'吹替完了！',play:'吹替を聞く',again:'もう一度',home:'ホーム',noD:'吹替なし',noN:'ノートなし',dT:'吹替リスト',nT:'ノート',room:'マイルーム',hOn:'ON',hOff:'OFF',sents:'文',sw:'言語切替',note:'メモ',sv:'保存'},
+zh:{s1:'核心表达',s2:'脚本练习',s3:'配音练习',listen:'听',showT:'看原文',showM:'看翻译',next:'下一个',sDone:'练习完成！',go3:'开始配音！',save:'保存',saved:'已保存！',speak:'请说！',lng:'正在听...',hint:'提示:',fhint:'完整提示',great:'很好！',wait:'准备中...',done:'配音完成！',play:'听配音',again:'再来',home:'首页',noD:'没有配音',noN:'没有笔记',dT:'我的配音',nT:'我的笔记',room:'我的房间',hOn:'ON',hOff:'OFF',sents:'句',sw:'切换语言',note:'笔记',sv:'保存'}
+};
+function t(k){return S&&UI[S.n]?UI[S.n][k]||UI.en[k]||k:UI.en[k]||k;}
+
+// ========== CONTENT ==========
+var C=[
+{id:1,tl:"NYC: What makes it special?",yt:"4O6qj9JWNzE",df:"beginner",cat:"interview",tg:["interview","daily"],lang:"en",
+ss:[{o:"What makes New York special to you?",t:0,tr:{ko:"뉴욕이 당신에게 특별한 이유는?",ja:"ニューヨークがあなたにとって特別な理由は？",zh:"纽约对你来说有什么特别的？"}},{o:"I think it's the energy of the city.",t:4,tr:{ko:"도시의 에너지 때문인 것 같아요.",ja:"街のエネルギーだと思います。",zh:"我觉得是这座城市的能量。"}},{o:"You can feel it everywhere you go.",t:8,tr:{ko:"어디를 가든 느낄 수 있어요.",ja:"どこに行っても感じられます。",zh:"无论去哪里都能感受到。"}},{o:"There's nothing like it in the world.",t:12,tr:{ko:"세상에 이런 곳은 없어요.",ja:"世界にこんな所はありません。",zh:"世界上没有这样的地方。"}}],
+ex:[{o:"What makes ~ special",tr:{ko:"~을 특별하게 만드는 것",ja:"〜を特別にするもの",zh:"是什么让~特别"},nt:{ko:"'What makes you happy?' 처럼 활용!",ja:"活用パターン！",zh:"灵活运用！"}},{o:"the energy of ~",tr:{ko:"~의 에너지",ja:"〜のエネルギー",zh:"~的能量"},nt:{ko:"분위기 표현",ja:"雰囲気表現",zh:"表达氛围"}},{o:"There's nothing like it",tr:{ko:"이런 건 없어요",ja:"こんなものはない",zh:"没有能比的"},nt:{ko:"최고라는 뉘앙스!",ja:"最高というニュアンス！",zh:"表示最好的！"}}]},
+{id:2,tl:"NYC: Dollar Pizza 🍕",yt:"ikYVBHLSOpY",df:"beginner",cat:"food",tg:["food","daily"],lang:"en",
+ss:[{o:"Have you ever tried dollar pizza?",t:0,tr:{ko:"1달러 피자 먹어본 적 있어?",ja:"1ドルピザ食べたことある？",zh:"你吃过一美元披萨吗？"}},{o:"It's one of the best deals in the city.",t:4,tr:{ko:"이 도시 최고의 가성비예요.",ja:"この街で一番お得です。",zh:"这是城里最划算的。"}},{o:"The cheese is always perfectly melted.",t:8,tr:{ko:"치즈가 항상 완벽하게 녹아있어요.",ja:"チーズがいつも完璧に溶けています。",zh:"奶酪总是融化得恰到好处。"}},{o:"I could eat it every single day.",t:12,tr:{ko:"매일 먹을 수 있을 것 같아요.",ja:"毎日食べられそうです。",zh:"我每天都能吃。"}}],
+ex:[{o:"Have you ever tried ~?",tr:{ko:"~해본 적 있어?",ja:"〜したことある？",zh:"你试过~吗？"},nt:{ko:"경험 물어보기!",ja:"経験を聞く！",zh:"询问经历！"}},{o:"one of the best deals",tr:{ko:"최고의 가성비",ja:"一番お得",zh:"最划算的"},nt:{ko:"추천할 때!",ja:"おすすめする時！",zh:"推荐时用！"}},{o:"I could eat it every day",tr:{ko:"매일 먹을 수 있어",ja:"毎日食べられる",zh:"每天都能吃"},nt:{ko:"정말 좋아한다는 뜻",ja:"大好きという意味",zh:"表示非常喜欢"}}]},
+{id:10,tl:"서울 맛집: 떡볶이 🌶️",yt:"hPM29so2mMc",df:"beginner",cat:"food",tg:["food","daily"],lang:"ko",
+ss:[{o:"여기 떡볶이 진짜 맛있어요.",t:0,tr:{en:"The tteokbokki here is really delicious.",ja:"ここのトッポッキ本当においしいです。",zh:"这里的炒年糕真的很好吃。"}},{o:"매운 거 좋아하세요?",t:4,tr:{en:"Do you like spicy food?",ja:"辛いもの好きですか？",zh:"你喜欢吃辣的吗？"}},{o:"이거 하나에 삼천 원이에요.",t:8,tr:{en:"This is three thousand won each.",ja:"これ一つ3000ウォンです。",zh:"这个一份三千韩元。"}},{o:"꼭 한번 드셔보세요!",t:12,tr:{en:"You must try it!",ja:"ぜひ食べてみてください！",zh:"一定要尝尝！"}}],
+ex:[{o:"진짜 맛있어요",tr:{en:"really delicious",ja:"本当においしい",zh:"真的很好吃"},nt:{en:"진짜 = really. Super common!",ja:"진짜 = 本当に。めっちゃ使う！",zh:"진짜 = 真的。非常常用！"}},{o:"~좋아하세요?",tr:{en:"Do you like ~?",ja:"〜好きですか？",zh:"你喜欢~吗？"},nt:{en:"Polite preference question",ja:"丁寧な好みの質問",zh:"礼貌地询问喜好"}},{o:"꼭 드셔보세요",tr:{en:"You must try it",ja:"ぜひ食べてみて",zh:"一定要试试"},nt:{en:"꼭 = must, 드시다 = eat (honorific)",ja:"꼭 = 必ず、드시다 = 食べる(尊敬語)",zh:"꼭 = 一定，드시다 = 吃(敬语)"}}]},
+{id:11,tl:"카페에서 주문하기 ☕",yt:"",df:"beginner",cat:"daily",tg:["daily","food"],lang:"ko",
+ss:[{o:"아이스 아메리카노 한 잔 주세요.",t:0,tr:{en:"One iced americano please.",ja:"アイスアメリカーノ一杯ください。",zh:"请给我一杯冰美式。"}},{o:"사이즈는 어떤 걸로 하시겠어요?",t:4,tr:{en:"What size would you like?",ja:"サイズはどうされますか？",zh:"您要什么尺寸？"}},{o:"큰 걸로 할게요.",t:8,tr:{en:"I'll have the large.",ja:"大きいのにします。",zh:"要大杯的。"}},{o:"카드로 결제할게요.",t:12,tr:{en:"I'll pay by card.",ja:"カードで払います。",zh:"我刷卡。"}}],
+ex:[{o:"~주세요",tr:{en:"Please give me ~",ja:"〜ください",zh:"请给我~"},nt:{en:"Most useful Korean phrase!",ja:"最も便利な韓国語！",zh:"最有用的韩语！"}},{o:"어떤 걸로 하시겠어요?",tr:{en:"Which would you like?",ja:"どれにされますか？",zh:"您要哪个？"},nt:{en:"Staff asking preference",ja:"店員がよく使う表現",zh:"店员常用表达"}},{o:"카드로 결제할게요",tr:{en:"I'll pay by card",ja:"カードで払います",zh:"刷卡付款"},nt:{en:"Korea is cashless!",ja:"韓国はキャッシュレス！",zh:"韩国几乎无现金！"}}]},
+{id:20,tl:"東京ラーメン 🍜",yt:"NXivkUHQpXw",df:"beginner",cat:"food",tg:["food","travel"],lang:"ja",
+ss:[{o:"このラーメン、めちゃくちゃうまい！",t:0,tr:{en:"This ramen is super good!",ko:"이 라면 진짜 맛있어!",zh:"这拉面超级好吃！"}},{o:"おすすめは味噌ラーメンです。",t:4,tr:{en:"The recommendation is miso ramen.",ko:"추천은 미소 라멘이에요.",zh:"推荐味噌拉面。"}},{o:"スープが最高ですね。",t:8,tr:{en:"The soup is the best.",ko:"국물이 최고예요.",zh:"汤头太棒了。"}},{o:"また絶対来ます！",t:12,tr:{en:"I'll definitely come again!",ko:"꼭 또 올게요!",zh:"下次一定还来！"}}],
+ex:[{o:"めちゃくちゃ",tr:{en:"super/incredibly",ko:"진짜/엄청",zh:"超级"},nt:{en:"Casual 'very'!",ko:"'매우'의 캐주얼!",zh:"'非常'的口语！"}},{o:"おすすめ",tr:{en:"recommendation",ko:"추천",zh:"推荐"},nt:{en:"Must-know restaurant word!",ko:"식당 필수 단어!",zh:"餐厅必知词！"}},{o:"また絶対来ます",tr:{en:"Definitely coming again",ko:"꼭 또 올게요",zh:"一定还来"},nt:{en:"絶対 = absolutely!",ko:"絶対 = 반드시!",zh:"絶対 = 绝对！"}}]},
+{id:21,tl:"渋谷で道を聞く 🗺️",yt:"",df:"beginner",cat:"travel",tg:["travel","daily"],lang:"ja",
+ss:[{o:"すみません、駅はどこですか？",t:0,tr:{en:"Excuse me, where is the station?",ko:"실례합니다, 역이 어디예요?",zh:"打扰一下，车站在哪里？"}},{o:"まっすぐ行って、右に曲がってください。",t:4,tr:{en:"Go straight and turn right.",ko:"직진해서 오른쪽으로 도세요.",zh:"直走然后右转。"}},{o:"歩いて五分くらいです。",t:8,tr:{en:"About five minutes on foot.",ko:"걸어서 5분 정도예요.",zh:"走路大概五分钟。"}},{o:"ありがとうございます！",t:12,tr:{en:"Thank you very much!",ko:"감사합니다!",zh:"非常感谢！"}}],
+ex:[{o:"すみません",tr:{en:"Excuse me",ko:"실례합니다",zh:"打扰一下"},nt:{en:"Most versatile word!",ko:"가장 만능 표현!",zh:"最万能的词！"}},{o:"~はどこですか？",tr:{en:"Where is ~?",ko:"~이 어디예요?",zh:"~在哪里？"},nt:{en:"Essential navigation!",ko:"필수 길찾기!",zh:"问路必备！"}},{o:"~くらいです",tr:{en:"It's about ~",ko:"~정도예요",zh:"大概~"},nt:{en:"くらい = approximately",ko:"くらい = 대략",zh:"くらい = 大约"}}]},
+{id:30,tl:"北京烤鸭 🦆",yt:"CDNw9sWFvNk",df:"beginner",cat:"food",tg:["food"],lang:"zh",
+ss:[{o:"这个烤鸭太好吃了！",t:0,tr:{en:"This roast duck is so delicious!",ko:"이 오리구이 너무 맛있어!",ja:"この北京ダック、めちゃおいしい！"}},{o:"你要几只？",t:4,tr:{en:"How many do you want?",ko:"몇 마리 드릴까요?",ja:"何羽にしますか？"}},{o:"皮特别脆，肉特别嫩。",t:8,tr:{en:"Skin is crispy, meat is tender.",ko:"껍질이 바삭하고 고기가 부드러워요.",ja:"皮がパリパリで肉が柔らかい。"}},{o:"我还想再来一次！",t:12,tr:{en:"I want to come again!",ko:"또 오고 싶어요!",ja:"また来たいです！"}}],
+ex:[{o:"太~了",tr:{en:"so ~/too ~",ko:"너무 ~해",ja:"〜すぎる"},nt:{en:"Most common 'very' pattern!",ko:"가장 흔한 '매우' 패턴!",ja:"最も一般的な'とても'！"}},{o:"特别",tr:{en:"especially",ko:"특별히",ja:"特に"},nt:{en:"特别 + adj = emphasis!",ko:"特别 + 형용사 = 강조!",ja:"特别 + 形容詞 = 強調！"}},{o:"还想再~",tr:{en:"want to ~ again",ko:"또 ~하고 싶어",ja:"また〜したい"},nt:{en:"Double emphasis!",ko:"이중 강조!",ja:"二重強調！"}}]},
+{id:31,tl:"出租车怎么走 🚕",yt:"",df:"beginner",cat:"travel",tg:["travel","daily"],lang:"zh",
+ss:[{o:"师傅，去天安门广场。",t:0,tr:{en:"Driver, to Tiananmen Square.",ko:"기사님, 천안문 광장으로 가주세요.",ja:"運転手さん、天安門広場まで。"}},{o:"大概要多长时间？",t:4,tr:{en:"About how long?",ko:"대략 얼마나 걸려요?",ja:"だいたいどのくらい？"}},{o:"二十分钟左右吧。",t:8,tr:{en:"About twenty minutes.",ko:"20분 정도요.",ja:"20分くらいですね。"}},{o:"可以用手机支付吗？",t:12,tr:{en:"Can I pay by phone?",ko:"핸드폰으로 결제할 수 있어요?",ja:"スマホで支払えますか？"}}],
+ex:[{o:"师傅",tr:{en:"driver (respectful)",ko:"기사님",ja:"運転手さん"},nt:{en:"How to address drivers!",ko:"택시기사 호칭!",ja:"タクシーの呼び方！"}},{o:"大概要多长时间",tr:{en:"About how long",ko:"대략 얼마나",ja:"だいたいどのくらい"},nt:{en:"Essential travel phrase!",ko:"필수 여행 표현!",ja:"旅行必須！"}},{o:"可以~吗？",tr:{en:"Can I ~?",ko:"~할 수 있어요?",ja:"〜できますか？"},nt:{en:"Polite request!",ko:"정중한 요청!",ja:"丁寧なお願い！"}}]}
+];
+
+var CATS=[{id:"all",lb:"All",ic:"⚡"},{id:"interview",lb:"Interview",ic:"🎤",cl:"#7C3AED"},{id:"food",lb:"Food",ic:"🍕",cl:"#EF4444"},{id:"travel",lb:"Travel",ic:"✈️",cl:"#0EA5E9"},{id:"daily",lb:"Daily",ic:"☕",cl:"#F59E0B"}];
+var PRS=[{n:'ko',t:'en'},{n:'ko',t:'ja'},{n:'ko',t:'zh'},{n:'en',t:'ko'},{n:'en',t:'ja'},{n:'en',t:'zh'},{n:'ja',t:'ko'},{n:'ja',t:'en'},{n:'ja',t:'zh'},{n:'zh',t:'ko'},{n:'zh',t:'en'},{n:'zh',t:'ja'}];
+
+// ========== STATE ==========
+var cf='all',cl=null,cs=1,pl=null,yr=false,ac=null,an=null,ms2=null,mr=null,rc=[];
+var ds={si:0,sl:1,sc:0,sp:1,run:false,st:null,hl:0,dl:null,nh:true,ab:null};
+var sN=JSON.parse(localStorage.getItem('sn2')||'[]'),sD=JSON.parse(localStorage.getItem('sd2')||'[]');
+var rT='d';
+
+// ========== INIT ==========
+if(S&&S.n&&S.t)initApp();
+var tag=document.createElement('script');tag.src='https://www.youtube.com/iframe_api';document.head.appendChild(tag);
+window.onYouTubeIframeAPIReady=function(){yr=true;};
+document.addEventListener('touchstart',function(){var u=new SpeechSynthesisUtterance('');u.volume=0;speechSynthesis.speak(u);},{once:true});
+
+function initApp(){
+  document.getElementById('lsel').textContent=F[S.n]+' → '+F[S.t]+' ▾';
+  document.getElementById('mrH').textContent='📁 '+t('room');
+  document.getElementById('rtD').textContent='🎬 '+t('dT');
+  document.getElementById('rtN').textContent='📝 '+t('nT');
+  rCh();rFd();
+}
+
+// ========== LANG PICKER ==========
+function openLP(){var m=document.getElementById('lM');document.getElementById('lMt').textContent=t('sw');document.getElementById('lPs').innerHTML=PRS.map(function(p){return'<div class="mp'+(p.n===S.n&&p.t===S.t?' cur':'')+'" onclick="swP(\''+p.n+'\',\''+p.t+'\')"><span class="mpf">'+F[p.n]+' → '+F[p.t]+'</span><span class="mpt">'+p.n.toUpperCase()+' → '+p.t.toUpperCase()+'</span></div>';}).join('');m.classList.add('sh');m.onclick=function(e){if(e.target===m)m.classList.remove('sh');};}
+function swP(n,tg){S={n:n,t:tg};localStorage.setItem('stl',JSON.stringify(S));document.getElementById('lM').classList.remove('sh');initApp();nav('h');}
+
+// ========== NAV ==========
+function nav(x){document.querySelectorAll('.sc').forEach(function(s){s.classList.remove('on');});document.querySelectorAll('.nb').forEach(function(b){b.classList.remove('on');});if(x==='h'){document.getElementById('hm').classList.add('on');document.getElementById('nH').classList.add('on');stopD();dPl();}else if(x==='l'){document.getElementById('les').classList.add('on');}else{document.getElementById('mr').classList.add('on');document.getElementById('nR').classList.add('on');rRm();}}
+function goH(){stopD();nav('h');}
+
+// ========== HOME ==========
+function rCh(){document.getElementById('cC').innerHTML=CATS.map(function(c){var a=c.id===cf;var s=a&&c.cl?'color:'+c.cl+';border-color:'+c.cl:a?'color:var(--accent);border-color:var(--accent)':'';return'<button class="ch'+(a?' on':'')+'" style="'+s+'" onclick="sFi(\''+c.id+'\')">'+c.ic+' '+c.lb+'</button>';}).join('');}
+function sFi(id){cf=id;rCh();rFd();}
+function rFd(){var it=C.filter(function(c){return c.lang===S.t;});if(cf!=='all')it=it.filter(function(c){return c.tg.indexOf(cf)>=0;});var f=document.getElementById('fC');if(!it.length){f.innerHTML='<div class="empty">'+F[S.t]+' No content yet.<br>Coming soon!</div>';return;}
+f.innerHTML=it.map(function(i){var th=i.yt?'https://img.youtube.com/vi/'+i.yt+'/hqdefault.jpg':'';return'<div class="cd" onclick="oL('+i.id+')"><div class="ct">'+(th?'<img src="'+th+'" loading="lazy">':'<div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:36px">'+F[i.lang]+'</div>')+'<div class="po"><div class="pi">▶</div></div></div><div class="ci"><div class="cn">'+i.tl+'</div><div class="cm"><span class="bd bd-'+i.df[0]+'">'+i.df+'</span><span class="cs">'+i.ss.length+' '+t('sents')+'</span><span class="lf">'+F[i.lang]+'</span></div></div></div>';}).join('');}
+
+// ========== LESSON ==========
+function oL(id){cl=C.filter(function(c){return c.id===id;})[0];if(!cl)return;cs=1;nav('l');uPB();rS1();iPl();ds.nh=true;document.getElementById('htB').textContent=F[S.n]+' '+t('hOn');document.getElementById('htB').classList.remove('off');}
+function iPl(){dPl();if(!cl.yt){document.getElementById('yp').innerHTML='<div style="width:100%;height:100%;background:#111;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px">'+F[cl.lang]+' Coming soon</div>';return;}if(!yr){setTimeout(iPl,300);return;}pl=new YT.Player('yp',{videoId:cl.yt,playerVars:{playsinline:1,controls:0,rel:0,modestbranding:1,fs:0},events:{onReady:function(){pl.setVolume(50);}}});}
+function dPl(){if(pl&&pl.destroy)try{pl.destroy();}catch(e){}pl=null;document.getElementById('yp').innerHTML='';}
+function uPB(){['d1','d2','d3'].forEach(function(id,i){document.getElementById(id).className='sd '+(cs>i+1?'dn':cs===i+1?'cr':'');});}
+function gTr(s){return s.tr[S.n]||s.tr.en||'';}
+function gTE(e){return(e.tr||{})[S.n]||(e.tr||{}).en||'';}
+function gTN(e){return(e.nt||{})[S.n]||(e.nt||{}).en||'';}
+
+function rS1(){document.getElementById('sO').style.display='none';var L=cl;document.getElementById('lC').innerHTML='<div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">📌 '+t('s1')+'</div>'+L.ex.map(function(e,i){return'<div class="ec"><div class="ee">'+e.o+'</div><div class="ek">'+gTE(e)+'</div><div class="ea"><button class="eb" onclick="sp(\''+e.o.replace(/'/g,"\\'")+'\',\''+L.lang+'\')">🔊 '+t('listen')+'</button><button class="eb" onclick="document.getElementById(\'n'+i+'\').classList.toggle(\'sh\')">💡 '+t('note')+'</button><button class="eb" onclick="svN(\''+e.o.replace(/'/g,"\\'")+'\',\''+gTE(e).replace(/'/g,"\\'")+'\')">📌 '+t('sv')+'</button></div><div class="en" id="n'+i+'">'+gTN(e)+'</div></div>';}).join('')+'<button class="snb" onclick="gS2()">📖 '+t('s2')+' →</button>';if(pl&&pl.unMute){pl.unMute();pl.setVolume(50);try{pl.playVideo();}catch(e){}}}
+
+function gS2(){cs=2;uPB();document.getElementById('sO').style.display='none';document.getElementById('lC').innerHTML='<div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">📖 '+t('s2')+'</div><div id="sCs">'+rSC(0)+'</div>';setTimeout(function(){sp(cl.ss[0].o,cl.lang);},500);if(pl&&pl.unMute){pl.unMute();pl.setVolume(50);try{pl.seekTo(0);pl.playVideo();}catch(e){}}}
+function rSC(i){var L=cl;if(i>=L.ss.length)return'<div style="text-align:center;padding:20px"><div style="font-size:32px;margin-bottom:10px">✅</div><div style="font-size:16px;font-weight:700;margin-bottom:14px">'+t('sDone')+'</div><button class="snb" onclick="gS3()" style="background:linear-gradient(135deg,var(--accent),#FF8F65)">🎬 '+t('go3')+'</button></div>';var s=L.ss[i];return'<div class="ss"><div class="sn2">'+(i+1)+' / '+L.ss.length+'</div><div class="scl"><button class="sb" onclick="sp(\''+s.o.replace(/'/g,"\\'")+'\',\''+L.lang+'\')">🔄 '+t('listen')+'</button><button class="sb" onclick="document.getElementById(\'so'+i+'\').classList.toggle(\'sh\')">👀 '+t('showT')+'</button><button class="sb" onclick="document.getElementById(\'st'+i+'\').classList.toggle(\'sh\')">'+F[S.n]+' '+t('showM')+'</button><button class="sb" onclick="nSc('+(i+1)+')" style="background:var(--accent);color:#fff">➡️ '+t('next')+'</button></div><div class="rv" id="so'+i+'" style="font-weight:600">'+s.o+'</div><div class="rv" id="st'+i+'" style="color:var(--text2)">'+gTr(s)+'</div></div>';}
+function nSc(i){document.getElementById('sCs').innerHTML=rSC(i);if(i<cl.ss.length)setTimeout(function(){sp(cl.ss[i].o,cl.lang);},300);}
+
+function gS3(){cs=3;uPB();ds={si:0,sl:1,sc:0,sp:1,run:false,st:null,hl:0,dl:null,nh:true,ab:null};document.getElementById('sO').style.display='none';document.getElementById('lC').innerHTML='<div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">🎬 '+t('s3')+'</div><div style="display:flex;flex-direction:column;gap:12px"><div class="spr"><button class="spb on" onclick="sSp(0.5)">🐢 0.5x</button><button class="spb" onclick="sSp(1)">🚶 1.0x</button><button class="spb" onclick="sSp(1.2)">🏃 1.2x</button></div><div style="text-align:center;color:var(--text2);font-size:13px;padding:8px">🎤 '+t('speak')+'</div><button class="da big" onclick="stD()" style="margin:0 auto">🎤 '+t('go3')+'</button></div>';}
+function sSp(s){ds.sp=s;if(pl&&pl.setPlaybackRate)pl.setPlaybackRate(s);document.querySelectorAll('.spb').forEach(function(b){b.classList.toggle('on',b.textContent.indexOf(s===0.5?'0.5':s===1?'1.0':'1.2')>=0);});}
+
+function stD(){navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){if(!ac)ac=new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();ms2=stream;an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(ms2).connect(an);rc=[];mr=new MediaRecorder(ms2);mr.ondataavailable=function(e){if(e.data.size>0)rc.push(e.data);};mr.onstop=function(){ds.ab=new Blob(rc,{type:'audio/webm'});};mr.start();ds.run=true;ds.si=0;ds.sc=0;ds.sl=1;if(pl&&pl.mute){pl.mute();pl.setPlaybackRate(ds.sp);pl.seekTo(0);pl.playVideo();}rDU();rDS();}).catch(function(){alert('Microphone required!');});}
+function rDU(){document.getElementById('lC').innerHTML='<div style="display:flex;flex-direction:column;gap:12px"><div class="spr"><button class="spb'+(ds.sp===0.5?' on':'')+'" onclick="sSp(0.5)">🐢 0.5x</button><button class="spb'+(ds.sp===1?' on':'')+'" onclick="sSp(1)">🚶 1.0x</button><button class="spb'+(ds.sp===1.2?' on':'')+'" onclick="sSp(1.2)">🏃 1.2x</button></div><div class="vs"><div class="vi"><span class="mic" id="mD"></span><span id="vL">'+t('wait')+'</span></div></div><div class="sl" id="sDD">⭐</div><div class="dsd" id="dSD"></div><div class="dhk" id="dH"></div><button class="mn" id="mB" onclick="mN()" style="display:none">'+t('next')+' →</button></div>';}
+function rDS(){if(!ds.run)return;if(ds.si>=cl.ss.length){cD();return;}var s=cl.ss[ds.si];if(pl&&pl.pauseVideo){pl.seekTo(s.t);setTimeout(function(){if(pl&&pl.pauseVideo)pl.pauseVideo();},300);}sSub(s.o,ds.sl);var d=document.getElementById('dSD');if(d)d.innerHTML=mBl(s.o,ds.sl);var h=document.getElementById('dH');if(h)h.textContent=ds.nh?gTr(s):'';var mb=document.getElementById('mB');if(mb)mb.style.display='block';uV('🎤 '+t('speak'));ds.hl=0;cST();sVD(s);}
+function sSub(tx,sl){document.getElementById('sO').style.display='block';document.getElementById('sT').innerHTML=mBl(tx,sl);}
+function mBl(tx,sl){var w=tx.split(/\s+/);if(w.length<=1)return tx;var bc=sl===1?1:sl===2?Math.ceil(w.length*.4):Math.ceil(w.length*.7);var bi={};var step=Math.max(1,Math.floor(w.length/bc));for(var i=0;i<bc&&Object.keys(bi).length<w.length;i++)bi[(step*i+Math.floor(step/2))%w.length]=1;return w.map(function(x,i){return bi[i]?'<span class="bl"></span>':x;}).join(' ');}
+
+var sS=0,wS=false;
+function sVD(sn){if(ds.dl)cancelAnimationFrame(ds.dl);sS=Date.now();wS=false;var sk=0;sSHT(sn);function det(){if(!ds.run||!an)return;var d=new Uint8Array(an.frequencyBinCount);an.getByteFrequencyData(d);var v=0;for(var i=0;i<d.length;i++)v+=d[i];v/=d.length;var s=v>25;var dot=document.getElementById('mD');if(dot)dot.className='mic'+(s?' sp':' li');if(s){wS=true;sk++;sS=Date.now();cST();uV('🔴 '+t('lng'));}else if(wS&&Date.now()-sS>1500&&sk>15){ds.sc++;if(ds.sc>=3){ds.sl=Math.min(3,ds.sl+1);ds.sc=0;var sd=document.getElementById('sDD');if(sd)sd.textContent='⭐'.repeat(ds.sl);}aS();return;}ds.dl=requestAnimationFrame(det);}ds.dl=requestAnimationFrame(det);}
+function aS(){cancelAnimationFrame(ds.dl);cST();if(pl&&pl.playVideo)pl.playVideo();uV('✅ '+t('great'));ds.si++;setTimeout(function(){if(pl&&pl.pauseVideo)pl.pauseVideo();rDS();},1200);}
+function mN(){if(!ds.run)return;ds.sc++;if(ds.sc>=3){ds.sl=Math.min(3,ds.sl+1);ds.sc=0;var sd=document.getElementById('sDD');if(sd)sd.textContent='⭐'.repeat(ds.sl);}aS();}
+function uV(x){var v=document.getElementById('vL');if(v)v.textContent=x;}
+function sSHT(sn){cST();ds.hl=0;var w=sn.o.split(/\s+/);ds.st=setInterval(function(){if(!ds.run){cST();return;}ds.hl++;if(ds.hl>w.length){cST();sp(sn.o,cl.lang);uV('💡 '+t('fhint'));setTimeout(function(){ds.si++;ds.sc=0;rDS();},3000);return;}var h=w.slice(0,ds.hl).join(' ');sp(h,cl.lang);uV('💡 '+t('hint')+' "'+h+'..."');var st=document.getElementById('sT');if(st)st.innerHTML=w.map(function(x,i){return i<ds.hl?'<span class="hw">'+x+'</span>':'<span class="bl"></span>';}).join(' ');},3000);}
+function cST(){if(ds.st){clearInterval(ds.st);ds.st=null;}}
+function cD(){ds.run=false;if(ds.dl)cancelAnimationFrame(ds.dl);cST();if(mr&&mr.state!=='inactive')mr.stop();document.getElementById('sO').style.display='none';if(pl&&pl.pauseVideo)pl.pauseVideo();document.getElementById('lC').innerHTML='<div style="display:flex;flex-direction:column;align-items:center;gap:14px;padding:20px;text-align:center"><div style="font-size:48px">🎉</div><div style="font-size:20px;font-weight:800">'+t('done')+'</div><div style="font-size:13px;color:var(--text2)">'+cl.tl+'</div><div class="sl">'+'⭐'.repeat(ds.sl)+'</div><div style="display:flex;gap:8px"><button class="da" onclick="pMD()">▶ '+t('play')+'</button><button class="da pm" onclick="svDub()">💾 '+t('save')+'</button></div><div style="display:flex;gap:8px"><button class="da" onclick="gS3()">🔄 '+t('again')+'</button><button class="da" onclick="goH()">🏠 '+t('home')+'</button></div></div>';}
+function pMD(){if(ds.ab)new Audio(URL.createObjectURL(ds.ab)).play();}
+function svDub(){if(!ds.ab)return;var r=new FileReader();r.onload=function(){sD.push({tl:cl.tl,dt:new Date().toLocaleDateString(),ad:r.result,st:ds.sl});localStorage.setItem('sd2',JSON.stringify(sD));alert(t('saved'));};r.readAsDataURL(ds.ab);}
+function stopD(){ds.run=false;if(ds.dl)cancelAnimationFrame(ds.dl);cST();if(mr&&mr.state!=='inactive')try{mr.stop();}catch(e){}if(ms2){ms2.getTracks().forEach(function(t){t.stop();});ms2=null;}}
+function togHint(){ds.nh=!ds.nh;var b=document.getElementById('htB');b.textContent=F[S.n]+' '+(ds.nh?t('hOn'):t('hOff'));b.classList.toggle('off',!ds.nh);var h=document.getElementById('dH');if(h&&cl&&ds.si<cl.ss.length)h.textContent=ds.nh?gTr(cl.ss[ds.si]):'';}
+function svN(o,m){if(sN.filter(function(n){return n.en===o;}).length)return;sN.push({en:o,kr:m,dt:new Date().toLocaleDateString()});localStorage.setItem('sn2',JSON.stringify(sN));alert(t('saved'));}
+
+function sp(tx,lang){if(!tx)return;speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(tx);var lm={en:'en-US',ko:'ko-KR',ja:'ja-JP',zh:'zh-CN'};u.lang=lm[lang||S.t]||'en-US';u.rate=0.9;var vs=speechSynthesis.getVoices();var v=vs.filter(function(v){return v.lang.indexOf(u.lang)===0;})[0];if(v)u.voice=v;var ka;u.onstart=function(){ka=setInterval(function(){speechSynthesis.pause();speechSynthesis.resume();},10000);};u.onend=function(){clearInterval(ka);};u.onerror=function(){clearInterval(ka);};speechSynthesis.speak(u);}
+speechSynthesis.onvoiceschanged=function(){speechSynthesis.getVoices();};
+
+function srTab(tab,el){rT=tab;document.querySelectorAll('.rt').forEach(function(t){t.classList.remove('on');});el.classList.add('on');rRm();}
+function rRm(){var l=document.getElementById('rL');if(rT==='d'){if(!sD.length){l.innerHTML='<div class="empty">'+t('noD')+'</div>';return;}l.innerHTML=sD.map(function(d,i){return'<div class="ri"><div class="rin"><div class="rit">'+'⭐'.repeat(d.st||1)+' '+d.tl+'</div><div class="ris">'+d.dt+'</div></div><div style="display:flex;gap:8px"><button class="rb" onclick="new Audio(sD['+i+'].ad).play()">▶</button><button class="rb" onclick="if(confirm(\'Delete?\')){sD.splice('+i+',1);localStorage.setItem(\'sd2\',JSON.stringify(sD));rRm();}">🗑</button></div></div>';}).join('');}else{if(!sN.length){l.innerHTML='<div class="empty">'+t('noN')+'</div>';return;}l.innerHTML=sN.map(function(n,i){return'<div class="ri"><div class="rin"><div class="rit">'+n.en+'</div><div class="ris">'+n.kr+'</div></div><div style="display:flex;gap:8px"><button class="rb" onclick="sp(\''+n.en.replace(/'/g,"\\'")+'\')">🔊</button><button class="rb" onclick="if(confirm(\'Delete?\')){sN.splice('+i+',1);localStorage.setItem(\'sn2\',JSON.stringify(sN));rRm();}">🗑</button></div></div>';}).join('');}}
+</script>
+</body></html>
