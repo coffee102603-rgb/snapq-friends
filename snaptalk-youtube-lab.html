@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SnapTalk — Snap Dubbing</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&display=swap');
+:root{--bg:#080c18;--card:#131830;--card2:#1a2040;--accent:#FF6B35;--acg:rgba(255,107,53,0.18);--accent2:#FF9F1C;--text:#f2f2f8;--dim:#6b7094;--mid:#a0a5c4;--ok:#2ecc71;--no:#e74c3c;--brd:rgba(255,255,255,0.06)}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Outfit',system-ui,sans-serif;background:var(--bg);color:var(--text)}
+.page{display:none;width:100%;height:100%;flex-direction:column;position:absolute;top:0;left:0}.page.active{display:flex}
+.bnav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;height:54px;background:rgba(8,12,24,0.95);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--brd)}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:none;border:none;color:var(--dim);font-size:10px;font-weight:600;font-family:inherit;cursor:pointer;gap:2px}.nb i{font-size:20px;font-style:normal}.nb.on{color:var(--accent)}
+.sa{flex:1;overflow-y:auto;overflow-x:hidden;padding-bottom:64px;-webkit-overflow-scrolling:touch}
+.hdr{padding:14px 16px 0;display:flex;align-items:center}
+.logo{font-size:24px;font-weight:900;letter-spacing:-0.5px;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ltag{font-size:9px;font-weight:700;color:var(--accent);background:rgba(255,107,53,0.12);padding:3px 8px;border-radius:20px;margin-left:8px}
+.cats{display:flex;gap:8px;padding:14px 16px 6px;overflow-x:auto;scrollbar-width:none}.cats::-webkit-scrollbar{display:none}
+.cat{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:8px 16px 8px 10px;border-radius:22px;font-size:13px;font-weight:700;font-family:inherit;border:none;cursor:pointer;transition:all .2s;white-space:nowrap}
+.cat .ce{font-size:18px;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-style:normal}
+.cat-all{background:var(--accent);color:#fff}.cat-all .ce{background:rgba(255,255,255,0.25)}
+.cat-off{background:var(--card);color:var(--mid);border:1px solid var(--brd)}.cat-off .ce{background:rgba(255,255,255,0.06)}.cat-off:active{transform:scale(0.95)}
+.cat-interview{background:#7C3AED;color:#fff}.cat-interview .ce{background:rgba(255,255,255,0.2)}
+.cat-food{background:#EF4444;color:#fff}.cat-food .ce{background:rgba(255,255,255,0.2)}
+.cat-travel{background:#0EA5E9;color:#fff}.cat-travel .ce{background:rgba(255,255,255,0.2)}
+.cat-daily{background:#F59E0B;color:#fff}.cat-daily .ce{background:rgba(255,255,255,0.2)}
+.cat-slang{background:#EC4899;color:#fff}.cat-slang .ce{background:rgba(255,255,255,0.2)}
+.feed{padding:8px 16px;display:flex;flex-direction:column;gap:12px}
+.fc{background:var(--card);border-radius:16px;overflow:hidden;border:1px solid var(--brd);cursor:pointer;transition:transform .15s}.fc:active{transform:scale(0.98)}
+.fc-thumb{width:100%;aspect-ratio:16/9;background:#1a1a3a;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.fc-thumb img{width:100%;height:100%;object-fit:cover}
+.fc-thumb .fc-emo{font-size:48px;position:absolute}
+.fc-thumb .fc-grad{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(transparent,rgba(0,0,0,0.7))}
+.fc-thumb .fc-dur{position:absolute;top:8px;right:8px;background:rgba(0,0,0,0.6);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;backdrop-filter:blur(4px)}
+.fc-thumb .fc-play{position:absolute;width:40px;height:40px;border-radius:50%;background:rgba(255,107,53,0.85);display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.fc-thumb .fc-play::after{content:'';border:solid #fff;border-width:0 2.5px 2.5px 0;padding:5px;transform:rotate(-45deg);margin-left:3px}
+.fc-info{padding:12px 14px}.fc-title{font-size:15px;font-weight:700;line-height:1.3;margin-bottom:5px}
+.fc-row{display:flex;align-items:center;gap:8px}.fc-meta{font-size:11px;color:var(--dim)}
+.fc-diff{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px}.d-b{background:rgba(46,204,113,0.15);color:#2ecc71}.d-i{background:rgba(255,159,28,0.15);color:#FF9F1C}.d-a{background:rgba(231,76,60,0.15);color:#e74c3c}
+.fc-tags{display:flex;gap:4px;margin-top:6px}.fc-tag{font-size:10px;font-weight:500;padding:3px 8px;border-radius:6px;background:rgba(255,255,255,0.05);color:var(--dim)}
+.lt{position:relative;width:100%;background:#000}
+.vc{width:100%;aspect-ratio:9/14;max-height:52vh;background:#0a0a1e;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}.vc iframe{width:100%;height:100%;border:none}
+.vp{text-align:center;color:var(--dim)}.vp .ve{font-size:48px;margin-bottom:8px}.vp .vt{font-size:15px;font-weight:600;color:var(--text)}.vp .vs{font-size:11px;margin-top:3px}
+.bb{position:absolute;top:12px;left:12px;z-index:10;width:34px;height:34px;border-radius:50%;background:rgba(0,0,0,0.4);border:none;color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px)}
+.lc{padding:14px 16px 0}.ltb{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}.ltb h3{font-size:15px;font-weight:700}.ltb span{font-size:11px;color:var(--dim)}
+.ec{background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--brd);display:flex;align-items:center;gap:10px}
+.een{font-size:14px;font-weight:600}.eko{font-size:11px;color:var(--dim);margin-top:2px}.eno{font-size:10px;color:var(--accent);margin-top:2px}
+.ea{display:flex;gap:5px;flex-shrink:0}.eb{width:34px;height:34px;border-radius:50%;background:rgba(255,107,53,0.08);border:1px solid rgba(255,107,53,0.15);color:var(--accent);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}.eb:active{background:rgba(255,107,53,0.2)}.eb.sv{background:var(--accent);color:#fff;border-color:var(--accent)}
+.sdb{width:100%;padding:15px;margin-top:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:14px;color:#fff;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px var(--acg)}.sdb:active{transform:scale(0.97)}
+.dva{width:100%;aspect-ratio:9/14;max-height:52vh;background:#000;position:relative}
+.dso{position:absolute;bottom:0;left:0;right:0;padding:14px;text-align:center;background:linear-gradient(transparent,rgba(0,0,0,0.85));z-index:5}
+.dst{font-size:17px;font-weight:600;line-height:1.5;text-shadow:0 2px 8px rgba(0,0,0,0.8)}.dst .bl{display:inline-block;min-width:50px;border-bottom:2px solid var(--accent);margin:0 2px}
+.dkh{font-size:12px;color:var(--dim);margin-top:5px}
+.dc{flex:1;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+.ds{font-size:12px;color:var(--dim);display:flex;align-items:center;gap:6px}.ds .rd{width:8px;height:8px;border-radius:50%;background:var(--no);animation:pu 1s infinite}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+.sbtn{width:80%;max-width:280px;padding:16px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:50px;color:#fff;font-size:17px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 25px var(--acg)}.sbtn:active{transform:scale(.95)}
+.ht{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--dim)}.ht input{accent-color:var(--accent);width:16px;height:16px}
+.dcm{display:none;flex-direction:column;align-items:center;gap:12px;padding:20px;text-align:center}.dcm.sh{display:flex}.dcm h3{font-size:20px;font-weight:900}.dcm p{font-size:12px;color:var(--dim)}
+.drb{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}.drn{padding:11px 18px;border-radius:12px;border:1px solid var(--brd);background:var(--card);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}.drn:active{background:var(--card2)}.drn.pr{background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;color:#fff}
+.mrh{padding:18px 16px 0;font-size:20px;font-weight:900}.mrt{display:flex;padding:12px 16px;gap:8px}.mt{flex:1;padding:9px;text-align:center;background:var(--card);border:1px solid var(--brd);border-radius:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;color:var(--dim)}.mt.on{background:rgba(255,107,53,.12);border-color:var(--accent);color:var(--accent)}
+.mrc{padding:0 16px}.me{text-align:center;padding:36px 0;color:var(--dim)}.me i{font-size:42px;font-style:normal;display:block;margin-bottom:10px}.me p{font-size:13px;line-height:1.5}
+.mi{background:var(--card);border-radius:12px;padding:12px;margin-bottom:8px;border:1px solid var(--brd);display:flex;align-items:center;gap:10px}.mi i{font-size:24px;font-style:normal}.mi .mx{flex:1}.mi h4{font-size:13px;font-weight:600}.mi p{font-size:11px;color:var(--dim);margin-top:2px}
+.mb{width:32px;height:32px;border-radius:50%;border:1px solid var(--brd);background:var(--card2);color:var(--mid);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center}.mb:active{background:rgba(255,107,53,.12);color:var(--accent)}
+.toast{position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-80px);background:var(--card);border:1px solid var(--accent);padding:8px 18px;border-radius:12px;font-size:12px;font-weight:600;z-index:200;transition:transform .3s;box-shadow:0 8px 30px rgba(0,0,0,.5)}.toast.sh{transform:translateX(-50%) translateY(0)}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}.fu{animation:fu .3s ease forwards}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="page active" id="p-home"><div class="sa"><div class="hdr"><div class="logo">SnapTalk</div><span class="ltag">Snap Dubbing</span></div><div class="cats" id="cats"></div><div class="feed" id="feed"></div></div></div>
+<div class="page" id="p-learn"><div class="lt"><button class="bb" onclick="goH()">←</button><div class="vc" id="lv"></div></div><div class="sa"><div class="lc"><div class="ltb"><h3>📌 핵심 표현</h3><span id="lsc"></span></div><div id="lex"></div><button class="sdb" onclick="goD()">🎬 더빙 시작!</button></div></div></div>
+<div class="page" id="p-dub"><div class="dva" id="dv"><div class="vp"><div class="ve" id="dve">🎬</div><div class="vt" id="dvt">더빙</div><div class="vs">마이크 준비!</div></div><div class="dso" id="dso" style="display:none"><div class="dst" id="dsub"></div><div class="dkh" id="dhint"></div></div></div><div class="dc" id="dctl"><div class="ds"><div class="rd"></div><span>녹음 중</span></div><div id="dstar" style="font-size:20px;letter-spacing:3px">⭐</div><div id="dcnt" style="font-size:11px;color:var(--dim)">1/4</div><button class="sbtn" onclick="nxS()">✅ 말했어요!</button><label class="ht"><input type="checkbox" id="hck" checked onchange="tH()"> 한글 힌트</label></div><div class="dcm" id="dcmp"><div style="font-size:48px">🎉</div><h3>더빙 완료!</h3><p id="dcmi"></p><div class="drb"><button class="drn pr" onclick="pbD()">▶ 내 더빙 듣기</button><button class="drn" onclick="svD()">💾 저장</button><button class="drn" onclick="goD()">🔄 다시</button><button class="drn" onclick="goH()">🏠 홈</button></div></div></div>
+<div class="page" id="p-mr"><div class="sa"><div class="mrh">📁 나의방</div><div class="mrt"><div class="mt on" onclick="smr('d',this)">🎬 나의 더빙</div><div class="mt" onclick="smr('n',this)">📝 나의 노트</div></div><div class="mrc" id="mrc"></div></div></div>
+<div class="bnav"><button class="nb on" onclick="nav('home')" id="nh"><i>🏠</i>Home</button><button class="nb" onclick="nav('mr')" id="nm"><i>📁</i>My Room</button></div>
+<script>
+/* ═══ GALAXY TTS FIX ═══ */
+let ttsReady=false,ttsVoices=[];
+function loadVoices(attempt){
+  attempt=attempt||0;
+  ttsVoices=speechSynthesis.getVoices();
+  if(ttsVoices.length>0){ttsReady=true;return}
+  if(attempt<10)setTimeout(()=>loadVoices(attempt+1),300);
+}
+if('speechSynthesis' in window){
+  loadVoices();
+  speechSynthesis.onvoiceschanged=()=>loadVoices();
+}
+function activateAudio(){
+  if(ttsReady)return;
+  if(!('speechSynthesis' in window))return;
+  const u=new SpeechSynthesisUtterance('');
+  u.volume=0;u.lang='en-US';
+  speechSynthesis.speak(u);
+  loadVoices();
+  ttsReady=true;
+}
+document.addEventListener('touchstart',activateAudio,{once:true});
+document.addEventListener('click',activateAudio,{once:true});
+
+function tts(text){
+  if(!('speechSynthesis' in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='en-US';u.rate=0.9;
+  /* Galaxy: find English voice explicitly */
+  const voices=speechSynthesis.getVoices();
+  const enVoice=voices.find(v=>v.lang==='en-US')||voices.find(v=>v.lang.startsWith('en'));
+  if(enVoice)u.voice=enVoice;
+  /* Galaxy Chrome 15s bug fix: pause/resume */
+  let timer=setInterval(()=>{if(speechSynthesis.speaking){speechSynthesis.pause();speechSynthesis.resume()}else{clearInterval(timer)}},10000);
+  u.onend=()=>clearInterval(timer);
+  u.onerror=()=>clearInterval(timer);
+  speechSynthesis.speak(u);
+}
+
+/* ═══ DATA ═══ */
+const L=[
+{id:"v1",title:"NYC Life: What makes it special?",vid:"4O6qj9JWNzE",dur:30,cat:"interview",emo:"🎤",diff:"beginner",tags:["interview","reaction"],ex:[{en:"It's the vibe, you know?",ko:"그 분위기 있잖아.",nt:"vibe = 분위기"},{en:"There's no place like it.",ko:"이런 곳은 없어.",nt:"no place like it"},{en:"I fell in love with this city.",ko:"이 도시와 사랑에 빠졌어.",nt:"fell in love with"}],sn:[{en:"Excuse me, what makes New York special to you?",ko:"뉴욕이 왜 특별한가요?",s:0,e:4},{en:"It's the vibe, you know? The energy is crazy.",ko:"분위기 있잖아, 에너지가 미쳤어.",s:4,e:8},{en:"There's no place like it in the world.",ko:"세상에 이런 곳은 없어.",s:8,e:12},{en:"I fell in love with this city the moment I got here.",ko:"도착하는 순간 사랑에 빠졌어.",s:12,e:17}]},
+{id:"v2",title:"NYC Life: Best advice",vid:"QmQ5MLAqjoU",dur:25,cat:"interview",emo:"🎤",diff:"beginner",tags:["interview","daily"],ex:[{en:"Don't be afraid to explore.",ko:"탐험을 두려워하지 마.",nt:"be afraid to"},{en:"Take the subway, it's worth it.",ko:"지하철 타봐.",nt:"worth it"},{en:"Talk to the locals!",ko:"현지인한테 말 걸어봐!",nt:"locals = 현지인"}],sn:[{en:"Hey, what's your best advice for tourists?",ko:"관광객에게 조언은?",s:0,e:4},{en:"Don't be afraid to explore the neighborhoods.",ko:"동네 탐험 두려워하지 마.",s:4,e:8},{en:"Take the subway, trust me, it's worth it.",ko:"지하철 타봐, 가치 있어.",s:8,e:12},{en:"And talk to the locals, they're super friendly!",ko:"현지인한테 말 걸어봐!",s:12,e:16}]},
+{id:"v3",title:"NYC Life: Favorite food",vid:"9BWsa9p3i6o",dur:30,cat:"food",emo:"🍕",diff:"intermediate",tags:["food","interview"],ex:[{en:"I'm obsessed with ramen.",ko:"라멘에 빠져 있어.",nt:"obsessed with"},{en:"You can never go wrong with pizza.",ko:"피자는 실패 없어.",nt:"can never go wrong"},{en:"It hits different at 2 AM.",ko:"새벽 2시에 느낌 달라.",nt:"hits different"}],sn:[{en:"Quick question: what's your absolute favorite food?",ko:"좋아하는 음식은?",s:0,e:4},{en:"Oh man, I'm obsessed with ramen right now.",ko:"지금 라멘에 빠져 있어.",s:4,e:8},{en:"But you can never go wrong with a good slice of pizza.",ko:"피자는 절대 실패 없지.",s:8,e:13},{en:"Especially at 2 AM, it just hits different!",ko:"새벽 2시에 느낌이 다르지!",s:13,e:17}]},
+{id:"v4",title:"NYC Life: Dollar Pizza 🍕",vid:"ikYVBHLSOpY",dur:30,cat:"food",emo:"🍕",diff:"beginner",tags:["food","reaction"],ex:[{en:"You gotta try this place.",ko:"여기 꼭 와봐야 해.",nt:"gotta = got to"},{en:"Best slice in the city.",ko:"도시 최고 피자.",nt:"slice = 한 조각"},{en:"Totally worth it.",ko:"완전 가치 있어.",nt:"worth it"}],sn:[{en:"Hey guys, check out this dollar pizza!",ko:"1달러 피자 봐봐!",s:0,e:4},{en:"You gotta try this place.",ko:"여기 꼭 와봐야 해.",s:4,e:7},{en:"Look at that cheese pull!",ko:"치즈 늘어나는 거 봐!",s:7,e:11},{en:"Best slice in the city, hands down.",ko:"도시 최고, 확실해.",s:11,e:15}]},
+{id:"v5",title:"Chinatown Dumplings 🥟",vid:"",dur:30,cat:"food",emo:"🥟",diff:"beginner",tags:["food","slang"],ex:[{en:"These are to die for.",ko:"이건 죽여줘.",nt:"to die for"},{en:"Fresh out of the kitchen.",ko:"갓 나온.",nt:"fresh out of"},{en:"I could eat these all day.",ko:"하루 종일 먹을 수 있어.",nt:"could ~ all day"}],sn:[{en:"Welcome to Chinatown, let's get some dumplings!",ko:"차이나타운, 만두 먹자!",s:0,e:4},{en:"These are fresh out of the kitchen.",ko:"갓 나왔어.",s:4,e:8},{en:"Oh my gosh, these are to die for!",ko:"죽여준다!",s:8,e:12},{en:"I could eat these all day, seriously.",ko:"하루 종일 먹을 수 있어.",s:12,e:15}]},
+{id:"v6",title:"Times Square at Night ✨",vid:"",dur:30,cat:"travel",emo:"✨",diff:"beginner",tags:["travel","reaction"],ex:[{en:"This is absolutely insane!",ko:"완전 미쳤어!",nt:"insane"},{en:"It never gets old.",ko:"안 질려.",nt:"never gets old"},{en:"The energy here is unreal.",ko:"에너지 장난 아니야.",nt:"unreal"}],sn:[{en:"We just got to Times Square and wow!",ko:"타임스퀘어 도착, 와우!",s:0,e:4},{en:"Look at all these lights, this is insane!",ko:"불빛들, 미쳤다!",s:4,e:8},{en:"The energy here is absolutely unreal.",ko:"에너지 비현실적이야.",s:8,e:12},{en:"It never gets old, no matter how many times you come.",ko:"몇 번 와도 좋아.",s:12,e:17}]},
+{id:"v7",title:"Brooklyn Bridge Walk 🌉",vid:"",dur:30,cat:"travel",emo:"🌉",diff:"beginner",tags:["travel","daily"],ex:[{en:"What a view!",ko:"경치 대박!",nt:"What a ~"},{en:"It's a must-see.",ko:"꼭 봐야 해.",nt:"must-see"},{en:"Bucket list: checked.",ko:"버킷리스트 달성.",nt:"bucket list"}],sn:[{en:"Walking across the Brooklyn Bridge right now!",ko:"브루클린 브릿지 걷는 중!",s:0,e:4},{en:"What a view, oh my God!",ko:"경치 대박!",s:4,e:7},{en:"If you come to NYC, this is a must-see.",ko:"뉴욕 오면 꼭 와야 해.",s:7,e:12},{en:"Bucket list: officially checked!",ko:"버킷리스트 달성!",s:12,e:15}]},
+{id:"v8",title:"Ordering Coffee ☕",vid:"",dur:30,cat:"daily",emo:"☕",diff:"beginner",tags:["daily","ordering"],ex:[{en:"Can I get a large iced latte?",ko:"라지 아이스 라떼 주세요.",nt:"Can I get"},{en:"With oat milk, please.",ko:"오트밀크로요.",nt:"with ~ please"},{en:"Keep the change.",ko:"거스름돈 괜찮아요.",nt:"keep the change"}],sn:[{en:"Hi, can I get a large iced latte?",ko:"라지 아이스 라떼요?",s:0,e:4},{en:"With oat milk, please.",ko:"오트밀크로요.",s:4,e:7},{en:"And can I add a shot of vanilla?",ko:"바닐라 샷 추가요?",s:7,e:11},{en:"Perfect, keep the change. Thanks!",ko:"거스름돈 됐어요!",s:11,e:15}]},
+{id:"v9",title:"NYC Morning Routine ☀️",vid:"",dur:40,cat:"daily",emo:"☀️",diff:"intermediate",tags:["daily","narration"],ex:[{en:"First things first, I need my coffee.",ko:"커피 먼저.",nt:"first things first"},{en:"I'm running a bit late.",ko:"좀 늦었어.",nt:"running late"},{en:"Let's get this day started!",ko:"시작하자!",nt:"get started"}],sn:[{en:"Good morning everyone! It's 7 AM in New York.",ko:"좋은 아침! 뉴욕 7시.",s:0,e:5},{en:"First things first, I need my coffee.",ko:"커피부터.",s:5,e:9},{en:"Okay, I'm running a bit late today.",ko:"오늘 좀 늦었어.",s:9,e:13},{en:"Quick shower, get dressed, out the door.",ko:"샤워, 옷, 출발.",s:13,e:18},{en:"Let's get this day started!",ko:"시작하자!",s:18,e:22}]},
+{id:"v10",title:"Gen Z Slang Explained 🔥",vid:"",dur:25,cat:"slang",emo:"🔥",diff:"advanced",tags:["slang","comedy"],ex:[{en:"That's fire!",ko:"대박!",nt:"fire = 엄청 좋은"},{en:"No cap.",ko:"진짜야.",nt:"no cap = 진심"},{en:"It hits different.",ko:"느낌 다르다.",nt:"hits different"}],sn:[{en:"Yo, this outfit is fire!",ko:"이 옷 대박!",s:0,e:3},{en:"No cap, this is the best I've ever had.",ko:"진짜 최고.",s:3,e:7},{en:"Late night pizza just hits different.",ko:"밤 피자는 느낌 달라.",s:7,e:11},{en:"I'm dead, that was so funny!",ko:"죽겠어, 웃겨!",s:11,e:14}]},
+{id:"v11",title:"How to Compliment 💬",vid:"",dur:25,cat:"slang",emo:"💬",diff:"intermediate",tags:["slang","daily"],ex:[{en:"You look amazing today!",ko:"오늘 멋져!",nt:"look amazing"},{en:"I love your vibe.",ko:"분위기 좋아.",nt:"vibe"},{en:"You nailed it!",ko:"완벽해!",nt:"nailed it"}],sn:[{en:"Hey, you look amazing today!",ko:"오늘 멋져!",s:0,e:3},{en:"Seriously, I love your vibe.",ko:"분위기 좋아.",s:3,e:6},{en:"That presentation? You totally nailed it!",ko:"완전 완벽했어!",s:6,e:10},{en:"Keep it up, you're doing great!",ko:"잘하고 있어!",s:10,e:14}]}
+];
+const CATS=[{k:"all",lb:"All",emo:"⚡",cls:"cat-all"},{k:"interview",lb:"Interview",emo:"🎤",cls:"cat-interview"},{k:"food",lb:"Food",emo:"🍕",cls:"cat-food"},{k:"travel",lb:"Travel",emo:"✈️",cls:"cat-travel"},{k:"daily",lb:"Daily",emo:"☕",cls:"cat-daily"},{k:"slang",lb:"Slang",emo:"🔥",cls:"cat-slang"}];
+let cf='all',cs=null,ds={si:0,sk:0,bl:1,rec:false,mr:null,ac:[],ab:null,au:null},mrt='d';
+const gN=()=>{try{return JSON.parse(localStorage.getItem('sn')||'[]')}catch{return[]}};const sN=a=>localStorage.setItem('sn',JSON.stringify(a));
+const gD=()=>{try{return JSON.parse(localStorage.getItem('sd')||'[]')}catch{return[]}};const sD=a=>localStorage.setItem('sd',JSON.stringify(a));
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('sh');setTimeout(()=>t.classList.remove('sh'),2000)}
+function nav(p){document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.nb').forEach(x=>x.classList.remove('on'));if(p==='home'){document.getElementById('p-home').classList.add('active');document.getElementById('nh').classList.add('on')}else{document.getElementById('p-mr').classList.add('active');document.getElementById('nm').classList.add('on');rMR()}}
+function goH(){sRec();nav('home')}
+function rCats(){document.getElementById('cats').innerHTML=CATS.map(c=>`<button class="cat ${c.k===cf?c.cls:'cat-off'}" onclick="activateAudio();sF('${c.k}')"><i class="ce">${c.emo}</i>${c.lb}</button>`).join('')}
+function sF(k){cf=k;rCats();rFeed()}
+function rFeed(){const f=document.getElementById('feed');const items=cf==='all'?L:L.filter(s=>s.cat===cf||s.tags.includes(cf));if(!items.length){f.innerHTML='<div class="me"><i>🔍</i><p>콘텐츠 준비 중...</p></div>';return}
+f.innerHTML=items.map((x,i)=>{const hasV=!!x.vid;const thumb=hasV?`<img src="https://img.youtube.com/vi/${x.vid}/hqdefault.jpg" alt="${x.title}" onerror="this.style.display='none'">`:'';const dCls=x.diff==='beginner'?'d-b':x.diff==='intermediate'?'d-i':'d-a';
+return`<div class="fc fu" style="animation-delay:${i*.05}s" onclick="activateAudio();oL('${x.id}')"><div class="fc-thumb"${hasV?'':' style="background:linear-gradient(135deg,#1a1a3e,#2a1a3e)"'}>${thumb}<span class="fc-emo"${hasV?' style="display:none"':''}>${x.emo}</span><div class="fc-grad"></div><span class="fc-dur">${x.dur}s</span><div class="fc-play"></div></div><div class="fc-info"><div class="fc-title">${x.title}</div><div class="fc-row"><span class="fc-meta">${x.sn.length}문장</span><span class="fc-diff ${dCls}">${x.diff}</span></div><div class="fc-tags">${x.tags.map(t=>`<span class="fc-tag">${t}</span>`).join('')}</div></div></div>`}).join('')}
+function oL(id){cs=L.find(s=>s.id===id);if(!cs)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-learn').classList.add('active');
+const vc=document.getElementById('lv');if(cs.vid){vc.innerHTML=`<button class="bb" onclick="goH()">←</button><iframe src="https://www.youtube.com/embed/${cs.vid}?playsinline=1&rel=0&modestbranding=1&loop=1&playlist=${cs.vid}" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen></iframe>`}else{vc.innerHTML=`<button class="bb" onclick="goH()">←</button><div class="vp"><div class="ve">${cs.emo}</div><div class="vt">${cs.title}</div><div class="vs">영상 준비 중</div></div>`}
+document.getElementById('lsc').textContent=`${cs.sn.length}문장 · ${cs.dur}초`;const sn=gN();document.getElementById('lex').innerHTML=cs.ex.map((e,i)=>{const sv=sn.some(n=>n.en===e.en);return`<div class="ec fu" style="animation-delay:${i*.06}s"><div style="flex:1"><div class="een">${e.en}</div><div class="eko">${e.ko}</div>${e.nt?`<div class="eno">💡 ${e.nt}</div>`:''}</div><div class="ea"><button class="eb" onclick="tts('${e.en.replace(/'/g,"\\'")}')">🔊</button><button class="eb ${sv?'sv':''}" onclick="tN(this,'${e.en.replace(/'/g,"\\'")}','${e.ko.replace(/'/g,"\\'")}')">📌</button></div></div>`}).join('')}
+function tN(b,en,ko){let n=gN();const i=n.findIndex(x=>x.en===en);if(i>=0){n.splice(i,1);b.classList.remove('sv');toast('📌 삭제')}else{n.push({en,ko,t:Date.now()});b.classList.add('sv');toast('📌 저장!')}sN(n)}
+function goD(){if(!cs)return;document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.getElementById('p-dub').classList.add('active');ds={si:0,sk:0,bl:1,rec:false,mr:null,ac:[],ab:null,au:null};
+const dv=document.getElementById('dv');if(cs.vid){dv.innerHTML=`<iframe src="https://www.youtube.com/embed/${cs.vid}?playsinline=1&rel=0&modestbranding=1&mute=1&autoplay=1&loop=1&playlist=${cs.vid}" allow="accelerometer;autoplay;encrypted-media;gyroscope;picture-in-picture" allowfullscreen style="width:100%;height:100%;border:none;position:absolute;top:0;left:0"></iframe><div class="dso" id="dso"><div class="dst" id="dsub"></div><div class="dkh" id="dhint"></div></div>`}else{dv.innerHTML=`<div class="vp"><div class="ve">${cs.emo}</div><div class="vt">${cs.title}</div><div class="vs">더빙 모드</div></div><div class="dso" id="dso"><div class="dst" id="dsub"></div><div class="dkh" id="dhint"></div></div>`}
+document.getElementById('dctl').style.display='flex';document.getElementById('dcmp').classList.remove('sh');shS();stRec()}
+function shS(){const s=cs.sn[ds.si];if(!s)return;const w=s.en.split(' ');const bc=Math.min(ds.bl,Math.floor(w.length*.6));const av=w.map((_,i)=>i);const idx=[];for(let i=0;i<bc;i++){if(!av.length)break;const p=Math.floor(Math.random()*av.length);idx.push(av[p]);av.splice(p,1)}
+document.getElementById('dsub').innerHTML=w.map((x,i)=>idx.includes(i)?'<span class="bl">&nbsp;</span>':x).join(' ');document.getElementById('dhint').textContent=document.getElementById('hck').checked?s.ko:'';document.getElementById('dstar').textContent='⭐'.repeat(Math.min(ds.bl,3));document.getElementById('dcnt').textContent=`${ds.si+1} / ${cs.sn.length}`}
+function nxS(){ds.sk++;if(ds.sk>=3){ds.bl=Math.min(ds.bl+1,5);ds.sk=0}ds.si++;if(ds.si>=cs.sn.length){fnD();return}shS()}
+function tH(){if(!cs)return;const s=cs.sn[ds.si];document.getElementById('dhint').textContent=document.getElementById('hck').checked?(s?s.ko:''):''}
+async function stRec(){try{const st=await navigator.mediaDevices.getUserMedia({audio:true});ds.mr=new MediaRecorder(st);ds.ac=[];ds.mr.ondataavailable=e=>{if(e.data.size>0)ds.ac.push(e.data)};ds.mr.onstop=()=>{ds.ab=new Blob(ds.ac,{type:'audio/webm'});ds.au=URL.createObjectURL(ds.ab);st.getTracks().forEach(t=>t.stop())};ds.mr.start();ds.rec=true}catch(e){toast('🎤 마이크 권한 필요')}}
+function sRec(){if(ds.mr&&ds.rec){try{ds.mr.stop()}catch(e){}ds.rec=false}}
+function fnD(){sRec();document.getElementById('dctl').style.display='none';const dso=document.getElementById('dso');if(dso)dso.style.display='none';document.getElementById('dcmp').classList.add('sh');document.getElementById('dcmi').textContent=`${cs.title} — ${cs.sn.length}문장 완료!`}
+function pbD(){if(ds.au){new Audio(ds.au).play();toast('▶ 재생 중...')}else toast('녹음 없음')}
+function svD(){const d=gD();d.unshift({id:cs.id,title:cs.title,emo:cs.emo,sn:cs.sn.length,t:Date.now()});sD(d);toast('💾 저장!')}
+function smr(tab,el){mrt=tab;document.querySelectorAll('.mt').forEach(t=>t.classList.remove('on'));el.classList.add('on');rMR()}
+function rMR(){const c=document.getElementById('mrc');if(mrt==='d'){const d=gD();if(!d.length){c.innerHTML='<div class="me"><i>🎬</i><p>저장된 더빙 없어요<br>숏츠 더빙 도전!</p></div>';return}c.innerHTML=d.map((x,i)=>`<div class="mi fu" style="animation-delay:${i*.05}s"><i>${x.emo}</i><div class="mx"><h4>${x.title}</h4><p>${x.sn}문장 · ${new Date(x.t).toLocaleDateString()}</p></div><button class="mb" onclick="dD(${i})">🗑</button></div>`).join('')}else{const n=gN();if(!n.length){c.innerHTML='<div class="me"><i>📝</i><p>저장된 표현 없어요<br>📌으로 저장!</p></div>';return}c.innerHTML=n.map((x,i)=>`<div class="mi fu" style="animation-delay:${i*.05}s"><i>📝</i><div class="mx"><h4>${x.en}</h4><p>${x.ko}</p></div><div style="display:flex;gap:4px"><button class="mb" onclick="tts('${x.en.replace(/'/g,"\\'")}')">🔊</button><button class="mb" onclick="dN(${i})">🗑</button></div></div>`).join('')}}
+function dD(i){const d=gD();d.splice(i,1);sD(d);rMR();toast('🗑')}
+function dN(i){const n=gN();n.splice(i,1);sN(n);rMR();toast('🗑')}
+rCats();rFeed();
+</script>
+</body>
+</html>
