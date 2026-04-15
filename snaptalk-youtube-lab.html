@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SnapTalk — Snap Dubbing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #080c18;
+  --bg2: #0f1525;
+  --bg3: #161d30;
+  --text: #f0f0f0;
+  --text2: #a0a8c0;
+  --accent: #FF6B35;
+  --accent2: #FF8F65;
+  --interview: #7C3AED;
+  --food: #EF4444;
+  --travel: #0EA5E9;
+  --daily: #F59E0B;
+  --slang: #EC4899;
+  --beginner: #22C55E;
+  --intermediate: #F59E0B;
+  --advanced: #EF4444;
+  --step-done: #22C55E;
+  --step-current: #FF6B35;
+  --step-wait: #2a3050;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+html, body { 
+  height:100%; overflow:hidden; 
+  font-family:'Outfit',sans-serif; 
+  background:var(--bg); color:var(--text);
+}
+button { font-family:inherit; cursor:pointer; border:none; outline:none; }
+
+/* ── APP SHELL ── */
+#app {
+  max-width:430px; margin:0 auto; height:100dvh;
+  display:flex; flex-direction:column; position:relative;
+  overflow:hidden;
+}
+
+/* ── BOTTOM NAV ── */
+#bottomNav {
+  display:flex; height:56px; min-height:56px;
+  background:var(--bg2); border-top:1px solid #1a2040;
+  z-index:100;
+}
+.nav-btn {
+  flex:1; display:flex; flex-direction:column; 
+  align-items:center; justify-content:center; gap:2px;
+  background:none; color:var(--text2); font-size:11px; font-weight:500;
+  transition:color .2s;
+}
+.nav-btn.active { color:var(--accent); }
+.nav-btn span.icon { font-size:22px; }
+
+/* ── SCREENS ── */
+.screen { 
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  display:none; flex-direction:column;
+  -webkit-overflow-scrolling:touch;
+}
+.screen.active { display:flex; }
+
+/* ── HOME ── */
+#homeScreen .home-header {
+  padding:16px 16px 0;
+  display:flex; align-items:center; gap:10px;
+}
+.logo { font-size:22px; font-weight:800; color:var(--accent); }
+.logo-tag { 
+  font-size:11px; font-weight:600; color:var(--text2); 
+  background:var(--bg3); padding:2px 8px; border-radius:20px;
+}
+
+/* Chip Filters */
+.chips {
+  display:flex; gap:8px; padding:14px 16px;
+  overflow-x:auto; scrollbar-width:none;
+}
+.chips::-webkit-scrollbar { display:none; }
+.chip {
+  flex-shrink:0; padding:7px 16px; border-radius:20px;
+  font-size:13px; font-weight:600; background:var(--bg3);
+  color:var(--text2); border:1.5px solid transparent;
+  transition:all .2s; white-space:nowrap;
+}
+.chip.active { color:#fff; border-color:currentColor; }
+
+/* Feed Cards */
+.feed { padding:0 16px 20px; display:flex; flex-direction:column; gap:14px; }
+.card {
+  border-radius:var(--radius); overflow:hidden;
+  background:var(--bg2); cursor:pointer;
+  transition:transform .15s;
+}
+.card:active { transform:scale(.97); }
+.card-thumb {
+  position:relative; width:100%; aspect-ratio:16/9;
+  background:#111; overflow:hidden;
+}
+.card-thumb img { width:100%; height:100%; object-fit:cover; }
+.card-thumb .play-overlay {
+  position:absolute; inset:0; 
+  background:linear-gradient(transparent 40%,rgba(0,0,0,.7));
+  display:flex; align-items:center; justify-content:center;
+}
+.play-icon {
+  width:48px; height:48px; border-radius:50%;
+  background:rgba(255,255,255,.2); backdrop-filter:blur(6px);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px;
+}
+.card-info { padding:12px 14px; }
+.card-title { font-size:15px; font-weight:700; margin-bottom:6px; line-height:1.3; }
+.card-meta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.badge {
+  font-size:10px; font-weight:700; padding:3px 8px; 
+  border-radius:6px; text-transform:uppercase; letter-spacing:.3px;
+}
+.badge-beginner { background:rgba(34,197,94,.15); color:var(--beginner); }
+.badge-intermediate { background:rgba(245,158,11,.15); color:var(--intermediate); }
+.badge-advanced { background:rgba(239,68,68,.15); color:var(--advanced); }
+.card-sentences { font-size:11px; color:var(--text2); }
+.card-tags { display:flex; gap:4px; margin-top:4px; }
+.tag-dot {
+  width:8px; height:8px; border-radius:50%;
+}
+
+/* ── LESSON SCREEN ── */
+#lessonScreen { background:var(--bg); }
+
+/* Video Area */
+.video-area {
+  width:100%; aspect-ratio:9/16; max-height:52vh;
+  background:#000; position:relative; flex-shrink:0;
+  overflow:hidden;
+}
+.video-area iframe { width:100%; height:100%; border:none; }
+.video-area .subtitle-overlay {
+  position:absolute; bottom:12px; left:8px; right:8px;
+  text-align:center; z-index:10;
+}
+.subtitle-text {
+  display:inline-block; padding:6px 14px;
+  background:rgba(0,0,0,.75); border-radius:10px;
+  font-size:15px; font-weight:600; line-height:1.5;
+  color:#fff; backdrop-filter:blur(4px);
+}
+.subtitle-text .blank {
+  display:inline-block; min-width:60px; 
+  border-bottom:2.5px solid var(--accent);
+  margin:0 3px; vertical-align:baseline;
+}
+.subtitle-text .hint-word { color:var(--accent2); }
+
+/* Korean hint toggle - overlays on video */
+.kr-hint-toggle {
+  position:absolute; top:10px; right:10px; z-index:20;
+  background:rgba(0,0,0,.5); border-radius:20px;
+  padding:4px 12px; font-size:11px; font-weight:600;
+  color:#fff; backdrop-filter:blur(6px);
+}
+.kr-hint-toggle.off { opacity:.5; }
+
+/* Progress Bar */
+.progress-bar {
+  display:flex; gap:6px; padding:10px 16px;
+  background:var(--bg2);
+}
+.step-dot {
+  flex:1; height:5px; border-radius:3px;
+  background:var(--step-wait);
+  transition:background .3s;
+}
+.step-dot.done { background:var(--step-done); }
+.step-dot.current { background:var(--step-current); }
+
+/* Content Area */
+.lesson-content {
+  flex:1; overflow-y:auto; padding:14px 16px 20px;
+}
+
+/* ── Step 1: Expressions ── */
+.expr-card {
+  background:var(--bg3); border-radius:var(--radius-sm);
+  padding:14px; margin-bottom:10px;
+  border-left:3px solid var(--accent);
+}
+.expr-en { font-size:16px; font-weight:700; margin-bottom:4px; }
+.expr-kr { font-size:13px; color:var(--text2); margin-bottom:8px; }
+.expr-actions { display:flex; gap:8px; align-items:center; }
+.expr-btn {
+  padding:5px 12px; border-radius:8px; font-size:12px; font-weight:600;
+  background:var(--bg2); color:var(--text2); transition:all .2s;
+}
+.expr-btn:active { background:var(--accent); color:#fff; }
+.expr-note {
+  margin-top:8px; padding:8px 10px; border-radius:8px;
+  background:rgba(255,107,53,.08); font-size:12px; color:var(--accent2);
+  display:none;
+}
+.expr-note.show { display:block; }
+
+.step-next-btn {
+  display:block; width:100%; padding:14px; margin-top:14px;
+  border-radius:var(--radius-sm); font-size:15px; font-weight:700;
+  background:linear-gradient(135deg,var(--interview),#9333EA);
+  color:#fff; text-align:center;
+}
+
+/* ── Step 2: Script Practice ── */
+.script-sentence {
+  background:var(--bg3); border-radius:var(--radius-sm);
+  padding:14px; margin-bottom:10px;
+}
+.script-num { 
+  font-size:11px; font-weight:700; color:var(--accent);
+  margin-bottom:6px;
+}
+.script-controls { display:flex; flex-wrap:wrap; gap:8px; }
+.sc-btn {
+  padding:7px 14px; border-radius:8px; font-size:12px; font-weight:600;
+  background:var(--bg2); color:var(--text2); transition:all .15s;
+}
+.sc-btn:active { background:var(--accent); color:#fff; }
+.sc-reveal {
+  width:100%; padding:10px; margin-top:8px; border-radius:8px;
+  background:var(--bg2); font-size:14px; line-height:1.6;
+  display:none;
+}
+.sc-reveal.show { display:block; }
+.sc-reveal-en { color:var(--text); font-weight:600; }
+.sc-reveal-kr { color:var(--text2); font-size:13px; }
+
+/* ── Step 3: Dubbing ── */
+.dub-controls {
+  display:flex; flex-direction:column; gap:12px;
+}
+
+/* Speed Buttons */
+.speed-row {
+  display:flex; gap:8px; justify-content:center;
+}
+.speed-btn {
+  padding:8px 18px; border-radius:20px; font-size:13px; font-weight:700;
+  background:var(--bg3); color:var(--text2); transition:all .2s;
+  border:2px solid transparent;
+}
+.speed-btn.active { border-color:var(--accent); color:var(--accent); }
+
+/* Voice Status */
+.voice-status {
+  text-align:center; padding:10px;
+  border-radius:var(--radius-sm); background:var(--bg3);
+}
+.voice-indicator {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:14px; font-weight:600;
+}
+.mic-dot {
+  width:12px; height:12px; border-radius:50%;
+  background:#555; transition:background .2s;
+}
+.mic-dot.listening { background:var(--beginner); animation:pulse 1s infinite; }
+.mic-dot.speaking { background:var(--accent); animation:pulse .5s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+.dub-sentence-display {
+  text-align:center; padding:12px;
+  font-size:18px; font-weight:700; min-height:60px;
+  display:flex; align-items:center; justify-content:center;
+}
+.dub-hint-kr {
+  text-align:center; font-size:13px; color:var(--text2);
+  min-height:20px;
+}
+
+/* Star Level */
+.star-level {
+  text-align:center; font-size:22px; letter-spacing:4px;
+}
+
+/* Dub action buttons */
+.dub-action-row {
+  display:flex; gap:8px; justify-content:center; flex-wrap:wrap;
+}
+.dub-act-btn {
+  padding:10px 18px; border-radius:var(--radius-sm);
+  font-size:13px; font-weight:700; 
+  background:var(--bg3); color:var(--text);
+  transition:all .15s;
+}
+.dub-act-btn:active { transform:scale(.95); }
+.dub-act-btn.primary { background:var(--accent); color:#fff; }
+.dub-act-btn.start-btn {
+  background:linear-gradient(135deg,var(--accent),#FF8F65);
+  color:#fff; font-size:16px; padding:14px 32px;
+}
+
+/* Manual fallback button */
+.manual-next {
+  padding:10px 24px; border-radius:20px;
+  background:var(--bg3); color:var(--text2);
+  font-size:13px; font-weight:600; margin:0 auto; display:block;
+}
+
+/* ── MY ROOM ── */
+#myRoomScreen { background:var(--bg); }
+.room-header {
+  padding:16px; font-size:20px; font-weight:800;
+}
+.room-tabs {
+  display:flex; padding:0 16px; gap:8px; margin-bottom:14px;
+}
+.room-tab {
+  flex:1; padding:10px; border-radius:var(--radius-sm);
+  text-align:center; font-size:13px; font-weight:700;
+  background:var(--bg3); color:var(--text2); transition:all .2s;
+}
+.room-tab.active { background:var(--accent); color:#fff; }
+.room-list { padding:0 16px 20px; }
+.room-item {
+  background:var(--bg2); border-radius:var(--radius-sm);
+  padding:14px; margin-bottom:8px;
+  display:flex; justify-content:space-between; align-items:center;
+}
+.room-item-info { flex:1; }
+.room-item-title { font-size:14px; font-weight:700; }
+.room-item-sub { font-size:12px; color:var(--text2); margin-top:2px; }
+.room-item-actions { display:flex; gap:8px; }
+.room-btn {
+  padding:6px 12px; border-radius:8px; font-size:18px;
+  background:var(--bg3); color:var(--text2);
+}
+.empty-state {
+  text-align:center; padding:40px 20px;
+  color:var(--text2); font-size:14px;
+}
+
+/* Dub completion screen */
+.dub-complete {
+  display:none; flex-direction:column; align-items:center; gap:14px;
+  padding:20px; text-align:center;
+}
+.dub-complete.show { display:flex; }
+.complete-emoji { font-size:48px; }
+.complete-title { font-size:20px; font-weight:800; }
+.complete-sub { font-size:13px; color:var(--text2); }
+
+/* Scrollbar hide */
+.lesson-content::-webkit-scrollbar,
+.screen::-webkit-scrollbar,
+.room-list::-webkit-scrollbar { width:0; display:none; }
+
+/* Back button */
+.back-btn {
+  position:absolute; top:10px; left:10px; z-index:20;
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(0,0,0,.5); backdrop-filter:blur(6px);
+  color:#fff; font-size:18px; display:flex;
+  align-items:center; justify-content:center;
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+  <!-- ========== HOME ========== -->
+  <div id="homeScreen" class="screen active">
+    <div class="home-header">
+      <div class="logo">SnapTalk</div>
+      <div class="logo-tag">Snap Dubbing</div>
+    </div>
+    <div class="chips" id="chipContainer"></div>
+    <div class="feed" id="feedContainer"></div>
+  </div>
+
+  <!-- ========== LESSON ========== -->
+  <div id="lessonScreen" class="screen">
+    <div class="video-area">
+      <button class="back-btn" onclick="goHome()">←</button>
+      <div id="ytPlayer"></div>
+      <button class="kr-hint-toggle" id="krToggle" onclick="toggleKrHint()">🇰🇷 ON</button>
+      <div class="subtitle-overlay" id="subtitleOverlay" style="display:none">
+        <div class="subtitle-text" id="subtitleText"></div>
+      </div>
+    </div>
+    <div class="progress-bar">
+      <div class="step-dot" id="dot1"></div>
+      <div class="step-dot" id="dot2"></div>
+      <div class="step-dot" id="dot3"></div>
+    </div>
+    <div class="lesson-content" id="lessonContent"></div>
+  </div>
+
+  <!-- ========== MY ROOM ========== -->
+  <div id="myRoomScreen" class="screen">
+    <div class="room-header">📁 나의 방</div>
+    <div class="room-tabs">
+      <button class="room-tab active" onclick="switchRoomTab('dubs')">🎬 나의 더빙</button>
+      <button class="room-tab" onclick="switchRoomTab('notes')">📝 나의 노트</button>
+    </div>
+    <div class="room-list" id="roomList"></div>
+  </div>
+
+  <!-- ========== BOTTOM NAV ========== -->
+  <div id="bottomNav">
+    <button class="nav-btn active" onclick="showScreen('home')" id="navHome">
+      <span class="icon">🏠</span> Home
+    </button>
+    <button class="nav-btn" onclick="showScreen('myRoom')" id="navRoom">
+      <span class="icon">📁</span> My Room
+    </button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════
+const CONTENT = [
+  {
+    id:1, title:"NYC Life: What makes it special?", ytId:"4O6qj9JWNzE",
+    difficulty:"beginner", category:"interview", tags:["interview","daily"],
+    sentences:[
+      {en:"What makes New York special to you?", kr:"뉴욕이 당신에게 특별한 이유는?", time:0},
+      {en:"I think it's the energy of the city.", kr:"도시의 에너지 때문인 것 같아요.", time:4},
+      {en:"You can feel it everywhere you go.", kr:"어디를 가든 그걸 느낄 수 있어요.", time:8},
+      {en:"There's nothing like it in the world.", kr:"세상에 이런 곳은 없어요.", time:12}
+    ],
+    expressions:[
+      {en:"What makes ~ special", kr:"~을 특별하게 만드는 것", note:"'What makes you happy?' 처럼 다양하게 활용!"},
+      {en:"the energy of ~", kr:"~의 에너지/활기", note:"분위기, 느낌을 표현할 때 자주 사용"},
+      {en:"There's nothing like it", kr:"이런 건 없어요", note:"최고라는 뉘앙스! 강력 추천 표현"}
+    ]
+  },
+  {
+    id:2, title:"NYC Life: Best advice", ytId:"QmQ5MLAqjoU",
+    difficulty:"beginner", category:"interview", tags:["interview"],
+    sentences:[
+      {en:"What's the best advice you've ever received?",kr:"지금까지 받은 최고의 조언은?",time:0},
+      {en:"Just be yourself and don't worry about others.",kr:"그냥 너답게, 남 신경 쓰지 마.",time:4},
+      {en:"It sounds simple but it changed my life.",kr:"단순하게 들리지만 제 인생을 바꿨어요.",time:8},
+      {en:"I try to live by that every single day.",kr:"매일 그 말대로 살려고 노력해요.",time:12}
+    ],
+    expressions:[
+      {en:"the best advice", kr:"최고의 조언", note:"'What's the best ~ you've ever ~?' 패턴 기억!"},
+      {en:"Just be yourself", kr:"너답게 해", note:"격려할 때 가장 많이 쓰는 표현"},
+      {en:"live by ~", kr:"~대로 살다", note:"'I live by this rule.' 처럼 사용"}
+    ]
+  },
+  {
+    id:3, title:"NYC Life: Favorite food", ytId:"9BWsa9p3i6o",
+    difficulty:"intermediate", category:"interview", tags:["interview","food"],
+    sentences:[
+      {en:"What's your favorite food in New York?",kr:"뉴욕에서 가장 좋아하는 음식은?",time:0},
+      {en:"Oh man, that's a tough question.",kr:"오, 그거 어려운 질문이네요.",time:4},
+      {en:"I'd have to say the pizza, for sure.",kr:"확실히 피자라고 해야겠네요.",time:8},
+      {en:"You can grab a slice for just a dollar.",kr:"1달러면 한 조각 먹을 수 있어요.",time:12}
+    ],
+    expressions:[
+      {en:"That's a tough question", kr:"어려운 질문이네요", note:"대답 고민할 때 시간 벌기 좋은 표현!"},
+      {en:"I'd have to say ~", kr:"~라고 해야겠네요", note:"신중하게 답할 때. 원어민 자주 사용"},
+      {en:"grab a slice", kr:"(피자) 한 조각 사먹다", note:"grab = 빠르게 사다/먹다"}
+    ]
+  },
+  {
+    id:4, title:"NYC Life: Dollar Pizza 🍕", ytId:"ikYVBHLSOpY",
+    difficulty:"beginner", category:"food", tags:["food","daily"],
+    sentences:[
+      {en:"Have you ever tried dollar pizza?",kr:"1달러 피자 먹어본 적 있어?",time:0},
+      {en:"It's one of the best deals in the city.",kr:"이 도시 최고의 가성비예요.",time:4},
+      {en:"The cheese is always perfectly melted.",kr:"치즈가 항상 완벽하게 녹아있어요.",time:8},
+      {en:"I could eat it every single day.",kr:"매일 먹을 수 있을 것 같아요.",time:12}
+    ],
+    expressions:[
+      {en:"Have you ever tried ~?", kr:"~해본 적 있어?", note:"경험 물어보는 기본 패턴!"},
+      {en:"one of the best deals", kr:"최고의 가성비 중 하나", note:"추천할 때 유용!"},
+      {en:"I could eat it every day", kr:"매일 먹을 수 있어", note:"정말 좋아한다는 뉘앙스"}
+    ]
+  },
+  {
+    id:5, title:"Chinatown Dumplings 🥟", ytId:"",
+    difficulty:"beginner", category:"food", tags:["food","travel"],
+    sentences:[
+      {en:"Chinatown has the best dumplings.",kr:"차이나타운에 최고의 만두가 있어요.",time:0},
+      {en:"They make them fresh every morning.",kr:"매일 아침 직접 만들어요.",time:4},
+      {en:"You can get ten for only three dollars.",kr:"3달러면 10개를 먹을 수 있어요.",time:8},
+      {en:"Trust me, you won't regret it.",kr:"날 믿어, 후회 안 할 거야.",time:12}
+    ],
+    expressions:[
+      {en:"the best ~", kr:"최고의 ~", note:"'has the best ~' 특정 장소 추천 패턴"},
+      {en:"make them fresh", kr:"직접 신선하게 만들다", note:"식당 추천할 때 자주 사용"},
+      {en:"Trust me", kr:"날 믿어", note:"강력 추천의 시작! 일상에서 엄청 자주 씀"}
+    ]
+  },
+  {
+    id:6, title:"Times Square at Night ✨", ytId:"",
+    difficulty:"beginner", category:"travel", tags:["travel","daily"],
+    sentences:[
+      {en:"Times Square is magical at night.",kr:"타임스퀘어는 밤에 마법 같아요.",time:0},
+      {en:"The lights are absolutely incredible.",kr:"조명이 정말 믿을 수 없이 멋져요.",time:4},
+      {en:"It feels like the city never sleeps.",kr:"도시가 결코 잠들지 않는 느낌이에요.",time:8},
+      {en:"You have to see it at least once.",kr:"적어도 한 번은 봐야 해요.",time:12}
+    ],
+    expressions:[
+      {en:"magical at night", kr:"밤에 마법 같은", note:"장소 묘사에 분위기 UP!"},
+      {en:"absolutely incredible", kr:"정말 믿을 수 없이", note:"absolutely로 강조 효과 극대화"},
+      {en:"the city never sleeps", kr:"도시는 잠들지 않는다", note:"뉴욕의 별명이기도!"}
+    ]
+  },
+  {
+    id:7, title:"Brooklyn Bridge Walk 🌉", ytId:"",
+    difficulty:"beginner", category:"travel", tags:["travel"],
+    sentences:[
+      {en:"Walking across Brooklyn Bridge is a must.",kr:"브루클린 브릿지를 걸어보는 건 필수야.",time:0},
+      {en:"The view of Manhattan is breathtaking.",kr:"맨해튼 전망이 숨 막힐 정도예요.",time:4},
+      {en:"I recommend going during sunset.",kr:"일몰 때 가는 걸 추천해요.",time:8},
+      {en:"Bring your camera, you'll need it.",kr:"카메라 가져가, 필요할 거야.",time:12}
+    ],
+    expressions:[
+      {en:"a must", kr:"필수/꼭 해야 할 것", note:"'It's a must!' 강력 추천"},
+      {en:"breathtaking", kr:"숨 막히는", note:"풍경 묘사 최고급 표현"},
+      {en:"I recommend ~ing", kr:"~하는 걸 추천해요", note:"recommend + 동명사(-ing) 패턴!"}
+    ]
+  },
+  {
+    id:8, title:"Ordering Coffee ☕", ytId:"",
+    difficulty:"beginner", category:"daily", tags:["daily","food"],
+    sentences:[
+      {en:"Hi, can I get a large iced americano?",kr:"안녕하세요, 아이스 아메리카노 큰 거 하나요?",time:0},
+      {en:"Would you like any sugar or cream?",kr:"설탕이나 크림 넣으시겠어요?",time:4},
+      {en:"No thanks, just black is fine.",kr:"아뇨, 그냥 블랙으로 괜찮아요.",time:8},
+      {en:"That'll be three fifty, please.",kr:"3달러 50센트입니다.",time:12}
+    ],
+    expressions:[
+      {en:"Can I get ~?", kr:"~ 주세요", note:"주문할 때 가장 자연스러운 표현!"},
+      {en:"Would you like ~?", kr:"~ 하시겠어요?", note:"직원이 물을 때 패턴"},
+      {en:"That'll be ~", kr:"~입니다 (가격)", note:"계산할 때 듣는 표현"}
+    ]
+  },
+  {
+    id:9, title:"NYC Morning Routine ☀️", ytId:"",
+    difficulty:"intermediate", category:"daily", tags:["daily"],
+    sentences:[
+      {en:"I usually wake up around six thirty.",kr:"보통 6시 30분쯤 일어나요.",time:0},
+      {en:"The first thing I do is grab a coffee.",kr:"제일 먼저 하는 건 커피 사는 거예요.",time:4},
+      {en:"Then I take the subway to work.",kr:"그다음 지하철 타고 출근해요.",time:8},
+      {en:"It takes about forty-five minutes.",kr:"약 45분 정도 걸려요.",time:10},
+      {en:"I wouldn't trade this life for anything.",kr:"이 생활을 그 무엇과도 바꾸지 않을 거예요.",time:14}
+    ],
+    expressions:[
+      {en:"The first thing I do is ~", kr:"제일 먼저 하는 건 ~", note:"일상 루틴 설명 필수 패턴!"},
+      {en:"It takes about ~", kr:"약 ~ 걸려요", note:"시간/비용 소요 표현"},
+      {en:"I wouldn't trade ~ for anything", kr:"~를 그 무엇과도 안 바꿔", note:"강한 만족감 표현!"}
+    ]
+  },
+  {
+    id:10, title:"Gen Z Slang 🔥", ytId:"",
+    difficulty:"advanced", category:"slang", tags:["slang"],
+    sentences:[
+      {en:"That outfit is giving main character energy.",kr:"그 옷 완전 주인공 느낌이야.",time:0},
+      {en:"No cap, this place is absolutely bussin.",kr:"진짜로, 여기 완전 맛있어.",time:4},
+      {en:"She's lowkey the GOAT of our group.",kr:"걔가 은근 우리 그룹 최고야.",time:8},
+      {en:"It's giving slay, I'm so here for it.",kr:"완전 멋져, 나 완전 좋아.",time:12}
+    ],
+    expressions:[
+      {en:"giving ~ energy", kr:"~느낌이야", note:"'giving boss energy' 등 자유롭게!"},
+      {en:"No cap", kr:"진짜로 (거짓말 아님)", note:"Gen Z 필수 슬랭. cap = 거짓말"},
+      {en:"lowkey", kr:"은근히/살짝", note:"'I lowkey love it' = 은근 좋아함"}
+    ]
+  },
+  {
+    id:11, title:"How to Compliment 💬", ytId:"",
+    difficulty:"intermediate", category:"slang", tags:["slang","daily"],
+    sentences:[
+      {en:"I love your style, it really suits you.",kr:"스타일 좋다, 진짜 잘 어울려.",time:0},
+      {en:"You always know how to make people smile.",kr:"넌 항상 사람들을 웃게 만들어.",time:4},
+      {en:"That was such a thoughtful thing to say.",kr:"그 말 정말 사려 깊었어.",time:8},
+      {en:"You're literally the nicest person I know.",kr:"내가 아는 사람 중 진짜 제일 착해.",time:12}
+    ],
+    expressions:[
+      {en:"it really suits you", kr:"진짜 잘 어울려", note:"옷/스타일 칭찬 필수 표현"},
+      {en:"You always know how to ~", kr:"넌 항상 ~할 줄 알아", note:"능력 칭찬의 고급 패턴"},
+      {en:"literally the ~est", kr:"진짜 제일 ~한", note:"literally로 강조! 원어민 입에 붙은 표현"}
+    ]
+  }
+];
+
+const CATEGORIES = [
+  {id:"all", label:"⚡ All", color:"#fff"},
+  {id:"interview", label:"🎤 Interview", color:"#7C3AED"},
+  {id:"food", label:"🍕 Food", color:"#EF4444"},
+  {id:"travel", label:"✈️ Travel", color:"#0EA5E9"},
+  {id:"daily", label:"☕ Daily", color:"#F59E0B"},
+  {id:"slang", label:"🔥 Slang", color:"#EC4899"}
+];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+let currentFilter = "all";
+let currentLesson = null;
+let currentStep = 1; // 1,2,3
+let player = null;
+let ytReady = false;
+let audioCtx = null;
+let analyser = null;
+let micStream = null;
+let mediaRecorder = null;
+let recordedChunks = [];
+let isMicActive = false;
+let dubState = {
+  sentenceIdx: 0,
+  starLevel: 1,
+  successCount: 0,
+  speed: 1.0,
+  isRunning: false,
+  silenceTimer: null,
+  hintLevel: 0,
+  detectionLoop: null,
+  krHint: true,
+  audioBlob: null
+};
+let savedNotes = JSON.parse(localStorage.getItem('sn') || '[]');
+let savedDubs = JSON.parse(localStorage.getItem('sd') || '[]');
+let audioActivated = false;
+let roomTab = 'dubs';
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  renderChips();
+  renderFeed();
+  // Load YouTube IFrame API
+  const tag = document.createElement('script');
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.head.appendChild(tag);
+});
+
+window.onYouTubeIframeAPIReady = () => { ytReady = true; };
+
+// Activate audio on first touch (Galaxy fix)
+document.addEventListener('touchstart', activateAudio, {once:true});
+document.addEventListener('click', activateAudio, {once:true});
+function activateAudio() {
+  if (audioActivated) return;
+  audioActivated = true;
+  const u = new SpeechSynthesisUtterance('');
+  u.volume = 0;
+  speechSynthesis.speak(u);
+}
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+  if (name === 'home') {
+    document.getElementById('homeScreen').classList.add('active');
+    document.getElementById('navHome').classList.add('active');
+    stopDubbing();
+    destroyPlayer();
+  } else if (name === 'lesson') {
+    document.getElementById('lessonScreen').classList.add('active');
+  } else if (name === 'myRoom') {
+    document.getElementById('myRoomScreen').classList.add('active');
+    document.getElementById('navRoom').classList.add('active');
+    renderRoom();
+  }
+}
+
+function goHome() {
+  stopDubbing();
+  showScreen('home');
+}
+
+// ═══════════════════════════════════════════
+// HOME: CHIPS + FEED
+// ═══════════════════════════════════════════
+function renderChips() {
+  const c = document.getElementById('chipContainer');
+  c.innerHTML = CATEGORIES.map(cat => 
+    `<button class="chip ${cat.id === currentFilter ? 'active' : ''}" 
+     style="${cat.id !== 'all' && cat.id === currentFilter ? 'color:'+cat.color+';border-color:'+cat.color : cat.id === 'all' && currentFilter === 'all' ? 'color:var(--accent);border-color:var(--accent)' : ''}"
+     onclick="setFilter('${cat.id}')">${cat.label}</button>`
+  ).join('');
+}
+
+function setFilter(id) {
+  currentFilter = id;
+  renderChips();
+  renderFeed();
+}
+
+function renderFeed() {
+  const f = document.getElementById('feedContainer');
+  const items = currentFilter === 'all' ? CONTENT : CONTENT.filter(c => c.tags.includes(currentFilter));
+  f.innerHTML = items.map(item => {
+    const thumb = item.ytId ? `https://img.youtube.com/vi/${item.ytId}/hqdefault.jpg` : '';
+    const diffClass = 'badge-' + item.difficulty;
+    const catColor = CATEGORIES.find(c => c.id === item.category)?.color || '#fff';
+    return `
+    <div class="card" onclick="openLesson(${item.id})">
+      <div class="card-thumb">
+        ${thumb ? `<img src="${thumb}" alt="" loading="lazy">` : `<div style="width:100%;height:100%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:32px">🎬</div>`}
+        <div class="play-overlay">
+          <div class="play-icon">▶</div>
+        </div>
+      </div>
+      <div class="card-info">
+        <div class="card-title">${item.title}</div>
+        <div class="card-meta">
+          <span class="badge ${diffClass}">${item.difficulty}</span>
+          <span class="card-sentences">${item.sentences.length}문장</span>
+          <span style="color:${catColor};font-size:11px;font-weight:600">${item.category}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ═══════════════════════════════════════════
+// LESSON FLOW
+// ═══════════════════════════════════════════
+function openLesson(id) {
+  currentLesson = CONTENT.find(c => c.id === id);
+  if (!currentLesson) return;
+  currentStep = 1;
+  showScreen('lesson');
+  updateProgressBar();
+  renderStep1();
+  initYTPlayer();
+}
+
+function initYTPlayer() {
+  destroyPlayer();
+  if (!currentLesson.ytId) {
+    document.getElementById('ytPlayer').innerHTML = '<div style="width:100%;height:100%;background:#111;display:flex;align-items:center;justify-content:center;color:#555;font-size:14px">영상 준비중</div>';
+    return;
+  }
+  if (!ytReady) {
+    setTimeout(initYTPlayer, 300);
+    return;
+  }
+  player = new YT.Player('ytPlayer', {
+    videoId: currentLesson.ytId,
+    playerVars: { playsinline:1, controls:0, rel:0, modestbranding:1, fs:0 },
+    events: {
+      onReady: () => { player.setVolume(50); }
+    }
+  });
+}
+
+function destroyPlayer() {
+  if (player && player.destroy) {
+    try { player.destroy(); } catch(e) {}
+    player = null;
+  }
+  document.getElementById('ytPlayer').innerHTML = '';
+}
+
+function updateProgressBar() {
+  const d1 = document.getElementById('dot1');
+  const d2 = document.getElementById('dot2');
+  const d3 = document.getElementById('dot3');
+  d1.className = 'step-dot ' + (currentStep > 1 ? 'done' : currentStep === 1 ? 'current' : '');
+  d2.className = 'step-dot ' + (currentStep > 2 ? 'done' : currentStep === 2 ? 'current' : '');
+  d3.className = 'step-dot ' + (currentStep >= 3 ? 'current' : '');
+}
+
+// ═══════════════════════════════════════════
+// STEP 1: KEY EXPRESSIONS
+// ═══════════════════════════════════════════
+function renderStep1() {
+  document.getElementById('subtitleOverlay').style.display = 'none';
+  const lc = document.getElementById('lessonContent');
+  const L = currentLesson;
+  lc.innerHTML = `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">📌 Step 1: 핵심 표현</div>
+    ${L.expressions.map((ex, i) => `
+      <div class="expr-card">
+        <div class="expr-en">${ex.en}</div>
+        <div class="expr-kr">${ex.kr}</div>
+        <div class="expr-actions">
+          <button class="expr-btn" onclick="tts('${ex.en.replace(/'/g,"\\'")}')">🔊 발음</button>
+          <button class="expr-btn" onclick="toggleNote(${i})">💡 노트</button>
+          <button class="expr-btn" onclick="saveNote('${ex.en.replace(/'/g,"\\'")}','${ex.kr.replace(/'/g,"\\'")}')">📌 저장</button>
+        </div>
+        <div class="expr-note" id="note${i}">${ex.note || ''}</div>
+      </div>
+    `).join('')}
+    <button class="step-next-btn" onclick="goStep2()">📖 스크립트 연습 →</button>
+  `;
+  // Play video with sound for step 1
+  if (player && player.unMute) { player.unMute(); player.setVolume(50); try{player.playVideo();}catch(e){} }
+}
+
+function toggleNote(i) {
+  document.getElementById('note'+i).classList.toggle('show');
+}
+
+function saveNote(en, kr) {
+  if (savedNotes.find(n => n.en === en)) return;
+  savedNotes.push({en, kr, date: new Date().toLocaleDateString()});
+  localStorage.setItem('sn', JSON.stringify(savedNotes));
+  alert('📌 저장 완료!');
+}
+
+// ═══════════════════════════════════════════
+// STEP 2: SCRIPT PRACTICE
+// ═══════════════════════════════════════════
+function goStep2() {
+  currentStep = 2;
+  updateProgressBar();
+  renderStep2();
+  if (player && player.unMute) { player.unMute(); player.setVolume(50); try{player.seekTo(0);player.playVideo();}catch(e){} }
+}
+
+function renderStep2() {
+  document.getElementById('subtitleOverlay').style.display = 'none';
+  const lc = document.getElementById('lessonContent');
+  const L = currentLesson;
+  let scriptIdx = 0;
+
+  lc.innerHTML = `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">📖 Step 2: 스크립트 연습</div>
+    <div id="scriptCards">
+      ${renderScriptCard(0)}
+    </div>
+  `;
+  // Auto TTS first sentence
+  setTimeout(() => tts(L.sentences[0].en), 500);
+
+  window._scriptIdx = 0;
+}
+
+function renderScriptCard(idx) {
+  const L = currentLesson;
+  if (idx >= L.sentences.length) {
+    return `
+      <div style="text-align:center;padding:20px">
+        <div style="font-size:32px;margin-bottom:10px">✅</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:14px">스크립트 연습 완료!</div>
+        <button class="step-next-btn" onclick="goStep3()" style="background:linear-gradient(135deg,var(--accent),#FF8F65)">
+          🎬 Step 3: 더빙 시작!
+        </button>
+      </div>
+    `;
+  }
+  const s = L.sentences[idx];
+  return `
+    <div class="script-sentence">
+      <div class="script-num">문장 ${idx+1} / ${L.sentences.length}</div>
+      <div class="script-controls">
+        <button class="sc-btn" onclick="tts('${s.en.replace(/'/g,"\\'")}')">🔄 다시 듣기</button>
+        <button class="sc-btn" onclick="toggleScriptReveal('en',${idx})">👀 영어 보기</button>
+        <button class="sc-btn" onclick="toggleScriptReveal('kr',${idx})">🇰🇷 해석 보기</button>
+        <button class="sc-btn" onclick="nextScriptSentence(${idx+1})" style="background:var(--accent);color:#fff">➡️ 다음</button>
+      </div>
+      <div class="sc-reveal" id="scEn${idx}"><div class="sc-reveal-en">${s.en}</div></div>
+      <div class="sc-reveal" id="scKr${idx}"><div class="sc-reveal-kr">${s.kr}</div></div>
+    </div>
+  `;
+}
+
+function toggleScriptReveal(type, idx) {
+  const el = document.getElementById(type === 'en' ? 'scEn'+idx : 'scKr'+idx);
+  el.classList.toggle('show');
+}
+
+function nextScriptSentence(nextIdx) {
+  const container = document.getElementById('scriptCards');
+  container.innerHTML = renderScriptCard(nextIdx);
+  if (nextIdx < currentLesson.sentences.length) {
+    setTimeout(() => tts(currentLesson.sentences[nextIdx].en), 300);
+  }
+}
+
+// ═══════════════════════════════════════════
+// STEP 3: DUBBING — CORE
+// ═══════════════════════════════════════════
+function goStep3() {
+  currentStep = 3;
+  updateProgressBar();
+  dubState = {
+    sentenceIdx: 0, starLevel: 1, successCount: 0,
+    speed: 1.0, isRunning: false, silenceTimer: null,
+    hintLevel: 0, detectionLoop: null, krHint: true, audioBlob: null
+  };
+  document.getElementById('krToggle').textContent = '🇰🇷 ON';
+  document.getElementById('krToggle').classList.remove('off');
+  renderStep3Start();
+}
+
+function renderStep3Start() {
+  document.getElementById('subtitleOverlay').style.display = 'none';
+  const lc = document.getElementById('lessonContent');
+  lc.innerHTML = `
+    <div style="font-size:13px;color:var(--text2);margin-bottom:10px;font-weight:600">🎬 Step 3: 스냅 더빙</div>
+    <div class="dub-controls">
+      <div class="speed-row">
+        <button class="speed-btn ${dubState.speed===0.5?'active':''}" onclick="setSpeed(0.5)">🐢 0.5x</button>
+        <button class="speed-btn ${dubState.speed===1.0?'active':''}" onclick="setSpeed(1.0)">🚶 1.0x</button>
+        <button class="speed-btn ${dubState.speed===1.2?'active':''}" onclick="setSpeed(1.2)">🏃 1.2x</button>
+      </div>
+      <div style="text-align:center;color:var(--text2);font-size:13px;padding:8px">
+        영상이 음소거 재생되고, 각 문장에서 멈춥니다.<br>
+        마이크로 말하면 자동으로 다음 문장으로!
+      </div>
+      <button class="dub-act-btn start-btn" onclick="startDubbing()" style="margin:0 auto">🎤 더빙 시작</button>
+    </div>
+  `;
+}
+
+function setSpeed(s) {
+  dubState.speed = s;
+  if (player && player.setPlaybackRate) player.setPlaybackRate(s);
+  // Re-render speed buttons
+  document.querySelectorAll('.speed-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.textContent.includes(s === 0.5 ? '0.5' : s === 1.0 ? '1.0' : '1.2'));
+  });
+}
+
+async function startDubbing() {
+  // Request mic
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === 'suspended') await audioCtx.resume();
+    micStream = await navigator.mediaDevices.getUserMedia({audio:true});
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 512;
+    const source = audioCtx.createMediaStreamSource(micStream);
+    source.connect(analyser);
+    isMicActive = true;
+
+    // Start MediaRecorder
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(micStream);
+    mediaRecorder.ondataavailable = e => { if(e.data.size>0) recordedChunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      dubState.audioBlob = new Blob(recordedChunks, {type:'audio/webm'});
+    };
+    mediaRecorder.start();
+  } catch(e) {
+    alert('마이크 권한이 필요합니다! 설정에서 허용해주세요.');
+    return;
+  }
+
+  dubState.isRunning = true;
+  dubState.sentenceIdx = 0;
+  dubState.successCount = 0;
+  dubState.starLevel = 1;
+
+  // Mute + play video
+  if (player && player.mute) {
+    player.mute();
+    player.setPlaybackRate(dubState.speed);
+    player.seekTo(0);
+    player.playVideo();
+  }
+
+  renderDubUI();
+  runDubSentence();
+}
+
+function renderDubUI() {
+  const lc = document.getElementById('lessonContent');
+  const L = currentLesson;
+  lc.innerHTML = `
+    <div class="dub-controls">
+      <div class="speed-row">
+        <button class="speed-btn ${dubState.speed===0.5?'active':''}" onclick="setSpeed(0.5)">🐢 0.5x</button>
+        <button class="speed-btn ${dubState.speed===1.0?'active':''}" onclick="setSpeed(1.0)">🚶 1.0x</button>
+        <button class="speed-btn ${dubState.speed===1.2?'active':''}" onclick="setSpeed(1.2)">🏃 1.2x</button>
+      </div>
+      <div class="voice-status">
+        <div class="voice-indicator">
+          <span class="mic-dot" id="micDot"></span>
+          <span id="voiceLabel">대기중...</span>
+        </div>
+      </div>
+      <div class="star-level" id="starDisplay">${'⭐'.repeat(dubState.starLevel)}</div>
+      <div class="dub-sentence-display" id="dubSentenceDisplay"></div>
+      <div class="dub-hint-kr" id="dubHintKr"></div>
+      <button class="manual-next" id="manualNextBtn" onclick="manualNext()" style="display:none">말했어요! →</button>
+    </div>
+  `;
+}
+
+function runDubSentence() {
+  if (!dubState.isRunning) return;
+  const L = currentLesson;
+  if (dubState.sentenceIdx >= L.sentences.length) {
+    completeDubbing();
+    return;
+  }
+
+  const s = L.sentences[dubState.sentenceIdx];
+
+  // Pause video at sentence time
+  if (player && player.pauseVideo) {
+    player.seekTo(s.time);
+    setTimeout(() => { if(player && player.pauseVideo) player.pauseVideo(); }, 300);
+  }
+
+  // Show subtitle with blanks
+  showSubtitle(s.en, dubState.starLevel);
+
+  // Show sentence in content area
+  const display = document.getElementById('dubSentenceDisplay');
+  const hintKr = document.getElementById('dubHintKr');
+  if (display) display.innerHTML = makeBlanks(s.en, dubState.starLevel);
+  if (hintKr) hintKr.textContent = dubState.krHint ? s.kr : '';
+
+  // Show manual button
+  const mb = document.getElementById('manualNextBtn');
+  if (mb) mb.style.display = 'block';
+
+  // Update voice label
+  updateVoiceLabel('🎤 말해보세요!');
+
+  // Reset hint
+  dubState.hintLevel = 0;
+  clearSilenceTimer();
+
+  // Start voice detection loop
+  startVoiceDetection(s);
+}
+
+function showSubtitle(text, starLevel) {
+  const overlay = document.getElementById('subtitleOverlay');
+  const st = document.getElementById('subtitleText');
+  overlay.style.display = 'block';
+  st.innerHTML = makeBlanks(text, starLevel);
+}
+
+function makeBlanks(text, starLevel) {
+  const words = text.split(' ');
+  if (words.length <= 1) return text;
+  
+  // Star level determines how many blanks
+  let blankCount = 0;
+  if (starLevel === 1) blankCount = 1;
+  else if (starLevel === 2) blankCount = Math.ceil(words.length * 0.4);
+  else blankCount = Math.ceil(words.length * 0.7);
+  
+  // Choose which words to blank (spread evenly)
+  const blankIndices = new Set();
+  const step = Math.max(1, Math.floor(words.length / blankCount));
+  for (let i = 0; i < blankCount && blankIndices.size < words.length; i++) {
+    let idx = (step * i + Math.floor(step/2)) % words.length;
+    blankIndices.add(idx);
+  }
+
+  return words.map((w, i) => 
+    blankIndices.has(i) ? '<span class="blank"></span>' : w
+  ).join(' ');
+}
+
+// ═══════════════════════════════════════════
+// VOICE DETECTION (Web Audio API)
+// ═══════════════════════════════════════════
+const VOLUME_THRESHOLD = 25;
+let silenceStart = 0;
+let wasSpeaking = false;
+
+function startVoiceDetection(sentence) {
+  if (dubState.detectionLoop) cancelAnimationFrame(dubState.detectionLoop);
+  
+  silenceStart = Date.now();
+  wasSpeaking = false;
+  let spokeDuration = 0;
+  
+  // Progressive hint timer
+  startSilenceHintTimer(sentence);
+
+  function detect() {
+    if (!dubState.isRunning || !analyser) return;
+
+    const data = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    const volume = data.reduce((a,b) => a+b,0) / data.length;
+    const speaking = volume > VOLUME_THRESHOLD;
+
+    const dot = document.getElementById('micDot');
+    if (dot) {
+      dot.className = 'mic-dot' + (speaking ? ' speaking' : ' listening');
+    }
+
+    if (speaking) {
+      wasSpeaking = true;
+      spokeDuration++;
+      silenceStart = Date.now();
+      clearSilenceTimer(); // Reset hint timer while speaking
+      updateVoiceLabel('🔴 듣고 있어요...');
+    } else if (wasSpeaking) {
+      const silenceDur = Date.now() - silenceStart;
+      if (silenceDur > 1500 && spokeDuration > 15) {
+        // User spoke then stopped → advance
+        dubState.successCount++;
+        if (dubState.successCount >= 3) {
+          dubState.starLevel = Math.min(3, dubState.starLevel + 1);
+          dubState.successCount = 0;
+          const sd = document.getElementById('starDisplay');
+          if (sd) sd.textContent = '⭐'.repeat(dubState.starLevel);
+        }
+        advanceSentence();
+        return;
+      }
+    }
+
+    dubState.detectionLoop = requestAnimationFrame(detect);
+  }
+
+  dubState.detectionLoop = requestAnimationFrame(detect);
+}
+
+function advanceSentence() {
+  cancelAnimationFrame(dubState.detectionLoop);
+  clearSilenceTimer();
+  
+  // Resume video briefly
+  if (player && player.playVideo) player.playVideo();
+
+  updateVoiceLabel('✅ 좋아요!');
+
+  dubState.sentenceIdx++;
+  setTimeout(() => {
+    if (player && player.pauseVideo) player.pauseVideo();
+    runDubSentence();
+  }, 1200);
+}
+
+function manualNext() {
+  if (!dubState.isRunning) return;
+  dubState.successCount++;
+  if (dubState.successCount >= 3) {
+    dubState.starLevel = Math.min(3, dubState.starLevel + 1);
+    dubState.successCount = 0;
+    const sd = document.getElementById('starDisplay');
+    if (sd) sd.textContent = '⭐'.repeat(dubState.starLevel);
+  }
+  advanceSentence();
+}
+
+function updateVoiceLabel(text) {
+  const vl = document.getElementById('voiceLabel');
+  if (vl) vl.textContent = text;
+}
+
+// ═══════════════════════════════════════════
+// PROGRESSIVE HINTS
+// ═══════════════════════════════════════════
+function startSilenceHintTimer(sentence) {
+  clearSilenceTimer();
+  dubState.hintLevel = 0;
+  const words = sentence.en.split(' ');
+
+  dubState.silenceTimer = setInterval(() => {
+    if (!dubState.isRunning) { clearSilenceTimer(); return; }
+    
+    dubState.hintLevel++;
+    
+    if (dubState.hintLevel > words.length) {
+      // Full sentence TTS → auto advance
+      clearSilenceTimer();
+      tts(sentence.en);
+      updateVoiceLabel('💡 전체 힌트 재생 후 넘어갑니다');
+      setTimeout(() => {
+        dubState.sentenceIdx++;
+        dubState.successCount = 0; // Reset on full hint
+        runDubSentence();
+      }, 3000);
+      return;
+    }
+
+    // Speak partial hint
+    const hint = words.slice(0, dubState.hintLevel).join(' ');
+    tts(hint);
+    updateVoiceLabel(`💡 힌트: "${hint}..."`);
+    
+    // Show hint words in subtitle
+    const st = document.getElementById('subtitleText');
+    if (st) {
+      st.innerHTML = words.map((w, i) => {
+        if (i < dubState.hintLevel) return `<span class="hint-word">${w}</span>`;
+        return '<span class="blank"></span>';
+      }).join(' ');
+    }
+  }, 3000);
+}
+
+function clearSilenceTimer() {
+  if (dubState.silenceTimer) {
+    clearInterval(dubState.silenceTimer);
+    dubState.silenceTimer = null;
+  }
+}
+
+// ═══════════════════════════════════════════
+// DUB COMPLETE
+// ═══════════════════════════════════════════
+function completeDubbing() {
+  dubState.isRunning = false;
+  cancelAnimationFrame(dubState.detectionLoop);
+  clearSilenceTimer();
+
+  // Stop recording
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+  }
+
+  document.getElementById('subtitleOverlay').style.display = 'none';
+  if (player && player.pauseVideo) player.pauseVideo();
+
+  const lc = document.getElementById('lessonContent');
+  lc.innerHTML = `
+    <div class="dub-complete show">
+      <div class="complete-emoji">🎉</div>
+      <div class="complete-title">더빙 완료!</div>
+      <div class="complete-sub">${currentLesson.title}</div>
+      <div class="star-level">${'⭐'.repeat(dubState.starLevel)}</div>
+      <div class="dub-action-row">
+        <button class="dub-act-btn" onclick="playMyDub()">▶ 내 더빙 듣기</button>
+        <button class="dub-act-btn primary" onclick="saveDub()">💾 저장</button>
+      </div>
+      <div class="dub-action-row">
+        <button class="dub-act-btn" onclick="goStep3()">🔄 다시</button>
+        <button class="dub-act-btn" onclick="goHome()">🏠 홈</button>
+      </div>
+    </div>
+  `;
+}
+
+function playMyDub() {
+  if (dubState.audioBlob) {
+    const url = URL.createObjectURL(dubState.audioBlob);
+    new Audio(url).play();
+  } else {
+    alert('녹음 데이터가 없습니다.');
+  }
+}
+
+function saveDub() {
+  if (!dubState.audioBlob) { alert('녹음 없음'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    savedDubs.push({
+      title: currentLesson.title,
+      date: new Date().toLocaleDateString(),
+      audioData: reader.result,
+      stars: dubState.starLevel
+    });
+    localStorage.setItem('sd', JSON.stringify(savedDubs));
+    alert('💾 더빙 저장 완료!');
+  };
+  reader.readAsDataURL(dubState.audioBlob);
+}
+
+function stopDubbing() {
+  dubState.isRunning = false;
+  if (dubState.detectionLoop) cancelAnimationFrame(dubState.detectionLoop);
+  clearSilenceTimer();
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    try { mediaRecorder.stop(); } catch(e) {}
+  }
+  if (micStream) {
+    micStream.getTracks().forEach(t => t.stop());
+    micStream = null;
+  }
+  isMicActive = false;
+}
+
+// ═══════════════════════════════════════════
+// KOREAN HINT TOGGLE
+// ═══════════════════════════════════════════
+function toggleKrHint() {
+  dubState.krHint = !dubState.krHint;
+  const btn = document.getElementById('krToggle');
+  btn.textContent = dubState.krHint ? '🇰🇷 ON' : '🇰🇷 OFF';
+  btn.classList.toggle('off', !dubState.krHint);
+  // Update current hint if in dubbing
+  const hk = document.getElementById('dubHintKr');
+  if (hk && currentLesson && dubState.sentenceIdx < currentLesson.sentences.length) {
+    hk.textContent = dubState.krHint ? currentLesson.sentences[dubState.sentenceIdx].kr : '';
+  }
+}
+
+// ═══════════════════════════════════════════
+// TTS (Galaxy Fix)
+// ═══════════════════════════════════════════
+function tts(text) {
+  if (!text) return;
+  speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'en-US';
+  u.rate = 0.9;
+  // Find English voice
+  const voices = speechSynthesis.getVoices();
+  const enVoice = voices.find(v => v.lang.startsWith('en-US')) || voices.find(v => v.lang.startsWith('en'));
+  if (enVoice) u.voice = enVoice;
+  
+  // Galaxy 15-sec bug fix: pause/resume
+  let keepAlive;
+  u.onstart = () => {
+    keepAlive = setInterval(() => {
+      speechSynthesis.pause();
+      speechSynthesis.resume();
+    }, 10000);
+  };
+  u.onend = () => clearInterval(keepAlive);
+  u.onerror = () => clearInterval(keepAlive);
+  
+  speechSynthesis.speak(u);
+}
+
+// Load voices
+speechSynthesis.onvoiceschanged = () => speechSynthesis.getVoices();
+
+// ═══════════════════════════════════════════
+// MY ROOM
+// ═══════════════════════════════════════════
+function switchRoomTab(tab) {
+  roomTab = tab;
+  document.querySelectorAll('.room-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderRoom();
+}
+
+function renderRoom() {
+  const list = document.getElementById('roomList');
+  
+  if (roomTab === 'dubs') {
+    if (savedDubs.length === 0) {
+      list.innerHTML = '<div class="empty-state">아직 저장된 더빙이 없어요 🎬<br>숏츠를 골라 더빙해보세요!</div>';
+      return;
+    }
+    list.innerHTML = savedDubs.map((d, i) => `
+      <div class="room-item">
+        <div class="room-item-info">
+          <div class="room-item-title">${'⭐'.repeat(d.stars||1)} ${d.title}</div>
+          <div class="room-item-sub">${d.date}</div>
+        </div>
+        <div class="room-item-actions">
+          <button class="room-btn" onclick="playRoomDub(${i})">▶</button>
+          <button class="room-btn" onclick="deleteRoomDub(${i})">🗑</button>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    if (savedNotes.length === 0) {
+      list.innerHTML = '<div class="empty-state">아직 저장된 표현이 없어요 📝<br>Step 1에서 📌 저장해보세요!</div>';
+      return;
+    }
+    list.innerHTML = savedNotes.map((n, i) => `
+      <div class="room-item">
+        <div class="room-item-info">
+          <div class="room-item-title">${n.en}</div>
+          <div class="room-item-sub">${n.kr}</div>
+        </div>
+        <div class="room-item-actions">
+          <button class="room-btn" onclick="tts('${n.en.replace(/'/g,"\\'")}')">🔊</button>
+          <button class="room-btn" onclick="deleteRoomNote(${i})">🗑</button>
+        </div>
+      </div>
+    `).join('');
+  }
+}
+
+function playRoomDub(i) {
+  const d = savedDubs[i];
+  if (d && d.audioData) {
+    new Audio(d.audioData).play();
+  }
+}
+
+function deleteRoomDub(i) {
+  if (confirm('이 더빙을 삭제할까요?')) {
+    savedDubs.splice(i, 1);
+    localStorage.setItem('sd', JSON.stringify(savedDubs));
+    renderRoom();
+  }
+}
+
+function deleteRoomNote(i) {
+  if (confirm('이 표현을 삭제할까요?')) {
+    savedNotes.splice(i, 1);
+    localStorage.setItem('sn', JSON.stringify(savedNotes));
+    renderRoom();
+  }
+}
+</script>
+</body>
+</html>
