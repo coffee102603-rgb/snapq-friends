@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<!-- ═══════════════════════════════════════════════════════
+     SnapTalk Lesson Generator v1.0 (2026-04-16)
+     YouTube 스크립트 → SnapTalk 레슨 데이터 자동 변환 도구
+     ═══════════════════════════════════════════════════════ -->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎬 SnapTalk 레슨 생성기</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,'Segoe UI','Noto Sans KR',sans-serif;background:#0a0a14;color:#e8e8ea;padding:20px;line-height:1.5;min-height:100vh}
+.container{max-width:860px;margin:0 auto}
+h1{font-size:24px;font-weight:900;color:#00e5a0;margin-bottom:4px}
+.subtitle{font-size:13px;color:#94a3b8;margin-bottom:24px}
+.section{background:#15151f;border-radius:14px;padding:18px;margin-bottom:14px;border:1px solid #262632}
+.section-title{font-size:14px;font-weight:800;margin-bottom:10px;color:#00e5a0;display:flex;align-items:center;gap:8px}
+.step-num{background:#00e5a0;color:#000;width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:12px}
+textarea,input,select{width:100%;background:#0a0a14;border:1px solid #30303f;color:#e8e8ea;padding:10px 12px;border-radius:8px;font-size:14px;font-family:inherit;outline:none;transition:border .15s}
+textarea:focus,input:focus,select:focus{border-color:#00e5a0}
+textarea{min-height:160px;resize:vertical;font-family:'SF Mono','Monaco',monospace;font-size:12px;line-height:1.6}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.row-3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+label{font-size:11px;font-weight:700;color:#94a3b8;display:block;margin-bottom:4px}
+.hint{font-size:11px;color:#64748b;margin-top:4px}
+button{background:linear-gradient(135deg,#00e5a0,#22d3ee);color:#000;border:none;padding:14px 20px;border-radius:10px;font-size:15px;font-weight:900;cursor:pointer;width:100%;transition:transform .1s}
+button:active{transform:scale(.98)}
+button.secondary{background:#262632;color:#e8e8ea}
+button.small{padding:6px 12px;font-size:12px;width:auto;display:inline-block}
+#result{display:none}
+#result.show{display:block;animation:pop .3s ease}
+@keyframes pop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.preview-card{background:#1a1a26;border-radius:10px;padding:12px;margin-bottom:8px;border:1px solid #30303f;font-size:13px}
+.preview-time{color:#00e5a0;font-weight:800;font-size:11px;margin-bottom:4px}
+.preview-en{font-weight:700;color:#fff;margin-bottom:4px}
+.preview-en .hl{background:rgba(255,200,66,.4);padding:0 3px;border-radius:3px;color:#ffd742;font-weight:900}
+.preview-en .core{text-decoration:underline wavy #00e5a0;text-underline-offset:3px}
+.preview-ko{font-size:11px;color:#94a3b8}
+.preview-ko .hl-ko{background:rgba(255,200,66,.2);padding:0 3px;border-radius:2px;color:#c9a543}
+.preview-meta{font-size:10px;color:#64748b;margin-top:6px;display:flex;gap:12px}
+.code-box{background:#0a0a14;border:1px solid #30303f;border-radius:8px;padding:12px;font-family:'SF Mono','Monaco',monospace;font-size:11px;line-height:1.5;overflow-x:auto;color:#e8e8ea;max-height:400px;overflow-y:auto;white-space:pre-wrap;word-break:break-all}
+.copy-btn{margin-top:8px;background:#00e5a0;color:#000}
+.copy-btn.copied{background:#22d3ee}
+.error{background:rgba(239,68,68,.1);color:#ef4444;padding:10px;border-radius:8px;font-size:13px;margin-top:10px;border:1px solid rgba(239,68,68,.3)}
+.success{background:rgba(0,229,160,.1);color:#00e5a0;padding:10px;border-radius:8px;font-size:13px;margin-top:10px;border:1px solid rgba(0,229,160,.3)}
+.example{background:#1a1a26;border-radius:6px;padding:8px;font-size:11px;color:#94a3b8;font-family:monospace;margin-top:6px;white-space:pre-line}
+.tip{background:rgba(0,229,160,.05);border-left:3px solid #00e5a0;padding:10px 12px;border-radius:4px;font-size:12px;color:#94a3b8;margin-top:10px}
+.tip strong{color:#00e5a0}
+h2{font-size:16px;margin-bottom:10px;color:#fff;font-weight:800}
+.tabs{display:flex;gap:4px;margin-bottom:12px}
+.tab{flex:1;padding:8px;background:#1a1a26;border:1px solid #30303f;border-radius:8px;cursor:pointer;text-align:center;font-size:12px;font-weight:700;color:#94a3b8;transition:all .15s}
+.tab.active{background:#00e5a0;color:#000;border-color:#00e5a0}
+.editable-sentence{display:grid;grid-template-columns:60px 1fr;gap:8px;background:#1a1a26;border-radius:10px;padding:10px;margin-bottom:8px;border:1px solid #30303f;align-items:start}
+.editable-sentence input,.editable-sentence textarea{font-size:12px;padding:6px 8px}
+.sentence-times{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.sentence-content{display:flex;flex-direction:column;gap:6px}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:900;letter-spacing:.3px}
+.badge-core{background:rgba(0,229,160,.2);color:#00e5a0;border:1px solid #00e5a0}
+.badge-hl{background:rgba(255,200,66,.2);color:#ffd742;border:1px solid #ffd742}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🎬 SnapTalk 레슨 생성기</h1>
+<p class="subtitle">YouTube 스크립트 → SnapTalk 레슨 데이터 자동 변환</p>
+
+<!-- STEP 1: YouTube URL -->
+<div class="section">
+  <div class="section-title"><span class="step-num">1</span> YouTube URL</div>
+  <input type="text" id="ytUrl" placeholder="https://youtube.com/shorts/I6ENx20q6aA 또는 youtube.com/watch?v=..." />
+  <div class="hint">video ID가 자동으로 추출됩니다</div>
+</div>
+
+<!-- STEP 2: Transcript -->
+<div class="section">
+  <div class="section-title"><span class="step-num">2</span> YouTube 스크립트 복붙</div>
+  <textarea id="transcript" placeholder="YouTube에서 '스크립트 표시' → 전체 복사 → 여기 붙여넣기
+
+예시:
+0:00 Hey what's up guys
+0:02 today I'll teach you a dance
+0:05 Start with your hands up
+0:08 Now drop it low"></textarea>
+  <div class="tip"><strong>💡 YouTube에서 스크립트 얻는 법:</strong><br>
+1. 영상 아래 <strong>"..."</strong> 또는 <strong>"더보기"</strong> 클릭<br>
+2. <strong>"스크립트 표시"</strong> 선택<br>
+3. 모든 자막 드래그 → 복사 → 여기 붙여넣기</div>
+</div>
+
+<!-- STEP 3: Metadata -->
+<div class="section">
+  <div class="section-title"><span class="step-num">3</span> 영상 정보</div>
+  <label>제목</label>
+  <input type="text" id="title" placeholder="예: K-pop Dance Tutorial" />
+  <div class="row" style="margin-top:10px">
+    <div>
+      <label>탭</label>
+      <select id="tab">
+        <option value="us">🇺🇸 US English</option>
+        <option value="kr">🇰🇷 KR 한국어</option>
+      </select>
+    </div>
+    <div>
+      <label>난이도</label>
+      <select id="difficulty">
+        <option value="beginner">🟢 Beginner (왕초보)</option>
+        <option value="intermediate" selected>🟡 Intermediate (중급)</option>
+        <option value="advanced">🔴 Advanced (고급)</option>
+      </select>
+    </div>
+  </div>
+  <label>카테고리</label>
+  <select id="category">
+    <option value="interview">🎤 인터뷰 (interview)</option>
+    <option value="food">🍔 먹방/음식 (food)</option>
+    <option value="daily">☀️ 일상 회화 (daily)</option>
+    <option value="kpop">💃 K-pop/댄스 (kpop)</option>
+    <option value="travel">✈️ 여행 (travel)</option>
+    <option value="business">👔 비즈니스 (business)</option>
+    <option value="drama">🎭 드라마 (drama)</option>
+  </select>
+</div>
+
+<!-- Generate button -->
+<button onclick="generateLesson()">🚀 변환하기</button>
+
+<!-- Result -->
+<div id="result">
+  <div class="section" style="margin-top:20px">
+    <h2>📊 미리보기 (편집 가능)</h2>
+    <div id="editablePreview"></div>
+    <button onclick="regeneratePreview()" class="secondary" style="margin-top:10px;font-size:12px;padding:8px">🔄 한국어 번역 재생성</button>
+  </div>
+
+  <div class="section">
+    <h2>📋 SnapTalk 코드</h2>
+    <p class="hint">이 코드를 복사해서 snaptalk-youtube-lab.html의 SHORTS 배열에 붙여넣으세요</p>
+    <div class="code-box" id="codeOutput"></div>
+    <button onclick="copyCode()" class="copy-btn" id="copyBtn">📋 클립보드에 복사</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+ * ALGORITHM: CORE word + HIGHLIGHT chunk selection
+ * ═══════════════════════════════════════════════════════ */
+
+/* Common "function words" — skip for CORE selection */
+const FUNCTION_WORDS = new Set([
+  'a','an','the','is','are','was','were','be','been','being','am','have','has','had',
+  'do','does','did','will','would','shall','should','can','could','may','might','must',
+  'i','you','he','she','it','we','they','me','him','her','us','them','my','your','his',
+  'its','our','their','this','that','these','those','to','of','in','on','at','by','for',
+  'with','about','from','as','and','or','but','so','if','then','when','where','why','how',
+  'what','who','which','not','no','yes','just','very','too','also','only','even','still'
+]);
+
+/* Common collocations / idioms — use as HIGHLIGHT chunks */
+const COMMON_CHUNKS = [
+  'for a living', 'how are you', 'what do you do', 'nice to meet you',
+  'how much is', 'do you have', 'i would like', 'could you', 'would you',
+  'let me', 'take a look', 'make sure', 'figure out', 'come on',
+  'step by step', 'every single', 'look at', 'wait for', 'used to',
+  'have to', 'going to', 'want to', 'need to', 'try to',
+  'all day', 'all night', 'all the time', 'every day', 'right now',
+  'this is', 'that is', 'there is', 'there are',
+  'i love', 'i like', 'i think', 'i know', 'i feel',
+  'so good', 'so much', 'so many', 'really good', 'really nice',
+  'thank you', 'thanks a lot', 'you know', 'i guess'
+];
+
+/* Extract video ID from various URL formats */
+function extractVideoId(url) {
+  if (!url) return null;
+  // youtube.com/shorts/ID
+  let m = url.match(/shorts\/([A-Za-z0-9_-]{11})/);
+  if (m) return m[1];
+  // youtube.com/watch?v=ID
+  m = url.match(/[?&]v=([A-Za-z0-9_-]{11})/);
+  if (m) return m[1];
+  // youtu.be/ID
+  m = url.match(/youtu\.be\/([A-Za-z0-9_-]{11})/);
+  if (m) return m[1];
+  // Raw ID (11 chars)
+  m = url.match(/^([A-Za-z0-9_-]{11})$/);
+  if (m) return m[1];
+  return null;
+}
+
+/* Parse YouTube transcript text into timed segments */
+function parseTranscript(text) {
+  const lines = text.split('\n').map(s => s.trim()).filter(Boolean);
+  const segments = [];
+
+  for (const line of lines) {
+    // Match various timestamp formats:
+    // 0:00, 00:00, 0:00:00, 1:23, 10:45
+    const m = line.match(/^(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(.*)/);
+    if (m) {
+      let seconds;
+      if (m[3]) {
+        // HH:MM:SS
+        seconds = parseInt(m[1]) * 3600 + parseInt(m[2]) * 60 + parseInt(m[3]);
+      } else {
+        // MM:SS
+        seconds = parseInt(m[1]) * 60 + parseInt(m[2]);
+      }
+      const text = m[4].trim();
+      if (text) segments.push({ time: seconds, text });
+    } else if (segments.length > 0) {
+      // Continuation line without timestamp — append to previous
+      segments[segments.length - 1].text += ' ' + line;
+    }
+  }
+
+  return segments;
+}
+
+/* Merge short segments into complete sentences */
+function mergeIntoSentences(segments) {
+  if (segments.length === 0) return [];
+
+  const sentences = [];
+  let current = { start: segments[0].time, text: segments[0].text };
+
+  for (let i = 1; i < segments.length; i++) {
+    const seg = segments[i];
+    const prev = current.text.trim();
+    const prevEndsWithPunct = /[.!?]$/.test(prev);
+
+    // Merge if:
+    // - Previous doesn't end with punctuation AND
+    // - Current segment is short (continuation) OR starts with lowercase
+    const startsLowercase = /^[a-z]/.test(seg.text);
+    const shouldMerge = !prevEndsWithPunct && (startsLowercase || seg.text.length < 15);
+
+    if (shouldMerge) {
+      current.text += ' ' + seg.text;
+    } else {
+      // Close current sentence
+      current.end = seg.time;
+      sentences.push(current);
+      current = { start: seg.time, text: seg.text };
+    }
+  }
+
+  // Close last sentence (estimate end time)
+  current.end = current.start + Math.max(2, current.text.split(/\s+/).length * 0.4);
+  sentences.push(current);
+
+  // Clean up each sentence
+  return sentences.map(s => ({
+    start: s.start,
+    end: s.end,
+    en: s.text.trim().replace(/\s+/g, ' ')
+  }));
+}
+
+/* Pick CORE word: content word with highest "stickiness" (longest content word, no function words) */
+function pickCore(sentence) {
+  const words = sentence.toLowerCase()
+    .replace(/[.,!?;:"]/g, '')
+    .split(/\s+/)
+    .filter(w => w.length > 0);
+
+  // Filter out function words
+  let candidates = words.filter(w => !FUNCTION_WORDS.has(w) && w.length >= 3);
+
+  if (candidates.length === 0) {
+    // Fallback: longest word overall
+    candidates = words.filter(w => w.length >= 3);
+    if (candidates.length === 0) return words[words.length - 1] || '';
+  }
+
+  // Prefer: proper nouns (capital in original), longer words, nouns over verbs
+  const originalWords = sentence.replace(/[.,!?;:"]/g, '').split(/\s+/);
+  const capitalized = originalWords.filter(w => /^[A-Z][a-z]+/.test(w) && w.length >= 3);
+  if (capitalized.length > 0) return capitalized[0];
+
+  // Longest content word
+  candidates.sort((a, b) => b.length - a.length);
+  return candidates[0];
+}
+
+/* Pick HIGHLIGHT chunk: common collocation if present, otherwise phrase around CORE */
+function pickHighlight(sentence, core) {
+  const lower = sentence.toLowerCase();
+
+  // Check for known collocations
+  for (const chunk of COMMON_CHUNKS) {
+    if (lower.includes(chunk)) {
+      // Return original case
+      const startIdx = lower.indexOf(chunk);
+      return sentence.substr(startIdx, chunk.length);
+    }
+  }
+
+  // Build phrase around core: core + preceding/following word
+  const words = sentence.replace(/[.,!?;:"]/g, '').split(/\s+/);
+  const coreIdx = words.findIndex(w => w.toLowerCase() === core.toLowerCase());
+
+  if (coreIdx === -1) return core;
+
+  // Take 2-3 words including core
+  const start = Math.max(0, coreIdx - 1);
+  const end = Math.min(words.length, coreIdx + 2);
+  return words.slice(start, end).join(' ');
+}
+
+/* Simple Korean translation (placeholder — user should review) */
+function quickTranslate(en) {
+  // This is a placeholder — real translation requires Claude API
+  // For now, return "[한국어: ...]" so user knows to fill it in
+  const shortTranslations = {
+    'hey': '이봐', 'hi': '안녕', 'hello': '안녕하세요',
+    'what': '뭐', 'who': '누구', 'where': '어디', 'when': '언제',
+    'why': '왜', 'how': '어떻게',
+    "what's up": '무슨 일이야', 'thank you': '고마워요', 'thanks': '고마워',
+    'yes': '네', 'no': '아니오', 'okay': '좋아', 'ok': '좋아',
+    'love': '사랑', 'like': '좋아해', 'want': '원해',
+    'good': '좋은', 'bad': '나쁜', 'great': '훌륭한', 'amazing': '놀라운',
+  };
+
+  const lower = en.toLowerCase().replace(/[.,!?;:"]/g, '').trim();
+  if (shortTranslations[lower]) return shortTranslations[lower];
+
+  // Return placeholder
+  return `[번역 필요: ${en}]`;
+}
+
+/* MAIN: Generate lesson data */
+let generatedData = null;
+
+function generateLesson() {
+  const url = document.getElementById('ytUrl').value.trim();
+  const transcript = document.getElementById('transcript').value.trim();
+  const title = document.getElementById('title').value.trim();
+  const tab = document.getElementById('tab').value;
+  const difficulty = document.getElementById('difficulty').value;
+  const category = document.getElementById('category').value;
+
+  if (!url || !transcript || !title) {
+    alert('URL, 스크립트, 제목 모두 입력해주세요!');
+    return;
+  }
+
+  const videoId = extractVideoId(url);
+  if (!videoId) {
+    alert('YouTube URL에서 video ID를 추출할 수 없습니다!');
+    return;
+  }
+
+  // Parse transcript
+  const segments = parseTranscript(transcript);
+  if (segments.length === 0) {
+    alert('스크립트 파싱 실패! 타임스탬프 형식을 확인하세요 (예: 0:00 텍스트)');
+    return;
+  }
+
+  // Merge into sentences
+  const sentences = mergeIntoSentences(segments);
+
+  // Limit to 4-6 sentences for SnapTalk format
+  const finalSentences = sentences.slice(0, 6);
+
+  // Category icon map
+  const catIcons = {
+    interview: '🎤', food: '🍔', daily: '☀️',
+    kpop: '💃', travel: '✈️', business: '👔', drama: '🎭'
+  };
+
+  // Build lesson data
+  const lesson = {
+    id: videoId,
+    title: title,
+    cat: category,
+    catIcon: catIcons[category] || '📺',
+    diff: difficulty,
+    dubs: 0,
+    sentences: finalSentences.map(s => {
+      const core = pickCore(s.en);
+      const highlight = pickHighlight(s.en, core);
+      const ko = quickTranslate(s.en);
+      return {
+        en: s.en,
+        ko: ko,
+        start: parseFloat(s.start.toFixed(1)),
+        end: parseFloat(s.end.toFixed(1)),
+        core: core,
+        highlight: highlight,
+        koHighlight: '[번역 확인]'
+      };
+    }),
+    _tab: tab
+  };
+
+  generatedData = lesson;
+  renderPreview();
+  document.getElementById('result').classList.add('show');
+  document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderPreview() {
+  const preview = document.getElementById('editablePreview');
+  preview.innerHTML = '';
+
+  generatedData.sentences.forEach((s, i) => {
+    const card = document.createElement('div');
+    card.className = 'editable-sentence';
+    card.innerHTML = `
+      <div class="sentence-times">
+        <div>
+          <label>시작(초)</label>
+          <input type="number" step="0.1" value="${s.start}" onchange="updateSentence(${i},'start',this.value)" />
+        </div>
+        <div>
+          <label>끝(초)</label>
+          <input type="number" step="0.1" value="${s.end}" onchange="updateSentence(${i},'end',this.value)" />
+        </div>
+      </div>
+      <div class="sentence-content">
+        <div>
+          <label>영어</label>
+          <input type="text" value="${escapeHtml(s.en)}" onchange="updateSentence(${i},'en',this.value)" />
+        </div>
+        <div>
+          <label>한국어 번역</label>
+          <input type="text" value="${escapeHtml(s.ko)}" onchange="updateSentence(${i},'ko',this.value)" />
+        </div>
+        <div class="row">
+          <div>
+            <label><span class="badge badge-core">CORE</span> 핵심어</label>
+            <input type="text" value="${escapeHtml(s.core)}" onchange="updateSentence(${i},'core',this.value)" />
+          </div>
+          <div>
+            <label><span class="badge badge-hl">HIGHLIGHT</span> 덩어리</label>
+            <input type="text" value="${escapeHtml(s.highlight)}" onchange="updateSentence(${i},'highlight',this.value)" />
+          </div>
+        </div>
+        <div>
+          <label>koHighlight (한글 형광)</label>
+          <input type="text" value="${escapeHtml(s.koHighlight)}" onchange="updateSentence(${i},'koHighlight',this.value)" />
+        </div>
+      </div>
+    `;
+    preview.appendChild(card);
+  });
+
+  updateCodeOutput();
+}
+
+function updateSentence(idx, field, value) {
+  if (field === 'start' || field === 'end') {
+    generatedData.sentences[idx][field] = parseFloat(value);
+  } else {
+    generatedData.sentences[idx][field] = value;
+  }
+  updateCodeOutput();
+}
+
+function regeneratePreview() {
+  // Re-run Core/Highlight/KO with current EN
+  generatedData.sentences = generatedData.sentences.map(s => ({
+    ...s,
+    core: pickCore(s.en),
+    highlight: pickHighlight(s.en, pickCore(s.en)),
+    ko: s.ko.startsWith('[번역 필요') ? quickTranslate(s.en) : s.ko
+  }));
+  renderPreview();
+}
+
+function updateCodeOutput() {
+  const d = generatedData;
+  // Format: matches SnapTalk SHORTS array format
+  const sentencesCode = d.sentences.map(s =>
+    `    {en:${JSON.stringify(s.en)},ko:${JSON.stringify(s.ko)},start:${s.start},end:${s.end},core:${JSON.stringify(s.core)},highlight:${JSON.stringify(s.highlight)},koHighlight:${JSON.stringify(s.koHighlight)}}`
+  ).join(',\n');
+
+  const code = `  {id:'${d.id}',title:${JSON.stringify(d.title)},cat:'${d.cat}',catIcon:'${d.catIcon}',diff:'${d.diff}',dubs:${d.dubs},
+   sentences:[
+${sentencesCode}
+   ]},`;
+
+  document.getElementById('codeOutput').textContent = code;
+}
+
+function copyCode() {
+  const code = document.getElementById('codeOutput').textContent;
+  navigator.clipboard.writeText(code).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✅ 복사됨!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = '📋 클립보드에 복사';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/"/g,'&quot;').replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+
+</div>
+</body>
+</html>
