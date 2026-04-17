@@ -1668,27 +1668,18 @@ function clearSnapNote(){
 function incrementSnapWrite(){
   SnapReview.writeCount++;
   
+  /* 10번 썼을 때도 조용히 · 방해 없이 · 데이터만 업데이트 */
   if(SnapReview.writeCount>=10){
-    /* MASTERED 연출 */
-    const note=document.getElementById('snapNoteArea');
-    if(note){
-      const banner=document.createElement('div');
-      banner.className='snap-mastery-banner';
-      banner.textContent='🎉 MASTERED!';
-      note.appendChild(banner);
-      setTimeout(()=>banner.remove(),2500);
-    }
-    /* 10번 쓰기 = sayCount 증가 효과 */
+    /* 내부적으로 복습 기록만 업데이트 · 사용자는 방해 없이 쓰기 계속 */
     const nb=db.get('notebook',[]);
     if(nb[SnapReview.idx]){
       nb[SnapReview.idx].sayCount=(nb[SnapReview.idx].sayCount||0)+1;
       nb[SnapReview.idx].lastReview=new Date().toISOString();
       updateStage(nb[SnapReview.idx]);
       db.set('notebook',nb);
-      renderNotebook();
     }
+    /* 카운트 리셋 (다음 10번까지 쌓이도록) · 하지만 캔버스는 그대로 유지 */
     SnapReview.writeCount=0;
-    clearSnapNote();
   }
 }
 
@@ -2119,6 +2110,14 @@ function goStep(step){
     /* STEP 2: 말해봐 — hide video, show moment cards */
     bn.className='step-banner shadow';
     bn.textContent='🎤 말해봐 — 90% 넘을 때까지!';
+    /* ⚠️ 중요: Step 1 영상 완전 정지 + 음소거 (소리가 계속 나오던 버그 수정) */
+    try{
+      if(ytPlayer){
+        if(ytPlayer.pauseVideo)ytPlayer.pauseVideo();
+        if(ytPlayer.mute)ytPlayer.mute();
+        if(ytPlayer.stopVideo)ytPlayer.stopVideo();
+      }
+    }catch(err){console.warn('Stop Step1 player:',err)}
     yt.style.display='none';
     tower.classList.remove('show');
     document.getElementById('shadowArea').style.display='flex';
@@ -2128,6 +2127,13 @@ function goStep(step){
     /* STEP 3: DUB CHALLENGE — show booth picker first */
     bn.className='step-banner dub';
     bn.textContent='🔥 진짜 더빙 — 영상 속 주인공을 뜨겁게!';
+    /* ⚠️ 중요: 이전 단계 영상 완전 정지 */
+    try{
+      if(ytPlayer){
+        if(ytPlayer.pauseVideo)ytPlayer.pauseVideo();
+        if(ytPlayer.mute)ytPlayer.mute();
+      }
+    }catch(err){}
     yt.style.display='none';
     tower.classList.remove('show');
     document.getElementById('syncRingGauge').classList.remove('show');
@@ -2145,6 +2151,13 @@ function goStep(step){
   }
   else if(step===3){
     /* STEP 4: SHARE */
+    /* ⚠️ 중요: 모든 영상 완전 정지 */
+    try{
+      if(ytPlayer){
+        if(ytPlayer.pauseVideo)ytPlayer.pauseVideo();
+        if(ytPlayer.mute)ytPlayer.mute();
+      }
+    }catch(err){}
     yt.style.display='none';tower.classList.remove('show');
     document.getElementById('syncRingGauge').classList.remove('show');
     /* Remove glass subtitle */
