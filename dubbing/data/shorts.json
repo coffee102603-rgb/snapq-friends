@@ -1,0 +1,217 @@
+{
+  "version": "7.0",
+  "us": [
+    {
+      "id": "4O6qj9JWNzE",
+      "title": "NYC Street Interview",
+      "cat": "interview",
+      "catIcon": "🎤",
+      "diff": "beginner",
+      "dubs": 1247,
+      "sentences": [
+        {
+          "en": "What do you do for a living?",
+          "start": 0.5,
+          "end": 2.3,
+          "core": "living",
+          "highlight": "for a living",
+          "translations": {
+            "ko": { "text": "직업이 뭐예요?", "highlight": "직업" }
+          }
+        },
+        {
+          "en": "I work in finance downtown.",
+          "start": 3.0,
+          "end": 5.1,
+          "core": "finance",
+          "highlight": "work in finance",
+          "translations": {
+            "ko": { "text": "저는 다운타운에서 금융 일해요.", "highlight": "금융 일해요" }
+          }
+        },
+        {
+          "en": "Do you like living in New York?",
+          "start": 5.8,
+          "end": 8.0,
+          "core": "New York",
+          "highlight": "live in New York",
+          "translations": {
+            "ko": { "text": "뉴욕에 사는 거 좋아요?", "highlight": "뉴욕에 사는" }
+          }
+        },
+        {
+          "en": "I love it, there is always something happening.",
+          "start": 8.5,
+          "end": 11.2,
+          "core": "happening",
+          "highlight": "always something happening",
+          "translations": {
+            "ko": { "text": "좋아요, 항상 뭔가 일어나거든요.", "highlight": "항상 뭔가 일어나" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "ikYVBHLSOpY",
+      "title": "Dollar Pizza in NYC",
+      "cat": "food",
+      "catIcon": "🍕",
+      "diff": "beginner",
+      "dubs": 2341,
+      "sentences": [
+        {
+          "en": "This is the best dollar pizza in New York.",
+          "start": 0.3,
+          "end": 2.8,
+          "core": "pizza",
+          "highlight": "the best pizza",
+          "translations": {
+            "ko": { "text": "이게 뉴욕 최고의 1달러 피자야.", "highlight": "최고의" }
+          }
+        },
+        {
+          "en": "Look at that cheese pull.",
+          "start": 3.2,
+          "end": 5.0,
+          "core": "cheese",
+          "highlight": "cheese pull",
+          "translations": {
+            "ko": { "text": "저 치즈 늘어나는 거 봐.", "highlight": "치즈 늘어나는" }
+          }
+        },
+        {
+          "en": "You cannot beat this for one dollar.",
+          "start": 5.5,
+          "end": 7.8,
+          "core": "beat",
+          "highlight": "cannot beat this",
+          "translations": {
+            "ko": { "text": "1달러에 이건 못 이겨.", "highlight": "못 이겨" }
+          }
+        },
+        {
+          "en": "I could eat this every single day.",
+          "start": 8.2,
+          "end": 10.5,
+          "core": "every",
+          "highlight": "every single day",
+          "translations": {
+            "ko": { "text": "매일 먹을 수 있어.", "highlight": "매일" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "dQw4w9WgXcQ",
+      "title": "Morning Routine Talk",
+      "cat": "daily",
+      "catIcon": "☀️",
+      "diff": "intermediate",
+      "dubs": 856,
+      "sentences": [
+        {
+          "en": "I usually wake up around six thirty.",
+          "start": 0.5,
+          "end": 2.5,
+          "core": "wake",
+          "highlight": "wake up",
+          "translations": {
+            "ko": { "text": "보통 6시 반에 일어나요.", "highlight": "일어나요" }
+          }
+        },
+        {
+          "en": "First thing I do is make coffee.",
+          "start": 3.0,
+          "end": 5.0,
+          "core": "coffee",
+          "highlight": "make coffee",
+          "translations": {
+            "ko": { "text": "제일 먼저 커피를 내려요.", "highlight": "커피를 내려요" }
+          }
+        },
+        {
+          "en": "Then I go for a quick morning jog.",
+          "start": 5.5,
+          "end": 7.8,
+          "core": "jog",
+          "highlight": "go for a jog",
+          "translations": {
+            "ko": { "text": "그다음 가볍게 조깅을 해요.", "highlight": "조깅을 해요" }
+          }
+        },
+        {
+          "en": "It helps me stay focused all day.",
+          "start": 8.2,
+          "end": 10.8,
+          "core": "focused",
+          "highlight": "stay focused",
+          "translations": {
+            "ko": { "text": "하루 종일 집중하는 데 도움이 돼요.", "highlight": "집중하는" }
+          }
+        }
+      ]
+    }
+  ],
+  "kr": [
+    {
+      "id": "hPM29so2mMc",
+      "title": "한국 편의점 먹방",
+      "cat": "food",
+      "catIcon": "🍜",
+      "diff": "beginner",
+      "dubs": 1893,
+      "sentences": [
+        {
+          "en": "This is a Korean convenience store.",
+          "start": 0.3,
+          "end": 2.2,
+          "core": "store",
+          "highlight": "convenience store",
+          "translations": {
+            "ko": { "text": "여기는 한국 편의점이에요.", "highlight": "편의점" }
+          }
+        },
+        {
+          "en": "Let me try this spicy ramen.",
+          "start": 2.8,
+          "end": 4.8,
+          "core": "try",
+          "highlight": "Let me try",
+          "translations": {
+            "ko": { "text": "이 매운 라면 먹어볼게요.", "highlight": "먹어볼게요" }
+          }
+        }
+      ]
+    },
+    {
+      "id": "NXivkUHQpXw",
+      "title": "K-pop Dance Challenge",
+      "cat": "kpop",
+      "catIcon": "💃",
+      "diff": "intermediate",
+      "dubs": 3102,
+      "sentences": [
+        {
+          "en": "Today we are learning this dance.",
+          "start": 0.5,
+          "end": 2.5,
+          "core": "dance",
+          "highlight": "learning this dance",
+          "translations": {
+            "ko": { "text": "오늘 이 춤을 배울 거예요.", "highlight": "춤을 배울" }
+          }
+        },
+        {
+          "en": "Follow my moves step by step.",
+          "start": 3.0,
+          "end": 5.2,
+          "core": "step",
+          "highlight": "step by step",
+          "translations": {
+            "ko": { "text": "제 동작을 따라 해보세요.", "highlight": "따라 해보세요" }
+          }
+        }
+      ]
+    }
+  ]
+}

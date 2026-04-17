@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<!--
+═══════════════════════════════════════════════════════════════════
+  📱 SnapTalk — Snap Dubbing v7.0
+  ─────────────────────────────────────────────────────────────────
+  YouTube 숏츠 × Progressive Dubbing × 다국어 학습 플랫폼
+
+  슬로건: "Talk changes everything."
+
+  📊 구조:
+     app/         ← 앱 코어 (초기화, 설정, 라우팅)
+     algorithms/  ← 특허 대상 16개 알고리즘 (S/A/B/C급)
+     ui/          ← UI 컴포넌트
+     data/        ← JSON 데이터 (영상, 카테고리, 언어)
+     styles/      ← CSS
+     docs/        ← 문서 (ALGORITHMS, PATENT_CLAIMS 등)
+
+  📋 특허 청구항:
+     독립 청구항 4개 (S급)
+     종속 청구항 10~15개 (A/B/C급)
+
+  👤 Author: 최정은 (coffee102603@gmail.com)
+  📅 Since: 2026-04-17
+  🔒 License: Proprietary (특허 출원 예정)
+═══════════════════════════════════════════════════════════════════ -->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>SnapTalk — Snap Dubbing</title>
+<meta name="description" content="YouTube 숏츠 더빙으로 외국어 배우는 글로벌 학습 플랫폼">
+
+<!-- 폰트 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+<!-- 메인 스타일 -->
+<link rel="stylesheet" href="styles/main.css">
+
+<!-- 버전 태그 (캐시 무효화용) -->
+<meta name="version" content="7.0.1">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════
+     앱 컨테이너 (JS에서 동적으로 UI 렌더링)
+     ═══════════════════════════════════════════════════ -->
+<div id="app">
+  <div id="loading" style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100vh;color:#00e5a0;font-family:'Nunito',sans-serif">
+    <div style="font-size:48px;font-weight:900;letter-spacing:-1px">SnapTalk</div>
+    <div style="font-size:12px;margin-top:8px;opacity:.6">Loading...</div>
+  </div>
+</div>
+
+<!-- 하단 네비게이션 바 -->
+<nav id="bottom-nav" class="bottom-nav" style="display:none">
+  <button class="nav-btn active" data-screen="home" onclick="SnapTalkApp.showScreen('home'); updateNav('home')">
+    <span class="nav-icon">🏠</span>
+    <span class="nav-label">Home</span>
+  </button>
+  <button class="nav-btn" data-screen="my-room" onclick="SnapTalkApp.showScreen('my-room'); updateNav('my-room')">
+    <span class="nav-icon">📁</span>
+    <span class="nav-label">나의 방</span>
+  </button>
+</nav>
+
+<script>
+  // 네비바 활성 상태 토글
+  function updateNav(screen) {
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.screen === screen);
+    });
+  }
+  
+  // 로딩 완료 후 네비바 표시
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      const nav = document.getElementById('bottom-nav');
+      if (nav) nav.style.display = 'flex';
+    }, 1500);
+  });
+</script>
+
+<!-- ═══════════════════════════════════════════════════
+     스크립트 로딩 순서
+     1. config.js   - 앱 설정값 (필수)
+     2. main.js     - 초기화 + 라우팅
+     3. 나머지는 main.js 안에서 동적 import
+     ═══════════════════════════════════════════════════ -->
+<script src="app/config.js"></script>
+<script src="app/main.js"></script>
+
+</body>
+</html>

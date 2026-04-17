@@ -1,0 +1,59 @@
+{
+  "version": "7.0",
+  "supported": {
+    "ko": {
+      "name": "한국어",
+      "nativeName": "한국어",
+      "flag": "🇰🇷",
+      "code": "ko-KR",
+      "ttsCode": "ko-KR",
+      "fallback": "en",
+      "isRtl": false,
+      "marketPriority": 1
+    },
+    "en": {
+      "name": "English",
+      "nativeName": "English",
+      "flag": "🇺🇸",
+      "code": "en-US",
+      "ttsCode": "en-US",
+      "fallback": null,
+      "isRtl": false,
+      "marketPriority": 2
+    },
+    "ja": {
+      "name": "日本語",
+      "nativeName": "日本語",
+      "flag": "🇯🇵",
+      "code": "ja-JP",
+      "ttsCode": "ja-JP",
+      "fallback": "ko",
+      "isRtl": false,
+      "marketPriority": 3
+    },
+    "zh": {
+      "name": "中文 (简体)",
+      "nativeName": "中文",
+      "flag": "🇨🇳",
+      "code": "zh-CN",
+      "ttsCode": "zh-CN",
+      "fallback": "en",
+      "isRtl": false,
+      "marketPriority": 4
+    },
+    "es": {
+      "name": "Español",
+      "nativeName": "Español",
+      "flag": "🇪🇸",
+      "code": "es-ES",
+      "ttsCode": "es-ES",
+      "fallback": "en",
+      "isRtl": false,
+      "marketPriority": 5
+    }
+  },
+  "ui": {
+    "default": "ko",
+    "fallbackChain": ["ko", "en", "ja"]
+  }
+}

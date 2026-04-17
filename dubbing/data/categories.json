@@ -1,0 +1,20 @@
+{
+  "version": "7.0",
+  "us": [
+    { "id": "featured",   "emoji": "🔥", "title": "이번 주 인기", "limit": 10 },
+    { "id": "beginner",   "emoji": "🌱", "title": "초보자 추천", "filterBy": "difficulty", "filterValue": "beginner", "limit": 10 },
+    { "id": "interview",  "emoji": "🎤", "title": "인터뷰 회화", "filterBy": "category", "filterValue": "interview", "limit": 10 },
+    { "id": "food_us",    "emoji": "🍔", "title": "먹방 & 음식", "filterBy": "category", "filterValue": "food", "limit": 10 },
+    { "id": "daily_us",   "emoji": "☀️", "title": "일상 회화", "filterBy": "category", "filterValue": "daily", "limit": 10 },
+    { "id": "travel_us",  "emoji": "✈️", "title": "여행", "filterBy": "category", "filterValue": "travel", "limit": 10 },
+    { "id": "business",   "emoji": "👔", "title": "비즈니스", "filterBy": "category", "filterValue": "business", "limit": 10 }
+  ],
+  "kr": [
+    { "id": "featured",   "emoji": "🔥", "title": "이번 주 인기", "limit": 10 },
+    { "id": "kpop",       "emoji": "💃", "title": "K-pop & 댄스", "filterBy": "category", "filterValue": "kpop", "limit": 10 },
+    { "id": "food_kr",    "emoji": "🍜", "title": "먹방 & 한식", "filterBy": "category", "filterValue": "food", "limit": 10 },
+    { "id": "drama",      "emoji": "🎭", "title": "K-drama", "filterBy": "category", "filterValue": "drama", "limit": 10 },
+    { "id": "daily_kr",   "emoji": "☀️", "title": "일상 회화", "filterBy": "category", "filterValue": "daily", "limit": 10 },
+    { "id": "travel_kr",  "emoji": "✈️", "title": "K-travel", "filterBy": "category", "filterValue": "travel", "limit": 10 }
+  ]
+}
