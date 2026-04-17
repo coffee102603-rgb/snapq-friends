@@ -45,7 +45,9 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 
 /* ═══ HEADER ═══ */
 #header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--sf);border-bottom:1px solid var(--bd);z-index:50;min-height:52px}
-.logo{font-weight:900;font-size:20px;color:var(--accent);letter-spacing:-.5px}
+.header-left{display:flex;align-items:center;gap:10px}
+.header-icon{font-size:24px;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+.logo{font-weight:900;font-size:22px;color:var(--accent);letter-spacing:-.5px}
 .logo-badge{font-size:10px;background:var(--accent);color:var(--bg);padding:2px 8px;border-radius:20px;margin-left:8px;font-weight:700;vertical-align:middle}
 .header-right{display:flex;gap:10px;align-items:center}
 .lang-btn{font-size:13px;background:var(--sf2);padding:6px 12px;border-radius:20px;border:1px solid var(--bd);color:var(--tx2)}
@@ -541,6 +543,86 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #roomScreen{overflow-y:auto;padding:20px 16px 80px}
 .room-section{margin-bottom:24px}
 .room-title{font-size:18px;font-weight:800;margin-bottom:12px}
+
+/* ═══ SNAP REVIEW (v6.3 NEW) ═══ */
+.snap-review-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.snap-review-count{font-size:11px;color:var(--accent);font-weight:800;white-space:nowrap}
+.snap-review-progress{flex:1;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden}
+.snap-review-progress-fill{height:100%;background:var(--accent);transition:width .3s ease}
+.snap-review-progress-top{height:2px;background:rgba(255,255,255,.08);border-radius:1px;overflow:hidden;margin-bottom:8px}
+.snap-card{background:linear-gradient(135deg,var(--sf),var(--sf2));border:1px solid var(--bd);border-radius:14px;padding:18px 18px;text-align:center;min-height:100px;display:flex;flex-direction:column;justify-content:center;transition:opacity .25s ease,transform .25s ease;opacity:1}
+.snap-card-highlight{font-size:13px;font-weight:800;color:var(--gold);margin-bottom:8px;background:rgba(245,158,11,.1);padding:4px 10px;border-radius:8px;display:inline-block;align-self:center}
+.snap-card-en{font-size:18px;font-weight:600;color:var(--tx);margin-bottom:8px;line-height:1.5}
+.snap-card-ko{font-size:14px;color:var(--tx2);margin-bottom:6px;line-height:1.5}
+
+/* 인라인 형광펜 v6.4.1 · 글자 가독성 우선 · 밑줄+연한 배경 */
+.snap-hl-en{background:linear-gradient(180deg,transparent 70%,rgba(255,215,0,.45) 70%);padding:0 1px;color:var(--tx);font-weight:700;border-radius:1px}
+.snap-hl-ko{background:linear-gradient(180deg,transparent 75%,rgba(255,245,157,.35) 75%);padding:0 1px;color:var(--tx2);border-radius:1px}
+mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
+.snap-card-source{font-size:10px;color:var(--tx3);margin-top:4px}
+.snap-card-status{font-size:10px;color:var(--accent);margin-top:6px;opacity:.7}
+.snap-card-actions{display:flex;justify-content:center;gap:14px;margin-top:10px}
+.snap-act-btn{width:40px;height:40px;border-radius:50%;background:var(--sf);border:1px solid var(--bd);color:var(--tx);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s ease}
+.snap-act-btn:hover{background:rgba(255,255,255,.08);transform:translateY(-1px)}
+.snap-act-btn:active{transform:scale(.95)}
+.snap-note-area{margin-top:10px;background:var(--sf);border:1px solid var(--accent);border-radius:14px;padding:12px;position:relative;animation:slideDown .3s ease}
+@keyframes slideDown{from{opacity:0;max-height:0;transform:translateY(-10px)}to{opacity:1;max-height:600px;transform:translateY(0)}}
+.snap-note-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px}
+.snap-note-title{font-size:13px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.snap-note-tools-inline{display:flex;gap:4px;flex-shrink:0}
+.snap-note-tools-inline .snap-note-tool{font-size:10px;padding:4px 8px}
+.snap-note-count{font-size:11px;font-weight:800;color:var(--accent);white-space:nowrap;flex-shrink:0}
+.snap-note-progressbar{width:100%;height:4px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden;margin-bottom:10px}
+.snap-note-progressbar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--gold));border-radius:2px;transition:width .4s cubic-bezier(.3,.8,.3,1)}
+#snapNoteCanvas{width:100%;height:240px;background:#fefefe;border-radius:8px;display:block;margin-bottom:10px;touch-action:none;cursor:crosshair}
+.snap-note-tools{display:flex;justify-content:center;gap:10px}
+.snap-note-tool{background:rgba(255,255,255,.05);border:1px solid var(--bd);color:var(--tx);font-size:11px;padding:6px 14px;border-radius:8px;cursor:pointer;transition:all .15s ease}
+.snap-note-tool.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.snap-note-tool:hover:not(.active){background:rgba(255,255,255,.1)}
+.snap-mastery-banner{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--accent);color:#000;font-size:22px;font-weight:900;padding:16px 32px;border-radius:16px;z-index:100;animation:masteryPop .5s ease,masteryFade 2s ease 1s forwards;box-shadow:0 8px 24px rgba(0,229,160,.5);white-space:nowrap}
+@keyframes masteryPop{0%{transform:translate(-50%,-50%) scale(0);opacity:0}60%{transform:translate(-50%,-50%) scale(1.2);opacity:1}100%{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes masteryFade{to{opacity:0;transform:translate(-50%,-50%) scale(1.1)}}
+
+/* ═══ SNAP STUDIO (v6.4 NEW · 녹음 서랍) ═══ */
+.studio-empty{background:var(--sf);border:1px dashed var(--bd);border-radius:14px;padding:32px 20px;text-align:center;color:var(--tx3)}
+.studio-empty-icon{font-size:42px;margin-bottom:12px;opacity:.5}
+.studio-empty-title{font-size:14px;font-weight:700;color:var(--tx2);margin-bottom:8px}
+.studio-empty-desc{font-size:12px;line-height:1.6;margin-bottom:14px}
+.studio-empty-hint{font-size:10px;color:var(--accent);opacity:.7}
+
+.studio-preview-header{display:flex;justify-content:flex-end;margin-bottom:10px}
+.studio-preview-count{font-size:11px;color:var(--tx2);font-weight:700}
+
+.studio-card{background:linear-gradient(135deg,var(--sf),var(--sf2));border:1px solid var(--bd);border-radius:10px;padding:10px 12px;margin-bottom:6px;transition:all .15s ease}
+.studio-card.preview{cursor:default}
+.studio-card.full{display:flex;flex-direction:column;gap:4px}
+.studio-card.legend{background:linear-gradient(135deg,rgba(255,215,0,.08),var(--sf2));border-color:#FFD700}
+.studio-card-row{display:flex;align-items:center;gap:8px;font-size:12px}
+.studio-card-row2{display:flex;align-items:center;justify-content:space-between;font-size:10px;color:var(--tx3);margin-top:2px}
+.studio-score{font-weight:800;min-width:60px}
+.studio-grade{font-size:10px;font-weight:800;padding:2px 7px;border-radius:10px;background:rgba(255,255,255,.1)}
+.studio-title{flex:1;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px}
+.studio-date{color:var(--tx3)}
+.studio-actions{display:flex;gap:6px}
+.studio-act{width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.06);border:none;color:var(--tx2);font-size:10px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.studio-act:hover{background:rgba(255,255,255,.12);color:var(--accent)}
+.legend-lock{font-size:10px;opacity:.6}
+
+.studio-open-btn{width:100%;background:var(--sf);border:1px solid var(--bd);border-radius:12px;padding:14px;color:var(--accent);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;margin-top:10px}
+.studio-open-btn:hover{background:rgba(0,229,160,.05);border-color:var(--accent)}
+
+.studio-tabs{display:flex;gap:6px;margin-bottom:10px}
+.studio-tab{flex:1;background:var(--sf);border:1px solid var(--bd);border-radius:10px;padding:10px 8px;color:var(--tx2);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.studio-tab.active{background:var(--accent);color:#000;border-color:var(--accent)}
+.studio-tab:hover:not(.active){background:rgba(255,255,255,.05)}
+.tab-badge{font-size:10px;background:rgba(0,0,0,.2);padding:1px 6px;border-radius:8px;font-weight:800}
+.studio-tab.active .tab-badge{background:rgba(0,0,0,.15)}
+.studio-list-info{font-size:10px;color:var(--tx3);text-align:right;margin-bottom:8px}
+.studio-list{max-height:360px;overflow-y:auto}
+.studio-empty-small{text-align:center;color:var(--tx3);font-size:11px;padding:24px 12px}
+/* ═══ END SNAP STUDIO ═══ */
+/* ═══ END SNAP REVIEW ═══ */
+
 .streak-card{background:linear-gradient(135deg,var(--sf),var(--sf2));border-radius:var(--r);padding:20px;border:1px solid var(--bd);text-align:center}
 .streak-num{font-size:48px;font-weight:900;color:var(--gold)}
 .streak-label{font-size:14px;color:var(--tx2);margin-top:4px}
@@ -668,7 +750,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 <body>
 <div id="app">
   <!-- HEADER -->
-  <div id="header"><div><span class="logo">SnapTalk</span><span class="logo-badge">Snap Dubbing</span></div><div class="header-right"><div class="streak-badge" id="streakBadge">🔥 0일</div><button class="lang-btn" id="langToggle">🇰🇷→🇺🇸</button></div></div>
+  <div id="header"><div class="header-left"><span class="header-icon">🎬</span><span class="logo">SnapTalk</span></div><div class="header-right"><button class="lang-btn" id="langToggle">🇰🇷→🇺🇸</button></div></div>
 
   <!-- TABS -->
   <div id="contentTabs"><button class="ctab active" data-tab="us">🇺🇸 English</button><button class="ctab" data-tab="kr">🇰🇷 한국어</button></div>
@@ -690,6 +772,8 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   <!-- PLAYER -->
   <div class="screen" id="playerScreen">
     <div class="player-top">
+      <div class="speed-ctrl"><button class="speed-btn" data-speed="0.8">0.8x</button><button class="speed-btn active" data-speed="1">1.0x</button><button class="speed-btn" data-speed="1.2">1.2x</button></div>
+      <div class="step-indicator" id="stepIndicator"><div class="step-dot current" data-s="0"></div><div class="step-dot" data-s="1"></div><div class="step-dot" data-s="2"></div><div class="step-dot" data-s="3"></div></div>
       <div class="paint-header-group">
         <button class="cover-toggle" id="paintToggle">🎨 가리개</button>
         <div id="paintTools">
@@ -697,8 +781,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
           <button class="paint-btn eraser" id="paintEraser" title="지우개">🧽</button>
         </div>
       </div>
-      <div class="step-indicator" id="stepIndicator"><div class="step-dot current" data-s="0"></div><div class="step-dot" data-s="1"></div><div class="step-dot" data-s="2"></div><div class="step-dot" data-s="3"></div></div>
-      <div class="speed-ctrl"><button class="speed-btn" data-speed="0.8">0.8x</button><button class="speed-btn active" data-speed="1">1.0x</button><button class="speed-btn" data-speed="1.2">1.2x</button></div>
     </div>
     <div id="ytContainer">
       <div id="heatFrame"></div>
@@ -734,9 +816,10 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
       <div class="listen-info">🔁 <span class="n" id="listenCount">1</span>번째 <span class="bricks" id="brickCount">· 벽돌 0개</span></div>
       <div class="listen-actions">
         <button class="listen-replay" id="listenReplay">🔁 다시 듣기</button>
-        <button class="listen-next" id="listenNext" disabled>따라 읽기 →</button>
+        <button class="listen-next" id="listenNext">따라 읽기 →</button>
         <button class="home-btn-inline" title="홈으로">🏠</button>
       </div>
+      <div class="listen-hint-row" id="listenHintRow" style="font-size:11px;color:var(--tx2);text-align:center;margin-top:4px;opacity:.75">💡 자신 있으면 바로 "따라 읽기" 눌러도 돼!</div>
     </div>
 
     <!-- STEP 2: 말해봐 (Shadow) -->
@@ -885,16 +968,35 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 
   <!-- MY ROOM -->
   <div class="screen" id="roomScreen">
-    <div class="room-section"><div class="room-title">🔥 나의 스트릭</div><div class="streak-card"><div class="streak-num" id="roomStreak">0</div><div class="streak-label">연속 더빙일</div></div></div>
-    <div class="room-section"><div class="room-title">📊 통계</div><div class="stats-grid"><div class="stat-card"><div class="stat-num" id="totalDubs">0</div><div class="stat-label">총 더빙</div></div><div class="stat-card"><div class="stat-num" id="avgScore">0</div><div class="stat-label">평균 싱크율</div></div></div></div>
-    <div class="room-section"><div class="room-title">📝 최근 더빙</div><div id="historyList"><div style="color:var(--tx3);font-size:13px;padding:12px">아직 더빙 기록이 없어요!</div></div></div>
-    <div class="room-section"><div class="room-title">📓 나의 노트</div><div id="notebookSummary" class="garden-summary"></div><div id="notebookList"><div style="color:var(--tx3);font-size:13px;padding:12px">저장한 문장이 없어요. 말해봐에서 💾 버튼으로 담아보세요!</div></div></div>
+    <!-- 📦 숨겨진 섹션 · 데이터는 보존하되 UI만 삭제 (DOM은 유지) -->
+    <div id="roomStreak" style="display:none">0</div>
+    <div id="totalDubs" style="display:none">0</div>
+    <div id="avgScore" style="display:none">0</div>
+    <div id="historyList" style="display:none"></div>
+    <div id="notebookSummary" style="display:none"></div>
+    <div id="notebookList" style="display:none"></div>
+
+    <!-- 🔄 Snap Review (3초 자동 순환) -->
+    <div class="room-section" id="snapReviewSection" style="display:none;margin-top:0">
+      <div class="room-title" style="font-size:14px;margin-bottom:8px;display:flex;align-items:center;gap:6px;flex-wrap:wrap">
+        <span>🔄 Snap Review</span>
+        <span style="font-size:10px;color:var(--tx3);font-weight:500">· 3초 순환</span>
+        <span id="snapReviewCountTop" style="font-size:11px;color:var(--accent);font-weight:800;margin-left:auto">0 / 0</span>
+      </div>
+      <div id="snapReviewContainer"></div>
+    </div>
+
+    <!-- 🎬 Snap Studio (녹음 서랍 · v6.4 NEW) -->
+    <div class="room-section" id="snapStudioSection">
+      <div class="room-title">🎬 Snap Studio <span style="font-size:10px;color:var(--tx3);font-weight:500;margin-left:6px">· 나의 녹음 서랍</span></div>
+      <div id="snapStudioContainer"></div>
+    </div>
   </div>
 
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v6.1</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v6.4</div>
 </div>
 
 <!-- Quick Review / Scenario / Share Modal -->
@@ -1047,8 +1149,24 @@ const db={get:(k,d)=>{try{return JSON.parse(localStorage.getItem('sd_'+k))||d}ca
  * ═══════════════════════════════════════ */
 function getStreak(){const s=db.get('streak',{count:0,last:null});if(s.last){const d=Math.floor((new Date(new Date().toDateString())-new Date(s.last))/864e5);if(d>1)s.count=0}return s}
 function updateStreak(){const s=getStreak(),t=new Date().toDateString();if(s.last!==t){s.count++;s.last=t;db.set('streak',s)}renderStreak()}
-function renderStreak(){const s=getStreak();document.getElementById('streakBadge').textContent='🔥 '+s.count+'일';document.getElementById('roomStreak').textContent=s.count}
-function saveResult(sh,sc,att){const h=db.get('history',[]);h.unshift({title:sh.title,score:sc,attempts:att,date:new Date().toISOString()});if(h.length>30)h.pop();db.set('history',h);const st=db.get('stats',{total:0,sum:0});st.total++;st.sum+=sc;db.set('stats',st)}
+function renderStreak(){const s=getStreak();const b=document.getElementById('streakBadge');if(b)b.textContent='🔥 '+s.count+'일';document.getElementById('roomStreak').textContent=s.count}
+function saveResult(sh,sc,att){
+  const h=db.get('history',[]);
+  h.unshift({title:sh.title,score:sc,attempts:att,date:new Date().toISOString()});
+  /* v6.4 · 30개 초과 시 싱크로율 가장 낮은 것 제거 (최신은 항상 보존) */
+  if(h.length>30){
+    /* 첫 번째(최신) 제외하고 가장 낮은 점수 찾기 */
+    let minIdx=1;
+    for(let i=2;i<h.length;i++){
+      if((h[i].score||0)<(h[minIdx].score||0))minIdx=i;
+    }
+    h.splice(minIdx,1);
+  }
+  db.set('history',h);
+  const st=db.get('stats',{total:0,sum:0});
+  st.total++;st.sum+=sc;
+  db.set('stats',st);
+}
 function renderRoom(){
   renderStreak();
   const st=db.get('stats',{total:0,sum:0});
@@ -1058,6 +1176,8 @@ function renderRoom(){
   if(!h.length){list.innerHTML='<div style="color:var(--tx3);font-size:13px;padding:12px">아직 더빙 기록이 없어요!</div>'}
   else{list.innerHTML=h.slice(0,10).map(i=>{const d=new Date(i.date);return`<div class="history-item"><div class="history-score">${i.score}%</div><div class="history-info"><div class="history-title">${i.title}</div><div class="history-date">${d.getMonth()+1}/${d.getDate()} · ${i.attempts}번 도전</div></div></div>`}).join('')}
   renderNotebook();
+  renderSnapReview();
+  renderSnapStudio();
 }
 
 /* Growth stage config */
@@ -1090,6 +1210,488 @@ function updateStage(note){
   return note;
 }
 
+
+const SnapReview={
+  timer:null,
+  idx:0,
+  paused:false,
+  noteOpen:false,
+  writeCount:0,
+  canvas:null,
+  ctx:null,
+  drawing:false,
+  tool:'pencil',
+  lastPos:null
+};
+
+/* ═══════════════════════════════════════
+ * SNAP STUDIO (v6.4 NEW)
+ * 녹음 서랍 · Best Records + Recent Records
+ * ═══════════════════════════════════════ */
+const SnapStudio={
+  drawerOpen:false,
+  activeTab:'best',  /* 'best' or 'recent' */
+  MAX_BEST:30,
+  MAX_RECENT:20,
+  PREVIEW_COUNT:5
+};
+
+function renderSnapStudio(){
+  const container=document.getElementById('snapStudioContainer');
+  if(!container)return;
+  
+  const best=db.get('snapBest',[]);
+  const recent=db.get('snapRecent',[]);
+  const total=best.length+recent.length;
+  
+  /* 데이터 없으면 Empty State */
+  if(!best.length&&!recent.length){
+    container.innerHTML=`
+      <div class="studio-empty">
+        <div class="studio-empty-icon">🎤</div>
+        <div class="studio-empty-title">아직 녹음이 없어요!</div>
+        <div class="studio-empty-desc">더빙 부스에서 녹음하면<br>여기에 쌓여요</div>
+        <div class="studio-empty-hint">🏆 Best Records · 🕐 Recent Records</div>
+      </div>`;
+    return;
+  }
+  
+  /* 상태 1: 서랍 닫힘 · 상위 5개 프리뷰 */
+  if(!SnapStudio.drawerOpen){
+    const preview=best.slice(0,SnapStudio.PREVIEW_COUNT);
+    const moreCount=total-preview.length;
+    container.innerHTML=`
+      <div class="studio-preview-header">
+        <span class="studio-preview-count">🏆 ${best.length} · 🕐 ${recent.length}</span>
+      </div>
+      ${preview.map(r=>renderStudioCard(r,'preview')).join('')}
+      ${moreCount>0?`<button class="studio-open-btn" onclick="openSnapDrawer()">서랍 열기 (+${moreCount}개)</button>`:`<button class="studio-open-btn" onclick="openSnapDrawer()">서랍 열기 (전체 보기)</button>`}
+    `;
+    return;
+  }
+  
+  /* 상태 2: 서랍 열림 · 탭 선택 */
+  const items=SnapStudio.activeTab==='best'?best:recent;
+  const maxCount=SnapStudio.activeTab==='best'?SnapStudio.MAX_BEST:SnapStudio.MAX_RECENT;
+  
+  container.innerHTML=`
+    <div class="studio-tabs">
+      <button class="studio-tab ${SnapStudio.activeTab==='best'?'active':''}" onclick="switchStudioTab('best')">🏆 Best <span class="tab-badge">${best.length}</span></button>
+      <button class="studio-tab ${SnapStudio.activeTab==='recent'?'active':''}" onclick="switchStudioTab('recent')">🕐 Recent <span class="tab-badge">${recent.length}</span></button>
+    </div>
+    <div class="studio-list-info">${items.length} / ${maxCount}</div>
+    <div class="studio-list">
+      ${items.length?items.map(r=>renderStudioCard(r,'full')).join(''):'<div class="studio-empty-small">이 탭은 비어있어요</div>'}
+    </div>
+    <button class="studio-open-btn" onclick="closeSnapDrawer()">서랍 닫기</button>
+  `;
+}
+
+function renderStudioCard(rec,mode){
+  const gradeColor=getGradeColor(rec.grade);
+  const icon=rec.grade==='LEGEND'?'🏆':(rec.score>=90?'⭐':'📍');
+  const date=new Date(rec.date);
+  const dateStr=`${date.getMonth()+1}/${date.getDate()}`;
+  const isLegend=rec.grade==='LEGEND';
+  
+  return `
+    <div class="studio-card ${mode} ${isLegend?'legend':''}" style="border-color:${gradeColor}33">
+      <div class="studio-card-row">
+        <span class="studio-score" style="color:${gradeColor}">${icon} ${rec.score}%</span>
+        <span class="studio-grade" style="color:${gradeColor}">${rec.grade}</span>
+        <span class="studio-title">${rec.title||'녹음'}</span>
+      </div>
+      ${mode==='full'?`
+        <div class="studio-card-row2">
+          <span class="studio-date">${dateStr} · ${rec.difficulty||'-'}</span>
+          <div class="studio-actions">
+            ${rec.audio?`<button class="studio-act" onclick="playSnapRecord('${rec.id}')" title="재생">▶</button>`:''}
+            ${!isLegend?`<button class="studio-act" onclick="deleteSnapRecord('${rec.id}','${SnapStudio.activeTab}')" title="삭제">🗑</button>`:'<span class="legend-lock" title="LEGEND은 영구 보존">🔒</span>'}
+          </div>
+        </div>
+      `:''}
+    </div>
+  `;
+}
+
+function getGradeColor(grade){
+  const colors={
+    LEGEND:'#FFD700',
+    SS:'#FFD700',
+    S:'#00e5a0',
+    A:'#64b5f6',
+    B:'#aaaaaa',
+    C:'#888',
+    D:'#666'
+  };
+  return colors[grade]||'#888';
+}
+
+function openSnapDrawer(){
+  SnapStudio.drawerOpen=true;
+  renderSnapStudio();
+}
+
+function closeSnapDrawer(){
+  SnapStudio.drawerOpen=false;
+  renderSnapStudio();
+}
+
+function switchStudioTab(tab){
+  SnapStudio.activeTab=tab;
+  renderSnapStudio();
+}
+
+function playSnapRecord(id){
+  const best=db.get('snapBest',[]);
+  const recent=db.get('snapRecent',[]);
+  const rec=[...best,...recent].find(r=>r.id==id);
+  if(!rec||!rec.audio){
+    alert('오디오 파일이 없어요');
+    return;
+  }
+  try{
+    const audio=new Audio(rec.audio);
+    audio.play();
+  }catch(e){console.warn('재생 실패',e)}
+}
+
+function deleteSnapRecord(id,tabType){
+  if(!confirm('이 녹음을 삭제할까요?'))return;
+  const key=tabType==='best'?'snapBest':'snapRecent';
+  const list=db.get(key,[]).filter(r=>r.id!=id);
+  db.set(key,list);
+  renderSnapStudio();
+}
+
+/* 녹음 저장 함수 (추후 더빙 완료 시 호출) */
+function saveSnapRecord(data){
+  /* data = {id, title, score, grade, difficulty, date, audio, shortId} */
+  const rec={
+    id:Date.now(),
+    title:data.title||'녹음',
+    score:data.score||0,
+    grade:data.grade||'D',
+    difficulty:data.difficulty||'-',
+    date:new Date().toISOString(),
+    audio:data.audio||null,
+    shortId:data.shortId||null
+  };
+  
+  /* Recent Records: 최신 N개 */
+  let recent=db.get('snapRecent',[]);
+  recent.unshift(rec);
+  recent=recent.slice(0,SnapStudio.MAX_RECENT);
+  db.set('snapRecent',recent);
+  
+  /* Best Records: 영상별 최고 점수만 */
+  let best=db.get('snapBest',[]);
+  const existing=best.findIndex(r=>r.shortId===rec.shortId);
+  if(existing>=0){
+    /* 이미 해당 영상 기록 있음 · 점수 더 높으면 교체 */
+    if(rec.score>best[existing].score){
+      best[existing]=rec;
+    }
+  }else{
+    best.push(rec);
+  }
+  /* 정렬: LEGEND 우선 · 점수 내림차순 */
+  best.sort((a,b)=>{
+    if(a.grade==='LEGEND'&&b.grade!=='LEGEND')return -1;
+    if(b.grade==='LEGEND'&&a.grade!=='LEGEND')return 1;
+    return b.score-a.score;
+  });
+  /* LEGEND 제외 개수 제한 */
+  const legends=best.filter(r=>r.grade==='LEGEND');
+  const others=best.filter(r=>r.grade!=='LEGEND').slice(0,SnapStudio.MAX_BEST-legends.length);
+  best=[...legends,...others];
+  db.set('snapBest',best);
+}
+
+/* ═══════════════════════════════════════
+ * SNAP REVIEW (v6.3)
+ * ═══════════════════════════════════════ */
+function renderSnapReview(){
+  const section=document.getElementById('snapReviewSection');
+  const container=document.getElementById('snapReviewContainer');
+  if(!section||!container)return;
+  
+  const nb=db.get('notebook',[]);
+  if(!nb.length){
+    section.style.display='none';
+    stopSnapReview();
+    return;
+  }
+  
+  section.style.display='block';
+  SnapReview.idx=0;
+  SnapReview.paused=false;
+  SnapReview.noteOpen=false;
+  renderSnapCard();
+  startSnapReviewTimer();
+}
+
+function startSnapReviewTimer(){
+  stopSnapReview();
+  SnapReview.timer=setInterval(()=>{
+    if(!SnapReview.paused&&!SnapReview.noteOpen){
+      advanceSnapCard();
+    }
+  },3000);
+}
+
+function stopSnapReview(){
+  if(SnapReview.timer){clearInterval(SnapReview.timer);SnapReview.timer=null}
+}
+
+function advanceSnapCard(){
+  const nb=db.get('notebook',[]);
+  if(!nb.length)return;
+  const card=document.getElementById('snapCard');
+  if(!card)return;
+  
+  /* 페이드 아웃 */
+  card.style.opacity='0';
+  card.style.transform='translateY(-8px)';
+  
+  setTimeout(()=>{
+    SnapReview.idx=(SnapReview.idx+1)%nb.length;
+    renderSnapCard();
+  },200);
+}
+
+function renderSnapCard(){
+  const container=document.getElementById('snapReviewContainer');
+  if(!container)return;
+  
+  const nb=db.get('notebook',[]);
+  if(!nb.length){renderSnapReview();return}
+  
+  if(SnapReview.idx>=nb.length)SnapReview.idx=0;
+  const item=nb[SnapReview.idx];
+  const total=nb.length;
+  const progress=((SnapReview.idx+1)/total)*100;
+  
+  const pauseIcon=SnapReview.paused?'▶':'⏸';
+  const statusText=SnapReview.paused?'⏸ 정지됨 · 쓰기 연습 중':'3초 후 다음...';
+  
+  /* 상단 카운트 업데이트 */
+  const countTop=document.getElementById('snapReviewCountTop');
+  if(countTop)countTop.textContent=`${SnapReview.idx+1} / ${total}`;
+  
+  /* 문장 내 하이라이트 적용 · 영어 진한 노랑 · 한글 연한 노랑 */
+  const enHtml=highlightInText(item.en||'',item.highlight,'en');
+  const koHtml=highlightInText(item.ko||'',item.koHighlight,'ko');
+  
+  container.innerHTML=`
+    <div class="snap-review-progress-top"><div class="snap-review-progress-fill" style="width:${progress}%"></div></div>
+    <div id="snapCard" class="snap-card">
+      <div class="snap-card-en">${enHtml}</div>
+      <div class="snap-card-ko">${koHtml}</div>
+    </div>
+    <div class="snap-card-actions">
+      <button class="snap-act-btn" onclick="toggleSnapPause()" title="${SnapReview.paused?'재생':'일시정지'}">${pauseIcon}</button>
+      <button class="snap-act-btn" onclick="playSnapTTS()" title="듣기">🔊</button>
+      <button class="snap-act-btn" onclick="deleteSnapCard()" title="삭제">🗑</button>
+    </div>
+  `;
+  
+  /* 페이드 인 */
+  requestAnimationFrame(()=>{
+    const card=document.getElementById('snapCard');
+    if(card){
+      card.style.opacity='1';
+      card.style.transform='translateY(0)';
+    }
+  });
+  
+  /* 노트 열려있으면 유지 */
+  if(SnapReview.noteOpen){
+    renderSnapNote();
+  }
+}
+
+/* 문장 내 하이라이트 표시 · 영어/한글 각각 다른 색 */
+function highlightInText(fullText,highlightText,lang){
+  if(!fullText)return '';
+  if(!highlightText||!highlightText.trim())return escapeHtml(fullText);
+  
+  const safeFullText=escapeHtml(fullText);
+  const safeHighlight=escapeHtml(highlightText.trim());
+  
+  /* 대소문자 무시하고 찾기 (영어용) */
+  const regex=new RegExp(safeHighlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),lang==='en'?'i':'');
+  const className=lang==='en'?'snap-hl-en':'snap-hl-ko';
+  
+  return safeFullText.replace(regex,match=>`<mark class="${className}">${match}</mark>`);
+}
+
+function escapeHtml(str){
+  return String(str).replace(/[&<>"']/g,c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[c]);
+}
+
+function toggleSnapPause(){
+  SnapReview.paused=!SnapReview.paused;
+  if(SnapReview.paused){
+    SnapReview.noteOpen=true;
+    SnapReview.writeCount=0;
+    renderSnapCard();
+    renderSnapNote();
+  }else{
+    SnapReview.noteOpen=false;
+    const note=document.getElementById('snapNoteArea');
+    if(note)note.remove();
+    renderSnapCard();
+  }
+}
+
+function playSnapTTS(){
+  const nb=db.get('notebook',[]);
+  if(!nb.length)return;
+  const item=nb[SnapReview.idx];
+  if(!item||!item.en)return;
+  try{
+    const u=new SpeechSynthesisUtterance(item.en);
+    u.lang='en-US';u.rate=0.9;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }catch(e){console.warn('TTS error',e)}
+}
+
+function deleteSnapCard(){
+  const nb=db.get('notebook',[]);
+  if(!nb.length)return;
+  if(!confirm('이 표현을 삭제할까요?'))return;
+  nb.splice(SnapReview.idx,1);
+  db.set('notebook',nb);
+  if(!nb.length){
+    renderSnapReview();
+    renderNotebook();
+    return;
+  }
+  if(SnapReview.idx>=nb.length)SnapReview.idx=0;
+  renderSnapCard();
+  renderNotebook();
+}
+
+function renderSnapNote(){
+  const existing=document.getElementById('snapNoteArea');
+  if(existing)existing.remove();
+  
+  const container=document.getElementById('snapReviewContainer');
+  if(!container)return;
+  
+  const noteEl=document.createElement('div');
+  noteEl.id='snapNoteArea';
+  noteEl.className='snap-note-area';
+  noteEl.innerHTML=`
+    <div class="snap-note-header">
+      <span class="snap-note-title">📝 Snap Note · 써봐!</span>
+      <div class="snap-note-tools-inline">
+        <button class="snap-note-tool active" onclick="setSnapTool('pencil')">✏️ 연필</button>
+        <button class="snap-note-tool" onclick="clearSnapNote()">🔄 지우기</button>
+      </div>
+    </div>
+    <canvas id="snapNoteCanvas" width="300" height="240"></canvas>
+  `;
+  container.appendChild(noteEl);
+  
+  /* 연필만 사용 · 지우개 제거 */
+  SnapReview.tool='pencil';
+  
+  setTimeout(()=>initSnapCanvas(),10);
+}
+
+function initSnapCanvas(){
+  const cv=document.getElementById('snapNoteCanvas');
+  if(!cv)return;
+  SnapReview.canvas=cv;
+  SnapReview.ctx=cv.getContext('2d');
+  SnapReview.ctx.strokeStyle='#2a2a38';
+  SnapReview.ctx.lineWidth=3;
+  SnapReview.ctx.lineCap='round';
+  SnapReview.ctx.lineJoin='round';
+  
+  const getPos=(e)=>{
+    const rect=cv.getBoundingClientRect();
+    const cx=e.touches?e.touches[0].clientX:e.clientX;
+    const cy=e.touches?e.touches[0].clientY:e.clientY;
+    return{x:(cx-rect.left)*(cv.width/rect.width),y:(cy-rect.top)*(cv.height/rect.height)};
+  };
+  
+  const start=(e)=>{e.preventDefault();SnapReview.drawing=true;SnapReview.lastPos=getPos(e)};
+  const move=(e)=>{
+    if(!SnapReview.drawing)return;
+    e.preventDefault();
+    const p=getPos(e);
+    const ctx=SnapReview.ctx;
+    /* 연필만 사용 (지우개 제거) */
+    ctx.globalCompositeOperation='source-over';
+    ctx.strokeStyle='#2a2a38';
+    ctx.lineWidth=3;
+    ctx.beginPath();
+    ctx.moveTo(SnapReview.lastPos.x,SnapReview.lastPos.y);
+    ctx.lineTo(p.x,p.y);
+    ctx.stroke();
+    SnapReview.lastPos=p;
+  };
+  const end=()=>{
+    if(SnapReview.drawing){
+      SnapReview.drawing=false;
+      incrementSnapWrite();
+    }
+  };
+  
+  cv.addEventListener('touchstart',start,{passive:false});
+  cv.addEventListener('touchmove',move,{passive:false});
+  cv.addEventListener('touchend',end);
+  cv.addEventListener('mousedown',start);
+  cv.addEventListener('mousemove',move);
+  cv.addEventListener('mouseup',end);
+  cv.addEventListener('mouseleave',end);
+}
+
+function setSnapTool(t){
+  SnapReview.tool=t;
+  document.querySelectorAll('.snap-note-tool').forEach(b=>b.classList.remove('active'));
+  if(event&&event.target)event.target.classList.add('active');
+}
+
+function clearSnapNote(){
+  if(SnapReview.ctx&&SnapReview.canvas){
+    SnapReview.ctx.clearRect(0,0,SnapReview.canvas.width,SnapReview.canvas.height);
+  }
+}
+
+function incrementSnapWrite(){
+  SnapReview.writeCount++;
+  
+  if(SnapReview.writeCount>=10){
+    /* MASTERED 연출 */
+    const note=document.getElementById('snapNoteArea');
+    if(note){
+      const banner=document.createElement('div');
+      banner.className='snap-mastery-banner';
+      banner.textContent='🎉 MASTERED!';
+      note.appendChild(banner);
+      setTimeout(()=>banner.remove(),2500);
+    }
+    /* 10번 쓰기 = sayCount 증가 효과 */
+    const nb=db.get('notebook',[]);
+    if(nb[SnapReview.idx]){
+      nb[SnapReview.idx].sayCount=(nb[SnapReview.idx].sayCount||0)+1;
+      nb[SnapReview.idx].lastReview=new Date().toISOString();
+      updateStage(nb[SnapReview.idx]);
+      db.set('notebook',nb);
+      renderNotebook();
+    }
+    SnapReview.writeCount=0;
+    clearSnapNote();
+  }
+}
+
 function renderNotebook(){
   const nb=db.get('notebook',[]);
   const nbList=document.getElementById('notebookList');
@@ -1105,29 +1707,10 @@ function renderNotebook(){
   const total=nb.length;
   const masteredPct=total?Math.round(counts.mastered/total*100):0;
 
+  /* v6.4: "나의 표현 정원" 섹션 숨김 (데이터는 유지, UI만 제거) */
   if(summary){
-    summary.style.display='block';
-    summary.innerHTML=`
-      <div class="garden-header">
-        <div class="garden-title">🌱 나의 표현 정원</div>
-        <div class="garden-count">${total}개</div>
-      </div>
-      <div class="garden-stages">
-        <span>🌱 ${counts.seed}</span>
-        <span>🌿 ${counts.sprout}</span>
-        <span>🌳 ${counts.tree}</span>
-        <span>🎬 ${counts.live}</span>
-        <span>🌸 ${counts.mastered}</span>
-      </div>
-      <div class="garden-progress"><div class="garden-progress-fill" style="width:${masteredPct}%"></div></div>
-      <div class="garden-actions">
-        <button class="garden-btn review" id="btnQuickReview">📖 퀵 리뷰</button>
-        <button class="garden-btn scenario" id="btnScenario">🎬 실전 대화</button>
-        <button class="garden-btn share" id="btnShareGarden">📤 공유</button>
-      </div>`;
-    document.getElementById('btnQuickReview').addEventListener('click',startQuickReview);
-    document.getElementById('btnScenario').addEventListener('click',openScenarioPicker);
-    document.getElementById('btnShareGarden').addEventListener('click',shareGarden);
+    summary.style.display='none';
+    summary.innerHTML='';
   }
 
   nbList.innerHTML=nb.slice(0,30).map(n=>{
@@ -1367,6 +1950,9 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id+'Screen').classList.add('active');
   document.getElementById('contentTabs').style.display=(id==='feed')?'flex':'none';
+  /* v6.4: 나의 방에서는 헤더 숨김 (공간 확보) */
+  const header=document.getElementById('header');
+  if(header)header.style.display=(id==='room')?'none':'flex';
   /* HoF sign only visible on feed */
   const sign=document.getElementById('hofSign');
   if(sign)sign.classList.toggle('show',id==='feed');
@@ -1374,7 +1960,7 @@ function showScreen(id){
   if(id!=='feed'&&hofRotationTimer){clearInterval(hofRotationTimer);hofRotationTimer=null}
 }
 document.querySelectorAll('.ctab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.ctab').forEach(x=>x.classList.remove('active'));t.classList.add('active');S.tab=t.dataset.tab;renderFeed()})});
-document.querySelectorAll('.nav-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.screen==='feed')showScreen('feed');if(b.dataset.screen==='room'){renderRoom();showScreen('room')}cleanupPlayer()})});
+document.querySelectorAll('.nav-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.screen==='feed'){stopSnapReview();showScreen('feed')}if(b.dataset.screen==='room'){renderRoom();showScreen('room')}cleanupPlayer()})});
 
 /* ═══════════════════════════════════════
  * YOUTUBE PLAYER
@@ -1585,7 +2171,12 @@ function renderListen(){
   document.getElementById('brickCount').textContent='· 핵심어 '+S.shownHints.length+'/'+totalChunks;
   document.getElementById('understandFill').style.height=S.understand+'%';
   document.getElementById('understandPct').textContent=S.understand+'%';
-  document.getElementById('listenNext').disabled=(S.understand<60);
+  /* 언제든 따라 읽기 가능 · 힌트만 업데이트 */
+  const hint=document.getElementById('listenHintRow');
+  if(hint){
+    if(S.understand<60) hint.textContent='💡 자신 있으면 바로 "따라 읽기" 눌러도 돼!';
+    else hint.textContent='✅ 준비 완료! "따라 읽기"로 진행하자!';
+  }
 
   const panel=document.getElementById('rightPanel');
   const stack=document.getElementById('hintStack');
@@ -1617,9 +2208,9 @@ document.getElementById('listenReplay').addEventListener('click',()=>{
   if(ytPlayer&&ytPlayer.seekTo){ytPlayer.seekTo(0);ytPlayer.playVideo()}
 });
 
-/* Next button: go to Shadow step */
+/* Next button: go to Shadow step · 언제든 진행 가능 */
 document.getElementById('listenNext').addEventListener('click',()=>{
-  if(S.understand>=60) goStep(1);
+  goStep(1);
 });
 
 /* ═══════════════════════════════════════
@@ -1853,6 +2444,16 @@ document.getElementById('shadowSave').addEventListener('click',()=>{
     useCount:0,             /* how many times used in scenario */
     lastReview:null
   });
+  /* v6.4 · 100개 초과 시 가장 오래된 (마스터 안 된) 것 제거 */
+  if(nb.length>100){
+    let removeIdx=-1;
+    /* 뒤에서부터 · mastered 아닌 것 찾기 */
+    for(let i=nb.length-1;i>=1;i--){
+      if(nb[i].stage!=='mastered'){removeIdx=i;break;}
+    }
+    if(removeIdx===-1)removeIdx=nb.length-1;
+    nb.splice(removeIdx,1);
+  }
   db.set('notebook',nb);
   const btn=document.getElementById('shadowSave');
   btn.classList.add('saved');
@@ -2471,6 +3072,7 @@ document.querySelectorAll('.speed-btn').forEach(b=>{b.addEventListener('click',(
  * ═══════════════════════════════════════ */
 /* Inline Home buttons — all instances use common handler */
 function goHome(){
+  stopSnapReview();
   cleanupPlayer();
   showScreen('feed');
   document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
