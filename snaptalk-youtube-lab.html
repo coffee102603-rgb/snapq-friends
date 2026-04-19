@@ -1391,6 +1391,51 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes scaleIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .fade-up{animation:fadeUp .4s ease both}.scale-in{animation:scaleIn .5s ease both}
+
+/* ═══════════════════════════════════════ */
+/* v7.5: 🎬 CINEMA MODE - 영화관 몰입 */
+/* ═══════════════════════════════════════ */
+
+/* 시네마 헤더 (LIVE + 진행도) */
+.cinema-header{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:linear-gradient(180deg,#0a0a0f,#15151f);border-bottom:1px solid rgba(255,215,0,.15)}
+.cinema-live{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:#ff3b30;letter-spacing:1px}
+.cinema-live::before{content:'';width:8px;height:8px;background:#ff3b30;border-radius:50%;animation:livePulse 1.2s ease-in-out infinite;box-shadow:0 0 10px #ff3b30}
+.cinema-title{font-size:14px;font-weight:800;color:#00e5a0;letter-spacing:.5px}
+.cinema-progress{font-size:13px;font-weight:700;color:#ffd700;font-variant-numeric:tabular-nums}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.9)}}
+
+/* 영상 영역 - 골드 글로우! */
+.cinema-video-box{margin:8px 16px 4px;border-radius:16px;border:1px solid rgba(255,215,0,.3);box-shadow:0 0 30px rgba(255,215,0,.08),inset 0 0 0 1px rgba(255,255,255,.05);overflow:hidden;background:#000;position:relative}
+.cinema-video-box::after{content:'';position:absolute;inset:0;border-radius:16px;pointer-events:none;box-shadow:inset 0 0 40px rgba(0,0,0,.5)}
+
+/* 대본 카드 */
+.cinema-script{margin:12px 16px;padding:16px 20px;background:rgba(26,26,46,.6);backdrop-filter:blur(20px);border-radius:16px;border:1px solid rgba(139,92,246,.15);text-align:center}
+.cinema-script .shadow-en{font-size:22px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:10px;letter-spacing:-.3px}
+.cinema-script .shadow-ko{font-size:15px;color:#a1a1aa;line-height:1.4;margin-bottom:8px}
+.cinema-script .shadow-phonetic{font-size:14px;color:#a78bfa;font-weight:600;padding:8px 14px;background:rgba(139,92,246,.12);border-radius:10px;display:none;margin-top:6px;animation:phoneticFade .3s ease}
+.cinema-script .shadow-phonetic.show{display:block}
+@keyframes phoneticFade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+
+/* 버튼 영역 - 시네마 스타일! */
+.cinema-actions{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:12px 16px;margin-top:8px}
+.cinema-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:72px;padding:8px 4px;background:rgba(139,92,246,.1);border:1.5px solid rgba(139,92,246,.25);border-radius:14px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.cinema-btn:active{transform:scale(.95);background:rgba(139,92,246,.25)}
+.cinema-btn-icon{font-size:24px;line-height:1;filter:drop-shadow(0 0 4px rgba(139,92,246,.3))}
+.cinema-btn-label{font-size:11px;font-weight:700;color:#c4b5fd;letter-spacing:.2px}
+.cinema-btn.active{background:rgba(139,92,246,.35);border-color:#a78bfa;box-shadow:0 0 15px rgba(139,92,246,.4)}
+.cinema-btn.active .cinema-btn-label{color:#fff}
+
+/* 인디케이터 (문장 진행도 - 좌석표처럼!) */
+.cinema-indicator{display:flex;align-items:center;justify-content:center;gap:5px;padding:10px 16px;flex-wrap:wrap}
+.cinema-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s}
+.cinema-dot.done{background:#a78bfa;box-shadow:0 0 6px rgba(139,92,246,.6)}
+.cinema-dot.current{width:10px;height:10px;background:#ffd700;box-shadow:0 0 12px #ffd700;animation:dotPulse 1.5s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+
+/* 전체 배경 시네마 */
+body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !important}
+
+/* ═══════════════════════════════════════ */
 </style>
 </head>
 <body>
@@ -1479,13 +1524,13 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="shadow-sync-bar"><div class="shadow-sync-fill" id="shadowSyncFill" style="width:0%"></div></div>
         <div class="shadow-hint" id="shadowHint">🎤 버튼을 눌러 말해봐! 90% 넘으면 다음으로</div>
       </div>
-      <div class="shadow-controls">
+      <div class="shadow-controls cinema-actions">
         <button class="shadow-listen-btn" id="shadowListen" title="듣기" style="display:none;">🔊</button>
-        <button class="shadow-listen-btn" id="shadowPhonetic" title="발음 보기" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:#a78bfa;font-weight:700;font-size:14px;min-width:45px;">가</button>
+        <button class="cinema-btn" id="shadowPhonetic" title="발음 보기"><span class="cinema-btn-icon">가</span><span class="cinema-btn-label">발음</span></button>
         <button class="shadow-mic" id="shadowMic" style="display:none;">🎤</button>
-        <button class="shadow-save" id="shadowSave" title="담기">💾</button>
-        <button class="shadow-skip" id="shadowSkip" title="건너뛰기">⏭</button>
-        <button class="home-btn-inline" title="홈으로">🏠</button>
+        <button class="cinema-btn" id="shadowSave" title="내 방에 저장"><span class="cinema-btn-icon">💾</span><span class="cinema-btn-label">내 방에</span></button>
+        <button class="cinema-btn" id="shadowSkip" title="다음 문장"><span class="cinema-btn-icon">⏭</span><span class="cinema-btn-label">다음</span></button>
+        <button class="cinema-btn" id="shadowHome" title="홈으로"><span class="cinema-btn-icon">🏠</span><span class="cinema-btn-label">돌아가기</span></button>
       </div>
     </div>
 
@@ -3150,12 +3195,12 @@ function renderShadow(){
   if(len>45)enEl.classList.add('very-long');
   else if(len>30)enEl.classList.add('long');
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
-  /* v7.4: 문장 바뀌면 phonetic 자동 업데이트 + 숨기기 */
+  /* v7.5: 발음 토글 유지 - 새 문장도 자동 업데이트 */
   const pEl=document.getElementById('shadowPhoneticText');
-  const pBtn=document.getElementById('shadowPhonetic');
-  if(pEl){pEl.style.display='none';pEl.textContent='';}
-  if(pBtn){pBtn.style.background='rgba(139,92,246,.15)';pBtn.style.color='#a78bfa';}
-  phoneticVisible=false;
+  if(pEl && phoneticVisible){
+    if(s && s.phonetic){pEl.textContent=s.phonetic;pEl.style.display='block';}
+    else{pEl.textContent='(발음 표기 준비중)';pEl.style.display='block';}
+  }
 
   renderShadowSync();
   document.getElementById('shadowHint').textContent='🎤 버튼을 눌러 말해봐! 90% 넘으면 다음으로';
@@ -4880,6 +4925,8 @@ function goHome(){
   document.querySelector('.nav-btn[data-screen="feed"]').classList.add('active');
 }
 document.querySelectorAll('.home-btn-inline').forEach(b=>b.addEventListener('click',goHome));
+/* v7.5: shadowHome cinema-btn 클릭 */
+(function(){var sh=document.getElementById('shadowHome');if(sh)sh.addEventListener('click',goHome);})();
 
 /* ═══════════════════════════════════════
  * PAINT PALETTE — Finger Drawing Cover
