@@ -1391,6 +1391,28 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes scaleIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .fade-up{animation:fadeUp .4s ease both}.scale-in{animation:scaleIn .5s ease both}
+
+/* ═══ v7.1: Shadow 모드 버튼 리뉴얼 ═══ */
+.shadow-hint-box{padding:12px 20px;text-align:center;background:rgba(0,229,160,.05);border:1px solid rgba(0,229,160,.15);border-radius:16px;margin:12px 16px}
+.shadow-hint-box .shadow-hint{color:var(--accent);font-size:13px;font-weight:600;opacity:.9}
+
+.shadow-controls-v2{display:flex;gap:8px;padding:16px;align-items:center}
+
+.btn-phonetic{flex:1;min-height:52px;display:flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;background:rgba(139,92,246,.1);border:2px solid rgba(139,92,246,.4);border-radius:26px;color:#a78bfa;font-weight:700;font-size:14px;cursor:pointer;transition:all .2s}
+.btn-phonetic-icon{width:28px;height:28px;border:2px solid currentColor;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900}
+.btn-phonetic-label{font-size:14px}
+.btn-phonetic:active,.btn-phonetic.active{background:rgba(139,92,246,.25);border-color:#a78bfa;color:#fff;box-shadow:0 0 20px rgba(139,92,246,.4)}
+
+.btn-icon-v2{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:22px;cursor:pointer;transition:all .2s;border:2px solid rgba(59,130,246,.4);background:rgba(59,130,246,.08);color:#60a5fa}
+.btn-icon-v2:active{transform:scale(.95);background:rgba(59,130,246,.2)}
+.btn-icon-v2.btn-next{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.08);color:#a78bfa}
+.btn-icon-v2.btn-next:active{background:rgba(139,92,246,.25)}
+
+/* 발음 표기 표시 */
+.shadow-phonetic{color:#a78bfa;font-size:16px;font-weight:600;text-align:center;margin-top:8px;padding:8px 16px;background:rgba(139,92,246,.08);border-radius:12px;display:none}
+.shadow-phonetic.show{display:block;animation:phoneticFadeIn .3s ease}
+@keyframes phoneticFadeIn{from{opacity:0;transform:translateY(-5px)}to{opacity:1;transform:translateY(0)}}
+/* ═══ END v7.1 ═══ */
 </style>
 </head>
 <body>
@@ -1416,8 +1438,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div id="paintTools">
           <button class="paint-btn brush active" id="paintBrush" title="칠하기">🖌</button>
           <button class="paint-btn eraser" id="paintEraser" title="지우개">🧽</button>
-        </div>
-      </div>
     </div>
     <div id="ytContainer">
       <div id="heatFrame"></div>
@@ -1431,7 +1451,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
           <circle class="srg-ring-fill" id="srgRingFill" cx="30" cy="30" r="24" stroke-dasharray="151" stroke-dashoffset="151"/>
         </svg>
         <div class="srg-num" id="srgNum">0</div>
-      </div>
       <div class="perfect-banner" id="perfectBanner">🔥 PERFECT! 🔥</div>
     </div>
     <div id="rightPanel">
@@ -1441,8 +1460,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="understand-gauge">
           <div class="understand-gauge-fill" id="understandFill" style="height:10%"></div>
           <div class="understand-gauge-pct" id="understandPct">10%</div>
-        </div>
-      </div>
     </div>
     <button class="sound-prompt" id="soundPrompt">🔊</button>
     <div id="coverContainer"></div>
@@ -1454,8 +1471,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       <div class="listen-actions">
         <button class="listen-replay" id="listenReplay">🔁 다시 듣기</button>
         <button class="listen-next" id="listenNext">따라 읽기 →</button>
-        <button class="home-btn-inline" title="홈으로">🏠</button>
-      </div>
+        <button class="home-btn-inline" id="shadowHome" title="홈">🏠</button>
       <div class="listen-hint-row" id="listenHintRow" style="font-size:11px;color:var(--tx2);text-align:center;margin-top:4px;opacity:.75">💡 자신 있으면 바로 "따라 읽기" 눌러도 돼!</div>
     </div>
 
@@ -1464,27 +1480,19 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       <div class="shadow-moment" id="shadowMoment">
         <div class="shadow-moment-label" id="shadowMomentLabel">📸 영상의 그 순간</div>
         <button class="shadow-moment-playbtn" id="shadowMomentPlay" title="이 구간 듣기">▶</button>
-      </div>
       <div class="shadow-progress">🎤 <span class="cur" id="shadowProgress">1</span> / <span id="shadowTotal">4</span></div>
       <div class="shadow-en-box">
         <div class="shadow-en" id="shadowEn"></div>
         <div class="shadow-ko" id="shadowKo"></div>
-      </div>
-      <div class="shadow-sync-box">
-        <div class="shadow-sync-row">
-          <span class="shadow-sync-label">🎯 싱크로율</span>
-          <span class="shadow-sync-pct" id="shadowSyncPct">0%</span>
-        </div>
-        <div class="shadow-sync-bar"><div class="shadow-sync-fill" id="shadowSyncFill" style="width:0%"></div></div>
-        <div class="shadow-hint" id="shadowHint">🎤 버튼을 눌러 말해봐! 90% 넘으면 다음으로</div>
-      </div>
+        <div class="shadow-phonetic" id="shadowPhoneticText"></div>
       <div class="shadow-controls">
-        <button class="shadow-listen-btn" id="shadowListen" title="듣기">🔊</button>
-        <button class="shadow-mic" id="shadowMic">🎤</button>
+        <button class="btn-phonetic" id="shadowPhonetic" title="발음 보기">
+          <span class="btn-phonetic-icon">가</span>
+          <span class="btn-phonetic-label">발음 보기</span>
+        </button>
         <button class="shadow-save" id="shadowSave" title="담기">💾</button>
         <button class="shadow-skip" id="shadowSkip" title="건너뛰기">⏭</button>
-        <button class="home-btn-inline" title="홈으로">🏠</button>
-      </div>
+        <button class="home-btn-inline" id="shadowHome" title="홈">🏠</button>
     </div>
 
     <!-- STEP 3: DUB CHALLENGE -->
@@ -1501,38 +1509,28 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
             <div class="booth-info">
               <div class="booth-name">FIRST TAKE</div>
               <div class="booth-heat">1차 녹음</div>
-            </div>
-            <div class="booth-footer"><div class="booth-footer-fill"></div></div>
-          </div>
-          <div class="booth normal" data-diff="normal">
+                <div class="booth-footer"><div class="booth-footer-fill"></div></div>
+            <div class="booth normal" data-diff="normal">
             <span class="booth-led"></span>
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
               <div class="booth-name">REHEARSAL</div>
               <div class="booth-heat">리허설</div>
-            </div>
-            <div class="booth-footer"><div class="booth-footer-fill"></div></div>
-          </div>
-          <div class="booth hard" data-diff="hard">
+                <div class="booth-footer"><div class="booth-footer-fill"></div></div>
+            <div class="booth hard" data-diff="hard">
             <span class="booth-led"></span>
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
               <div class="booth-name">ON AIR</div>
               <div class="booth-heat">본방 녹음 🔥</div>
-            </div>
-            <div class="booth-footer"><div class="booth-footer-fill"></div></div>
-          </div>
-        </div>
-        <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
+                <div class="booth-footer"><div class="booth-footer-fill"></div></div>
+          <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
           <span id="boothLabel">🟢 Easy · 영어+한글 모두 보임</span>
-        </div>
         <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
           <button class="listen-next" id="dubStartBtn" style="flex:1">▶ 부스 입장</button>
-          <button class="home-btn-inline" title="홈으로">🏠</button>
-        </div>
-      </div>
+          <button class="home-btn-inline" id="shadowHome" title="홈">🏠</button>
 
       <!-- Main studio dub UI: shown after picker transition -->
       <div id="dubMain" style="display:none">
@@ -1540,7 +1538,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
           <div class="studio-rec"><span class="studio-rec-dot"></span>REC</div>
           <span class="studio-booth-label" id="studioBoothLabel">● EASY BOOTH</span>
           <span class="studio-take" id="studioTake">TAKE 1</span>
-        </div>
         <!-- Karaoke-style rolling 2-sentence subtitles -->
         <div class="karaoke-subs" id="karaokeSubs"></div>
         <div class="dub-timeline" id="dubTimeline"></div>
@@ -1549,9 +1546,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="dub-bottom">
           <button class="dub-retry" id="dubRetry">🎬 더빙실</button>
           <button class="dub-mic-btn" id="dubMic">🎤</button>
-          <button class="home-btn-inline" title="홈으로">🏠</button>
-        </div>
-      </div>
+          <button class="home-btn-inline" id="shadowHome" title="홈">🏠</button>
     </div>
 
     <!-- STEP 4: SHARE -->
@@ -1561,22 +1556,19 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <button class="share-top-home" id="shareTopHome" title="홈으로">🏠</button>
         <div class="share-top-label">🏆 결과</div>
         <div class="share-top-spacer"></div>
-      </div>
       <!-- Result reveal -->
       <div id="resultReveal">
         <!-- Phase 1: "측정 중..." loading -->
         <div class="result-loading" id="resultLoading">
           <div class="result-loading-text">🎤 측정 중...</div>
           <div class="result-loading-bar"><div class="result-loading-fill"></div></div>
-        </div>
         <!-- Phase 2: v6.16 COMPACT RESULT -->
         <div class="result-main" id="resultMain" style="display:none">
           <!-- 영상 제목 + 부스 한 줄 -->
           <div class="result-header-compact">
             <div class="result-title-compact" id="resultTitle"></div>
             <div class="result-booth-badge" id="resultBoothBadge">HARD BOOTH</div>
-          </div>
-          <!-- 점수/등급/별 한 줄 컴팩트! -->
+            <!-- 점수/등급/별 한 줄 컴팩트! -->
           <div class="score-hero">
             <div class="score-hero-ring">
               <svg viewBox="0 0 120 120" width="100" height="100">
@@ -1584,36 +1576,28 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
                 <circle class="bsr-fill" id="bigScoreRing" cx="60" cy="60" r="52" stroke-dasharray="327" stroke-dashoffset="327"/>
               </svg>
               <div class="score-hero-num" id="bigScoreNum">0</div>
-            </div>
-            <div class="score-hero-info">
+                <div class="score-hero-info">
               <div class="big-rank" id="bigRank"></div>
               <div class="big-rank-desc" id="bigRankDesc"></div>
               <div class="result-stars" id="resultStars"></div>
-            </div>
-          </div>
-          <!-- v6.16: 피드백 멘트 (음악 감지 등) -->
+                <!-- v6.16: 피드백 멘트 (음악 감지 등) -->
           <div class="result-feedback" id="resultFeedback"></div>
           <!-- 2x2 그리드 세부 점수 -->
           <div class="score-breakdown-grid" id="scoreBreakdown"></div>
-        </div>
-      </div>
       <!-- 꾸미기 = 주인공 CTA -->
       <div class="share-decorate-row" id="shareDecorateRow" style="display:none">
         <button class="share-btn-decorate" id="shareDecorate">🎨 꾸며서 친구한테 자랑!</button>
         <button class="share-btn-submit" id="shareSubmit" style="display:none">🏆 출품하기</button>
-      </div>
       <div class="share-btn-encourage" id="shareEncourage" style="display:none"></div>
       <!-- v6.16: 작은 보조 버튼 3개 한 줄 -->
       <div class="share-actions-compact">
         <button class="share-btn-mini" id="shareRetry">🎤 다시</button>
         <button class="share-btn-mini" id="shareSave">💾 저장</button>
         <button class="share-btn-mini" id="shareHome">🏠 홈</button>
-      </div>
       <!-- Duet 숨김 (숨겨진 상태로 파형 계산만) -->
       <div class="duet-compare" style="display:none">
         <canvas class="duet-wave" id="duetWaveOrig" width="300" height="60"></canvas>
         <canvas class="duet-wave" id="duetWaveMine" width="300" height="60"></canvas>
-      </div>
     </div>
   </div>
 
@@ -1631,7 +1615,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <!-- v7.0: 스티커 6슬롯 + 코스프레 배너 + 뱃지 모두 제거 (깔끔!) -->
         <!-- 📺 TV 성우 포맷: 오른쪽 하단 고정 원형 -->
         <button class="deco-me-slot pos-right size-m" id="decoMeSlot" title="성우 얼굴 추가"><span class="deco-me-slot-empty-icon">📺</span></button>
-      </div>
     </div>
     <div class="deco-tabs">
       <button class="deco-tab active" data-deco-tab="frame">🖼️ 액자</button>
@@ -1656,7 +1639,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       <div class="deco-done-preview" id="decoDonePreview" style="display:none">
         <div class="deco-done-preview-thumb" id="decoDonePreviewThumb"></div>
         <div class="deco-done-preview-play"></div>
-      </div>
       
       <!-- v7.0: AI 튜터 제거됨 (깔끔!) -->
       
@@ -1667,7 +1649,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       <div class="deco-done-btn-group">
         <button class="deco-done-btn-share" id="decoDoneShareKakao">💬 카톡 공유</button>
         <button class="deco-done-btn-save" id="decoDoneDownload">💾 폰에 저장</button>
-      </div>
       
       <button class="deco-done-btn" id="decoDoneHome">🏠 홈으로</button>
       <button class="deco-done-btn-sub" id="decoDoneRoom">📁 나의 방 보기</button>
@@ -1702,7 +1683,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <span>🔄 Snap Review</span>
         <span style="font-size:10px;color:var(--tx3);font-weight:500">· 3초 순환</span>
         <span id="snapReviewCountTop" style="font-size:11px;color:var(--accent);font-weight:800;margin-left:auto">0 / 0</span>
-      </div>
       <div id="snapReviewContainer"></div>
     </div>
 
@@ -1710,7 +1690,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
     <div class="gallery-section" id="gallerySection">
       <div class="gallery-header">
         <div class="gallery-title">🎬 내 더빙 다시 보기 <span class="gallery-count" id="galleryCount"></span></div>
-      </div>
       <div id="galleryContainer"></div>
     </div>
 
@@ -1739,12 +1718,10 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="me-photo-btn-icon">📸</div>
         <div class="me-photo-btn-label">사진 찍기</div>
         <div class="me-photo-btn-hint">카메라로 바로</div>
-      </div>
       <div class="me-photo-btn" id="mePhotoUpload">
         <div class="me-photo-btn-icon">📁</div>
         <div class="me-photo-btn-label">앨범에서</div>
         <div class="me-photo-btn-hint">갤러리 선택</div>
-      </div>
     </div>
     
     <div class="me-picker-section-title">🎭 또는 친구 캐릭터 선택</div>
@@ -2034,7 +2011,6 @@ function renderSnapStudio(){
     container.innerHTML=`
       <div class="studio-preview-header">
         <span class="studio-preview-count">🏆 ${best.length} · 🕐 ${recent.length}</span>
-      </div>
       ${preview.map(r=>renderStudioCard(r,'preview')).join('')}
       ${moreCount>0?`<button class="studio-open-btn" onclick="openSnapDrawer()">서랍 열기 (+${moreCount}개)</button>`:`<button class="studio-open-btn" onclick="openSnapDrawer()">서랍 열기 (전체 보기)</button>`}
     `;
@@ -2071,16 +2047,13 @@ function renderStudioCard(rec,mode){
         <span class="studio-score" style="color:${gradeColor}">${icon} ${rec.score}%</span>
         <span class="studio-grade" style="color:${gradeColor}">${rec.grade}</span>
         <span class="studio-title">${rec.title||'녹음'}</span>
-      </div>
       ${mode==='full'?`
         <div class="studio-card-row2">
           <span class="studio-date">${dateStr} · ${rec.difficulty||'-'}</span>
           <div class="studio-actions">
             ${rec.audio?`<button class="studio-act" onclick="playSnapRecord('${rec.id}')" title="재생">▶</button>`:''}
             ${!isLegend?`<button class="studio-act" onclick="deleteSnapRecord('${rec.id}','${SnapStudio.activeTab}')" title="삭제">🗑</button>`:'<span class="legend-lock" title="LEGEND은 영구 보존">🔒</span>'}
-          </div>
-        </div>
-      `:''}
+        `:''}
     </div>
   `;
 }
@@ -2198,23 +2171,18 @@ function renderSnapReview(){
         <div style="font-size:13px;color:var(--tx);font-weight:800;margin-bottom:4px">아직 담은 문장이 없어요</div>
         <div style="font-size:11px;color:var(--tx2);line-height:1.5;margin-bottom:14px">
           영상 따라 읽기 하다가 💾 담기 버튼 누르면<br>여기에 문장이 쌓여요!
-        </div>
         
         <!-- 예시 카드 (샘플 체험) -->
         <div style="background:var(--sf);border:1px solid var(--accent);border-radius:12px;padding:14px;margin-top:12px;text-align:left">
           <div style="font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-bottom:6px">👀 예시 미리보기</div>
           <div style="font-size:15px;font-weight:800;color:var(--tx);line-height:1.35;margin-bottom:4px">
             What do you do <span style="background:rgba(255,200,66,.35);padding:0 3px;border-radius:3px;color:#ffd742">for a living</span>?
-          </div>
-          <div style="font-size:12px;color:var(--tx2);line-height:1.4">
+            <div style="font-size:12px;color:var(--tx2);line-height:1.4">
             <span style="background:rgba(255,200,66,.2);padding:0 2px;border-radius:2px;color:#c9a543">직업</span>이 뭐예요?
-          </div>
-        </div>
-        
+          
         <button id="snapReviewGoStudy" style="margin-top:14px;background:var(--accent);color:#000;border:none;padding:10px 20px;border-radius:12px;font-size:12px;font-weight:900;cursor:pointer;transition:transform .15s">
           🎬 영상 보러 가기
         </button>
-      </div>
     `;
     /* 홈으로 이동 버튼 */
     const goBtn=document.getElementById('snapReviewGoStudy');
@@ -2396,7 +2364,6 @@ function renderSnapNote(){
       <div class="snap-note-tools-inline">
         <button class="snap-note-tool active" onclick="setSnapTool('pencil')">✏️ 연필</button>
         <button class="snap-note-tool" onclick="clearSnapNote()">🔄 지우기</button>
-      </div>
     </div>
     <canvas id="snapNoteCanvas" width="300" height="240"></canvas>
   `;
@@ -2517,23 +2484,18 @@ function renderNotebook(){
       <div class="note-stage" style="color:${stage.color}">
         <span class="note-stage-icon">${stage.icon}</span>
         <span class="note-stage-label">${stage.label} · Day ${days}</span>
-      </div>
       <div class="note-hl">┃ ${n.highlight||''}</div>
       <div class="note-full">
         <div class="note-en">"${highlighted}"</div>
         <div class="note-ko">💭 ${highlightKo(n.ko,n.koHighlight)}</div>
-      </div>
       <div class="note-progress">
         <span>🎤 ${sayPips} ${n.sayCount}/3</span>
         <span>🎬 ${usePips} ${n.useCount}/3</span>
-      </div>
       <div class="note-footer">
         <span class="note-source">📹 ${n.shortTitle}</span>
         <div class="note-card-actions">
           <button class="note-action-btn" data-act="say" data-id="${n.id}">🎤</button>
           <button class="note-action-btn" data-act="delete" data-id="${n.id}">🗑</button>
-        </div>
-      </div>
     </div>`;
   }).join('');
 
@@ -2588,7 +2550,6 @@ function renderFeed(){
         <div class="featured-header">
           <div class="featured-title"><span class="featured-title-emoji">🏆</span>이번 주 대상</div>
           <div class="featured-subtitle">좋아요 TOP</div>
-        </div>
         <div class="featured-hero" data-short-id="${hero.id}">
           <div class="featured-hero-thumb" style="background-image:url('https://img.youtube.com/vi/${hero.id}/hqdefault.jpg')">
             <span class="featured-hero-crown">👑 1위</span>
@@ -2599,11 +2560,7 @@ function renderFeed(){
               <div class="featured-hero-meta">
                 <span class="featured-hero-cat-badge">${hero.catIcon} ${hero.diff}</span>
                 <span>${hero.sentences.length}문장</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
+                  `;
 
       if(runners.length>0){
         html+='<div class="featured-runners">';
@@ -2616,10 +2573,7 @@ function renderFeed(){
                 <span class="featured-runner-likes"><span class="heart">♥</span>${rLikes>=1000?Math.floor(rLikes/1000)+'k':rLikes}</span>
                 <div class="featured-runner-info">
                   <div class="featured-runner-title">${r.title}</div>
-                </div>
-              </div>
-            </div>
-          `;
+                            `;
         });
         html+='</div>';
       }
@@ -2646,7 +2600,6 @@ function renderFeed(){
       <div class="cat-header">
         <div class="cat-title"><span class="cat-title-emoji">${cat.emoji}</span>${cat.title}</div>
         <div class="cat-count">${items.length}개</div>
-      </div>
     `;
 
     /* Content */
@@ -2664,10 +2617,7 @@ function renderFeed(){
               <div class="cat-card-info">
                 <div class="cat-card-title">${s.title}</div>
                 <div class="cat-card-meta"><span>${s.sentences.length} 문장</span><span>🎤 ${s.dubs>=1000?Math.floor(s.dubs/1000)+'k':s.dubs}</span></div>
-              </div>
-            </div>
-          </div>
-        `;
+                    `;
       });
       /* "더보기" card only if we have items */
       if(items.length>=3){
@@ -2809,8 +2759,6 @@ function showAudioGate(short){
         <div class="audio-gate-hint">
           📱 무음 모드면 소리가 안 나요!<br>
           <span style="opacity:.7">(사이드 스위치 / 미디어 볼륨 확인)</span>
-        </div>
-      </div>
     `;
     document.getElementById('app').appendChild(gate);
     document.getElementById('audioGateStart').addEventListener('click',activateAudioAndStart);
@@ -3192,7 +3140,23 @@ function renderShadowSync(){
 }
 
 /* Listen again */
-document.getElementById('shadowListen').addEventListener('click',()=>{const s=S.short.sentences[S.shadowIdx];if(s)speak(s.en)});
+/* v7.1: 발음 보기 토글 */
+let phoneticMode=false;
+document.getElementById('shadowPhonetic').addEventListener('click',()=>{
+  phoneticMode=!phoneticMode;
+  const btn=document.getElementById('shadowPhonetic');
+  const pText=document.getElementById('shadowPhoneticText');
+  btn.classList.toggle('active',phoneticMode);
+  if(phoneticMode){
+    const s=S.short.sentences[S.shadowIdx];
+    if(s&&s.phonetic){pText.textContent=s.phonetic;pText.classList.add('show');}
+    else{pText.textContent='(발음 표기 준비중)';pText.classList.add('show');}
+  }else{
+    pText.classList.remove('show');
+  }
+});
+/* v7.1: 홈 버튼 이벤트 */
+document.getElementById('shadowHome').addEventListener('click',()=>{cleanupPlayer();showScreen('feed')});
 
 /* Mic: record → measure → update sync% */
 document.getElementById('shadowMic').addEventListener('click',async()=>{
@@ -3957,22 +3921,18 @@ function renderShare(){
         <div class="sbg-label">🎤 목소리 활동</div>
         <div class="sbg-value">${bd.voiceRatio||0}%</div>
         <div class="sbg-bar"><div class="sbg-fill" style="width:${bd.voiceRatio||0}%"></div></div>
-      </div>
       <div class="sbg-item">
         <div class="sbg-label">⏱ 타이밍 싱크</div>
         <div class="sbg-value">${bd.timingMatch||0}%</div>
         <div class="sbg-bar"><div class="sbg-fill" style="width:${bd.timingMatch||0}%"></div></div>
-      </div>
       <div class="sbg-item">
         <div class="sbg-label">📊 음량 변화</div>
         <div class="sbg-value">${bd.volumeConsistency||0}%</div>
         <div class="sbg-bar"><div class="sbg-fill" style="width:${bd.volumeConsistency||0}%"></div></div>
-      </div>
       <div class="sbg-item">
         <div class="sbg-label">✅ 완주도</div>
         <div class="sbg-value">${bd.completionBonus||0}%</div>
         <div class="sbg-bar"><div class="sbg-fill" style="width:${bd.completionBonus||0}%"></div></div>
-      </div>
     `;
     document.getElementById('scoreBreakdown').innerHTML=sbHtml;
     
@@ -4208,9 +4168,7 @@ function renderDecoOptions(){
             <div style="flex:1;min-width:0">
               <div style="font-size:11px;font-weight:800;color:var(--accent)">📺 성우 ${decoState.me.type==='photo'?'사진':'캐릭터'}</div>
               <div style="font-size:9px;color:var(--tx3)">TV처럼 오른쪽 하단에 표시</div>
-            </div>
-          </div>
-          
+                
           <!-- 크기 선택 -->
           <div class="me-adjust-row">
             <div class="me-adjust-label">📏 크기</div>
@@ -4218,15 +4176,11 @@ function renderDecoOptions(){
               <button class="me-adjust-btn ${decoState.meSize==='s'?'active':''}" data-size="s"><div class="me-adjust-btn-icon" style="font-size:11px">●</div>작게</button>
               <button class="me-adjust-btn ${decoState.meSize==='m'?'active':''}" data-size="m"><div class="me-adjust-btn-icon" style="font-size:15px">●</div>중간</button>
               <button class="me-adjust-btn ${decoState.meSize==='l'?'active':''}" data-size="l"><div class="me-adjust-btn-icon" style="font-size:22px">●</div>크게</button>
-            </div>
-          </div>
-          
+                
           <div class="me-adjust-hint">
             💡 TV에서 성우 얼굴이 뜨는 느낌으로!
-          </div>
-          
+            
           <button class="me-adjust-change-btn" id="meChangeBtn">🔄 사진/캐릭터 변경</button>
-        </div>
       `;
       /* 크기 버튼 */
       grid.querySelectorAll('.me-adjust-btn[data-size]').forEach(btn=>{
@@ -5086,7 +5040,6 @@ function renderQuickReview(){
       <div class="qr-card">
         <div style="font-size:48px;margin-bottom:8px">${s.correct===s.items.length?'🏆':s.correct>=2?'⭐':'💪'}</div>
         <div style="font-size:14px;color:var(--tx2)">${s.correct===s.items.length?'완벽해요!':s.correct>=2?'잘했어요!':'다시 도전!'}</div>
-      </div>
       <div class="qr-actions">
         <button class="qr-btn secondary" onclick="qrCloseNow()">닫기</button>
         <button class="qr-btn primary" onclick="startQuickReview()">🔁 다시</button>
@@ -5178,8 +5131,7 @@ function openScenarioPicker(){
           <div class="sc-item-info">
             <div class="sc-item-title">${sc.title.slice(2)}</div>
             <div class="sc-item-char">${sc.character}${locked?' · 🔒 Tree 3개 필요':''}</div>
-          </div>
-        </div>`;
+          </div>`;
       }).join('')}
     </div>`;
   qr.content.querySelectorAll('.sc-item').forEach(el=>{
@@ -5219,7 +5171,6 @@ function renderScenarioTurn(){
       <div class="qr-card">
         <div style="font-size:36px;margin-bottom:8px">🎉</div>
         <div style="font-size:13px">활용한 노트 표현: <b style="color:var(--gold)">${sess.usedNotes.length}개</b></div>
-      </div>
       <div class="qr-actions">
         <button class="qr-btn secondary" onclick="qrCloseNow()">닫기</button>
         <button class="qr-btn primary" onclick="openScenarioPicker()">다른 상황</button>
@@ -5260,7 +5211,6 @@ function renderScenarioTurn(){
       <div class="sc-turn-user">
         <div class="sc-ko-hint">💭 "${turn.ko}"</div>
         <div class="sc-hints-list">${hintsHTML}</div>
-      </div>
       <div class="sc-status" id="scStatus">🎤 말해봐!</div>
       <button class="sc-mic-big" id="scMic">🎤</button>
       <div class="qr-actions">
