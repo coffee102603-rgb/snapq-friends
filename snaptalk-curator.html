@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SnapTalk Curator — Admin</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0a0a0f;
+  --bg-card: #15151d;
+  --bg-input: #1e1e28;
+  --border: #2a2a38;
+  --text: #e8e8ec;
+  --text-dim: #9090a0;
+  --brand: #00e5a0;
+  --brand-dark: #00b37f;
+  --warn: #ff7043;
+  --error: #ef4444;
+  --info: #3b82f6;
+}
+body {
+  font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* 패스워드 게이트 */
+.gate-overlay {
+  position: fixed; inset: 0;
+  background: var(--bg);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 9999;
+}
+.gate-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 48px 40px;
+  width: 90%; max-width: 400px;
+  text-align: center;
+}
+.gate-logo { font-size: 48px; margin-bottom: 16px; }
+.gate-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; color: var(--brand); }
+.gate-subtitle { font-size: 14px; color: var(--text-dim); margin-bottom: 32px; }
+.gate-input {
+  width: 100%; padding: 14px 16px;
+  background: var(--bg-input);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text); font-size: 16px;
+  margin-bottom: 12px;
+  outline: none;
+  transition: border-color .2s;
+}
+.gate-input:focus { border-color: var(--brand); }
+.gate-btn {
+  width: 100%; padding: 14px;
+  background: var(--brand); color: #000;
+  border: none; border-radius: 10px;
+  font-size: 16px; font-weight: 700;
+  cursor: pointer;
+  transition: background .2s;
+}
+.gate-btn:hover { background: var(--brand-dark); }
+.gate-error {
+  color: var(--error); font-size: 13px;
+  margin-top: 12px; min-height: 16px;
+}
+
+/* 메인 레이아웃 */
+.container { max-width: 1200px; margin: 0 auto; }
+.header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.header-title { font-size: 24px; font-weight: 800; }
+.header-title span { color: var(--brand); }
+.header-sub { font-size: 13px; color: var(--text-dim); margin-top: 4px; }
+.logout-btn {
+  background: transparent; color: var(--text-dim);
+  border: 1px solid var(--border); padding: 8px 16px;
+  border-radius: 8px; font-size: 13px; cursor: pointer;
+}
+.logout-btn:hover { color: var(--text); border-color: var(--text-dim); }
+
+/* 검색 컨트롤 */
+.search-panel {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 20px; margin-bottom: 24px;
+}
+.search-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; }
+.field { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 140px; }
+.field label { font-size: 12px; color: var(--text-dim); font-weight: 600; }
+.field select, .field input {
+  padding: 10px 12px; background: var(--bg-input);
+  border: 1px solid var(--border); border-radius: 8px;
+  color: var(--text); font-size: 14px; outline: none;
+}
+.field select:focus, .field input:focus { border-color: var(--brand); }
+.btn-primary {
+  padding: 10px 20px; background: var(--brand); color: #000;
+  border: none; border-radius: 8px; font-size: 14px;
+  font-weight: 700; cursor: pointer; transition: background .2s;
+}
+.btn-primary:hover { background: var(--brand-dark); }
+.btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+
+/* 상태 표시 */
+.status-bar {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 8px; padding: 12px 16px;
+  margin-bottom: 16px; font-size: 13px; color: var(--text-dim);
+  display: none;
+}
+.status-bar.show { display: block; }
+.status-bar.success { border-color: var(--brand); color: var(--brand); }
+.status-bar.error { border-color: var(--error); color: var(--error); }
+
+/* 영상 카드 리스트 */
+.videos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.video-card {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; overflow: hidden;
+  transition: transform .2s, border-color .2s;
+  position: relative;
+}
+.video-card:hover { transform: translateY(-2px); border-color: var(--text-dim); }
+.video-card.selected { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand); }
+.video-checkbox {
+  position: absolute; top: 12px; left: 12px; z-index: 2;
+  width: 24px; height: 24px;
+  accent-color: var(--brand); cursor: pointer;
+}
+.video-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  background: var(--bg-input) center/cover;
+  cursor: pointer;
+}
+.video-info { padding: 12px 14px; }
+.video-title {
+  font-size: 14px; font-weight: 700; line-height: 1.3;
+  margin-bottom: 8px; overflow: hidden;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+}
+.video-meta {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  font-size: 11px; color: var(--text-dim); margin-bottom: 8px;
+}
+.video-stats {
+  display: flex; gap: 12px;
+  font-size: 11px; color: var(--text-dim);
+  padding-top: 8px; border-top: 1px solid var(--border);
+}
+.badge {
+  padding: 2px 8px; border-radius: 4px;
+  font-size: 10px; font-weight: 700;
+}
+.badge.easy { background: rgba(0,229,160,.15); color: var(--brand); }
+.badge.mid { background: rgba(59,130,246,.15); color: var(--info); }
+.badge.hard { background: rgba(255,112,67,.15); color: var(--warn); }
+.badge.danger { background: rgba(239,68,68,.15); color: var(--error); }
+.score-bar {
+  display: inline-flex; gap: 2px; align-items: center;
+}
+.score-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--border); }
+.score-dot.on { background: var(--brand); }
+
+/* 액션 바 */
+.action-bar {
+  position: sticky; bottom: 20px;
+  background: var(--bg-card); border: 1px solid var(--brand);
+  border-radius: 12px; padding: 16px 20px;
+  display: flex; justify-content: space-between; align-items: center;
+  box-shadow: 0 4px 16px rgba(0,229,160,.15);
+  display: none;
+}
+.action-bar.show { display: flex; }
+.action-count { font-size: 14px; font-weight: 700; }
+.action-count span { color: var(--brand); font-size: 20px; margin-right: 4px; }
+
+/* 레슨 생성 모달 */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,.8);
+  display: none; align-items: center; justify-content: center;
+  z-index: 9000; padding: 20px;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 24px;
+  width: 100%; max-width: 600px; max-height: 85vh;
+  overflow-y: auto;
+}
+.modal-title { font-size: 18px; font-weight: 800; margin-bottom: 16px; }
+.progress-list { display: flex; flex-direction: column; gap: 8px; }
+.progress-item {
+  background: var(--bg-input); padding: 12px 14px;
+  border-radius: 8px; font-size: 13px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.progress-item.pending { color: var(--text-dim); }
+.progress-item.loading { color: var(--info); }
+.progress-item.done { color: var(--brand); }
+.progress-item.error { color: var(--error); }
+.modal-footer {
+  margin-top: 20px; display: flex; gap: 8px; justify-content: flex-end;
+}
+.btn-secondary {
+  padding: 10px 18px; background: transparent;
+  color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; cursor: pointer; font-size: 14px;
+}
+.btn-secondary:hover { border-color: var(--text-dim); }
+
+.output-code {
+  background: #000; color: var(--brand);
+  padding: 12px; border-radius: 8px;
+  font-family: 'Monaco', monospace; font-size: 11px;
+  max-height: 300px; overflow: auto;
+  white-space: pre; margin: 12px 0;
+}
+
+.spinner {
+  display: inline-block; width: 14px; height: 14px;
+  border: 2px solid var(--border); border-top-color: var(--info);
+  border-radius: 50%; animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-state {
+  text-align: center; padding: 60px 20px;
+  color: var(--text-dim); font-size: 14px;
+}
+.empty-state .emoji { font-size: 48px; margin-bottom: 12px; }
+
+.version-tag {
+  position: fixed; bottom: 10px; right: 10px;
+  font-size: 10px; color: var(--text-dim);
+  background: var(--bg-card); padding: 4px 8px;
+  border-radius: 4px; border: 1px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<!-- 🔒 비밀번호 게이트 -->
+<div class="gate-overlay" id="gate">
+  <div class="gate-card">
+    <div class="gate-logo">🔐</div>
+    <div class="gate-title">SnapTalk Curator</div>
+    <div class="gate-subtitle">관리자 전용 페이지입니다</div>
+    <input type="password" class="gate-input" id="gatePassword" placeholder="비밀번호" autocomplete="off">
+    <button class="gate-btn" onclick="tryLogin()">접속</button>
+    <div class="gate-error" id="gateError"></div>
+  </div>
+</div>
+
+<!-- 메인 화면 -->
+<div class="container" id="main" style="display:none;">
+  <div class="header">
+    <div>
+      <div class="header-title">🎬 SnapTalk <span>Curator</span></div>
+      <div class="header-sub">YouTube Shorts 큐레이션 → AI 레슨 자동 생성</div>
+    </div>
+    <button class="logout-btn" onclick="logout()">로그아웃</button>
+  </div>
+
+  <!-- 검색 패널 -->
+  <div class="search-panel">
+    <div class="search-row">
+      <div class="field">
+        <label>🌍 지역</label>
+        <select id="region">
+          <option value="us">🇺🇸 미국 (영어)</option>
+          <option value="kr">🇰🇷 한국</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>📂 카테고리</label>
+        <select id="category">
+          <option value="food">🍔 Food & Taste</option>
+          <option value="people">🎤 People & Talk</option>
+          <option value="home">🏠 Home & Routine</option>
+          <option value="places">✈️ Places & Travel</option>
+          <option value="shopping">🛒 Shopping & Haul</option>
+          <option value="fun">😂 Fun & Challenge</option>
+          <option value="cars">🚗 Cars & Things</option>
+          <option value="work">💼 Work & Career</option>
+          <option value="culture">💃 K-Culture</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>🔢 결과 개수</label>
+        <select id="maxResults">
+          <option value="10">10개</option>
+          <option value="15" selected>15개</option>
+          <option value="20">20개</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0; min-width:auto;">
+        <label style="opacity:0;">.</label>
+        <button class="btn-primary" id="searchBtn" onclick="runSearch()">🔍 검색 실행</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 상태 표시 -->
+  <div class="status-bar" id="statusBar"></div>
+
+  <!-- 영상 결과 -->
+  <div class="videos-grid" id="videosGrid"></div>
+  <div class="empty-state" id="emptyState">
+    <div class="emoji">🔍</div>
+    <div>위에서 카테고리를 선택하고 검색 실행을 눌러주세요</div>
+  </div>
+
+  <!-- 액션 바 (체크한 영상 있을 때만 표시) -->
+  <div class="action-bar" id="actionBar">
+    <div class="action-count">
+      <span id="selectedCount">0</span>개 영상 선택됨
+    </div>
+    <div style="display:flex; gap:8px;">
+      <button class="btn-secondary" onclick="clearSelection()">선택 초기화</button>
+      <button class="btn-primary" onclick="openGenerateModal()">🤖 AI 레슨 생성 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- 레슨 생성 진행 모달 -->
+<div class="modal-overlay" id="generateModal">
+  <div class="modal">
+    <div class="modal-title">🤖 AI 레슨 생성 중...</div>
+    <div class="progress-list" id="progressList"></div>
+    <div id="outputSection" style="display:none;">
+      <div style="margin-top:20px; font-size:13px; font-weight:700;">📦 생성된 레슨 (shorts.json에 추가할 데이터)</div>
+      <pre class="output-code" id="outputJson"></pre>
+      <button class="btn-secondary" onclick="copyJson()">📋 JSON 복사</button>
+      <button class="btn-secondary" onclick="downloadJson()">💾 파일로 다운로드</button>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeModal()" id="modalCloseBtn">닫기</button>
+    </div>
+  </div>
+</div>
+
+<div class="version-tag">v1.1 · curator · fixed</div>
+
+<script>
+// =========================================
+// 설정
+// =========================================
+const ADMIN_PASSWORD = 'snaptalk2026!';
+const API_BASE = 'https://snaptalk-api-two.vercel.app';
+// 시크릿은 서버 환경변수 CURATOR_SECRET과 일치해야 함
+const CURATOR_SECRET = 'sk_curator_snaptalk_2026_a9f8b7c6d5e4f3a2b1c0';
+
+// =========================================
+// 상태
+// =========================================
+let videos = [];      // 검색 결과
+let selected = new Set(); // 선택된 videoId
+
+// =========================================
+// 패스워드 게이트
+// =========================================
+function tryLogin() {
+  const pw = document.getElementById('gatePassword').value;
+  if (pw === ADMIN_PASSWORD) {
+    localStorage.setItem('curator_auth', 'ok');
+    showMain();
+  } else {
+    document.getElementById('gateError').textContent = '❌ 비밀번호가 틀렸습니다';
+    document.getElementById('gatePassword').value = '';
+  }
+}
+function logout() {
+  localStorage.removeItem('curator_auth');
+  location.reload();
+}
+function showMain() {
+  document.getElementById('gate').style.display = 'none';
+  document.getElementById('main').style.display = 'block';
+}
+// 페이지 로드 시 자동 로그인 체크
+if (localStorage.getItem('curator_auth') === 'ok') {
+  showMain();
+}
+// 엔터키로 로그인
+document.getElementById('gatePassword').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tryLogin();
+});
+
+// =========================================
+// 상태 바
+// =========================================
+function showStatus(msg, type = '') {
+  const bar = document.getElementById('statusBar');
+  bar.textContent = msg;
+  bar.className = 'status-bar show ' + type;
+}
+function hideStatus() {
+  document.getElementById('statusBar').className = 'status-bar';
+}
+
+// =========================================
+// 검색 실행
+// =========================================
+async function runSearch() {
+  const region = document.getElementById('region').value;
+  const category = document.getElementById('category').value;
+  const maxResults = parseInt(document.getElementById('maxResults').value, 10);
+  const btn = document.getElementById('searchBtn');
+
+  btn.disabled = true;
+  btn.textContent = '⏳ 검색 중...';
+  showStatus('🔍 YouTube에서 영상 검색 중... (5~15초 소요)');
+  document.getElementById('videosGrid').innerHTML = '';
+  document.getElementById('emptyState').style.display = 'none';
+  videos = [];
+  selected.clear();
+  updateActionBar();
+
+  try {
+    const res = await fetch(API_BASE + '/api/search', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'X-Curator-Secret': CURATOR_SECRET
+      },
+      body: JSON.stringify({ category, region, maxResults })
+    });
+
+    const data = await res.json();
+    
+    if (!res.ok || !data.success) {
+      throw new Error(data.message || data.error || 'Search failed');
+    }
+
+    videos = data.videos || [];
+    
+    if (videos.length === 0) {
+      showStatus(`⚠️ "${data.query}" 검색 결과 없음 (${data.totalFound}개 중 0개 통과). 다른 카테고리 시도해보세요.`, 'error');
+      document.getElementById('emptyState').style.display = 'block';
+      document.getElementById('emptyState').innerHTML = '<div class="emoji">😭</div><div>조건에 맞는 영상이 없어요. 다른 카테고리 시도!</div>';
+    } else {
+      showStatus(`✅ ${data.totalFound}개 중 ${videos.length}개 통과 · 검색어: "${data.query}"`, 'success');
+      renderVideos();
+    }
+  } catch (err) {
+    console.error(err);
+    showStatus('❌ 에러: ' + err.message, 'error');
+    document.getElementById('emptyState').style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '🔍 검색 실행';
+  }
+}
+
+// =========================================
+// 영상 카드 렌더링
+// =========================================
+function renderVideos() {
+  const grid = document.getElementById('videosGrid');
+  grid.innerHTML = videos.map(v => {
+    const views = formatCount(v.viewCount);
+    const likes = formatCount(v.likeCount);
+    const duration = formatDuration(v.duration);
+    const diffClass = v.suggestedDifficulty;
+    const safetyWarn = v.safetyScore < 60 ? '<span class="badge danger">⚠️ 저작권</span>' : '';
+    
+    return `
+      <div class="video-card" data-id="${v.videoId}" onclick="toggleSelect('${v.videoId}')">
+        <input type="checkbox" class="video-checkbox" data-id="${v.videoId}" onclick="event.stopPropagation(); toggleSelect('${v.videoId}')">
+        <div class="video-thumb" style="background-image: url('${v.thumbnail}')"></div>
+        <div class="video-info">
+          <div class="video-title">${escapeHtml(v.title)}</div>
+          <div class="video-meta">
+            <span class="badge ${diffClass}">${diffClass.toUpperCase()}</span>
+            ${safetyWarn}
+            <span>👤 ${escapeHtml(v.channelTitle)}</span>
+          </div>
+          <div class="video-stats">
+            <span>👁 ${views}</span>
+            <span>❤️ ${likes}</span>
+            <span>⏱ ${duration}</span>
+            <span>📊 ${v.educationScore}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleSelect(videoId) {
+  const card = document.querySelector(`.video-card[data-id="${videoId}"]`);
+  const checkbox = document.querySelector(`.video-checkbox[data-id="${videoId}"]`);
+  if (selected.has(videoId)) {
+    selected.delete(videoId);
+    card.classList.remove('selected');
+    checkbox.checked = false;
+  } else {
+    selected.add(videoId);
+    card.classList.add('selected');
+    checkbox.checked = true;
+  }
+  updateActionBar();
+}
+
+function clearSelection() {
+  selected.clear();
+  document.querySelectorAll('.video-card.selected').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.video-checkbox:checked').forEach(c => c.checked = false);
+  updateActionBar();
+}
+
+function updateActionBar() {
+  const bar = document.getElementById('actionBar');
+  const count = selected.size;
+  document.getElementById('selectedCount').textContent = count;
+  if (count > 0) bar.classList.add('show');
+  else bar.classList.remove('show');
+}
+
+// =========================================
+// 유틸
+// =========================================
+function formatCount(n) {
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n/1000).toFixed(1) + 'K';
+  return String(n);
+}
+function formatDuration(s) {
+  const m = Math.floor(s/60), sec = s%60;
+  return m > 0 ? `${m}:${String(sec).padStart(2,'0')}` : `${sec}초`;
+}
+function escapeHtml(text) {
+  const map = {'&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'};
+  return String(text).replace(/[&<>"']/g, m => map[m]);
+}
+
+// =========================================
+// 레슨 생성 (AI)
+// =========================================
+let generatedLessons = [];
+
+function openGenerateModal() {
+  if (selected.size === 0) return;
+  document.getElementById('generateModal').classList.add('show');
+  generatedLessons = [];
+  
+  const selectedVideos = videos.filter(v => selected.has(v.videoId));
+  const list = document.getElementById('progressList');
+  list.innerHTML = selectedVideos.map(v => `
+    <div class="progress-item pending" data-id="${v.videoId}">
+      <span>${escapeHtml(v.title.slice(0, 50))}${v.title.length > 50 ? '...' : ''}</span>
+      <span class="status">대기 중</span>
+    </div>
+  `).join('');
+  
+  document.getElementById('outputSection').style.display = 'none';
+  document.getElementById('modalCloseBtn').textContent = '중단';
+  
+  // 순차 실행
+  runGeneration(selectedVideos);
+}
+
+async function runGeneration(vids) {
+  for (const v of vids) {
+    const item = document.querySelector(`.progress-item[data-id="${v.videoId}"]`);
+    item.className = 'progress-item loading';
+    item.querySelector('.status').innerHTML = '<span class="spinner"></span> 자막+번역 중...';
+    
+    try {
+      // 🔧 v1.1 수정: videoId → videoUrl 형태로 전송
+      // API 서버는 videoUrl 파라미터를 요구함
+      const videoUrl = 'https://www.youtube.com/shorts/' + v.videoId;
+      
+      const res = await fetch(API_BASE + '/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ videoUrl: videoUrl })
+      });
+      
+      const data = await res.json();
+      if (!res.ok || data.error) {
+        throw new Error(data.error || 'Generation failed');
+      }
+      
+      // 🔧 v1.1 수정: data를 먼저 펼치고 우리 메타데이터로 덮어쓰기
+      // (API 응답에 id/title 있어도 우리 값이 우선)
+      const lesson = {
+        ...data,  // API 응답 먼저
+        id: v.videoId,
+        title: v.title,
+        lang: document.getElementById('region').value === 'kr' ? 'ko' : 'en',
+        region: document.getElementById('region').value,
+        cat: document.getElementById('category').value,
+        diff: v.suggestedDifficulty === 'easy' ? 'beginner' : v.suggestedDifficulty === 'mid' ? 'intermediate' : 'advanced',
+        dubs: 0,
+        duration: v.duration,
+        tags: [],
+        status: 'review',
+        createdAt: new Date().toISOString().split('T')[0],
+        curatedBy: 'jungeun'
+      };
+      generatedLessons.push(lesson);
+      
+      item.className = 'progress-item done';
+      item.querySelector('.status').textContent = '✅ 완료';
+    } catch (err) {
+      console.error(err);
+      item.className = 'progress-item error';
+      // 🔧 v1.1 수정: 에러 메시지 더 자세히 (50자로 확장)
+      item.querySelector('.status').textContent = '❌ ' + err.message.slice(0, 50);
+    }
+  }
+  
+  // 전체 완료
+  document.getElementById('modalCloseBtn').textContent = '닫기';
+  if (generatedLessons.length > 0) {
+    document.getElementById('outputSection').style.display = 'block';
+    document.getElementById('outputJson').textContent = JSON.stringify(generatedLessons, null, 2);
+  }
+}
+
+function closeModal() {
+  document.getElementById('generateModal').classList.remove('show');
+}
+
+function copyJson() {
+  const text = document.getElementById('outputJson').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('📋 JSON 복사 완료! shorts.json에 붙여넣으세요.');
+  });
+}
+
+function downloadJson() {
+  const text = document.getElementById('outputJson').textContent;
+  const blob = new Blob([text], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `snaptalk-lessons-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
