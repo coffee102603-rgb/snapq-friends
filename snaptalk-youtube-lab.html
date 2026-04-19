@@ -1546,7 +1546,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">FIRST TAKE</div>
+              <div class="booth-name">📜 SCRIPT</div>
               <div class="booth-heat">1차 녹음</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
@@ -1556,7 +1556,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">REHEARSAL</div>
+              <div class="booth-name">🎭 REHEARSAL</div>
               <div class="booth-heat">리허설</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
@@ -1566,7 +1566,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">ON AIR</div>
+              <div class="booth-name">🎬 TAKE 1</div>
               <div class="booth-heat">본방 녹음 🔥</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
@@ -3195,11 +3195,17 @@ function renderShadow(){
   if(len>45)enEl.classList.add('very-long');
   else if(len>30)enEl.classList.add('long');
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
-  /* v7.5: 발음 토글 유지 - 새 문장도 자동 업데이트 */
+  /* v7.6: SCRIPT 모드(easy)면 발음 자동 표시! */
   const pEl=document.getElementById('shadowPhoneticText');
-  if(pEl && phoneticVisible){
-    if(s && s.phonetic){pEl.textContent=s.phonetic;pEl.style.display='block';}
-    else{pEl.textContent='(발음 표기 준비중)';pEl.style.display='block';}
+  const pBtn=document.getElementById('shadowPhonetic');
+  const isScriptMode = S.dubLevel==='easy';
+  if(pEl){
+    if(isScriptMode || phoneticVisible){
+      if(s && s.phonetic){pEl.textContent=s.phonetic;pEl.style.display='block';}
+      else{pEl.textContent='(발음 표기 준비중)';pEl.style.display='block';}
+      if(isScriptMode) phoneticVisible=true;
+      if(pBtn){pBtn.classList.add('active');}
+    }
   }
 
   renderShadowSync();
@@ -3890,14 +3896,14 @@ document.getElementById('dubRetry').addEventListener('click',()=>{
 
 /* Booth picker: v6.17 네이밍 — 방송 용어 통일 */
 const BOOTH_LABELS={
-  easy:'🎤 FIRST TAKE · 영어+한글 모두 보임 (1차 녹음)',
-  normal:'🎙 REHEARSAL · 한글만 보임 (리허설)',
-  hard:'🔴 ON AIR · 완전 더빙 (본방 녹음!)'
+  easy:'📜 SCRIPT · 대본 읽기 (영어+한글+발음)',
+  normal:'🎭 REHEARSAL · 리허설 (영어+한글)',
+  hard:'🎬 TAKE 1 · 나도 배우! (한글+영어 힌트)'
 };
 const BOOTH_STUDIO_LABEL={
-  easy:'● FIRST TAKE',
-  normal:'● REHEARSAL',
-  hard:'● ON AIR'
+  easy:'📜 SCRIPT',
+  normal:'🎭 REHEARSAL',
+  hard:'🎬 TAKE 1'
 };
 document.querySelectorAll('.booth').forEach(booth=>{
   booth.addEventListener('click',()=>{
@@ -3946,9 +3952,9 @@ document.getElementById('dubStartBtn').addEventListener('click',()=>{
     if(banner){
       banner.className='step-banner dub';
       const boothBannerText={
-        easy:'🎤 FIRST TAKE — 편하게 시작해봐!',
-        normal:'🎙 REHEARSAL — 감정을 살려봐!',
-        hard:'🔴 ON AIR — 완벽한 한 방!'
+        easy:'📜 SCRIPT — 편하게 따라해봐!',
+        normal:'🎭 REHEARSAL — 감정을 살려봐!',
+        hard:'🎬 TAKE 1 — 나도 주인공!'
       };
       banner.textContent=boothBannerText[selectedDiff]||'🔥 진짜 더빙 — 영상 속 주인공을 뜨겁게!';
     }
@@ -4002,7 +4008,7 @@ function renderShare(){
     document.getElementById('resultTitle').textContent=S.short.title;
     const badge=document.getElementById('resultBoothBadge');
     badge.className='result-booth-badge '+bd.difficulty;
-    const boothTxt={easy:'🎤 FIRST TAKE',normal:'🎙 REHEARSAL',hard:'🔴 ON AIR'};
+    const boothTxt={easy:'📜 SCRIPT',normal:'🎭 REHEARSAL',hard:'🎬 TAKE 1'};
     badge.textContent=boothTxt[bd.difficulty]||'BOOTH';
 
     /* Draw waveforms */
@@ -4071,7 +4077,7 @@ function renderShare(){
       }else if(sc>=50){
         feedback=`💡 ${bd.timingMatch>=70?'타이밍은 좋아요':'타이밍을 더 맞춰보세요'} — 더 큰 목소리로 한 번 더!`;
       }else{
-        feedback='🎯 처음엔 어려워요. FIRST TAKE(1차 녹음)부터 해보는 것도 좋아요!';
+        feedback='🎯 처음엔 어려워요. 📜 SCRIPT부터 차근차근 해봐요!';
         warnMode=true;
       }
       feedbackEl.textContent=feedback;
