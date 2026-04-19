@@ -1547,7 +1547,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <div class="booth-door"></div>
             <div class="booth-info">
               <div class="booth-name">📜 SCRIPT</div>
-              <div class="booth-heat">1차 녹음</div>
+              <div class="booth-heat">영어+한글+발음</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
@@ -1557,7 +1557,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <div class="booth-door"></div>
             <div class="booth-info">
               <div class="booth-name">🎭 REHEARSAL</div>
-              <div class="booth-heat">리허설</div>
+              <div class="booth-heat">영어+한글</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
@@ -1567,13 +1567,13 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <div class="booth-door"></div>
             <div class="booth-info">
               <div class="booth-name">🎬 TAKE 1</div>
-              <div class="booth-heat">본방 녹음 🔥</div>
+              <div class="booth-heat">한글+영어 힌트</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
         </div>
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
-          <span id="boothLabel">🟢 Easy · 영어+한글 모두 보임</span>
+          <span id="boothLabel">🟢 SCRIPT · 영어+한글+발음</span>
         </div>
         <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
           <button class="listen-next" id="dubStartBtn" style="flex:1">▶ 부스 입장</button>
@@ -2942,9 +2942,9 @@ function goStep(step){
     bn.className='step-banner dub';
     /* v7.0+: 시도 횟수 표시해서 동기부여 */
     if(S.dubAttempts&&S.dubAttempts>=1){
-      bn.textContent=`🔥 더빙실 · ${S.dubAttempts+1}번째 시도 — 이번엔 잡자!`;
+      bn.textContent=`🎬 스튜디오 · ${S.dubAttempts+1}번째 시도 — 이번엔 잡자!`;
     }else{
-      bn.textContent='🔥 진짜 더빙 — 영상 속 주인공을 뜨겁게!';
+      bn.textContent='🔥 촬영 — 영상 속 주인공을 뜨겁게!';
     }
     /* ⚠️ 중요: 이전 단계 영상 완전 정지 */
     try{
@@ -3956,7 +3956,7 @@ document.getElementById('dubStartBtn').addEventListener('click',()=>{
         normal:'🎭 REHEARSAL — 감정을 살려봐!',
         hard:'🎬 TAKE 1 — 나도 주인공!'
       };
-      banner.textContent=boothBannerText[selectedDiff]||'🔥 진짜 더빙 — 영상 속 주인공을 뜨겁게!';
+      banner.textContent=boothBannerText[selectedDiff]||'🔥 촬영 — 영상 속 주인공을 뜨겁게!';
     }
     document.getElementById('ytContainer').style.display='';
     document.getElementById('ytContainer').classList.remove('pip');
