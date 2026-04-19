@@ -1469,6 +1469,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       <div class="shadow-en-box">
         <div class="shadow-en" id="shadowEn"></div>
         <div class="shadow-ko" id="shadowKo"></div>
+        <div class="shadow-phonetic" id="shadowPhoneticText" style="display:none;color:#a78bfa;font-size:15px;font-weight:600;text-align:center;margin-top:8px;padding:8px 16px;background:rgba(139,92,246,.08);border-radius:12px;"></div>
       </div>
       <div class="shadow-sync-box">
         <div class="shadow-sync-row">
@@ -1480,6 +1481,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       </div>
       <div class="shadow-controls">
         <button class="shadow-listen-btn" id="shadowListen" title="듣기">🔊</button>
+        <button class="shadow-listen-btn" id="shadowPhonetic" title="발음 보기" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:#a78bfa;font-weight:700;font-size:14px;min-width:45px;">가</button>
         <button class="shadow-mic" id="shadowMic">🎤</button>
         <button class="shadow-save" id="shadowSave" title="담기">💾</button>
         <button class="shadow-skip" id="shadowSkip" title="건너뛰기">⏭</button>
@@ -3193,6 +3195,29 @@ function renderShadowSync(){
 
 /* Listen again */
 document.getElementById('shadowListen').addEventListener('click',()=>{const s=S.short.sentences[S.shadowIdx];if(s)speak(s.en)});
+/* v7.2: 발음 보기 토글 */
+let phoneticVisible=false;
+document.getElementById('shadowPhonetic').addEventListener('click',()=>{
+  phoneticVisible=!phoneticVisible;
+  const btn=document.getElementById('shadowPhonetic');
+  const pEl=document.getElementById('shadowPhoneticText');
+  if(phoneticVisible){
+    const s=S.short.sentences[S.shadowIdx];
+    if(s&&s.phonetic){
+      pEl.textContent=s.phonetic;
+      pEl.style.display='block';
+      btn.style.background='rgba(139,92,246,.35)';
+      btn.style.color='#fff';
+    }else{
+      pEl.textContent='(발음 표기 준비중)';
+      pEl.style.display='block';
+    }
+  }else{
+    pEl.style.display='none';
+    btn.style.background='rgba(139,92,246,.15)';
+    btn.style.color='#a78bfa';
+  }
+});
 
 /* Mic: record → measure → update sync% */
 document.getElementById('shadowMic').addEventListener('click',async()=>{
