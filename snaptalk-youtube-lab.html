@@ -1471,7 +1471,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="shadow-ko" id="shadowKo"></div>
         <div class="shadow-phonetic" id="shadowPhoneticText" style="display:none;color:#a78bfa;font-size:15px;font-weight:600;text-align:center;margin-top:8px;padding:8px 16px;background:rgba(139,92,246,.08);border-radius:12px;"></div>
       </div>
-      <div class="shadow-sync-box">
+      <div class="shadow-sync-box" style="display:none;">
         <div class="shadow-sync-row">
           <span class="shadow-sync-label">🎯 싱크로율</span>
           <span class="shadow-sync-pct" id="shadowSyncPct">0%</span>
@@ -1480,9 +1480,9 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="shadow-hint" id="shadowHint">🎤 버튼을 눌러 말해봐! 90% 넘으면 다음으로</div>
       </div>
       <div class="shadow-controls">
-        <button class="shadow-listen-btn" id="shadowListen" title="듣기">🔊</button>
+        <button class="shadow-listen-btn" id="shadowListen" title="듣기" style="display:none;">🔊</button>
         <button class="shadow-listen-btn" id="shadowPhonetic" title="발음 보기" style="background:rgba(139,92,246,.15);border:1px solid rgba(139,92,246,.4);color:#a78bfa;font-weight:700;font-size:14px;min-width:45px;">가</button>
-        <button class="shadow-mic" id="shadowMic">🎤</button>
+        <button class="shadow-mic" id="shadowMic" style="display:none;">🎤</button>
         <button class="shadow-save" id="shadowSave" title="담기">💾</button>
         <button class="shadow-skip" id="shadowSkip" title="건너뛰기">⏭</button>
         <button class="home-btn-inline" title="홈으로">🏠</button>
@@ -3150,6 +3150,12 @@ function renderShadow(){
   if(len>45)enEl.classList.add('very-long');
   else if(len>30)enEl.classList.add('long');
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
+  /* v7.4: 문장 바뀌면 phonetic 자동 업데이트 + 숨기기 */
+  const pEl=document.getElementById('shadowPhoneticText');
+  const pBtn=document.getElementById('shadowPhonetic');
+  if(pEl){pEl.style.display='none';pEl.textContent='';}
+  if(pBtn){pBtn.style.background='rgba(139,92,246,.15)';pBtn.style.color='#a78bfa';}
+  phoneticVisible=false;
 
   renderShadowSync();
   document.getElementById('shadowHint').textContent='🎤 버튼을 눌러 말해봐! 90% 넘으면 다음으로';
