@@ -745,7 +745,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .deco-done-btn-sub{width:100%;padding:12px;border-radius:14px;background:transparent;color:var(--tx2);border:1px solid var(--bd);font-size:13px;font-weight:700;cursor:pointer}
 
 /* Filter options (CSS filter only - 안전) */
-/* v6.10: 필터 3종만 (원본/흑백/흐리게) */
+/* v7.0: 필터 3종만 (원본/흑백/흐리게) */
 .filter-none{filter:none}
 .filter-mono{filter:grayscale(1) contrast(1.1)}
 .filter-blur{filter:blur(3px) brightness(.95)}
@@ -1628,7 +1628,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
       <div class="deco-preview" id="decoPreview">
         <div class="deco-preview-thumb filter-none" id="decoPreviewThumb"></div>
         <div class="deco-frame" id="decoFrame"></div>
-        <!-- v6.10: 스티커 6슬롯 + 코스프레 배너 + 뱃지 모두 제거 (깔끔!) -->
+        <!-- v7.0: 스티커 6슬롯 + 코스프레 배너 + 뱃지 모두 제거 (깔끔!) -->
         <!-- 📺 TV 성우 포맷: 오른쪽 하단 고정 원형 -->
         <button class="deco-me-slot pos-right size-m" id="decoMeSlot" title="성우 얼굴 추가"><span class="deco-me-slot-empty-icon">📺</span></button>
       </div>
@@ -1643,7 +1643,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
     </div>
   </div>
 
-  <!-- v6.10: 스티커 선택 모달 제거됨 (깔끔!) -->
+  <!-- v7.0: 스티커 선택 모달 제거됨 (깔끔!) -->
 
   <!-- Save complete modal -->
   <div class="deco-done-overlay" id="decoDoneOverlay">
@@ -1658,7 +1658,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
         <div class="deco-done-preview-play"></div>
       </div>
       
-      <!-- v6.10: AI 튜터 제거됨 (깔끔!) -->
+      <!-- v7.0: AI 튜터 제거됨 (깔끔!) -->
       
       <!-- v6.8: 재생하기 메인 버튼 -->
       <button class="deco-done-btn-primary" id="decoDonePlayBtn" style="display:none">▶️ 내 작품 감상</button>
@@ -1682,7 +1682,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
     </div>
     <div class="artwork-play-info">
       <div class="artwork-play-title" id="artworkPlayTitle"></div>
-      <!-- v6.10: AI 튜터 제거됨 -->
+      <!-- v7.0: AI 튜터 제거됨 -->
     </div>
   </div>
 
@@ -1724,7 +1724,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v6.20</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v7.0</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -2781,7 +2781,7 @@ function startGame(short){
   S.short=short;S.gameStep=0;
   S.listenCount=1;S.understand=10;S.shownHints=[];
   S.shadowIdx=0;S.syncScore=0;S.dubAttempts=0;
-  S.lastBooth=null; /* v6.10+: 새 영상이니 부스 선택 리셋 */
+  S.lastBooth=null; /* v7.0+: 새 영상이니 부스 선택 리셋 */
   showScreen('player');
   document.getElementById('bottomNav').style.display='none';
   document.getElementById('ytContainer').classList.remove('pip');
@@ -2893,7 +2893,7 @@ function goStep(step){
   else if(step===2){
     /* STEP 3: DUB CHALLENGE — show booth picker first */
     bn.className='step-banner dub';
-    /* v6.10+: 시도 횟수 표시해서 동기부여 */
+    /* v7.0+: 시도 횟수 표시해서 동기부여 */
     if(S.dubAttempts&&S.dubAttempts>=1){
       bn.textContent=`🔥 더빙실 · ${S.dubAttempts+1}번째 시도 — 이번엔 잡자!`;
     }else{
@@ -2915,7 +2915,7 @@ function goStep(step){
     const sub=document.getElementById('studioSubtitle');
     if(sub)sub.remove();
     document.getElementById('dubArea').style.display='flex';
-    /* v6.10+: 2번째 시도부터는 부스 선택 건너뛰고 바로 녹음실로! */
+    /* v7.0+: 2번째 시도부터는 부스 선택 건너뛰고 바로 녹음실로! */
     if(S.dubAttempts&&S.dubAttempts>=1&&S.lastBooth){
       /* 이전에 선택한 부스로 바로 진입 */
       S.dubLevel=S.lastBooth;
@@ -3828,7 +3828,7 @@ document.querySelectorAll('.booth').forEach(booth=>{
     document.querySelectorAll('.booth').forEach(b=>b.classList.remove('active'));
     booth.classList.add('active');
     S.dubLevel=booth.dataset.diff;
-    S.lastBooth=booth.dataset.diff; /* v6.10+: 다음 시도에서 자동 재선택 */
+    S.lastBooth=booth.dataset.diff; /* v7.0+: 다음 시도에서 자동 재선택 */
     document.getElementById('boothLabel').textContent=BOOTH_LABELS[S.dubLevel];
   });
 });
@@ -4148,7 +4148,7 @@ const DECO_FILTERS=[
   {id:'mono',icon:'🎞',label:'흑백',cls:'filter-mono'},
   {id:'blur',icon:'🌫',label:'흐리게',cls:'filter-blur'}
 ];
-/* v6.10: DECO_STICKERS 제거됨 (스티커 기능 삭제) */
+/* v7.0: DECO_STICKERS 제거됨 (스티커 기능 삭제) */
 
 /* 점수별 격려 뱃지 (낮은 점수도 부끄럽지 않게) */
 function getEncourageBadge(score){
@@ -4167,7 +4167,7 @@ let decoState={
   filter:'none',
   currentTab:'frame',
   me:null, /* {type:'photo', data:'base64...'} 또는 {type:'character', data:'🐻'} */
-  meSize:'m' /* v6.10: s / m / l (위치는 오른쪽 하단 고정) */
+  meSize:'m' /* v7.0: s / m / l (위치는 오른쪽 하단 고정) */
 };
 
 /* 꾸미기 화면 진입 */
@@ -4191,7 +4191,7 @@ function openDecorateScreen(){
 /* 옵션 패널 렌더링 (프레임/필터/뱃지/나&친구) */
 function renderDecoOptions(){
   const grid=document.getElementById('decoOptionGrid');
-  /* v6.10: 📺 성우 탭 - 크기 3단계만 (위치는 오른쪽 하단 고정) */
+  /* v7.0: 📺 성우 탭 - 크기 3단계만 (위치는 오른쪽 하단 고정) */
   if(decoState.currentTab==='me'){
     let mePreview='';
     if(decoState.me){
@@ -4296,11 +4296,11 @@ function applyDecoFilter(){
 }
 
 /* 자동 뱃지 렌더링 */
-/* v6.10: 제거된 함수들 - stub 유지 (기존 호출부 안전) */
-function renderDecoAutoBadge(){ /* v6.10: 자동 뱃지 제거됨 */ }
-function renderDecoSlots(){ /* v6.10: 스티커 슬롯 제거됨 */ }
-function openStickerPicker(){ /* v6.10: 스티커 기능 제거됨 */ }
-function closeStickerPicker(){ /* v6.10: 스티커 기능 제거됨 */ }
+/* v7.0: 제거된 함수들 - stub 유지 (기존 호출부 안전) */
+function renderDecoAutoBadge(){ /* v7.0: 자동 뱃지 제거됨 */ }
+function renderDecoSlots(){ /* v7.0: 스티커 슬롯 제거됨 */ }
+function openStickerPicker(){ /* v7.0: 스티커 기능 제거됨 */ }
+function closeStickerPicker(){ /* v7.0: 스티커 기능 제거됨 */ }
 
 /* 저장 */
 function saveDecoration(){
@@ -4315,7 +4315,7 @@ function saveDecoration(){
       frame:decoState.frame,
       filter:decoState.filter,
       me:decoState.me?{...decoState.me}:null,
-      meSize:decoState.meSize||'m', /* v6.10: 크기만 (위치는 오른쪽 하단 고정) */
+      meSize:decoState.meSize||'m', /* v7.0: 크기만 (위치는 오른쪽 하단 고정) */
       date:new Date().toISOString()
     };
     saved.unshift(item);
@@ -4382,7 +4382,7 @@ function saveProfilePhoto(meObj){
 function renderMeSlot(){
   const slot=document.getElementById('decoMeSlot');
   if(!slot)return;
-  /* v6.10: 오른쪽 하단 고정 (TV 성우 포맷) + 크기만 변경 */
+  /* v7.0: 오른쪽 하단 고정 (TV 성우 포맷) + 크기만 변경 */
   slot.className='deco-me-slot pos-right';
   slot.classList.add(`size-${decoState.meSize||'m'}`);
   if(!decoState.me){
@@ -4540,13 +4540,13 @@ function removeMe(){
 }
 
 
-/* v6.10: applyCosplayBanner, AI_TUTOR_MESSAGES, pickTutorMessage 제거됨 */
+/* v7.0: applyCosplayBanner, AI_TUTOR_MESSAGES, pickTutorMessage 제거됨 */
 function applyCosplayBanner(){ /* noop */ }
 function pickTutorMessage(){return ''}
 function pickTutorMessageForScore(){return ''}
 
 /* ═══════════════════════════════════════
- * 🎬 v6.10 · ARTWORK PLAYER (내 작품 감상) - 깔끔 버전
+ * 🎬 v7.0 · ARTWORK PLAYER (내 작품 감상) - 깔끔 버전
  * ═══════════════════════════════════════ */
 function openArtworkPlayer(item){
   const modal=document.getElementById('artworkPlayModal');
@@ -4562,7 +4562,7 @@ function openArtworkPlayer(item){
     </div>
     <div class="deco-frame ${frameInfo.cls}" style="position:absolute;inset:0;z-index:3;pointer-events:none"></div>
   `;
-  /* v6.10: 성우 얼굴 (오른쪽 하단 TV 포맷, 크기만) */
+  /* v7.0: 성우 얼굴 (오른쪽 하단 TV 포맷, 크기만) */
   if(item.me){
     const meSize=item.meSize||'m';
     const sizeMap={s:40,m:56,l:80};
@@ -4588,7 +4588,7 @@ function openArtworkPlayer(item){
   modal.classList.add('show');
 }
 
-/* v6.10: AI 튜터 관련 함수들 제거됨 (사용 안 함) */
+/* v7.0: AI 튜터 관련 함수들 제거됨 (사용 안 함) */
 
 function closeArtworkPlayer(){
   const modal=document.getElementById('artworkPlayModal');
@@ -4666,7 +4666,7 @@ document.querySelectorAll('.deco-tab').forEach(tab=>{
     renderDecoOptions();
   });
 });
-/* v6.10: 스티커 슬롯 + 스티커 모달 이벤트 리스너 제거됨 */
+/* v7.0: 스티커 슬롯 + 스티커 모달 이벤트 리스너 제거됨 */
 document.getElementById('decoDoneHome').addEventListener('click',()=>{
   document.getElementById('decoDoneOverlay').classList.remove('show');
   cleanupPlayer();
@@ -4727,7 +4727,7 @@ function renderGallery(){
     const filterInfo=DECO_FILTERS.find(f=>f.id===it.filter)||{cls:'filter-none'};
     const d=new Date(it.date);
     const dateStr=`${d.getMonth()+1}/${d.getDate()}`;
-    /* v6.10: 성우 얼굴 미니 아바타 (오른쪽 하단 - TV 포맷) */
+    /* v7.0: 성우 얼굴 미니 아바타 (오른쪽 하단 - TV 포맷) */
     let meHtml='';
     if(it.me){
       if(it.me.type==='photo'){
@@ -4769,7 +4769,7 @@ function openGalleryViewer(idx){
   frame.className='deco-frame '+frameInfo.cls;
   /* 기존 요소 제거 후 새로 추가 */
   preview.querySelectorAll('.gv-sticker,.gv-badge,.gv-me,.gv-withbadge').forEach(el=>el.remove());
-  /* v6.10: 성우 얼굴 (오른쪽 하단 TV 포맷) */
+  /* v7.0: 성우 얼굴 (오른쪽 하단 TV 포맷) */
   if(it.me){
     const meEl=document.createElement('div');
     meEl.className='gv-me';
