@@ -1382,6 +1382,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 
 .card-puzzle{
   background: linear-gradient(135deg, rgba(0,229,160,.15), rgba(26,26,46,.85));
+  opacity: 0.65;
 }
 .card-puzzle:hover{ box-shadow: 0 12px 40px rgba(0,229,160,.3) }
 
@@ -1887,333 +1888,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   color: #c4b5fd;
 }
 .quiz-btn-home:active{ transform: scale(.97); background: rgba(167,139,250,.2) }
-
-/* ═══════════════════════════════════════════════════
- * v9.4 · 🧩 PUZZLE GAME (쌤 비전: 자막 조립 → 탑 쌓기!)
- * 색깔별 단어 섞기 → 정답 완성 → 예쁜 한 색깔 문장 → 탑 쌓기!
- * 7 문장 = 🌈 무지개 탑 완성!
- * ═══════════════════════════════════════════════════ */
-
-#puzzleMain, #puzzleResult{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 10px 14px 14px;
-  gap: 12px;
-  overflow-y: auto;
-  animation: puzzleFadeIn .4s ease-out;
-}
-@keyframes puzzleFadeIn{
-  from{ opacity: 0; transform: translateY(10px) }
-  to{ opacity: 1; transform: translateY(0) }
-}
-
-/* 헤더 */
-.puzzle-header{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 14px;
-  background: linear-gradient(135deg, rgba(0,229,160,.15), rgba(167,139,250,.1));
-  border: 1px solid rgba(0,229,160,.25);
-  border-radius: 14px;
-}
-.puzzle-title{
-  font-size: 14px;
-  font-weight: 900;
-  color: #00e5a0;
-  letter-spacing: 0.3px;
-}
-.puzzle-progress{
-  font-size: 13px;
-  font-weight: 800;
-  color: #a78bfa;
-}
-.puzzle-nav{ display: flex; gap: 6px }
-
-/* 한글 힌트 */
-.puzzle-hint{
-  text-align: center;
-  padding: 12px 14px;
-  background: linear-gradient(135deg, rgba(26,26,46,.85), rgba(20,20,43,.7));
-  border: 1px solid rgba(167,139,250,.2);
-  border-radius: 14px;
-}
-.puzzle-hint-label{
-  font-size: 11px;
-  color: #a1a1aa;
-  font-weight: 700;
-  margin-bottom: 4px;
-}
-.puzzle-hint-text{
-  font-size: 20px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -0.2px;
-}
-
-/* 정답 슬롯 (드롭 영역) */
-.puzzle-slots{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  min-height: 54px;
-  padding: 10px 12px;
-  background: rgba(10,10,15,.5);
-  border: 2px dashed rgba(0,229,160,.3);
-  border-radius: 14px;
-  align-items: center;
-  justify-content: center;
-}
-.puzzle-slot{
-  min-width: 60px;
-  padding: 8px 14px;
-  background: rgba(255,255,255,.04);
-  border: 2px dashed rgba(255,255,255,.15);
-  border-radius: 10px;
-  text-align: center;
-  color: rgba(255,255,255,.3);
-  font-size: 15px;
-  font-weight: 800;
-  transition: all .25s ease;
-  min-height: 38px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.puzzle-slot.filled{
-  border-style: solid;
-  color: #fff;
-  cursor: pointer;
-  animation: slotFill .3s ease-out;
-}
-@keyframes slotFill{
-  from{ transform: scale(.7); opacity: 0 }
-  50%{ transform: scale(1.1); opacity: 1 }
-  to{ transform: scale(1); opacity: 1 }
-}
-.puzzle-slot.filled:active{ transform: scale(.9) }
-.puzzle-slots.complete .puzzle-slot{
-  animation: slotUnify .6s ease-out forwards;
-}
-@keyframes slotUnify{
-  0%{ transform: scale(1) }
-  40%{ transform: scale(1.15); box-shadow: 0 0 20px currentColor }
-  100%{ transform: scale(1); box-shadow: 0 0 10px currentColor }
-}
-
-/* 단어 조각 레이블 */
-.puzzle-pieces-label{
-  font-size: 12px;
-  font-weight: 800;
-  color: #a1a1aa;
-  margin-top: 4px;
-}
-
-/* 단어 조각 (색깔별!) */
-.puzzle-pieces{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 14px 12px;
-  background: linear-gradient(135deg, rgba(26,26,46,.6), rgba(20,20,43,.4));
-  border: 1px solid rgba(255,255,255,.08);
-  border-radius: 14px;
-  min-height: 70px;
-  align-items: center;
-  justify-content: center;
-}
-.puzzle-piece{
-  padding: 10px 16px;
-  border-radius: 10px;
-  font-size: 15px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all .2s ease;
-  border: 2px solid transparent;
-  user-select: none;
-  white-space: nowrap;
-  box-shadow: 0 3px 10px rgba(0,0,0,.3);
-  animation: piecePopIn .4s cubic-bezier(.3,1.5,.5,1);
-}
-@keyframes piecePopIn{
-  from{ transform: scale(0) rotate(-180deg); opacity: 0 }
-  to{ transform: scale(1) rotate(0); opacity: 1 }
-}
-.puzzle-piece:hover{ transform: translateY(-2px); filter: brightness(1.15) }
-.puzzle-piece:active{ transform: scale(.9) }
-.puzzle-piece.used{
-  opacity: 0;
-  pointer-events: none;
-  transform: scale(0);
-}
-
-/* 색깔 클래스들 */
-.piece-c1{ background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff }
-.piece-c2{ background: linear-gradient(135deg,#f97316,#ea580c); color: #fff }
-.piece-c3{ background: linear-gradient(135deg,#fbbf24,#d97706); color: #000 }
-.piece-c4{ background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff }
-.piece-c5{ background: linear-gradient(135deg,#06b6d4,#0891b2); color: #fff }
-.piece-c6{ background: linear-gradient(135deg,#3b82f6,#2563eb); color: #fff }
-.piece-c7{ background: linear-gradient(135deg,#a78bfa,#7c3aed); color: #fff }
-.piece-c8{ background: linear-gradient(135deg,#ec4899,#db2777); color: #fff }
-
-/* 탑 섹션 */
-.puzzle-tower-section{
-  background: linear-gradient(180deg, rgba(26,26,46,.3), rgba(10,10,15,.5));
-  border: 1px solid rgba(167,139,250,.15);
-  border-radius: 14px;
-  padding: 10px 12px;
-}
-.puzzle-tower-header{
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12px;
-  font-weight: 800;
-  color: #cbd5e1;
-  margin-bottom: 8px;
-}
-.puzzle-tower-count{ color: #fbbf24; font-weight: 900 }
-.puzzle-tower{
-  display: flex;
-  flex-direction: column-reverse; /* 아래부터 쌓임! */
-  gap: 3px;
-  min-height: 50px;
-  justify-content: flex-start;
-}
-.puzzle-tower-empty{
-  text-align: center;
-  padding: 12px;
-  font-size: 12px;
-  color: rgba(255,255,255,.3);
-  font-weight: 700;
-  font-style: italic;
-}
-.puzzle-brick{
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 800;
-  text-align: center;
-  animation: brickDrop .6s cubic-bezier(.3,1.5,.5,1);
-  box-shadow: 0 3px 8px rgba(0,0,0,.3);
-  letter-spacing: 0.2px;
-}
-@keyframes brickDrop{
-  0%{ transform: translateY(-40px) scale(.8); opacity: 0 }
-  60%{ transform: translateY(8px) scale(1.05) }
-  100%{ transform: translateY(0) scale(1); opacity: 1 }
-}
-
-/* 벽돌 색깔 (문장별) */
-.brick-s1{ background: linear-gradient(135deg,#3b82f6,#2563eb); color: #fff }
-.brick-s2{ background: linear-gradient(135deg,#ef4444,#dc2626); color: #fff }
-.brick-s3{ background: linear-gradient(135deg,#fbbf24,#d97706); color: #000 }
-.brick-s4{ background: linear-gradient(135deg,#22c55e,#16a34a); color: #fff }
-.brick-s5{ background: linear-gradient(135deg,#a78bfa,#7c3aed); color: #fff }
-.brick-s6{ background: linear-gradient(135deg,#f97316,#ea580c); color: #fff }
-.brick-s7{ background: linear-gradient(135deg,#ec4899,#db2777); color: #fff }
-
-/* 액션 버튼 */
-.puzzle-actions{
-  display: flex;
-  gap: 8px;
-  margin-top: 4px;
-}
-.puzzle-btn{
-  flex: 1;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  transition: all .2s ease;
-}
-.puzzle-btn:active{ transform: scale(.97) }
-.puzzle-btn-reset{
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.12);
-  color: #cbd5e1;
-  flex: 0 0 100px;
-}
-.puzzle-btn-check{
-  background: linear-gradient(135deg, #00e5a0, #0891b2);
-  color: #000;
-  box-shadow: 0 4px 16px rgba(0,229,160,.3);
-}
-
-/* 결과 화면 */
-.puzzle-result-header{
-  text-align: center;
-  padding: 20px 12px 10px;
-}
-.puzzle-result-rainbow{
-  font-size: 70px;
-  animation: rainbowSpin 2s linear infinite;
-  filter: drop-shadow(0 0 20px rgba(251,191,36,.5));
-}
-@keyframes rainbowSpin{
-  from{ transform: rotate(0deg) }
-  to{ transform: rotate(360deg) }
-}
-.puzzle-result-title{
-  font-size: 26px;
-  font-weight: 900;
-  color: #fff;
-  margin-top: 8px;
-  background: linear-gradient(90deg,#ef4444,#f97316,#fbbf24,#22c55e,#06b6d4,#3b82f6,#a78bfa);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: rainbowText 3s linear infinite;
-  background-size: 200% 100%;
-}
-@keyframes rainbowText{
-  0%{ background-position: 0% 0% }
-  100%{ background-position: 200% 0% }
-}
-.puzzle-result-subtitle{
-  font-size: 14px;
-  color: #a1a1aa;
-  margin-top: 6px;
-  font-weight: 600;
-}
-.puzzle-final-tower{
-  display: flex;
-  flex-direction: column-reverse;
-  gap: 4px;
-  padding: 14px;
-  margin: 8px 0;
-  background: rgba(0,0,0,.3);
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.08);
-}
-.puzzle-result-actions{
-  display: flex;
-  gap: 8px;
-  margin-top: auto;
-  padding-bottom: 10px;
-}
-
-/* 정답 애니메이션 (한 색깔로 변환!) */
-@keyframes slotCorrect{
-  0%{ transform: scale(1) }
-  30%{ transform: scale(1.15) rotate(5deg) }
-  60%{ transform: scale(1.1) rotate(-3deg) }
-  100%{ transform: scale(1) rotate(0) }
-}
-
-/* 오답 애니메이션 */
-@keyframes puzzleShake{
-  0%,100%{ transform: translateX(0) }
-  20%{ transform: translateX(-8px) }
-  40%{ transform: translateX(8px) }
-  60%{ transform: translateX(-6px) }
-  80%{ transform: translateX(6px) }
-}
-.puzzle-slots.wrong{ animation: puzzleShake .5s ease }
 
 #dubArea{flex-shrink:0;display:flex;flex-direction:column;padding:10px 14px 14px;gap:8px}
 .dub-instruction{text-align:center;font-size:12px;color:var(--tx2);font-weight:700}
@@ -3250,11 +2924,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       
       <!-- 🏢 4개 카드 허브 -->
       <div class="lobby-cards">
-        <!-- 🎤 노래방 -->
+        <!-- 🎤 노래방 더빙실 -->
         <button class="lobby-card card-karaoke" id="lobbyKaraoke">
           <div class="lobby-card-emoji">🎤</div>
-          <div class="lobby-card-title">노래방<br>&nbsp;</div>
-          <div class="lobby-card-desc">가사 보기 or 외워서!</div>
+          <div class="lobby-card-title">노래방<br>더빙실</div>
+          <div class="lobby-card-desc">대본 보고 부르기</div>
           <div class="lobby-card-action">▶ 입장</div>
         </button>
         
@@ -3266,12 +2940,12 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="lobby-card-action">▶ 입장</div>
         </button>
         
-        <!-- 🧩 퍼즐 게임 (v9.4 구현!) -->
+        <!-- 🧩 퍼즐 게임 (Coming Soon) -->
         <button class="lobby-card card-puzzle" id="lobbyPuzzle">
           <div class="lobby-card-emoji">🧩</div>
           <div class="lobby-card-title">퍼즐 게임<br>탑 쌓기</div>
           <div class="lobby-card-desc">자막 조립</div>
-          <div class="lobby-card-action">▶ 입장</div>
+          <div class="lobby-card-action lobby-card-soon">🔜 Coming Soon</div>
         </button>
         
         <!-- 🎥 다른 영화 -->
@@ -3356,7 +3030,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <div class="dub-sync-bar" style="display:none"><div class="dub-sync-fill" id="dubSyncFill"></div></div>
         <div class="dub-score-live" id="dubScoreLive" style="display:none">0%</div>
         <div class="dub-bottom">
-          <button class="dub-retry" id="dubRetry">🎤 모드 변경</button>
+          <button class="dub-retry" id="dubRetry">🎬 더빙실</button>
           <button class="dub-mic-btn" id="dubMic">🎤</button>
           <button class="home-btn-inline" title="홈으로">🏠</button>
         </div>
@@ -3438,63 +3112,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <button class="quiz-btn-home" id="quizLobbyBtn" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:#fbbf24">🏢 로비로</button>
             <button class="quiz-btn-home" id="quizHomeBtn">🏠 홈으로</button>
           </div>
-        </div>
-      </div>
-      
-      <!-- v9.4: 🧩 PUZZLE GAME UI (쌤 비전: 단어 조립 → 탑 쌓기!) -->
-      <div id="puzzleMain" style="display:none">
-        <!-- 헤더 -->
-        <div class="puzzle-header">
-          <span class="puzzle-title">🧩 자막 퍼즐</span>
-          <span class="puzzle-progress"><span id="puzzleCur">1</span>/<span id="puzzleTotal">5</span></span>
-          <div class="puzzle-nav">
-            <button class="quiz-nav-btn" data-puzzle-nav="lobby" title="로비로">🏢</button>
-            <button class="quiz-nav-btn" data-puzzle-nav="home" title="홈으로">🏠</button>
-          </div>
-        </div>
-        
-        <!-- 한글 힌트 -->
-        <div class="puzzle-hint">
-          <div class="puzzle-hint-label">🇰🇷 이 문장을 만들어봐!</div>
-          <div class="puzzle-hint-text" id="puzzleKo">다음 영상도 기대되네!</div>
-        </div>
-        
-        <!-- 정답 슬롯 (드롭 영역) -->
-        <div class="puzzle-slots" id="puzzleSlots"></div>
-        
-        <!-- 단어 재료 영역 -->
-        <div class="puzzle-pieces-label">📦 단어 조각</div>
-        <div class="puzzle-pieces" id="puzzlePieces"></div>
-        
-        <!-- 🏆 완성한 탑 -->
-        <div class="puzzle-tower-section">
-          <div class="puzzle-tower-header">
-            <span>🏆 내 탑</span>
-            <span class="puzzle-tower-count"><span id="puzzleTowerCount">0</span>/<span id="puzzleTowerMax">5</span></span>
-          </div>
-          <div class="puzzle-tower" id="puzzleTower"></div>
-        </div>
-        
-        <!-- 힌트 & 체크 버튼 -->
-        <div class="puzzle-actions">
-          <button class="puzzle-btn puzzle-btn-reset" id="puzzleReset">↺ 초기화</button>
-          <button class="puzzle-btn puzzle-btn-check" id="puzzleCheck">✓ 확인</button>
-        </div>
-      </div>
-      
-      <!-- 🎊 퍼즐 완료 결과 -->
-      <div id="puzzleResult" style="display:none">
-        <div class="puzzle-result-header">
-          <div class="puzzle-result-rainbow" id="puzzleResultRainbow">🏆</div>
-          <div class="puzzle-result-title" id="puzzleResultTitle">탑 완성!</div>
-          <div class="puzzle-result-subtitle" id="puzzleResultSubtitle">멋진 탑을 쌓았어요!</div>
-        </div>
-        <!-- 완성된 탑 보여주기 -->
-        <div class="puzzle-final-tower" id="puzzleFinalTower"></div>
-        <div class="puzzle-result-actions">
-          <button class="quiz-btn-retry" id="puzzleRetryBtn">🔁 다시 쌓기</button>
-          <button class="quiz-btn-home" id="puzzleLobbyBtn" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:#fbbf24">🏢 로비로</button>
-          <button class="quiz-btn-home" id="puzzleHomeBtn">🏠 홈으로</button>
         </div>
       </div>
     </div>
@@ -3669,7 +3286,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.4</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.3</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4787,13 +4404,22 @@ document.addEventListener('click', e=>{
   }
 });
 
-/* 🧩 퍼즐 게임 → 🎨 단어 조립 → 탑 쌓기! (v9.4 구현!) */
+/* 🧩 퍼즐 게임 → Coming Soon! */
 document.addEventListener('click', e=>{
   if(e.target && (e.target.id==='lobbyPuzzle' || e.target.closest('#lobbyPuzzle'))){
-    const hub=document.getElementById('lobbyHub');
-    if(hub) hub.style.display='none';
-    /* 퍼즐 게임 시작! */
-    startPuzzleGame();
+    /* 깜찍한 토스트 메시지 */
+    const card = e.target.closest('#lobbyPuzzle');
+    if(card){
+      const existing = card.querySelector('.soon-popup');
+      if(existing)return;
+      const popup = document.createElement('div');
+      popup.className = 'soon-popup';
+      popup.innerHTML = '🚧 곧 만나요!<br><span style="font-size:11px;opacity:.8">자막 퍼즐 + 탑 쌓기 준비중</span>';
+      popup.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,15,.95);color:#fbbf24;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:800;z-index:10;border:1px solid rgba(251,191,36,.3);box-shadow:0 8px 24px rgba(0,0,0,.5);text-align:center;animation:soonPop .3s ease-out;';
+      card.style.position='relative';
+      card.appendChild(popup);
+      setTimeout(()=>{ if(popup.parentNode)popup.remove(); }, 2000);
+    }
   }
 });
 
@@ -4816,444 +4442,6 @@ document.addEventListener('click', e=>{
   style.textContent='@keyframes soonPop{from{opacity:0;transform:translate(-50%,-50%) scale(.7)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}';
   document.head.appendChild(style);
 })();
-
-
-/* ═══════════════════════════════════════════════════
- * v9.4 · 🧩 PUZZLE GAME LOGIC (쌤 비전 완성!)
- * 색깔 단어 조립 → 정답 → 한 색깔 문장 → 탑 쌓기!
- * 5-7 문장 완성 = 🌈 무지개 탑 완성!
- * ═══════════════════════════════════════════════════ */
-
-const PUZZLE_STATE = {
-  items: [],          // 문장 배열 [{en, ko, words}]
-  currentIdx: 0,
-  placedPieces: [],   // 슬롯에 놓인 단어들
-  availablePieces: [], // 남은 단어 풀
-  tower: [],          // 완성된 벽돌들 [{text, sentIdx}]
-  totalToComplete: 5,
-  videoId: null,
-};
-
-/* 🧩 퍼즐 시작! */
-function startPuzzleGame(){
-  if(!S.short || !S.short.sentences || S.short.sentences.length === 0){
-    alert('영상을 먼저 선택해주세요!');
-    return;
-  }
-  
-  /* UI 전환 */
-  const dubArea = document.getElementById('dubArea');
-  const dubMain = document.getElementById('dubMain');
-  const quizMain = document.getElementById('quizMain');
-  const puzzleMain = document.getElementById('puzzleMain');
-  const puzzleResult = document.getElementById('puzzleResult');
-  
-  dubArea.style.display = 'flex';
-  if(dubMain) dubMain.style.display = 'none';
-  if(quizMain) quizMain.style.display = 'none';
-  if(puzzleResult) puzzleResult.style.display = 'none';
-  if(puzzleMain) puzzleMain.style.display = 'flex';
-  
-  /* 영상 숨김 */
-  const yt = document.getElementById('ytContainer');
-  if(yt) yt.style.display = 'none';
-  
-  /* player-top 숨김 */
-  const playerTop = document.querySelector('.player-top');
-  if(playerTop) playerTop.style.display = 'none';
-  
-  /* 배너 업데이트 */
-  const bn = document.getElementById('stepBanner');
-  if(bn){
-    bn.className = 'step-banner dub';
-    bn.textContent = '🧩 자막 퍼즐 — 색깔 단어로 탑을 쌓자!';
-  }
-  
-  /* 영상별 탑 로드 */
-  PUZZLE_STATE.videoId = S.short.id;
-  const savedTowers = db.get('puzzleTowers', {});
-  PUZZLE_STATE.tower = savedTowers[S.short.id] || [];
-  
-  /* 문장 준비 (짧은 것 우선, 최대 5-7개) */
-  const sentences = S.short.sentences
-    .filter(s => s.en && s.en.split(/\s+/).length >= 2 && s.en.split(/\s+/).length <= 10)
-    .slice(0, 7);
-  
-  if(sentences.length < 2){
-    /* 조건 완화 */
-    const fallback = S.short.sentences.slice(0, 5);
-    PUZZLE_STATE.items = fallback.map(s => ({
-      en: s.en,
-      ko: s.ko || s.koHighlight || '',
-      words: tokenizeForPuzzle(s.en)
-    }));
-  } else {
-    PUZZLE_STATE.items = sentences.map(s => ({
-      en: s.en,
-      ko: s.ko || s.koHighlight || '',
-      words: tokenizeForPuzzle(s.en)
-    }));
-  }
-  
-  PUZZLE_STATE.totalToComplete = PUZZLE_STATE.items.length;
-  PUZZLE_STATE.currentIdx = 0;
-  
-  /* 탑이 이미 완성된 경우 → 바로 결과 화면 */
-  if(PUZZLE_STATE.tower.length >= PUZZLE_STATE.totalToComplete){
-    showPuzzleResult(true); /* 이미 완성된 탑! */
-    return;
-  }
-  
-  /* 이미 일부 완성한 것 skip */
-  PUZZLE_STATE.currentIdx = PUZZLE_STATE.tower.length;
-  
-  renderPuzzleRound();
-  renderPuzzleTower();
-}
-
-/* 문장을 단어로 쪼개기 */
-function tokenizeForPuzzle(sentence){
-  /* 청크 마커 제거, 구두점은 단어에 붙임 */
-  return sentence
-    .replace(/\|/g, ' ')
-    .split(/\s+/)
-    .filter(Boolean);
-}
-
-/* 현재 라운드 렌더 */
-function renderPuzzleRound(){
-  const item = PUZZLE_STATE.items[PUZZLE_STATE.currentIdx];
-  if(!item){
-    finishPuzzleGame();
-    return;
-  }
-  
-  /* 진행 표시 */
-  document.getElementById('puzzleCur').textContent = PUZZLE_STATE.currentIdx + 1;
-  document.getElementById('puzzleTotal').textContent = PUZZLE_STATE.totalToComplete;
-  document.getElementById('puzzleKo').textContent = item.ko || '이 문장을 만들어봐!';
-  
-  /* 슬롯 생성 (빈 슬롯 N개) */
-  const slotsEl = document.getElementById('puzzleSlots');
-  slotsEl.innerHTML = '';
-  slotsEl.classList.remove('complete', 'wrong');
-  item.words.forEach((_, i) => {
-    const slot = document.createElement('div');
-    slot.className = 'puzzle-slot';
-    slot.dataset.slotIdx = i;
-    slot.addEventListener('click', () => removeFromSlot(i));
-    slotsEl.appendChild(slot);
-  });
-  
-  /* 단어 조각 생성 (색깔 랜덤) */
-  const piecesEl = document.getElementById('puzzlePieces');
-  piecesEl.innerHTML = '';
-  
-  /* 단어 섞기 */
-  const shuffled = [...item.words]
-    .map((w, origIdx) => ({ word: w, origIdx }))
-    .sort(() => Math.random() - 0.5);
-  
-  PUZZLE_STATE.placedPieces = new Array(item.words.length).fill(null);
-  PUZZLE_STATE.availablePieces = shuffled;
-  
-  shuffled.forEach((p, i) => {
-    const colorClass = 'piece-c' + ((i % 8) + 1);
-    const piece = document.createElement('button');
-    piece.className = 'puzzle-piece ' + colorClass;
-    piece.textContent = p.word;
-    piece.dataset.origIdx = p.origIdx;
-    piece.dataset.word = p.word;
-    piece.style.animationDelay = (i * 50) + 'ms';
-    piece.addEventListener('click', () => placeInNextSlot(piece, p.word, p.origIdx));
-    piecesEl.appendChild(piece);
-  });
-  
-  /* 탑 카운트 업데이트 */
-  document.getElementById('puzzleTowerCount').textContent = PUZZLE_STATE.tower.length;
-  document.getElementById('puzzleTowerMax').textContent = PUZZLE_STATE.totalToComplete;
-}
-
-/* 조각을 다음 빈 슬롯에 배치 */
-function placeInNextSlot(pieceEl, word, origIdx){
-  /* 다음 빈 슬롯 찾기 */
-  const slots = document.querySelectorAll('.puzzle-slot');
-  let nextEmpty = -1;
-  for(let i = 0; i < slots.length; i++){
-    if(!slots[i].classList.contains('filled')){
-      nextEmpty = i;
-      break;
-    }
-  }
-  if(nextEmpty < 0) return;
-  
-  /* 슬롯에 배치 */
-  const slot = slots[nextEmpty];
-  slot.classList.add('filled');
-  slot.textContent = word;
-  slot.dataset.word = word;
-  slot.dataset.origIdx = origIdx;
-  slot.dataset.pieceClass = Array.from(pieceEl.classList).find(c => c.startsWith('piece-c'));
-  /* 색깔 유지 */
-  slot.className = 'puzzle-slot filled ' + slot.dataset.pieceClass;
-  
-  /* 조각 숨김 */
-  pieceEl.classList.add('used');
-  
-  /* 기록 */
-  PUZZLE_STATE.placedPieces[nextEmpty] = { word, origIdx };
-  
-  /* 모든 슬롯 채워지면 자동 체크 */
-  const allFilled = PUZZLE_STATE.placedPieces.every(p => p !== null);
-  if(allFilled){
-    setTimeout(() => checkPuzzleAnswer(), 400);
-  }
-}
-
-/* 슬롯에서 조각 빼기 */
-function removeFromSlot(slotIdx){
-  const slot = document.querySelectorAll('.puzzle-slot')[slotIdx];
-  if(!slot || !slot.classList.contains('filled')) return;
-  
-  const origIdx = slot.dataset.origIdx;
-  const word = slot.dataset.word;
-  
-  /* 조각 다시 보이게 */
-  const pieces = document.querySelectorAll('.puzzle-piece');
-  pieces.forEach(p => {
-    if(p.dataset.origIdx == origIdx && p.classList.contains('used')){
-      p.classList.remove('used');
-    }
-  });
-  
-  /* 슬롯 비움 */
-  slot.className = 'puzzle-slot';
-  slot.textContent = '';
-  delete slot.dataset.word;
-  delete slot.dataset.origIdx;
-  delete slot.dataset.pieceClass;
-  
-  PUZZLE_STATE.placedPieces[slotIdx] = null;
-}
-
-/* 정답 체크 */
-function checkPuzzleAnswer(){
-  const item = PUZZLE_STATE.items[PUZZLE_STATE.currentIdx];
-  const slotsEl = document.getElementById('puzzleSlots');
-  
-  const userAnswer = PUZZLE_STATE.placedPieces.map(p => p ? p.word : '').join(' ');
-  const correctAnswer = item.words.join(' ');
-  
-  if(userAnswer === correctAnswer){
-    /* 🎉 정답! 한 색깔로 변환 */
-    const sentIdx = PUZZLE_STATE.tower.length; /* 0-based */
-    const brickClass = 'brick-s' + ((sentIdx % 7) + 1);
-    const pieceClassForSlot = 'piece-c' + ((sentIdx % 8) + 1); /* 근사한 색 */
-    
-    slotsEl.classList.add('complete');
-    const slots = document.querySelectorAll('.puzzle-slot');
-    slots.forEach((s, i) => {
-      s.className = 'puzzle-slot filled ' + pieceClassForSlot;
-      s.style.animationDelay = (i * 80) + 'ms';
-    });
-    
-    /* 파티클 효과 */
-    spawnParticles(8, ['🎉','✨','⭐','🌟']);
-    
-    /* 탑에 추가 */
-    PUZZLE_STATE.tower.push({
-      text: item.en,
-      sentIdx: sentIdx,
-      brickClass: brickClass
-    });
-    
-    /* localStorage 저장 */
-    const savedTowers = db.get('puzzleTowers', {});
-    savedTowers[PUZZLE_STATE.videoId] = PUZZLE_STATE.tower;
-    db.set('puzzleTowers', savedTowers);
-    
-    /* 탑 카운트 */
-    const lobbyTower = document.getElementById('lobbyTowerCount');
-    if(lobbyTower){
-      let totalBricks = 0;
-      Object.values(savedTowers).forEach(t => totalBricks += t.length);
-      lobbyTower.textContent = totalBricks;
-    }
-    
-    /* 다음 문장으로 */
-    setTimeout(() => {
-      renderPuzzleTower();
-      PUZZLE_STATE.currentIdx++;
-      
-      if(PUZZLE_STATE.currentIdx >= PUZZLE_STATE.totalToComplete){
-        finishPuzzleGame();
-      } else {
-        renderPuzzleRound();
-      }
-    }, 1500);
-  } else {
-    /* ❌ 오답 — 흔들기 */
-    slotsEl.classList.add('wrong');
-    setTimeout(() => slotsEl.classList.remove('wrong'), 500);
-  }
-}
-
-/* 탑 렌더 */
-function renderPuzzleTower(){
-  const towerEl = document.getElementById('puzzleTower');
-  if(!towerEl) return;
-  
-  if(PUZZLE_STATE.tower.length === 0){
-    towerEl.innerHTML = '<div class="puzzle-tower-empty">첫 벽돌을 쌓아보세요!</div>';
-    return;
-  }
-  
-  towerEl.innerHTML = '';
-  PUZZLE_STATE.tower.forEach(brick => {
-    const b = document.createElement('div');
-    b.className = 'puzzle-brick ' + brick.brickClass;
-    b.textContent = brick.text;
-    towerEl.appendChild(b);
-  });
-  
-  /* 카운트 업데이트 */
-  document.getElementById('puzzleTowerCount').textContent = PUZZLE_STATE.tower.length;
-}
-
-/* 🎊 완료! */
-function finishPuzzleGame(){
-  showPuzzleResult(false);
-}
-
-function showPuzzleResult(alreadyCompleted){
-  const puzzleMain = document.getElementById('puzzleMain');
-  const puzzleResult = document.getElementById('puzzleResult');
-  if(puzzleMain) puzzleMain.style.display = 'none';
-  if(puzzleResult) puzzleResult.style.display = 'flex';
-  
-  const iconEl = document.getElementById('puzzleResultRainbow');
-  const titleEl = document.getElementById('puzzleResultTitle');
-  const subEl = document.getElementById('puzzleResultSubtitle');
-  
-  if(PUZZLE_STATE.tower.length >= 7){
-    iconEl.textContent = '🌈';
-    titleEl.textContent = '🌈 무지개 탑 완성!';
-    subEl.textContent = '7층 완벽 마스터! 최고예요!';
-  } else if(PUZZLE_STATE.tower.length >= 5){
-    iconEl.textContent = '🏆';
-    titleEl.textContent = '멋진 탑 완성!';
-    subEl.textContent = `${PUZZLE_STATE.tower.length}층 탑을 쌓았어요!`;
-  } else {
-    iconEl.textContent = '🎊';
-    titleEl.textContent = alreadyCompleted ? '이미 완성된 탑!' : '탑 쌓기 진행 중';
-    subEl.textContent = `현재 ${PUZZLE_STATE.tower.length}층 완성!`;
-  }
-  
-  /* 최종 탑 표시 */
-  const finalTower = document.getElementById('puzzleFinalTower');
-  if(finalTower){
-    finalTower.innerHTML = '';
-    PUZZLE_STATE.tower.forEach(brick => {
-      const b = document.createElement('div');
-      b.className = 'puzzle-brick ' + brick.brickClass;
-      b.textContent = brick.text;
-      finalTower.appendChild(b);
-    });
-    if(PUZZLE_STATE.tower.length === 0){
-      finalTower.innerHTML = '<div class="puzzle-tower-empty">아직 쌓은 탑이 없어요</div>';
-    }
-  }
-  
-  /* 파티클 */
-  if(PUZZLE_STATE.tower.length >= 5){
-    setTimeout(() => {
-      for(let i = 0; i < 12; i++){
-        setTimeout(() => spawnParticles(3, ['🎉','🏆','✨','🌈']), i * 120);
-      }
-    }, 400);
-  }
-}
-
-/* 퍼즐 나가기 */
-function exitPuzzleGame(destination){
-  const puzzleMain = document.getElementById('puzzleMain');
-  const puzzleResult = document.getElementById('puzzleResult');
-  if(puzzleMain) puzzleMain.style.display = 'none';
-  if(puzzleResult) puzzleResult.style.display = 'none';
-  
-  /* player-top 복원 */
-  const playerTop = document.querySelector('.player-top');
-  if(playerTop) playerTop.style.display = 'flex';
-  
-  if(destination === 'lobby'){
-    showLobbyHub();
-  } else {
-    cleanupPlayer();
-    stopSnapReview();
-    renderFeed();
-    showScreen('feed');
-  }
-}
-window.exitPuzzleGame = exitPuzzleGame;
-
-/* 이벤트 바인딩 */
-document.addEventListener('click', e=>{
-  /* 퍼즐 네비 버튼 */
-  const navBtn = e.target.closest('[data-puzzle-nav]');
-  if(navBtn){
-    const dest = navBtn.dataset.puzzleNav;
-    exitPuzzleGame(dest === 'home' ? 'home' : 'lobby');
-    return;
-  }
-  
-  /* 초기화 버튼 */
-  if(e.target && e.target.id === 'puzzleReset'){
-    renderPuzzleRound();
-    return;
-  }
-  
-  /* 확인 버튼 */
-  if(e.target && e.target.id === 'puzzleCheck'){
-    const allFilled = PUZZLE_STATE.placedPieces.every(p => p !== null);
-    if(!allFilled){
-      const slotsEl = document.getElementById('puzzleSlots');
-      slotsEl.classList.add('wrong');
-      setTimeout(() => slotsEl.classList.remove('wrong'), 500);
-      return;
-    }
-    checkPuzzleAnswer();
-    return;
-  }
-  
-  /* 퍼즐 결과 버튼 */
-  if(e.target && e.target.id === 'puzzleRetryBtn'){
-    /* 탑 초기화하고 다시 시작? → 그냥 이어서! */
-    PUZZLE_STATE.currentIdx = PUZZLE_STATE.tower.length;
-    if(PUZZLE_STATE.currentIdx >= PUZZLE_STATE.totalToComplete){
-      /* 탑 리셋 */
-      PUZZLE_STATE.tower = [];
-      const savedTowers = db.get('puzzleTowers', {});
-      delete savedTowers[PUZZLE_STATE.videoId];
-      db.set('puzzleTowers', savedTowers);
-      PUZZLE_STATE.currentIdx = 0;
-    }
-    const puzzleResult = document.getElementById('puzzleResult');
-    const puzzleMain = document.getElementById('puzzleMain');
-    if(puzzleResult) puzzleResult.style.display = 'none';
-    if(puzzleMain) puzzleMain.style.display = 'flex';
-    renderPuzzleRound();
-    renderPuzzleTower();
-    return;
-  }
-  if(e.target && e.target.id === 'puzzleLobbyBtn'){
-    exitPuzzleGame('lobby');
-    return;
-  }
-  if(e.target && e.target.id === 'puzzleHomeBtn'){
-    exitPuzzleGame('home');
-    return;
-  }
-});
 
 
 /* ═══════════════════════════════════════════════════
