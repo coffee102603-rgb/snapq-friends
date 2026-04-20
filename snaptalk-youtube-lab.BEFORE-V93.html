@@ -2981,33 +2981,33 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     <div id="dubArea" style="display:none">
       <!-- Studio Booth Picker: shown first -->
       <div id="dubDiffPicker" class="diff-picker">
-        <div class="diff-picker-title">🎤 KARAOKE · 모드를 선택하세요</div>
-        <div class="diff-picker-sub">노래방처럼 즐겁게! 🎵</div>
+        <div class="diff-picker-title">🎙 STUDIO · 테이크를 선택하세요</div>
+        <div class="diff-picker-sub">도전할수록 Heat 보너스 🔥</div>
         <div class="booth-row">
           <div class="booth easy active" data-diff="easy">
             <span class="booth-led"></span>
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">🎵 가사 보기</div>
-              <div class="booth-heat">초보자 모드</div>
+              <div class="booth-name">📜 SCRIPT</div>
+              <div class="booth-heat">영어+한글+발음</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
           <div class="booth normal" data-diff="normal">
             <span class="booth-led"></span>
-            <span class="booth-mic">🎤</span>
+            <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">🎤 외워서 부르기</div>
-              <div class="booth-heat">도전 모드!</div>
+              <div class="booth-name">🎭 REHEARSAL</div>
+              <div class="booth-heat">영어+한글</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
           <!-- v9.2: QUIZ 부스 제거됨 (로비 허브 > 간식 코너에서 접근) -->
         </div>
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
-          <span id="boothLabel">🎵 가사 보기 · 대본 있음 (초보 모드)</span>
+          <span id="boothLabel">🟢 SCRIPT · 영어+한글+발음</span>
         </div>
         <!-- v9.2: 노래방 입장 + 로비 + 홈 3개 버튼 -->
         <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
@@ -3286,7 +3286,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.3</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.2</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4428,11 +4428,8 @@ document.addEventListener('click', e=>{
   if(e.target && (e.target.id==='lobbyHome' || e.target.closest('#lobbyHome'))){
     const hub=document.getElementById('lobbyHub');
     if(hub)hub.style.display='none';
-    /* v9.3: 홈 피드로! (cleanup + renderFeed 필수) */
-    cleanupPlayer();
-    stopSnapReview();
-    renderFeed();
-    showScreen('feed');
+    /* 홈 피드로! */
+    showScreen('feedScreen');
   }
 });
 
@@ -5041,10 +5038,7 @@ function exitQuizGame(destination){
     /* 🏢 로비 허브로 돌아가기 */
     showLobbyHub();
   } else {
-    /* 🏠 홈으로 — v9.3: 완전 정리 */
-    cleanupPlayer();
-    stopSnapReview();
-    renderFeed();
+    /* 🏠 홈으로 */
     showScreen('feed');
   }
 }
@@ -5383,11 +5377,11 @@ function goStep(step){
   else if(step===2){
     /* STEP 3: DUB CHALLENGE — show booth picker first */
     bn.className='step-banner dub';
-    /* v9.3: 노래방 감성 배너 */
+    /* v7.0+: 시도 횟수 표시해서 동기부여 */
     if(S.dubAttempts&&S.dubAttempts>=1){
-      bn.textContent=`🎤 노래방 · ${S.dubAttempts+1}번째 앵콜 — 이번엔 대박!`;
+      bn.textContent=`🎬 스튜디오 · ${S.dubAttempts+1}번째 시도 — 이번엔 잡자!`;
     }else{
-      bn.textContent='🎤 노래방 — 목청 풀고 주인공이 되자!';
+      bn.textContent='🔥 촬영 — 영상 속 주인공을 뜨겁게!';
     }
     /* ⚠️ 중요: 이전 단계 영상 완전 정지 */
     try{
@@ -6538,16 +6532,16 @@ document.getElementById('dubRetry').addEventListener('click',()=>{
   goStep(2);
 });
 
-/* Booth picker: v9.3 노래방 감성 네이밍 */
+/* Booth picker: v6.17 네이밍 — 방송 용어 통일 */
 const BOOTH_LABELS={
-  easy:'🎵 가사 보기 · 대본 있음 (초보 모드)',
-  normal:'🎤 외워서 부르기 · 무대 위! (도전 모드)',
+  easy:'📜 SCRIPT · 대본 읽기 (영어+한글+발음)',
+  normal:'🎭 REHEARSAL · 리허설 (영어+한글)',
   hard:'🎯 QUIZ · 🎰 랜덤 간식 게임!',
   quiz:'🎯 QUIZ · 🎰 랜덤 간식 게임!'
 };
 const BOOTH_STUDIO_LABEL={
-  easy:'🎵 가사 모드',
-  normal:'🎤 무대 모드',
+  easy:'📜 SCRIPT',
+  normal:'🎭 REHEARSAL',
   hard:'🎯 QUIZ',
   quiz:'🎯 QUIZ'
 };
@@ -6618,11 +6612,11 @@ document.getElementById('dubStartBtn').addEventListener('click',()=>{
     if(banner){
       banner.className='step-banner dub';
       const boothBannerText={
-        easy:'🎵 가사 보기 — 편하게 노래해봐!',
-        normal:'🎤 외워서 부르기 — 무대의 주인공!',
+        easy:'📜 SCRIPT — 편하게 따라해봐!',
+        normal:'🎭 REHEARSAL — 감정을 살려봐!',
         hard:'🎬 TAKE 1 — 나도 주인공!'
       };
-      banner.textContent=boothBannerText[selectedDiff]||'🎤 노래방 — 목청 풀고 가자!';
+      banner.textContent=boothBannerText[selectedDiff]||'🔥 촬영 — 영상 속 주인공을 뜨겁게!';
     }
     document.getElementById('ytContainer').style.display='';
     document.getElementById('ytContainer').classList.remove('pip');
@@ -7597,19 +7591,11 @@ document.querySelectorAll('.speed-btn').forEach(b=>{b.addEventListener('click',(
 function goHome(){
   stopSnapReview();
   cleanupPlayer();
-  /* v9.3: renderFeed() 호출 필수! (까만 화면 버그 수정) */
-  renderFeed();
   showScreen('feed');
   document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
   document.querySelector('.nav-btn[data-screen="feed"]').classList.add('active');
 }
-document.querySelectorAll('.home-btn-inline').forEach(b=>{
-  b.addEventListener('click', (e)=>{
-    /* v9.3: boothLobbyBtn은 로비로 가야 하니까 제외 */
-    if(b.id === 'boothLobbyBtn') return;
-    goHome();
-  });
-});
+document.querySelectorAll('.home-btn-inline').forEach(b=>b.addEventListener('click',goHome));
 /* v7.5: shadowHome cinema-btn 클릭 */
 (function(){var sh=document.getElementById('shadowHome');if(sh)sh.addEventListener('click',goHome);})();
 
