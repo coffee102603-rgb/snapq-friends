@@ -5440,21 +5440,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
           <span id="boothLabel">🎵 가사 보기 · 대본 있음 (초보 모드)</span>
         </div>
-        <!-- v10.5: 🎦 로비 + 매표소 버튼 (메인 통일!) -->
-        <div style="display:flex;gap:8px;align-items:stretch;margin-top:6px">
-          <button class="listen-next" id="dubStartBtn" style="flex:1">
-            <span class="btn-icon">▶</span>
-            <span class="btn-label">입장</span>
-            <span class="btn-sub">시작하기!</span>
-          </button>
-          <button class="lobby-btn-big" id="boothLobbyBtn" title="로비로">
-            <span class="btn-icon">🏢</span>
-            <span class="btn-label">LOBBY</span>
-          </button>
-          <button class="lobby-btn-big" title="매표소로">
-            <span class="btn-icon">🎦</span>
-            <span class="btn-label">HOME</span>
-          </button>
+        <!-- v9.2: 노래방 입장 + 로비 + 홈 3개 버튼 -->
+        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
+          <button class="listen-next" id="dubStartBtn" style="flex:1">▶ 입장</button>
+          <button class="home-btn-inline" id="boothLobbyBtn" title="로비로" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#fbbf24">🏢</button>
+          <button class="home-btn-inline" title="홈으로">🏠</button>
         </div>
       </div>
 
@@ -5473,10 +5463,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <div class="dub-bottom">
           <button class="dub-retry" id="dubRetry">🎤 모드 변경</button>
           <button class="dub-mic-btn" id="dubMic">🎤</button>
-          <button class="lobby-btn-big" title="매표소로">
-            <span class="btn-icon">🎦</span>
-            <span class="btn-label">HOME</span>
-          </button>
+          <button class="home-btn-inline" title="홈으로">🏠</button>
         </div>
       </div>
       
@@ -5856,7 +5843,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.5</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.4</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -11541,11 +11528,7 @@ document.querySelectorAll('.home-btn-inline').forEach(b=>{
 });
 /* v9.9.9: 🎦 LOBBY 버튼 → 홈으로 */
 document.querySelectorAll('.lobby-btn-big').forEach(b=>{
-  b.addEventListener('click', (e)=>{ 
-    /* v10.5: boothLobbyBtn은 로비로 가야 하니까 제외 */
-    if(b.id === 'boothLobbyBtn') return;
-    goHome(); 
-  });
+  b.addEventListener('click', (e)=>{ goHome(); });
 });
 /* v7.5: shadowHome cinema-btn 클릭 */
 (function(){var sh=document.getElementById('shadowHome');if(sh)sh.addEventListener('click',goHome);})();
