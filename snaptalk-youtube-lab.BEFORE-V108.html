@@ -4823,83 +4823,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-weight: 600;
 }
 
-/* v10.8: 🎬 영화관 배지 (골드/초록/보라 네온!) */
-.movie-poster-cinema-badge{
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  right: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 5px;
-  padding: 6px 8px;
-  border-radius: 10px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  z-index: 3;
-  backdrop-filter: blur(8px);
-  text-transform: uppercase;
-  animation: cinemaBadgePulse 2.5s ease-in-out infinite;
-}
-.movie-poster-cinema-badge .mpcb-icon{
-  font-size: 13px;
-  line-height: 1;
-  flex-shrink: 0;
-}
-.movie-poster-cinema-badge .mpcb-label{
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 0.6px;
-  line-height: 1;
-  white-space: nowrap;
-}
-/* 🎓 EDITOR'S PICK - 골드 (쌤 추천) */
-.badge-editor{
-  background: linear-gradient(135deg, rgba(251,191,36,0.95), rgba(245,158,11,0.92));
-  color: #1a1a2e;
-  border: 1.5px solid rgba(252,211,77,0.9);
-  box-shadow: 
-    0 4px 12px rgba(251,191,36,0.45),
-    0 0 20px rgba(251,191,36,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.35);
-  text-shadow: 0 1px 1px rgba(255,255,255,0.3);
-}
-/* 🆕 NEW RELEASE - 초록 (최신) */
-.badge-new{
-  background: linear-gradient(135deg, rgba(0,229,160,0.95), rgba(16,185,129,0.92));
-  color: #0f1117;
-  border: 1.5px solid rgba(110,231,183,0.9);
-  box-shadow: 
-    0 4px 12px rgba(0,229,160,0.45),
-    0 0 20px rgba(0,229,160,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-  text-shadow: 0 1px 1px rgba(255,255,255,0.2);
-}
-/* 🎰 TODAY'S PICK - 보라 (오늘의 픽) */
-.badge-today{
-  background: linear-gradient(135deg, rgba(168,85,247,0.95), rgba(139,92,246,0.92));
-  color: #fff;
-  border: 1.5px solid rgba(196,181,253,0.9);
-  box-shadow: 
-    0 4px 12px rgba(168,85,247,0.45),
-    0 0 20px rgba(168,85,247,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.25);
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-}
-@keyframes cinemaBadgePulse{
-  0%, 100% { transform: scale(1) }
-  50%      { transform: scale(1.04) }
-}
-/* 배지 하단 서브 텍스트 */
-.movie-poster-badge-sub{
-  font-size: 10px;
-  color: #94a3b8;
-  font-weight: 700;
-  letter-spacing: 0.2px;
-}
-
 /* 🎬 NOW SHOWING 섹션 */
 .now-showing-section{
   margin: 0 0 20px;
@@ -6208,7 +6131,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.8</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.7</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -6415,7 +6338,7 @@ const SHORTS={us:[
    sentences:[{en:"This is Dalgona candy,",ko:"이건 달고나 사탕이에요,",start:0.16,end:1.109,core:'candy',highlight:'Dalgona candy',koHighlight:'달고나 사탕',phonetic:'디스 이즈 달고나 캔디,'},{en:"the popular Korean street snack seen in the TV series Squid Game.",ko:"TV 시리즈 오징어 게임에 나온 인기 있는 한국 길거리 간식이죠.",start:1.191,end:4.033,core:'snack',highlight:'street snack',koHighlight:'길거리 간식',phonetic:'더 파퓰러 코리안 스트릿 스낵 씬 인 더 티비 시리즈 스퀴드 게임.'},{en:"It made by melting down sugar until it turns a caramel color and then",ko:"설탕을 카라멜 색이 될 때까지 녹여서 만들고,",start:4.115,end:7.227,core:'melting',highlight:'melting down sugar',koHighlight:'설탕을 녹여서',phonetic:'잇 메이드 바이 멜팅 다운 슈거 언틸 잇 턴즈 어 카라멜 컬러 앤 덴'},{en:"adding in a few pinches of baking soda,",ko:"베이킹 소다를 몇 꼬집 넣어주면,",start:7.309,end:8.981,core:'adding',highlight:'adding baking soda',koHighlight:'베이킹 소다를 넣어주면',phonetic:'애딩 인 어 퓨 핀치즈 오브 베이킹 소다,'},{en:"where it then becomes very light and foamy.",ko:"아주 가볍고 부풀어 오르게 돼요.",start:9.063,end:10.916,core:'foamy',highlight:'light and foamy',koHighlight:'가볍고 부풀어 오르게',phonetic:'웨어 잇 덴 비컴즈 베리 라이트 앤 포미.'},{en:"This is dropped onto a flat surface where it pressed down and lightly",ko:"이걸 평평한 표면에 떨어뜨려서 눌러주고,",start:10.998,end:14.109,core:'pressed',highlight:'pressed down',koHighlight:'눌러주고',phonetic:'디스 이즈 드롭트 온투 어 플랫 서페이스 웨어 잇 프레스드 다운 앤 라이틀리'},{en:"stamped with a cookie cutter mold.",ko:"쿠키 커터 틀로 가볍게 찍어줘요.",start:14.191,end:15.639,core:'stamped',highlight:'stamped with mold',koHighlight:'틀로 찍어줘요',phonetic:'스탬프드 위드 어 쿠키 커터 몰드.'},{en:"As you can see, I chose the umbrella shape,",ko:"보시다시피, 저는 우산 모양을 선택했어요,",start:15.721,end:17.448,core:'chose',highlight:'chose umbrella shape',koHighlight:'우산 모양을 선택했어요',phonetic:'애즈 유 캔 씨, 아이 초즈 디 엄브렐라 쉐이프,'},{en:"and once you handed the Dalgona,",ko:"그리고 달고나를 받으면,",start:17.53,end:18.92,core:'handed',highlight:'handed the Dalgona',koHighlight:'달고나를 받으면',phonetic:'앤 원스 유 핸디드 더 달고나,'},{en:"the goal is to use a toothpick to carve out the shape in the",ko:"목표는 이쑤시개로 가운데의 모양을 파내는 거예요,",start:19.002,end:21.445,core:'carve',highlight:'carve out shape',koHighlight:'모양을 파내는',phonetic:'더 골 이즈 투 유즈 어 투스픽 투 카브 아웃 더 쉐이프 인 더'},{en:"center so it looks like this,",ko:"이렇게 보이도록 말이죠,",start:21.527,end:22.665,core:'looks',highlight:'looks like this',koHighlight:'이렇게 보이도록',phonetic:'센터 쏘 잇 룩스 라이크 디스,'},{en:"but unfortunately I dropped it on the floor and lost immediately.",ko:"하지만 불행히도 저는 바닥에 떨어뜨려서 바로 졌어요.",start:22.747,end:25.44,core:'dropped',highlight:'dropped on floor',koHighlight:'바닥에 떨어뜨려서',phonetic:'벗 언포춘트리 아이 드롭트 잇 온 더 플로어 앤 로스트 이미디엇틀리.'}]},
   {id:'hBchw5-EQrI',title:'World Most Expensive Pizza',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:150,
    sentences:[{en:"This is the world largest pizza, but",ko:"이게 세계에서 가장 큰 피자인데",start:0.16,end:3.76,core:'largest',highlight:'largest pizza',koHighlight:'가장 큰 피자',phonetic:'디스 이즈 더 월드 라지스트 피자, 벗'},{en:"how much does it cost? Can I order the",ko:"얼마나 할까요? 제가 주문할 수 있을까요",start:2.32,end:5.759,core:'cost',highlight:'how much cost',koHighlight:'얼마나 하다',phonetic:'하우 머치 더즈 잇 코스트? 캔 아이 오더 더'},{en:"giant Sicilian and put everything you",ko:"자이언트 시실리안에 있는 모든 걸",start:3.76,end:7.44,core:'giant',highlight:'giant Sicilian',koHighlight:'자이언트 시실리안',phonetic:'자이언트 시실리안 앤 풋 에브리씽 유'},{en:"have on it? Bankrupt me. Sure.",ko:"다 올려주세요? 파산시켜 주세요. 알겠습니다.",start:5.759,end:8.72,core:'bankrupt',highlight:'bankrupt me',koHighlight:'파산시키다',phonetic:'해브 온 잇? 뱅크럽트 미. 슈어.'},{en:"Yeah, I am sure. Do you mind if I put",ko:"네, 확실해요. 제가 달아도 될까요",start:7.44,end:10.24,core:'mind',highlight:'do you mind',koHighlight:'괜찮으세요',phonetic:'예, 아이 엠 슈어. 두 유 마인드 이프 아이 풋'},{en:"this camera on your hat? Yeah. Thank you",ko:"이 카메라를 모자에? 네. 감사합니다",start:8.72,end:12.24,core:'camera',highlight:'camera on hat',koHighlight:'카메라를 모자에',phonetic:'디스 캐머라 온 유어 햇? 예. 땡큐'},{en:"so much. All right. Good luck, man. That",ko:"정말 감사해요. 좋아요. 잘 부탁드려요. 그게",start:10.24,end:14.24,core:'luck',highlight:'good luck',koHighlight:'행운을 빌어요',phonetic:'쏘 머치. 올 라잇. 굿 럭, 맨. 댓'},{en:"was so incredibly expensive. I will tell",ko:"엄청나게 비쌌어요. 제가 말씀드릴게요",start:12.24,end:15.519,core:'expensive',highlight:'incredibly expensive',koHighlight:'엄청나게 비싸다',phonetic:'워즈 쏘 인크레더블리 익스펜시브. 아이 윌 텔'},{en:"you guys what the price was at the end.",ko:"여러분께 가격이 얼마였는지 마지막에 알려드릴게요.",start:14.24,end:16.72,core:'price',highlight:'the price',koHighlight:'가격',phonetic:'유 가이즈 왓 더 프라이스 워즈 앳 디 엔드.'},{en:"Oh, he going. Dude, he playing the",ko:"오, 시작했어요. 이봐요, 그가 치고 있어요",start:15.519,end:18.24,core:'playing',highlight:'playing drums',koHighlight:'드럼을 치다',phonetic:'오, 히 고잉. 듀드, 히 플레잉 더'},{en:"drums on the dough right now. He doing",ko:"지금 반죽 위에서 드럼을요.",start:16.72,end:19.76,core:'dough',highlight:'drums on dough',koHighlight:'반죽 위에서 드럼',phonetic:'드럼즈 온 더 도우 라잇 나우. 히 두잉'},{en:"the stretchy thing with his hand. Such a",ko:"손으로 늘리는 거를요. 정말",start:18.24,end:20.8,core:'stretchy',highlight:'stretchy thing',koHighlight:'늘리는 것',phonetic:'더 스트레치 씽 위드 히즈 핸드. 서치 어'},{en:"professional. Normally, it would be",ko:"프로페셔널이에요. 보통은",start:19.76,end:22.24,core:'professional',highlight:'such professional',koHighlight:'정말 전문가',phonetic:'프로페셔널. 노멀리, 잇 우드 비'},{en:"impossible for me to see what going on",ko:"제가 무슨 일이 일어나는지 보는 게 불가능할 텐데",start:20.8,end:23.439,core:'impossible',highlight:'impossible to see',koHighlight:'볼 수 없다',phonetic:'임파시블 포 미 투 씨 왓 고잉 온'},{en:"in the back of the kitchen, but thanks",ko:"주방 뒤쪽에서요, 하지만 감사하게도",start:22.24,end:25.68,core:'kitchen',highlight:'back of kitchen',koHighlight:'주방 뒤쪽',phonetic:'인 더 백 오브 더 키친, 벗 땡스'}]},
-  {id:'8UpxiFOnNj8',title:'MrBeast Perfect Steak',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:200,curatorPick:true,
+  {id:'8UpxiFOnNj8',title:'MrBeast Perfect Steak',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:200,
    sentences:[{en:"Nick.",ko:"닉.",start:4.94,end:5.77,core:'Nick',highlight:'Nick',koHighlight:'닉',phonetic:'닉.'},{en:"Jimmy, what is up?",ko:"지미, 무슨 일이야?",start:5.852,end:6.682,core:'up',highlight:'what is up',koHighlight:'무슨 일이야',phonetic:'지미, 왓 이즈 업?'},{en:"It happened again.",ko:"또 일어났어.",start:6.764,end:7.594,core:'happened',highlight:'happened again',koHighlight:'또 일어났어',phonetic:'잇 해픈드 어겐.'},{en:"Wait right there.",ko:"거기서 기다려.",start:7.676,end:8.506,core:'wait',highlight:'wait right there',koHighlight:'거기서 기다려',phonetic:'웨잇 라잇 데어.'},{en:"Okay.",ko:"알겠어.",start:8.68,end:9.66,core:'Okay',highlight:'Okay',koHighlight:'알겠어',phonetic:'오케이.'},{en:"That is me.",ko:"그게 나야.",start:13.36,end:14.19,core:'me',highlight:'that is me',koHighlight:'그게 나야',phonetic:'댓 이즈 미.'},{en:"Where is he?",ko:"그 사람 어디 있어?",start:21.41,end:23.143,core:'where',highlight:'where is',koHighlight:'어디 있어',phonetic:'웨어 이즈 히?'},{en:"Yes. Thank you, man.",ko:"그래. 고마워, 친구.",start:33.231,end:35.243,core:'thank',highlight:'thank you',koHighlight:'고마워',phonetic:'예스. 땡큐, 맨.'},{en:"Jimmy, I am serious, this is the last time. I am not doing this again.",ko:"지미, 진심이야, 이게 마지막이야. 다시는 안 해.",start:35.243,end:37.364,core:'last',highlight:'the last time',koHighlight:'마지막',phonetic:'지미, 아이 엠 시리어스, 디스 이즈 더 라스트 타임. 아이 엠 낫 두잉 디스 어겐.'},{en:"Okay. Hopefully I do not run out.",ko:"알겠어. 다 떨어지지 않길 바라.",start:37.364,end:38.76,core:'run',highlight:'run out',koHighlight:'다 떨어지다',phonetic:'오케이. 호프풀리 아이 두 낫 런 아웃.'},{en:"Do not be lazy like Mr Beast. Just go to your local Walmart instead.",ko:"미스터 비스트처럼 게으르게 굴지 마. 그냥 동네 월마트에 가.",start:38.842,end:41.941,core:'lazy',highlight:'be lazy',koHighlight:'게으르게 굴다',phonetic:'두 낫 비 레이지 라이크 미스터 비스트. 저스트 고 투 유어 로컬 월마트 인스테드.'}]}
 ,
   {"id":"aCD5JC-52Lo","title":"How To Stay in Ronaldo’s Hotel For FREE! 🤫","status":"live","cat":"places","catIcon":"✈️","diff":"intermediate","dubs":0,"sentences":[{"en":"this is how you can stay in Ronaldo's","start":0.12,"end":4.5200000000000005,"core":"stay","highlight":"stay in","phonetic":"디스 이즈 하우 유 캔 스테이 인 로날도스","translations":{"ko":{"text":"이렇게 하면 로날두의 호텔에 묵을 수 있어요","highlight":"묵다"}}},{"en":"hotel for free usually this hotel costs","start":1.959,"end":7.439,"core":"free","highlight":"for free","phonetic":"호텔 포 프리 유주얼리 디스 호텔 코스츠","translations":{"ko":{"text":"호텔을 무료로 이용할 수 있어요 보통 이 호텔은","highlight":"무료로"}}},{"en":"$250 a night so it's not cheap and to","start":4.52,"end":9.04,"core":"cheap","highlight":"not cheap","phonetic":"투 헌드레드 피프티 달러스 어 나잇 소 잇츠 낫 칩 앤 투","translations":{"ko":{"text":"하룻밤에 250달러라서 저렴하지 않아요 그리고","highlight":"저렴하지 않은"}}},{"en":"get a night for free you need to stay","start":7.439,"end":10.639,"core":"need","highlight":"need to stay","phonetic":"겟 어 나잇 포 프리 유 니드 투 스테이","translations":{"ko":{"text":"하룻밤을 무료로 받으려면 묵어야 해요","highlight":"묵어야 한다"}}},{"en":"for three nights because they're going","start":9.04,"end":13.16,"core":"nights","highlight":"three nights","phonetic":"포 쓰리 나잇츠 비코즈 데어 고잉","translations":{"ko":{"text":"3박을 해야 하는데 왜냐하면 그들이","highlight":"3박"}}},{"en":"to give you an absolutely crazy gift","start":10.639,"end":15.36,"core":"gift","highlight":"crazy gift","phonetic":"투 기브 유 언 앱솔루틀리 크레이지 기프트","translations":{"ko":{"text":"정말 놀라운 선물을 줄 거예요","highlight":"놀라운 선물"}}},{"en":"when you leave but first I need to see","start":13.16,"end":17.560000000000002,"core":"leave","highlight":"when you leave","phonetic":"웬 유 리브 벗 퍼스트 아이 니드 투 씨","translations":{"ko":{"text":"떠날 때 주는데 먼저 확인해 봐야겠어요","highlight":"떠날 때"}}},{"en":"if this hotel is even worth staying in","start":15.36,"end":20,"core":"worth","highlight":"worth staying in","phonetic":"이프 디스 호텔 이즈 이븐 워쓰 스테잉 인","translations":{"ko":{"text":"이 호텔이 묵을 가치가 있는지를","highlight":"묵을 가치가 있는"}}},{"en":"the room is nice and the bathroom is","start":17.56,"end":22.759999999999998,"core":"nice","highlight":"room is nice","phonetic":"더 룸 이즈 나이스 앤 더 배쓰룸 이즈","translations":{"ko":{"text":"방은 좋고 욕실도","highlight":"방이 좋은"}}},{"en":"clean and it even says CR7 on the soap","start":20,"end":24.240000000000002,"core":"clean","highlight":"is clean","phonetic":"클린 앤 잇 이븐 세즈 씨알세븐 온 더 솝","translations":{"ko":{"text":"깨끗하고 비누에는 CR7이라고 쓰여 있어요","highlight":"깨끗한"}}},{"en":"but the only other football thing are","start":22.76,"end":26.279000000000003,"core":"football","highlight":"football thing","phonetic":"벗 디 온리 아더 풋볼 씽 아","translations":{"ko":{"text":"하지만 다른 축구 관련된 건","highlight":"축구 관련된 것"}}},{"en":"these stud marks on the carpet but down","start":24.24,"end":27.88,"core":"marks","highlight":"stud marks","phonetic":"디즈 스터드 막스 온 더 카펫 벗 다운","translations":{"ko":{"text":"카펫에 있는 스터드 자국뿐이에요 하지만 아래","highlight":"스터드 자국"}}},{"en":"in the lobby is where things get","start":26.279,"end":29.84,"core":"lobby","highlight":"in the lobby","phonetic":"인 더 라비 이즈 웨어 씽즈 겟","translations":{"ko":{"text":"로비에는 흥미로운 게","highlight":"로비에"}}},{"en":"exciting they have signed Ronaldo shirts","start":27.88,"end":31.799999999999997,"core":"signed","highlight":"signed Ronaldo shirts","phonetic":"익사이팅 데이 해브 사인드 로날도 셔츠","translations":{"ko":{"text":"많아요 로날두가 사인한 유니폼이","highlight":"사인한 유니폼"}}},{"en":"for from every Club he's ever played for","start":29.84,"end":33.719,"core":"played","highlight":"ever played for","phonetic":"포 프롬 에브리 클럽 히즈 에버 플레이드 포","translations":{"ko":{"text":"그가 뛰었던 모든 클럽의 것이 있어요","highlight":"뛰었던"}}},{"en":"including his country these must be","start":31.8,"end":35.68,"core":"country","highlight":"his country","phonetic":"인클루딩 히즈 컨트리 디즈 머스트 비","translations":{"ko":{"text":"국가대표 유니폼도 포함해서 이건","highlight":"그의 나라"}}},{"en":"worth thousands and they have glass","start":33.719,"end":37.68,"core":"thousands","highlight":"worth thousands","phonetic":"워쓰 싸우전즈 앤 데이 해브 글래스","translations":{"ko":{"text":"수천 달러의 가치가 있을 거예요 그리고 유리","highlight":"수천 달러의 가치"}}},{"en":"cabinets filled with Ronaldo products","start":35.68,"end":40.36,"core":"filled","highlight":"filled with","phonetic":"캐비넷츠 필드 위드 로날도 프로덕츠","translations":{"ko":{"text":"진열장에는 로날두 제품들이 가득해요","highlight":"가득 찬"}}},{"en":"like perfume and even underwear but my","start":37.68,"end":43.039,"core":"perfume","highlight":"perfume and underwear","phonetic":"라이크 퍼퓸 앤 이븐 언더웨어 벗 마이","translations":{"ko":{"text":"향수나 심지어 속옷까지요 하지만 제","highlight":"향수와 속옷"}}},{"en":"$250 gift was waiting for me behind the","start":40.36,"end":44.8,"core":"waiting","highlight":"waiting for me","phonetic":"투 헌드레드 피프티 달러스 기프트 워즈 웨이팅 포 미 비하인드 더","translations":{"ko":{"text":"250달러짜리 선물이 카운터 뒤에서 저를 기다리고 있었어요","highlight":"기다리고 있는"}}},{"en":"counter and once I had stayed three","start":43.039,"end":46.760000000000005,"core":"stayed","highlight":"had stayed","phonetic":"카운터 앤 원스 아이 해드 스테이드 쓰리","translations":{"ko":{"text":"카운터에요 그리고 3박을 하고 나서","highlight":"묵었던"}}},{"en":"nights in Portugal it was time to leave","start":44.8,"end":48.839999999999996,"core":"Portugal","highlight":"nights in Portugal","phonetic":"나잇츠 인 포르투갈 잇 워즈 타임 투 리브","translations":{"ko":{"text":"포르투갈에서의 밤이 지나고 떠날 시간이 됐어요","highlight":"포르투갈에서의 밤"}}},{"en":"and get my gift which I'm going to give","start":46.76,"end":51.28,"core":"give","highlight":"going to give","phonetic":"앤 겟 마이 기프트 위치 아임 고잉 투 기브","translations":{"ko":{"text":"그리고 선물을 받았는데 이걸 줄 거예요","highlight":"줄 예정인"}}},{"en":"to a subscriber a gold football that's","start":48.84,"end":54.68000000000001,"core":"subscriber","highlight":"to a subscriber","phonetic":"투 어 섭스크라이버 어 골드 풋볼 댓츠","translations":{"ko":{"text":"구독자에게 금색 축구공을","highlight":"구독자에게"}}},{"en":"signed by Ronaldo","start":51.28,"end":54.68,"core":"signed","highlight":"signed by Ronaldo","phonetic":"사인드 바이 로날도","translations":{"ko":{"text":"로날두가 사인한 걸요","highlight":"로날두가 사인한"}}}],"duration":53,"tags":[],"createdAt":"2026-04-20","curatedBy":"jungeun"},
@@ -6460,7 +6383,7 @@ const SHORTS={us:[
  */
 const CATEGORIES={
   us:[
-    {id:'now_showing',emoji:'🎬',title:'✨ NOW SHOWING 지금 상영중',subtitle:'🎓 쌤 추천 · 🆕 최신 · 🎰 오늘의 픽',filter:(s)=>true,limit:3,isNowShowing:true},
+    {id:'now_showing',emoji:'🎬',title:'✨ NOW SHOWING 지금 상영중',subtitle:'인기 있는 영상들',filter:(s)=>true,limit:10,sort:(a,b)=>b.dubs-a.dubs,isNowShowing:true},
     {id:'travel',emoji:'✈️',title:'✨ TRAVEL 여행',subtitle:'공항 · 호텔 · 관광',filter:(s)=>s.cat==='travel'||s.cat==='places',limit:10,theme:'travel'},
     {id:'campus',emoji:'🎓',title:'✨ CAMPUS 캠퍼스',subtitle:'유학 · 강의 · 도서관',filter:(s)=>s.cat==='campus'||s.cat==='education',limit:10,theme:'campus'},
     {id:'business',emoji:'💼',title:'✨ BUSINESS 비즈니스',subtitle:'회의 · 미팅 · 협상',filter:(s)=>s.cat==='business'||s.cat==='work',limit:10,theme:'business'},
@@ -6471,7 +6394,7 @@ const CATEGORIES={
     {id:'my_studio',emoji:'🎤',title:'✨ MY STUDIO 내 녹음실',subtitle:'내가 만든 영화들',filter:()=>false,limit:0,theme:'studio',isMyStudio:true}
   ],
   kr:[
-    {id:'now_showing',emoji:'🎬',title:'✨ NOW SHOWING 지금 상영중',subtitle:'🎓 쌤 추천 · 🆕 최신 · 🎰 오늘의 픽',filter:(s)=>true,limit:3,isNowShowing:true},
+    {id:'now_showing',emoji:'🎬',title:'✨ NOW SHOWING 지금 상영중',subtitle:'인기 있는 영상들',filter:(s)=>true,limit:10,sort:(a,b)=>b.dubs-a.dubs,isNowShowing:true},
     {id:'kculture',emoji:'💃',title:'✨ K-CULTURE 한류',subtitle:'K-POP · 드라마 · 예능',filter:(s)=>s.cat==='culture'||s.cat==='kpop'||s.cat==='drama',limit:10,theme:'kculture'},
     {id:'kfood',emoji:'🍜',title:'✨ K-FOOD 한식 먹방',subtitle:'한식 · 카페 · 맛집',filter:(s)=>s.cat==='food',limit:10,theme:'food'},
     {id:'ktravel',emoji:'✈️',title:'✨ K-TRAVEL 여행 한국어',subtitle:'관광 · 숙박 · 교통',filter:(s)=>s.cat==='places'||s.cat==='travel',limit:10,theme:'travel'},
@@ -7745,57 +7668,12 @@ function renderFeed(){
   `;
   feed.appendChild(booth);
   
-  /* 3. 🎬 NOW SHOWING — v10.8 하이브리드! 쌤추천 + 최신 + 오늘의픽 */
+  /* 3. 🎬 NOW SHOWING — 인기 영상 가로 스크롤 (상단 특별 자리) */
   const nowShowingCat = cats.find(c => c.isNowShowing);
   if(nowShowingCat){
-    /* v10.8: 🎬 3개 픽 알고리즘 */
-    const allShorts = shorts.filter(nowShowingCat.filter);
-    const picks = [];
-    const pickedIds = new Set();
-    
-    /* 🎓 #1 EDITOR'S PICK - 쌤 추천 (curatorPick:true) */
-    const editorPick = allShorts.find(s => s.curatorPick === true);
-    if(editorPick){
-      picks.push({...editorPick, _badge: 'editor'});
-      pickedIds.add(editorPick.id);
-    }
-    
-    /* 🆕 #2 NEW RELEASE - 7일 이내 최신 */
-    const now = Date.now();
-    const dayMs = 24 * 60 * 60 * 1000;
-    const newReleases = allShorts
-      .filter(s => !pickedIds.has(s.id))
-      .filter(s => s.createdAt && (now - new Date(s.createdAt).getTime()) / dayMs < 7)
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-    if(newReleases[0]){
-      picks.push({...newReleases[0], _badge: 'new'});
-      pickedIds.add(newReleases[0].id);
-    }
-    
-    /* 🎰 #3 TODAY'S PICK - 매일 바뀜! (날짜 seed 랜덤) */
-    const today = new Date().toDateString();
-    const seed = today.split('').reduce((s, c) => s + c.charCodeAt(0), 0);
-    const remaining = allShorts.filter(s => !pickedIds.has(s.id));
-    if(remaining.length > 0){
-      const todayPick = remaining[seed % remaining.length];
-      picks.push({...todayPick, _badge: 'today'});
-      pickedIds.add(todayPick.id);
-    }
-    
-    /* 🎯 폴백: 아직 3개가 안 되면 dubs 많은 순으로 채움 */
-    if(picks.length < 3){
-      const leftover = allShorts
-        .filter(s => !pickedIds.has(s.id))
-        .sort((a, b) => (b.dubs || 0) - (a.dubs || 0));
-      for(const s of leftover){
-        if(picks.length >= 3) break;
-        /* 폴백 배지: 더빙 많으면 editor, 그 외 today */
-        const fallbackBadge = (s.dubs || 0) >= 150 ? 'editor' : 'today';
-        picks.push({...s, _badge: fallbackBadge});
-      }
-    }
-    
-    const nowShowingItems = picks;
+    let nowShowingItems = shorts.filter(nowShowingCat.filter);
+    if(nowShowingCat.sort) nowShowingItems.sort(nowShowingCat.sort);
+    nowShowingItems = nowShowingItems.slice(0, nowShowingCat.limit);
     
     if(nowShowingItems.length > 0){
       const section = document.createElement('div');
@@ -7810,26 +7688,15 @@ function renderFeed(){
         <div class="now-showing-scroll">
       `;
       
-      /* v10.8: 영화관 배지 스타일 정의 */
-      const BADGES = {
-        editor:  {icon:'🎓', label:"EDITOR'S PICK",  class:'badge-editor',  sub:'쌤이 뽑은 추천'},
-        new:     {icon:'🆕', label:'NEW RELEASE',    class:'badge-new',     sub:'이번 주 개봉'},
-        today:   {icon:'🎰', label:"TODAY'S PICK",   class:'badge-today',   sub:'오늘의 추천'}
-      };
-      
       nowShowingItems.forEach((s, i) => {
         const isReview = IS_ADMIN && s.status === 'review';
         const reviewBadge = isReview 
           ? `<span class="poster-review-badge">🔒 비공개</span>` 
           : '';
-        const badgeInfo = BADGES[s._badge] || BADGES.today;
         html += `
           <div class="movie-poster ${isReview ? 'movie-poster-review' : ''}" data-short-id="${s.id}">
             <div class="movie-poster-img" style="background-image:url('https://img.youtube.com/vi/${s.id}/hqdefault.jpg')">
-              <div class="movie-poster-cinema-badge ${badgeInfo.class}">
-                <span class="mpcb-icon">${badgeInfo.icon}</span>
-                <span class="mpcb-label">${badgeInfo.label}</span>
-              </div>
+              ${i < 3 ? `<div class="movie-poster-rank">🎖️ #${i+1}</div>` : ''}
               ${reviewBadge}
               <div class="movie-poster-overlay"></div>
               <div class="movie-poster-play">▶</div>
@@ -7838,7 +7705,7 @@ function renderFeed(){
               <div class="movie-poster-title">${s.title}</div>
               <div class="movie-poster-meta">
                 <span class="movie-poster-diff diff-${s.diff}">${s.diff}</span>
-                <span class="movie-poster-badge-sub">${badgeInfo.sub}</span>
+                <span class="movie-poster-dubs">🎤 ${s.dubs >= 1000 ? Math.floor(s.dubs/1000)+'k' : s.dubs}</span>
               </div>
               ${isReview ? `<button class="cat-card-publish-btn" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>` : ''}
             </div>
