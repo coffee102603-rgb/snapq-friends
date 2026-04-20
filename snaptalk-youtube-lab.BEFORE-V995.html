@@ -3520,11 +3520,8 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   background: rgba(30,41,59,0.06);
   border-left: 4px solid #d97706;
   padding: 12px 14px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   border-radius: 0 8px 8px 0;
-  position: relative;
-  min-height: 70px;
-  transition: all 0.3s ease;
 }
 .screenplay-char{
   font-size: 10px;
@@ -3539,79 +3536,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   color: #1e293b;
   line-height: 1.4;
   letter-spacing: 0.2px;
-  margin-bottom: 4px;
-}
-/* v9.9.4: 한글 번역 (통합!) */
-.screenplay-dialogue-ko{
-  font-size: 13px;
-  font-weight: 600;
-  color: #64748b;
-  line-height: 1.4;
-  margin-top: 6px;
-  font-style: italic;
-}
-.screenplay-dialogue-ko:empty{ display: none }
-
-/* v9.9.4: TODAY'S LINE 액션 버튼 (일시정지/TTS/삭제) */
-.todays-line-wrap{
-  margin-bottom: 16px;
-}
-.todays-line-actions{
-  display: flex;
-  gap: 8px;
-  justify-content: center;
-  margin-top: 10px;
-  margin-bottom: 6px;
-}
-.todays-line-btn{
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(30,41,59,0.08);
-  border: 1px solid rgba(30,41,59,0.2);
-  color: #334155;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-.todays-line-btn:hover{
-  background: rgba(217,119,6,0.15);
-  border-color: rgba(217,119,6,0.4);
-  color: #7c2d12;
-  transform: scale(1.1);
-}
-.todays-line-btn:active{ transform: scale(0.92) }
-
-/* 자동 순환 프로그레스 바 */
-.todays-line-progress{
-  height: 3px;
-  background: rgba(30,41,59,0.1);
-  border-radius: 2px;
-  overflow: hidden;
-  margin-top: 6px;
-}
-.todays-line-progress-fill{
-  height: 100%;
-  background: linear-gradient(90deg, #d97706, #fbbf24);
-  transition: width 0.3s ease;
-  border-radius: 2px;
-}
-
-/* 한글 하이라이트 */
-.screenplay-dialogue .hl-en{
-  background: linear-gradient(transparent 55%, rgba(217,119,6,0.35) 55%, rgba(217,119,6,0.35) 90%, transparent 90%);
-  padding: 0 3px;
-  color: #7c2d12;
-  font-weight: 900;
-}
-.screenplay-dialogue-ko .hl-ko{
-  background: linear-gradient(transparent 60%, rgba(217,119,6,0.25) 60%, rgba(217,119,6,0.25) 90%, transparent 90%);
-  padding: 0 2px;
-  color: #92400e;
-  font-weight: 700;
 }
 
 /* 캔버스 레이블 */
@@ -5062,13 +4986,25 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       </div>
     </div>
     
-    <!-- v9.9.4: 📜 SCREENPLAY + MY DIALOGUES 통합! TODAY'S LINE이 자동 순환 -->
+    <!-- v9.9: 🔄 MY DIALOGUES 먼저 (쌤 요청!) -->
+    <div class="greenroom-section" id="snapReviewSection" style="margin-top:0">
+      <div class="greenroom-section-title">
+        <span class="gr-section-icon">🔄</span>
+        <div>
+          <div class="gr-section-name">MY DIALOGUES</div>
+          <div class="gr-section-sub">내가 모은 표현들 · <span id="snapReviewCountTop">0 / 0</span></div>
+        </div>
+      </div>
+      <div id="snapReviewContainer"></div>
+    </div>
+    
+    <!-- v9.9: 📜 SCREENPLAY 노트 (손가락으로 쓰는 캔버스!) -->
     <div class="greenroom-section screenplay-section">
       <div class="greenroom-section-title">
         <span class="gr-section-icon">📜</span>
         <div>
           <div class="gr-section-name">SCREENPLAY</div>
-          <div class="gr-section-sub">✍️ 쓰면서 외워요! · <span id="snapReviewCountTop">0 / 0</span></div>
+          <div class="gr-section-sub">✍️ 쓰면서 외워요!</div>
         </div>
       </div>
       <div class="screenplay-paper">
@@ -5077,25 +5013,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <span class="screenplay-memo-tip">✨ 쓰면서 대사 외우기!</span>
         </div>
         
-        <!-- 오늘의 대사 + 자동 순환 (기존 snapReviewContainer 통합) -->
-        <div id="todaysLineContainer" class="todays-line-wrap">
-          <div class="screenplay-dialogue-box">
-            <div class="screenplay-char">TODAY'S LINE</div>
-            <div class="screenplay-dialogue" id="screenplayDialogue">"I can't wait for my next scene!"</div>
-            <div class="screenplay-dialogue-ko" id="screenplayDialogueKo"></div>
-          </div>
-          <div class="todays-line-actions">
-            <button class="todays-line-btn" id="todaysLinePause" title="일시정지/재생">⏸</button>
-            <button class="todays-line-btn" id="todaysLineTTS" title="듣기">🔊</button>
-            <button class="todays-line-btn" id="todaysLineDelete" title="삭제">🗑</button>
-          </div>
-          <div class="todays-line-progress">
-            <div class="todays-line-progress-fill" id="todaysLineProgress" style="width:0%"></div>
-          </div>
+        <!-- 오늘의 대사 -->
+        <div class="screenplay-dialogue-box">
+          <div class="screenplay-char">TODAY'S LINE</div>
+          <div class="screenplay-dialogue" id="screenplayDialogue">"I can't wait for my next scene!"</div>
         </div>
-        
-        <!-- 숨겨진 컨테이너 (기존 호환성) -->
-        <div id="snapReviewContainer" style="display:none"></div>
         
         <!-- ✍️ 손글씨 캔버스 -->
         <div class="screenplay-canvas-label">
@@ -5106,7 +5028,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <canvas id="screenplayCanvas" class="screenplay-canvas"></canvas>
         </div>
         
-        <!-- 도구 모음 (연필/지우개/색상만) -->
+        <!-- 도구 모음 -->
         <div class="screenplay-tools">
           <button class="canvas-tool active" data-tool="pen" id="toolPen">
             <span class="tool-icon">✏️</span>
@@ -5116,16 +5038,20 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="tool-icon">🧽</span>
             <span class="tool-label">지우개</span>
           </button>
-          <button class="canvas-tool tool-color active" data-color="#1e293b" style="background:#1e293b"></button>
+          <button class="canvas-tool tool-color" data-color="#1e293b" style="background:#1e293b"></button>
           <button class="canvas-tool tool-color" data-color="#dc2626" style="background:#dc2626"></button>
           <button class="canvas-tool tool-color" data-color="#2563eb" style="background:#2563eb"></button>
           <button class="canvas-tool tool-color" data-color="#16a34a" style="background:#16a34a"></button>
         </div>
-        <!-- v9.9.5: 전체 지우기, 새 대사, 저장 버튼 제거 (쌤 요청!) -->
+        
+        <div class="screenplay-actions">
+          <button class="screenplay-btn screenplay-btn-clear" id="canvasClear">🗑️ 전체 지우기</button>
+          <button class="screenplay-btn screenplay-btn-new" id="screenplayNew">🎬 새 대사</button>
+          <button class="screenplay-btn screenplay-btn-save" id="screenplaySave">💾 저장</button>
+        </div>
       </div>
     </div>
 
-    <!-- v9.9.4: MY DIALOGUES 제거! TODAY'S LINE으로 통합됨 -->
     <!-- v9.9: MY SCENES 삭제됨 (쌤 요청) -->
     <div class="gallery-section" id="gallerySection" style="display:none">
       <div id="galleryContainer"></div>
@@ -5151,7 +5077,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.5</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.3</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -5419,9 +5345,9 @@ function renderRoom(){
       else{list.innerHTML=h.slice(0,10).map(i=>{const d=new Date(i.date);return`<div class="history-item"><div class="history-score">${i.score}%</div><div class="history-info"><div class="history-title">${i.title}</div><div class="history-date">${d.getMonth()+1}/${d.getDate()} · ${i.attempts}번 도전</div></div></div>`}).join('')}
     }
     if(typeof renderNotebook === 'function') renderNotebook();
-    /* v9.9.4: renderSnapReview는 TODAY'S LINE으로 통합, 호출 안 함 */
+    if(typeof renderSnapReview === 'function') renderSnapReview();
     if(typeof renderSnapStudio === 'function') renderSnapStudio();
-    /* v9.9.4: renderGallery 제거 (MY SCENES 삭제) */
+    if(typeof renderGallery === 'function') renderGallery();
     /* v9.8: 🎭 GREEN ROOM - SCREENPLAY 노트 렌더 */
     renderScreenplay();
   } catch(err){
@@ -5444,21 +5370,24 @@ const CANVAS_STATE = {
   lastY: 0,
 };
 
-/* v9.9.4: TODAY'S LINE 자동 순환 상태 */
-const TODAYS_LINE = {
-  idx: 0,
-  paused: false,
-  timer: null,
-  progressTimer: null,
-  items: [],
-};
-
 function renderScreenplay(){
   try {
     /* Day 카운트 (스트릭 기반) */
     const streak = db.get('streak', {count:0,last:null});
     const dayEl = document.getElementById('screenplayDay');
     if(dayEl) dayEl.textContent = 'DAY ' + Math.max(1, streak.count || 1);
+    
+    /* 오늘의 대사 — 저장된 노트북에서 랜덤 뽑기 */
+    const notebook = db.get('notebook', []);
+    const dialogueEl = document.getElementById('screenplayDialogue');
+    if(dialogueEl){
+      if(notebook.length > 0){
+        const randomItem = notebook[Math.floor(Math.random() * notebook.length)];
+        dialogueEl.textContent = `"${randomItem.en || randomItem.highlight || 'I can\'t wait for my next scene!'}"`;
+      } else {
+        dialogueEl.textContent = '"I can\'t wait for my next scene!"';
+      }
+    }
     
     /* 환영 메시지 랜덤 */
     const subEl = document.getElementById('grGreetingSub');
@@ -5473,9 +5402,6 @@ function renderScreenplay(){
       subEl.textContent = messages[Math.floor(Math.random() * messages.length)];
     }
     
-    /* v9.9.4: TODAY'S LINE 초기화 */
-    initTodaysLine();
-    
     /* 캔버스는 화면 보이고 나서 초기화 (타이밍!) */
     setTimeout(() => {
       try { initCanvas(); } catch(e){ console.warn('[initCanvas]', e); }
@@ -5484,184 +5410,6 @@ function renderScreenplay(){
     console.error('[renderScreenplay] Error:', err);
   }
 }
-
-/* v9.9.4: TODAY'S LINE 초기화 + 자동 순환 */
-function initTodaysLine(){
-  const nb = db.get('notebook', []);
-  TODAYS_LINE.items = nb;
-  
-  /* 카운트 업데이트 */
-  const countEl = document.getElementById('snapReviewCountTop');
-  
-  if(nb.length === 0){
-    /* 빈 상태 */
-    const dialogueEl = document.getElementById('screenplayDialogue');
-    const dialogueKoEl = document.getElementById('screenplayDialogueKo');
-    if(dialogueEl) dialogueEl.textContent = '"영상에서 💾 담기를 눌러봐!"';
-    if(dialogueKoEl) dialogueKoEl.textContent = '문장을 모아서 여기서 복습해요';
-    if(countEl) countEl.textContent = '0 / 0';
-    stopTodaysLineTimer();
-    return;
-  }
-  
-  /* 인덱스 유효성 체크 */
-  if(TODAYS_LINE.idx >= nb.length) TODAYS_LINE.idx = 0;
-  
-  renderCurrentLine();
-  startTodaysLineTimer();
-}
-
-/* 현재 대사 렌더링 */
-function renderCurrentLine(){
-  const nb = TODAYS_LINE.items;
-  if(!nb.length) return;
-  
-  const item = nb[TODAYS_LINE.idx];
-  const total = nb.length;
-  
-  const dialogueEl = document.getElementById('screenplayDialogue');
-  const dialogueKoEl = document.getElementById('screenplayDialogueKo');
-  const countEl = document.getElementById('snapReviewCountTop');
-  const pauseBtn = document.getElementById('todaysLinePause');
-  
-  if(countEl) countEl.textContent = `${TODAYS_LINE.idx+1} / ${total}`;
-  if(pauseBtn) pauseBtn.textContent = TODAYS_LINE.paused ? '▶' : '⏸';
-  
-  /* 영어 + 한글 + 하이라이트 */
-  if(dialogueEl && item.en){
-    const enHtml = highlightInText(item.en, item.highlight || '', 'en');
-    dialogueEl.innerHTML = `"${enHtml}"`;
-  }
-  if(dialogueKoEl && item.ko){
-    const koHtml = highlightInText(item.ko, item.koHighlight || '', 'ko');
-    dialogueKoEl.innerHTML = koHtml;
-  } else if(dialogueKoEl){
-    dialogueKoEl.textContent = '';
-  }
-}
-
-/* 자동 순환 타이머 (4초마다) */
-function startTodaysLineTimer(){
-  stopTodaysLineTimer();
-  if(TODAYS_LINE.paused) return;
-  if(!TODAYS_LINE.items.length) return;
-  
-  /* 프로그레스 바 초기화 */
-  const prog = document.getElementById('todaysLineProgress');
-  if(prog){
-    prog.style.transition = 'none';
-    prog.style.width = '0%';
-    /* 강제 리플로우 */
-    void prog.offsetWidth;
-    prog.style.transition = 'width 3s linear';
-    prog.style.width = '100%';
-  }
-  
-  TODAYS_LINE.timer = setTimeout(() => {
-    advanceTodaysLine();
-  }, 3000);
-}
-
-function stopTodaysLineTimer(){
-  if(TODAYS_LINE.timer){ clearTimeout(TODAYS_LINE.timer); TODAYS_LINE.timer = null; }
-  const prog = document.getElementById('todaysLineProgress');
-  if(prog){
-    prog.style.transition = 'none';
-    prog.style.width = '0%';
-  }
-}
-
-/* 다음 대사로 */
-function advanceTodaysLine(){
-  if(!TODAYS_LINE.items.length) return;
-  TODAYS_LINE.idx = (TODAYS_LINE.idx + 1) % TODAYS_LINE.items.length;
-  renderCurrentLine();
-  /* v9.9.5: 대사 바뀌면 캔버스도 자동으로 깨끗하게! */
-  clearCanvasSilently();
-  startTodaysLineTimer();
-}
-
-/* v9.9.5: 캔버스 조용히 지우기 (피드백 없이) */
-function clearCanvasSilently(){
-  if(CANVAS_STATE.ctx && CANVAS_STATE.canvas){
-    CANVAS_STATE.ctx.clearRect(0, 0, CANVAS_STATE.canvas.width, CANVAS_STATE.canvas.height);
-    db.set('screenplayDrawing', null);
-  }
-}
-
-/* TTS 재생 */
-function playTodaysLineTTS(){
-  if(!TODAYS_LINE.items.length) return;
-  const item = TODAYS_LINE.items[TODAYS_LINE.idx];
-  if(!item || !item.en) return;
-  
-  try {
-    window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance(item.en);
-    utter.lang = 'en-US';
-    utter.rate = 0.9;
-    window.speechSynthesis.speak(utter);
-    
-    /* 재생 중 일시정지 */
-    TODAYS_LINE.paused = true;
-    stopTodaysLineTimer();
-    const pauseBtn = document.getElementById('todaysLinePause');
-    if(pauseBtn) pauseBtn.textContent = '▶';
-    
-    /* TTS 끝나면 다시 시작 */
-    utter.onend = () => {
-      setTimeout(() => {
-        if(TODAYS_LINE.paused){
-          TODAYS_LINE.paused = false;
-          if(pauseBtn) pauseBtn.textContent = '⏸';
-          startTodaysLineTimer();
-        }
-      }, 500);
-    };
-  } catch(e){ console.warn('TTS failed', e); }
-}
-
-/* 현재 대사 삭제 */
-function deleteTodaysLine(){
-  if(!TODAYS_LINE.items.length) return;
-  if(!confirm('이 대사를 삭제할까요?')) return;
-  
-  const nb = db.get('notebook', []);
-  const item = TODAYS_LINE.items[TODAYS_LINE.idx];
-  const filtered = nb.filter(x => x.id !== item.id);
-  db.set('notebook', filtered);
-  
-  /* 재초기화 */
-  TODAYS_LINE.items = filtered;
-  if(TODAYS_LINE.idx >= filtered.length) TODAYS_LINE.idx = 0;
-  
-  if(filtered.length === 0){
-    stopTodaysLineTimer();
-    initTodaysLine();
-  } else {
-    renderCurrentLine();
-    startTodaysLineTimer();
-  }
-}
-
-/* 일시정지 토글 */
-function toggleTodaysLinePause(){
-  TODAYS_LINE.paused = !TODAYS_LINE.paused;
-  const pauseBtn = document.getElementById('todaysLinePause');
-  if(pauseBtn) pauseBtn.textContent = TODAYS_LINE.paused ? '▶' : '⏸';
-  if(TODAYS_LINE.paused){
-    stopTodaysLineTimer();
-  } else {
-    startTodaysLineTimer();
-  }
-}
-
-/* 이벤트 바인딩 (위임) */
-document.addEventListener('click', (e) => {
-  if(e.target && e.target.id === 'todaysLinePause'){ toggleTodaysLinePause(); return; }
-  if(e.target && e.target.id === 'todaysLineTTS'){ playTodaysLineTTS(); return; }
-  if(e.target && e.target.id === 'todaysLineDelete'){ deleteTodaysLine(); return; }
-});
 
 /* 🎨 캔버스 초기화 */
 function initCanvas(){
@@ -5844,24 +5592,22 @@ document.addEventListener('click', e => {
     return;
   }
   
-  /* 🎬 새 대사 (v9.9.4: TODAY'S LINE으로 통합) */
+  /* 🎬 새 대사 */
   if(e.target && e.target.id === 'screenplayNew'){
-    /* TODAY'S LINE 다음으로 */
-    if(TODAYS_LINE.items.length > 0){
-      advanceTodaysLine();
-    } else {
-      /* 노트북 비어있을 때 */
-      const dialogueEl = document.getElementById('screenplayDialogue');
-      if(dialogueEl){
-        const defaults = [
-          '"I can\'t wait for my next scene!"',
-          '"Let\'s make this a masterpiece!"',
-          '"Action!"',
-          '"One more take, please."',
-          '"That\'s a wrap!"'
-        ];
-        dialogueEl.textContent = defaults[Math.floor(Math.random() * defaults.length)];
-      }
+    const notebook = db.get('notebook', []);
+    const dialogueEl = document.getElementById('screenplayDialogue');
+    if(dialogueEl && notebook.length > 0){
+      const randomItem = notebook[Math.floor(Math.random() * notebook.length)];
+      dialogueEl.textContent = `"${randomItem.en || randomItem.highlight || 'New scene!'}"`;
+    } else if(dialogueEl){
+      const defaults = [
+        '"I can\'t wait for my next scene!"',
+        '"Let\'s make this a masterpiece!"',
+        '"Action!"',
+        '"One more take, please."',
+        '"That\'s a wrap!"'
+      ];
+      dialogueEl.textContent = defaults[Math.floor(Math.random() * defaults.length)];
     }
     return;
   }
@@ -8144,7 +7890,6 @@ document.querySelectorAll('.nav-btn').forEach(b=>{
     /* 화면 전환 */
     if(screen==='feed'){
       stopSnapReview();
-      if(typeof stopTodaysLineTimer === 'function') stopTodaysLineTimer();
       S.feedLevel=1;
       S.selectedCategory=null;
       renderFeed();
