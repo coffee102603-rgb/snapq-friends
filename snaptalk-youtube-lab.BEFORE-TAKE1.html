@@ -213,63 +213,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   border-bottom:2.5px solid #fb923c;
   text-shadow:0 0 8px rgba(251,146,60,.35);
 }
-
-/* ═══ v7.8 · 🔒 관리자 모드 (비공개 영상 표시) ═══ */
-.cat-card.cat-card-review{
-  border:2px dashed #fbbf24;
-  background:rgba(251,191,36,.05);
-  position:relative;
-}
-.cat-card-review-badge{
-  position:absolute;
-  top:8px;
-  left:8px;
-  background:linear-gradient(135deg,#fbbf24,#f59e0b);
-  color:#000;
-  font-size:10px;
-  font-weight:900;
-  padding:4px 8px;
-  border-radius:8px;
-  z-index:5;
-  box-shadow:0 2px 6px rgba(251,191,36,.4);
-  letter-spacing:.3px;
-}
-.cat-card-publish-btn{
-  width:100%;
-  margin-top:6px;
-  padding:10px;
-  background:linear-gradient(135deg,#22c55e,#16a34a);
-  color:#fff;
-  border:none;
-  border-radius:8px;
-  font-size:13px;
-  font-weight:800;
-  cursor:pointer;
-  transition:all .2s;
-  box-shadow:0 2px 8px rgba(34,197,94,.3);
-}
-.cat-card-publish-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 4px 12px rgba(34,197,94,.5);
-}
-.cat-card-publish-btn:active{
-  transform:translateY(0);
-}
-.admin-mode-banner{
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  z-index:9999;
-  background:linear-gradient(90deg,#fbbf24,#f59e0b);
-  color:#000;
-  text-align:center;
-  padding:6px 12px;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.5px;
-  box-shadow:0 2px 8px rgba(0,0,0,.2);
-}
 /* 🎤 말한 단어: 영어는 안 드러남! 밑줄만 녹색으로 */
 .karaoke-line.mode-rehearsal .karaoke-text .ktw.spoken,
 .karaoke-line.mode-onair .karaoke-text .ktw.spoken{
@@ -1603,8 +1546,8 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">📜 SCRIPT</div>
-              <div class="booth-heat">영어+한글+발음</div>
+              <div class="booth-name">FIRST TAKE</div>
+              <div class="booth-heat">1차 녹음</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
@@ -1613,8 +1556,8 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">🎭 REHEARSAL</div>
-              <div class="booth-heat">영어+한글</div>
+              <div class="booth-name">REHEARSAL</div>
+              <div class="booth-heat">리허설</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
@@ -1623,14 +1566,14 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="booth-mic">🎙</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">🎬 TAKE 1</div>
-              <div class="booth-heat">한글+영어 힌트</div>
+              <div class="booth-name">ON AIR</div>
+              <div class="booth-heat">본방 녹음 🔥</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
         </div>
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
-          <span id="boothLabel">🟢 SCRIPT · 영어+한글+발음</span>
+          <span id="boothLabel">🟢 Easy · 영어+한글 모두 보임</span>
         </div>
         <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
           <button class="listen-next" id="dubStartBtn" style="flex:1">▶ 부스 입장</button>
@@ -1828,7 +1771,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v7.8</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v7.0</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -2665,16 +2608,7 @@ function renderNotebook(){
  * ═══════════════════════════════════════ */
 function renderFeed(){
   const feed=document.getElementById('feedScreen');
-  /* ═══ v7.8 · 🔒 status 필터링 + 관리자 모드 ═══
-   * URL에 ?admin=1 있으면 관리자 모드 → 모든 영상 (review 포함)
-   * 일반 유저 → status:"review" 영상 자동 숨김
-   * status 필드 없는 기존 영상은 공개로 간주 (하위호환)
-   */
-  const IS_ADMIN = new URLSearchParams(window.location.search).get('admin')==='1';
-  const allShorts=SHORTS[S.tab]||[];
-  const shorts = IS_ADMIN
-    ? allShorts
-    : allShorts.filter(s => s.status !== 'review');
+  const shorts=SHORTS[S.tab]||[];
   const cats=CATEGORIES[S.tab]||[];
   feed.innerHTML='';
 
@@ -2768,27 +2702,17 @@ function renderFeed(){
       rowHtml=`<div class="cat-empty">곧 업로드 예정! 🎬</div>`;
     }else{
       items.forEach(s=>{
-        /* v7.8: 관리자 모드에서 비공개 영상 표시 */
-        const isReview = IS_ADMIN && s.status === 'review';
-        const reviewBadge = isReview 
-          ? `<span class="cat-card-review-badge">🔒 비공개</span>` 
-          : '';
-        const publishBtn = isReview
-          ? `<button class="cat-card-publish-btn" data-publish-id="${s.id}" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>`
-          : '';
         rowHtml+=`
-          <div class="cat-card ${isReview ? 'cat-card-review' : ''}" data-short-id="${s.id}">
+          <div class="cat-card" data-short-id="${s.id}">
             <div class="cat-card-thumb" style="background-image:url('https://img.youtube.com/vi/${s.id}/hqdefault.jpg')">
               <span class="cat-card-diff diff-${s.diff}">${s.diff}</span>
               <span class="cat-card-cat">${s.catIcon}</span>
-              ${reviewBadge}
               <div class="cat-card-play"></div>
               <div class="cat-card-info">
                 <div class="cat-card-title">${s.title}</div>
                 <div class="cat-card-meta"><span>${s.sentences.length} 문장</span><span>🎤 ${s.dubs>=1000?Math.floor(s.dubs/1000)+'k':s.dubs}</span></div>
               </div>
             </div>
-            ${publishBtn}
           </div>
         `;
       });
@@ -2813,61 +2737,6 @@ function renderFeed(){
     });
   });
 }
-
-/* ═══════════════════════════════════════
- * v7.8 · 🚀 PUBLISH (Phase 3에서 API 연동 예정)
- * ═══════════════════════════════════════ */
-async function publishVideo(videoId){
-  const confirmed = confirm('이 영상을 일반 공개하시겠어요?\n(공개 후에도 수정 가능해요)');
-  if(!confirmed) return;
-  
-  const btn = document.querySelector(`[data-publish-id="${videoId}"]`);
-  if(btn){
-    btn.textContent = '⏳ 공개 중...';
-    btn.disabled = true;
-  }
-  
-  try {
-    /* Phase 3에서 실제 API 호출로 교체 예정 */
-    const res = await fetch('https://snaptalk-api-two.vercel.app/api/publish', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({videoId})
-    });
-    
-    if(!res.ok){
-      throw new Error(`HTTP ${res.status}`);
-    }
-    
-    const data = await res.json();
-    if(data.success){
-      alert('✅ 공개 완료!\n2~3분 후 GitHub Pages에 반영됩니다.\n페이지를 새로고침하세요.');
-      if(btn){
-        btn.textContent = '✅ 공개됨!';
-        btn.style.background = 'linear-gradient(135deg,#6b7280,#4b5563)';
-      }
-    } else {
-      throw new Error(data.error || '알 수 없는 오류');
-    }
-  } catch(e) {
-    alert(`❌ 공개 실패: ${e.message}\n\n(Phase 3에서 /api/publish 엔드포인트 생성 예정)`);
-    if(btn){
-      btn.textContent = '🚀 공개하기';
-      btn.disabled = false;
-    }
-  }
-}
-
-/* v7.8: 관리자 모드 배너 표시 */
-(function(){
-  if(new URLSearchParams(window.location.search).get('admin')==='1'){
-    const banner = document.createElement('div');
-    banner.className = 'admin-mode-banner';
-    banner.innerHTML = '🔧 관리자 모드 · 비공개 영상도 표시됩니다';
-    document.body.appendChild(banner);
-    document.body.style.paddingTop = '30px';
-  }
-})();
 
 /* ═══════════════════════════════════════
  * SCREEN NAVIGATION
@@ -3073,9 +2942,9 @@ function goStep(step){
     bn.className='step-banner dub';
     /* v7.0+: 시도 횟수 표시해서 동기부여 */
     if(S.dubAttempts&&S.dubAttempts>=1){
-      bn.textContent=`🎬 스튜디오 · ${S.dubAttempts+1}번째 시도 — 이번엔 잡자!`;
+      bn.textContent=`🔥 더빙실 · ${S.dubAttempts+1}번째 시도 — 이번엔 잡자!`;
     }else{
-      bn.textContent='🔥 촬영 — 영상 속 주인공을 뜨겁게!';
+      bn.textContent='🔥 진짜 더빙 — 영상 속 주인공을 뜨겁게!';
     }
     /* ⚠️ 중요: 이전 단계 영상 완전 정지 */
     try{
@@ -3326,17 +3195,11 @@ function renderShadow(){
   if(len>45)enEl.classList.add('very-long');
   else if(len>30)enEl.classList.add('long');
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
-  /* v7.6: SCRIPT 모드(easy)면 발음 자동 표시! */
+  /* v7.5: 발음 토글 유지 - 새 문장도 자동 업데이트 */
   const pEl=document.getElementById('shadowPhoneticText');
-  const pBtn=document.getElementById('shadowPhonetic');
-  const isScriptMode = S.dubLevel==='easy';
-  if(pEl){
-    if(isScriptMode || phoneticVisible){
-      if(s && s.phonetic){pEl.textContent=s.phonetic;pEl.style.display='block';}
-      else{pEl.textContent='(발음 표기 준비중)';pEl.style.display='block';}
-      if(isScriptMode) phoneticVisible=true;
-      if(pBtn){pBtn.classList.add('active');}
-    }
+  if(pEl && phoneticVisible){
+    if(s && s.phonetic){pEl.textContent=s.phonetic;pEl.style.display='block';}
+    else{pEl.textContent='(발음 표기 준비중)';pEl.style.display='block';}
   }
 
   renderShadowSync();
@@ -4027,14 +3890,14 @@ document.getElementById('dubRetry').addEventListener('click',()=>{
 
 /* Booth picker: v6.17 네이밍 — 방송 용어 통일 */
 const BOOTH_LABELS={
-  easy:'📜 SCRIPT · 대본 읽기 (영어+한글+발음)',
-  normal:'🎭 REHEARSAL · 리허설 (영어+한글)',
-  hard:'🎬 TAKE 1 · 나도 배우! (한글+영어 힌트)'
+  easy:'🎤 FIRST TAKE · 영어+한글 모두 보임 (1차 녹음)',
+  normal:'🎙 REHEARSAL · 한글만 보임 (리허설)',
+  hard:'🔴 ON AIR · 완전 더빙 (본방 녹음!)'
 };
 const BOOTH_STUDIO_LABEL={
-  easy:'📜 SCRIPT',
-  normal:'🎭 REHEARSAL',
-  hard:'🎬 TAKE 1'
+  easy:'● FIRST TAKE',
+  normal:'● REHEARSAL',
+  hard:'● ON AIR'
 };
 document.querySelectorAll('.booth').forEach(booth=>{
   booth.addEventListener('click',()=>{
@@ -4083,11 +3946,11 @@ document.getElementById('dubStartBtn').addEventListener('click',()=>{
     if(banner){
       banner.className='step-banner dub';
       const boothBannerText={
-        easy:'📜 SCRIPT — 편하게 따라해봐!',
-        normal:'🎭 REHEARSAL — 감정을 살려봐!',
-        hard:'🎬 TAKE 1 — 나도 주인공!'
+        easy:'🎤 FIRST TAKE — 편하게 시작해봐!',
+        normal:'🎙 REHEARSAL — 감정을 살려봐!',
+        hard:'🔴 ON AIR — 완벽한 한 방!'
       };
-      banner.textContent=boothBannerText[selectedDiff]||'🔥 촬영 — 영상 속 주인공을 뜨겁게!';
+      banner.textContent=boothBannerText[selectedDiff]||'🔥 진짜 더빙 — 영상 속 주인공을 뜨겁게!';
     }
     document.getElementById('ytContainer').style.display='';
     document.getElementById('ytContainer').classList.remove('pip');
@@ -4139,7 +4002,7 @@ function renderShare(){
     document.getElementById('resultTitle').textContent=S.short.title;
     const badge=document.getElementById('resultBoothBadge');
     badge.className='result-booth-badge '+bd.difficulty;
-    const boothTxt={easy:'📜 SCRIPT',normal:'🎭 REHEARSAL',hard:'🎬 TAKE 1'};
+    const boothTxt={easy:'🎤 FIRST TAKE',normal:'🎙 REHEARSAL',hard:'🔴 ON AIR'};
     badge.textContent=boothTxt[bd.difficulty]||'BOOTH';
 
     /* Draw waveforms */
@@ -4208,7 +4071,7 @@ function renderShare(){
       }else if(sc>=50){
         feedback=`💡 ${bd.timingMatch>=70?'타이밍은 좋아요':'타이밍을 더 맞춰보세요'} — 더 큰 목소리로 한 번 더!`;
       }else{
-        feedback='🎯 처음엔 어려워요. 📜 SCRIPT부터 차근차근 해봐요!';
+        feedback='🎯 처음엔 어려워요. FIRST TAKE(1차 녹음)부터 해보는 것도 좋아요!';
         warnMode=true;
       }
       feedbackEl.textContent=feedback;
