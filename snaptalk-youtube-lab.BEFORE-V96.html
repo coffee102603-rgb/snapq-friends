@@ -2215,28 +2215,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 .puzzle-slots.wrong{ animation: puzzleShake .5s ease }
 
-/* v9.5: 🌧️ 쏟아지는 단어 효과 (쌤 아이디어!) */
-@keyframes wordFallDown{
-  0%{
-    transform: translateY(0) rotate(0deg);
-    opacity: 1;
-  }
-  30%{
-    transform: translateY(40px) rotate(15deg);
-  }
-  100%{
-    transform: translateY(200px) rotate(60deg);
-    opacity: 0;
-  }
-}
-
-/* 단어 되돌아오기 애니메이션 */
-@keyframes piecePopBack{
-  0%{ transform: scale(0) translateY(-30px); opacity: 0 }
-  60%{ transform: scale(1.15) translateY(5px); opacity: 1 }
-  100%{ transform: scale(1) translateY(0); opacity: 1 }
-}
-
 #dubArea{flex-shrink:0;display:flex;flex-direction:column;padding:10px 14px 14px;gap:8px}
 .dub-instruction{text-align:center;font-size:12px;color:var(--tx2);font-weight:700}
 .dub-timeline{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
@@ -3054,609 +3032,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 @keyframes scaleIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
 .fade-up{animation:fadeUp .4s ease both}.scale-in{animation:scaleIn .5s ease both}
 
-/* ═══════════════════════════════════════════════════
- * v9.6 · 🎦 CINEMA TICKET BOOTH (쌤 비전 최종!)
- * 영화관 매표소 홈 화면
- * ═══════════════════════════════════════════════════ */
-
-/* 🌟 네온 간판 (Marquee) */
-.cinema-marquee{
-  position: relative;
-  padding: 20px 16px 24px;
-  margin: 8px 12px 0;
-  background: linear-gradient(180deg,
-    rgba(20,16,42,0.95) 0%,
-    rgba(30,20,55,0.9) 50%,
-    rgba(15,10,26,0.98) 100%);
-  border-radius: 16px 16px 4px 4px;
-  border: 1px solid rgba(251,191,36,0.3);
-  overflow: hidden;
-  box-shadow: 
-    0 8px 32px rgba(251,191,36,0.15),
-    inset 0 1px 0 rgba(251,191,36,0.2),
-    0 0 60px rgba(139,92,246,0.1);
-}
-
-/* 네온 전구 */
-.marquee-lights{
-  display: flex;
-  justify-content: space-around;
-  padding: 4px 0 12px;
-}
-.marquee-bulb{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #fbbf24;
-  box-shadow: 
-    0 0 8px #fbbf24,
-    0 0 16px rgba(251,191,36,0.6);
-  animation: bulbBlink 1.5s ease-in-out infinite;
-}
-.marquee-bulb:nth-child(odd){ animation-delay: 0.2s; background: #fde047 }
-.marquee-bulb:nth-child(3n){ animation-delay: 0.4s; background: #fbbf24 }
-.marquee-bulb:nth-child(4n){ animation-delay: 0.6s; background: #fde047 }
-@keyframes bulbBlink{
-  0%,100%{ opacity: 1; transform: scale(1) }
-  50%{ opacity: 0.5; transform: scale(0.85) }
-}
-
-.marquee-title{
-  text-align: center;
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  color: #fbbf24;
-  text-shadow: 
-    0 0 10px rgba(251,191,36,0.9),
-    0 0 20px rgba(251,191,36,0.6),
-    0 0 30px rgba(251,191,36,0.4),
-    0 0 40px rgba(251,191,36,0.2);
-  margin-bottom: 6px;
-  animation: neonFlicker 4s ease-in-out infinite;
-}
-.marquee-sub{
-  text-align: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: #c4b5fd;
-  letter-spacing: 3px;
-  opacity: 0.8;
-  margin-bottom: 4px;
-}
-.marquee-tagline{
-  text-align: center;
-  font-size: 11px;
-  font-weight: 600;
-  color: #94a3b8;
-  letter-spacing: 1px;
-  font-style: italic;
-  margin-top: 8px;
-}
-
-/* 🎭 레드카펫 커튼 (하단) */
-.marquee-curtain{
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 8px;
-  background: linear-gradient(90deg,
-    #7f1d1d 0%, #dc2626 20%, #7f1d1d 40%,
-    #dc2626 60%, #7f1d1d 80%, #dc2626 100%);
-  box-shadow: 0 0 12px rgba(220,38,38,0.5);
-}
-
-/* 🎟️ 매표소 윈도우 */
-.ticket-booth{
-  margin: 0 12px 16px;
-  padding: 16px 14px;
-  background: linear-gradient(180deg,
-    rgba(30,20,55,0.8) 0%,
-    rgba(20,15,40,0.9) 100%);
-  border: 1px solid rgba(251,191,36,0.2);
-  border-top: none;
-  border-radius: 0 0 16px 16px;
-  position: relative;
-}
-.ticket-booth::before,
-.ticket-booth::after{
-  content: '';
-  position: absolute;
-  top: -1px;
-  width: 12px;
-  height: 24px;
-  background: radial-gradient(circle at 50% 100%, transparent 10px, rgba(251,191,36,0.15) 10.5px);
-}
-.ticket-booth::before{ left: 20% }
-.ticket-booth::after{ right: 20% }
-
-.ticket-booth-window{
-  text-align: center;
-  padding: 10px 12px;
-  background: rgba(251,191,36,0.08);
-  border: 1px solid rgba(251,191,36,0.25);
-  border-radius: 12px;
-  position: relative;
-}
-.ticket-booth-badge{
-  display: inline-block;
-  padding: 4px 12px;
-  background: linear-gradient(135deg, #fbbf24, #d97706);
-  color: #0a0a0f;
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  margin-bottom: 8px;
-  box-shadow: 0 2px 8px rgba(251,191,36,0.4);
-}
-.ticket-booth-q{
-  font-size: 20px;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 4px;
-}
-.ticket-booth-desc{
-  font-size: 12px;
-  color: #cbd5e1;
-  font-weight: 600;
-}
-
-/* 🎬 NOW SHOWING 섹션 */
-.now-showing-section{
-  margin: 0 0 20px;
-}
-.now-showing-header{
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  padding: 0 16px;
-  margin-bottom: 12px;
-}
-.now-showing-title{
-  font-size: 16px;
-  font-weight: 900;
-  color: #fbbf24;
-  letter-spacing: 1.5px;
-  text-shadow: 0 0 10px rgba(251,191,36,0.4);
-}
-.now-showing-subtitle{
-  font-size: 11px;
-  color: #94a3b8;
-  font-weight: 600;
-}
-.now-showing-scroll{
-  display: flex;
-  gap: 12px;
-  padding: 4px 16px 12px;
-  overflow-x: auto;
-  scrollbar-width: none;
-}
-.now-showing-scroll::-webkit-scrollbar{ display: none }
-
-/* 🎬 영화 포스터 (세로 비율!) */
-.movie-poster{
-  flex: 0 0 140px;
-  cursor: pointer;
-  transition: transform .25s ease;
-  animation: posterIn .5s ease both;
-}
-@keyframes posterIn{
-  from{ opacity: 0; transform: translateY(12px) scale(0.95) }
-  to{ opacity: 1; transform: translateY(0) scale(1) }
-}
-.movie-poster:active{ transform: scale(0.95) }
-.movie-poster-img{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 2/3;
-  background-size: cover;
-  background-position: center;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 
-    0 8px 24px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(251,191,36,0.15);
-  transition: all 0.3s ease;
-}
-.movie-poster:hover .movie-poster-img{
-  box-shadow: 
-    0 12px 32px rgba(251,191,36,0.3),
-    0 0 0 2px rgba(251,191,36,0.5);
-  transform: translateY(-2px);
-}
-.movie-poster-overlay{
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 0%, transparent 40%, rgba(0,0,0,0.8) 100%);
-}
-.movie-poster-rank{
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  padding: 3px 8px;
-  background: linear-gradient(135deg, #fbbf24, #d97706);
-  color: #0a0a0f;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 900;
-  z-index: 2;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.4);
-}
-.poster-review-badge{
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  padding: 3px 8px;
-  background: rgba(239,68,68,0.9);
-  color: #fff;
-  border-radius: 8px;
-  font-size: 10px;
-  font-weight: 800;
-  z-index: 2;
-}
-.movie-poster-play{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  width: 36px;
-  height: 36px;
-  background: rgba(251,191,36,0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #0a0a0f;
-  font-size: 14px;
-  font-weight: 900;
-  opacity: 0;
-  transition: opacity .25s;
-  z-index: 3;
-}
-.movie-poster:hover .movie-poster-play{ opacity: 1 }
-.movie-poster-info{
-  padding: 8px 4px 0;
-}
-.movie-poster-title{
-  font-size: 12px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.3;
-  margin-bottom: 4px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  min-height: 32px;
-}
-.movie-poster-meta{
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 10px;
-}
-.movie-poster-diff{
-  padding: 2px 6px;
-  border-radius: 6px;
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 9px;
-}
-.movie-poster-dubs{
-  color: #a1a1aa;
-  font-weight: 700;
-}
-
-/* 🎟️ BY SITUATION 섹션 */
-.situation-section{
-  padding: 0 12px 20px;
-}
-.situation-header{
-  text-align: center;
-  padding: 16px 12px 18px;
-  position: relative;
-}
-.situation-header-emoji{
-  font-size: 36px;
-  line-height: 1;
-  margin-bottom: 6px;
-  animation: ticketWave 3s ease-in-out infinite;
-}
-@keyframes ticketWave{
-  0%,100%{ transform: rotate(0deg) }
-  25%{ transform: rotate(-5deg) }
-  75%{ transform: rotate(5deg) }
-}
-.situation-header-title{
-  font-size: 18px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: 2px;
-  margin-bottom: 2px;
-}
-.situation-header-sub{
-  font-size: 12px;
-  color: #94a3b8;
-  font-weight: 600;
-}
-
-/* 🎟️ 상황 카드 그리드 (2xN) */
-.situation-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.situation-card{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 18px 10px 14px;
-  min-height: 150px;
-  border-radius: 14px;
-  cursor: pointer;
-  border: 1px solid rgba(255,255,255,0.1);
-  background: linear-gradient(135deg, rgba(30,30,50,0.9), rgba(20,20,40,0.95));
-  transition: all 0.3s cubic-bezier(.4,0,.2,1);
-  animation: posterIn .4s ease both;
-}
-.situation-card:active{ transform: scale(0.97) }
-.situation-card:hover{
-  transform: translateY(-3px);
-  border-color: rgba(251,191,36,0.3);
-  box-shadow: 0 10px 30px rgba(251,191,36,0.2);
-}
-
-/* 테마별 색상 */
-.situation-card.theme-travel{
-  background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(6,182,212,0.25);
-}
-.situation-card.theme-travel:hover{ box-shadow: 0 10px 30px rgba(6,182,212,0.3) }
-.situation-card.theme-campus{
-  background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(139,92,246,0.25);
-}
-.situation-card.theme-campus:hover{ box-shadow: 0 10px 30px rgba(139,92,246,0.3) }
-.situation-card.theme-business{
-  background: linear-gradient(135deg, rgba(148,163,184,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(148,163,184,0.25);
-}
-.situation-card.theme-business:hover{ box-shadow: 0 10px 30px rgba(148,163,184,0.3) }
-.situation-card.theme-career{
-  background: linear-gradient(135deg, rgba(236,72,153,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(236,72,153,0.25);
-}
-.situation-card.theme-career:hover{ box-shadow: 0 10px 30px rgba(236,72,153,0.3) }
-.situation-card.theme-daily{
-  background: linear-gradient(135deg, rgba(34,197,94,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(34,197,94,0.25);
-}
-.situation-card.theme-daily:hover{ box-shadow: 0 10px 30px rgba(34,197,94,0.3) }
-.situation-card.theme-food{
-  background: linear-gradient(135deg, rgba(249,115,22,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(249,115,22,0.25);
-}
-.situation-card.theme-food:hover{ box-shadow: 0 10px 30px rgba(249,115,22,0.3) }
-.situation-card.theme-casual{
-  background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(251,191,36,0.25);
-}
-.situation-card.theme-casual:hover{ box-shadow: 0 10px 30px rgba(251,191,36,0.3) }
-.situation-card.theme-kculture{
-  background: linear-gradient(135deg, rgba(244,114,182,0.15), rgba(20,20,40,0.95));
-  border-color: rgba(244,114,182,0.25);
-}
-.situation-card.theme-kculture:hover{ box-shadow: 0 10px 30px rgba(244,114,182,0.3) }
-
-.situation-card-emoji{
-  font-size: 38px;
-  line-height: 1;
-  margin-bottom: 10px;
-  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
-  animation: cardEmojiFloat 3.5s ease-in-out infinite;
-}
-.situation-card-title{
-  font-size: 13px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: 0.3px;
-  margin-bottom: 4px;
-  line-height: 1.3;
-}
-.situation-card-sub{
-  font-size: 10px;
-  color: #94a3b8;
-  font-weight: 600;
-  margin-bottom: 8px;
-  flex: 1;
-}
-.situation-card-count{
-  font-size: 11px;
-  font-weight: 800;
-  color: #fbbf24;
-  padding: 3px 10px;
-  background: rgba(251,191,36,0.1);
-  border-radius: 10px;
-  border: 1px solid rgba(251,191,36,0.2);
-}
-.situation-card-arrow{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 12px;
-  color: rgba(255,255,255,0.4);
-  transition: all 0.25s;
-}
-.situation-card:hover .situation-card-arrow{
-  color: #fbbf24;
-  transform: translateX(3px);
-}
-.situation-card-soon{
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 11px;
-  opacity: 0.5;
-}
-
-/* 2층: 카테고리 상세 화면 */
-.cat-detail-header{
-  position: relative;
-  padding: 16px 14px;
-  margin: 8px 12px 16px;
-  background: linear-gradient(180deg, rgba(30,20,55,0.95), rgba(20,15,40,0.9));
-  border-radius: 14px;
-  border: 1px solid rgba(251,191,36,0.2);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.3);
-}
-.cat-detail-back{
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  color: #c4b5fd;
-  padding: 6px 12px;
-  border-radius: 10px;
-  font-size: 12px;
-  font-weight: 800;
-  cursor: pointer;
-  margin-bottom: 10px;
-  transition: all 0.2s;
-}
-.cat-detail-back:active{ transform: scale(0.95); background: rgba(251,191,36,0.15) }
-.cat-detail-back:hover{ background: rgba(251,191,36,0.1); border-color: rgba(251,191,36,0.3) }
-
-.cat-detail-title-wrap{ text-align: center }
-.cat-detail-emoji{
-  font-size: 44px;
-  line-height: 1;
-  margin-bottom: 6px;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.4));
-}
-.cat-detail-title{
-  font-size: 17px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: 1px;
-  margin-bottom: 3px;
-}
-.cat-detail-sub{
-  font-size: 12px;
-  color: #94a3b8;
-  font-weight: 600;
-}
-.cat-detail-count-badge{
-  position: absolute;
-  top: 16px;
-  right: 14px;
-  padding: 4px 10px;
-  background: linear-gradient(135deg, #fbbf24, #d97706);
-  color: #0a0a0f;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 900;
-  box-shadow: 0 2px 8px rgba(251,191,36,0.3);
-}
-
-/* 2층: 영화 그리드 */
-.cat-detail-grid{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 0 12px 20px;
-}
-.movie-poster-large{
-  cursor: pointer;
-  transition: transform 0.25s ease;
-  animation: posterIn 0.5s ease both;
-}
-.movie-poster-large:active{ transform: scale(0.96) }
-.movie-poster-large-img{
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16/11;
-  background-size: cover;
-  background-position: center;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-}
-.movie-poster-large-overlay{
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.8) 100%);
-}
-.movie-poster-large-play{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
-  width: 44px;
-  height: 44px;
-  background: rgba(251,191,36,0.9);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #0a0a0f;
-  font-size: 16px;
-  font-weight: 900;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-}
-.movie-poster-large-info{
-  padding: 10px 4px 0;
-}
-.movie-poster-large-title{
-  font-size: 13px;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1.3;
-  margin-bottom: 6px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  min-height: 34px;
-}
-.movie-poster-large-meta{
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  font-size: 10px;
-  flex-wrap: wrap;
-}
-.movie-poster-large-sentences{
-  color: #a1a1aa;
-  font-weight: 700;
-}
-
-/* 2층: 빈 상태 */
-.cat-detail-empty{
-  text-align: center;
-  padding: 60px 20px;
-  color: #cbd5e1;
-}
-.cat-detail-empty-emoji{
-  font-size: 70px;
-  margin-bottom: 12px;
-  opacity: 0.6;
-}
-.cat-detail-empty-title{
-  font-size: 16px;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 4px;
-}
-.cat-detail-empty-sub{
-  font-size: 13px;
-  color: #94a3b8;
-  font-weight: 600;
-}
-
 /* ═══════════════════════════════════════ */
 /* v7.5: 🎬 CINEMA MODE - 영화관 몰입 */
 /* ═══════════════════════════════════════ */
@@ -4294,7 +3669,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.6</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.4</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4429,28 +3804,27 @@ const SHORTS={us:[
  * 기존 영상의 cat:'travel' 등도 호환 (OR 조건으로 둘 다 받음)
  * Empty rows are hidden automatically.
  */
-/* v9.6: 🎟️ 상황별 카테고리 (쌤 비전!) 
- * 영화관 매표소 → 1층 = 상황 선택 → 2층 = 그 상황의 영화들
- * 학습자 관점: "내가 처한 상황에 맞는 영어"
- */
 const CATEGORIES={
   us:[
-    {id:'now_showing',emoji:'🎬',title:'✨ NOW SHOWING 지금 상영중',subtitle:'인기 있는 영상들',filter:(s)=>true,limit:10,sort:(a,b)=>b.dubs-a.dubs,isNowShowing:true},
-    {id:'travel',emoji:'✈️',title:'✨ TRAVEL 여행',subtitle:'공항 · 호텔 · 관광',filter:(s)=>s.cat==='travel'||s.cat==='places',limit:10,theme:'travel'},
-    {id:'campus',emoji:'🎓',title:'✨ CAMPUS 캠퍼스',subtitle:'유학 · 강의 · 도서관',filter:(s)=>s.cat==='campus'||s.cat==='education',limit:10,theme:'campus'},
-    {id:'business',emoji:'💼',title:'✨ BUSINESS 비즈니스',subtitle:'회의 · 미팅 · 협상',filter:(s)=>s.cat==='business'||s.cat==='work',limit:10,theme:'business'},
-    {id:'career',emoji:'🏥',title:'✨ CAREER 해외 취업',subtitle:'면접 · 간호사 · IT',filter:(s)=>s.cat==='career'||s.cat==='interview_job',limit:10,theme:'career'},
-    {id:'daily',emoji:'🛍️',title:'✨ DAILY 생활 영어',subtitle:'쇼핑 · 은행 · 병원',filter:(s)=>s.cat==='daily'||s.cat==='shopping'||s.cat==='home',limit:10,theme:'daily'},
-    {id:'food',emoji:'🍔',title:'✨ FOODIE 먹방',subtitle:'식당 · 요리 · 리뷰',filter:(s)=>s.cat==='food',limit:10,theme:'food'},
-    {id:'casual',emoji:'💬',title:'✨ CASUAL 일상 회화',subtitle:'수다 · 감정 · 친구',filter:(s)=>s.cat==='people'||s.cat==='fun'||s.cat==='cars',limit:10,theme:'casual'}
+    {id:'featured',emoji:'🏆',title:'이번 주 대상',filter:(s)=>true,limit:10,sort:(a,b)=>b.dubs-a.dubs},
+    {id:'food',emoji:'🍔',title:'먹방 & 음식',filter:(s)=>s.cat==='food',limit:10},
+    {id:'places',emoji:'✈️',title:'여행 & 장소',filter:(s)=>s.cat==='places'||s.cat==='travel',limit:10},
+    {id:'people',emoji:'🎤',title:'인터뷰 & 대화',filter:(s)=>s.cat==='people'||s.cat==='interview',limit:10},
+    {id:'home',emoji:'🏠',title:'홈 & 루틴',filter:(s)=>s.cat==='home'||s.cat==='daily',limit:10},
+    {id:'shopping',emoji:'🛒',title:'쇼핑 & 하울',filter:(s)=>s.cat==='shopping',limit:10},
+    {id:'fun',emoji:'😂',title:'챌린지 & 웃음',filter:(s)=>s.cat==='fun',limit:10},
+    {id:'cars',emoji:'🚗',title:'자동차 & 리뷰',filter:(s)=>s.cat==='cars',limit:10},
+    {id:'work',emoji:'💼',title:'직장 & 커리어',filter:(s)=>s.cat==='work'||s.cat==='business',limit:10}
   ],
   kr:[
-    {id:'now_showing',emoji:'🎬',title:'✨ NOW SHOWING 지금 상영중',subtitle:'인기 있는 영상들',filter:(s)=>true,limit:10,sort:(a,b)=>b.dubs-a.dubs,isNowShowing:true},
-    {id:'kculture',emoji:'💃',title:'✨ K-CULTURE 한류',subtitle:'K-POP · 드라마 · 예능',filter:(s)=>s.cat==='culture'||s.cat==='kpop'||s.cat==='drama',limit:10,theme:'kculture'},
-    {id:'kfood',emoji:'🍜',title:'✨ K-FOOD 한식 먹방',subtitle:'한식 · 카페 · 맛집',filter:(s)=>s.cat==='food',limit:10,theme:'food'},
-    {id:'ktravel',emoji:'✈️',title:'✨ K-TRAVEL 여행 한국어',subtitle:'관광 · 숙박 · 교통',filter:(s)=>s.cat==='places'||s.cat==='travel',limit:10,theme:'travel'},
-    {id:'kdaily',emoji:'🏠',title:'✨ DAILY 일상 한국어',subtitle:'쇼핑 · 홈 · 일상',filter:(s)=>s.cat==='home'||s.cat==='daily'||s.cat==='shopping',limit:10,theme:'daily'},
-    {id:'kpeople',emoji:'💬',title:'✨ CASUAL 수다 한국어',subtitle:'대화 · 챌린지',filter:(s)=>s.cat==='people'||s.cat==='fun',limit:10,theme:'casual'}
+    {id:'featured',emoji:'🏆',title:'이번 주 대상',filter:(s)=>true,limit:10,sort:(a,b)=>b.dubs-a.dubs},
+    {id:'culture',emoji:'💃',title:'K-컬쳐',filter:(s)=>s.cat==='culture'||s.cat==='kpop'||s.cat==='drama',limit:10},
+    {id:'food',emoji:'🍜',title:'먹방 & 한식',filter:(s)=>s.cat==='food',limit:10},
+    {id:'places',emoji:'✈️',title:'여행 & 장소',filter:(s)=>s.cat==='places'||s.cat==='travel',limit:10},
+    {id:'people',emoji:'🎤',title:'사람 & 대화',filter:(s)=>s.cat==='people',limit:10},
+    {id:'home',emoji:'🏠',title:'홈 & 루틴',filter:(s)=>s.cat==='home'||s.cat==='daily',limit:10},
+    {id:'fun',emoji:'😂',title:'챌린지 & 웃음',filter:(s)=>s.cat==='fun',limit:10},
+    {id:'shopping',emoji:'🛒',title:'쇼핑',filter:(s)=>s.cat==='shopping',limit:10}
   ]
 };
 
@@ -4499,9 +3873,6 @@ const SCENARIOS=[
  * ═══════════════════════════════════════ */
 const S={
   tab:'us',short:null,gameStep:0,
-  /* v9.6: 🎦 영화관 매표소 2층 구조 */
-  feedLevel:1,           /* 1 = 매표소 (상황 선택) | 2 = 카테고리 상세 */
-  selectedCategory:null, /* 2층에서 선택한 카테고리 */
   listenCount:1,   /* STEP 1: how many times listened */
   understand:10,   /* STEP 1: understanding % */
   shownHints:[],   /* STEP 1: accumulated hint words */
@@ -5169,257 +4540,153 @@ function renderNotebook(){
  * ═══════════════════════════════════════ */
 function renderFeed(){
   const feed=document.getElementById('feedScreen');
+  /* ═══ v7.8 · 🔒 status 필터링 + 관리자 모드 ═══
+   * URL에 ?admin=1 있으면 관리자 모드 → 모든 영상 (review 포함)
+   * 일반 유저 → status:"review" 영상 자동 숨김
+   * status 필드 없는 기존 영상은 공개로 간주 (하위호환)
+   */
   const IS_ADMIN = new URLSearchParams(window.location.search).get('admin')==='1';
   const allShorts=SHORTS[S.tab]||[];
-  const shorts = IS_ADMIN ? allShorts : allShorts.filter(s => s.status !== 'review');
+  const shorts = IS_ADMIN
+    ? allShorts
+    : allShorts.filter(s => s.status !== 'review');
   const cats=CATEGORIES[S.tab]||[];
   feed.innerHTML='';
-  
-  /* v9.6: 2층 구조 — 카테고리 상세 화면 보여주는 중? */
-  if(S.feedLevel === 2 && S.selectedCategory){
-    renderCategoryDetail(shorts, S.selectedCategory);
-    return;
-  }
 
-  /* v9.6: 🎦 1층 — 영화관 매표소 홈! */
-  
-  /* 1. 🌟 CINEMA 네온 사인 헤더 */
-  const marquee = document.createElement('div');
-  marquee.className = 'cinema-marquee fade-up';
-  marquee.innerHTML = `
-    <div class="marquee-lights">
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-      <span class="marquee-bulb"></span>
-    </div>
-    <div class="marquee-title">★ C I N E M A ★</div>
-    <div class="marquee-sub">SnapTalk Pictures</div>
-    <div class="marquee-tagline">🎞️ Talk changes everything 🎞️</div>
-    <div class="marquee-curtain"></div>
-  `;
-  feed.appendChild(marquee);
-  
-  /* 2. 🎟️ 매표소 윈도우 */
-  const booth = document.createElement('div');
-  booth.className = 'ticket-booth fade-up';
-  booth.style.animationDelay = '0.1s';
-  booth.innerHTML = `
-    <div class="ticket-booth-window">
-      <div class="ticket-booth-badge">🎟️ TICKET BOOTH</div>
-      <div class="ticket-booth-q">오늘 뭐 보실래요?</div>
-      <div class="ticket-booth-desc">어떤 상황의 영어가 필요하세요?</div>
-    </div>
-  `;
-  feed.appendChild(booth);
-  
-  /* 3. 🎬 NOW SHOWING — 인기 영상 가로 스크롤 (상단 특별 자리) */
-  const nowShowingCat = cats.find(c => c.isNowShowing);
-  if(nowShowingCat){
-    let nowShowingItems = shorts.filter(nowShowingCat.filter);
-    if(nowShowingCat.sort) nowShowingItems.sort(nowShowingCat.sort);
-    nowShowingItems = nowShowingItems.slice(0, nowShowingCat.limit);
-    
-    if(nowShowingItems.length > 0){
-      const section = document.createElement('div');
-      section.className = 'now-showing-section fade-up';
-      section.style.animationDelay = '0.2s';
-      
-      let html = `
-        <div class="now-showing-header">
-          <div class="now-showing-title">🎬 NOW SHOWING</div>
-          <div class="now-showing-subtitle">지금 상영중</div>
+  /* Render each category row */
+  cats.forEach((cat,catIdx)=>{
+    let items=shorts.filter(cat.filter);
+    if(cat.sort)items.sort(cat.sort);
+    items=items.slice(0,cat.limit);
+
+    /* Skip empty categories unless it's 'featured' */
+    if(items.length===0&&cat.id!=='featured')return;
+
+    /* v6.5: "이번 주 인기"는 특별 렌더링 (TikTok 스타일 쇼케이스) */
+    if(cat.id==='featured'&&items.length>0){
+      const section=document.createElement('div');
+      section.className='featured-section fade-up';
+      section.style.animationDelay=(catIdx*.05)+'s';
+
+      const hero=items[0];
+      const runners=items.slice(1,10);
+      const heroLikes=(hero.dubs||0)+Math.floor((hero.dubs||0)*.3);
+
+      let html=`
+        <div class="featured-header">
+          <div class="featured-title"><span class="featured-title-emoji">🏆</span>이번 주 대상</div>
+          <div class="featured-subtitle">좋아요 TOP</div>
         </div>
-        <div class="now-showing-scroll">
+        <div class="featured-hero" data-short-id="${hero.id}">
+          <div class="featured-hero-thumb" style="background-image:url('https://img.youtube.com/vi/${hero.id}/hqdefault.jpg')">
+            <span class="featured-hero-crown">👑 1위</span>
+            <span class="featured-hero-likes"><span class="heart">♥</span>${heroLikes>=1000?Math.floor(heroLikes/1000)+'k':heroLikes}</span>
+            <div class="featured-hero-play"></div>
+            <div class="featured-hero-info">
+              <div class="featured-hero-title">${hero.title}</div>
+              <div class="featured-hero-meta">
+                <span class="featured-hero-cat-badge">${hero.catIcon} ${hero.diff}</span>
+                <span>${hero.sentences.length}문장</span>
+              </div>
+            </div>
+          </div>
+        </div>
       `;
-      
-      nowShowingItems.forEach((s, i) => {
+
+      if(runners.length>0){
+        html+='<div class="featured-runners">';
+        runners.forEach((r,i)=>{
+          const rLikes=(r.dubs||0)+Math.floor((r.dubs||0)*.2);
+          html+=`
+            <div class="featured-runner-card" data-short-id="${r.id}">
+              <div class="featured-runner-thumb" style="background-image:url('https://img.youtube.com/vi/${r.id}/hqdefault.jpg')">
+                <span class="featured-runner-rank">#${i+2}</span>
+                <span class="featured-runner-likes"><span class="heart">♥</span>${rLikes>=1000?Math.floor(rLikes/1000)+'k':rLikes}</span>
+                <div class="featured-runner-info">
+                  <div class="featured-runner-title">${r.title}</div>
+                </div>
+              </div>
+            </div>
+          `;
+        });
+        html+='</div>';
+      }
+
+      section.innerHTML=html;
+      feed.appendChild(section);
+
+      section.querySelectorAll('[data-short-id]').forEach(card=>{
+        card.addEventListener('click',()=>{
+          const shortId=card.dataset.shortId;
+          const short=shorts.find(s=>s.id===shortId);
+          if(short)startGame(short);
+        });
+      });
+      return;
+    }
+
+    const section=document.createElement('div');
+    section.className='cat-section fade-up';
+    section.style.animationDelay=(catIdx*.05)+'s';
+
+    /* Header */
+    const header=`
+      <div class="cat-header">
+        <div class="cat-title"><span class="cat-title-emoji">${cat.emoji}</span>${cat.title}</div>
+        <div class="cat-count">${items.length}개</div>
+      </div>
+    `;
+
+    /* Content */
+    let rowHtml='<div class="cat-row">';
+    if(items.length===0){
+      rowHtml=`<div class="cat-empty">곧 업로드 예정! 🎬</div>`;
+    }else{
+      items.forEach(s=>{
+        /* v7.8: 관리자 모드에서 비공개 영상 표시 */
         const isReview = IS_ADMIN && s.status === 'review';
         const reviewBadge = isReview 
-          ? `<span class="poster-review-badge">🔒 비공개</span>` 
+          ? `<span class="cat-card-review-badge">🔒 비공개</span>` 
           : '';
-        html += `
-          <div class="movie-poster ${isReview ? 'movie-poster-review' : ''}" data-short-id="${s.id}">
-            <div class="movie-poster-img" style="background-image:url('https://img.youtube.com/vi/${s.id}/hqdefault.jpg')">
-              ${i < 3 ? `<div class="movie-poster-rank">🎖️ #${i+1}</div>` : ''}
+        const publishBtn = isReview
+          ? `<button class="cat-card-publish-btn" data-publish-id="${s.id}" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>`
+          : '';
+        rowHtml+=`
+          <div class="cat-card ${isReview ? 'cat-card-review' : ''}" data-short-id="${s.id}">
+            <div class="cat-card-thumb" style="background-image:url('https://img.youtube.com/vi/${s.id}/hqdefault.jpg')">
+              <span class="cat-card-diff diff-${s.diff}">${s.diff}</span>
+              <span class="cat-card-cat">${s.catIcon}</span>
               ${reviewBadge}
-              <div class="movie-poster-overlay"></div>
-              <div class="movie-poster-play">▶</div>
-            </div>
-            <div class="movie-poster-info">
-              <div class="movie-poster-title">${s.title}</div>
-              <div class="movie-poster-meta">
-                <span class="movie-poster-diff diff-${s.diff}">${s.diff}</span>
-                <span class="movie-poster-dubs">🎤 ${s.dubs >= 1000 ? Math.floor(s.dubs/1000)+'k' : s.dubs}</span>
+              <div class="cat-card-play"></div>
+              <div class="cat-card-info">
+                <div class="cat-card-title">${s.title}</div>
+                <div class="cat-card-meta"><span>${s.sentences.length} 문장</span><span>🎤 ${s.dubs>=1000?Math.floor(s.dubs/1000)+'k':s.dubs}</span></div>
               </div>
-              ${isReview ? `<button class="cat-card-publish-btn" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>` : ''}
             </div>
+            ${publishBtn}
           </div>
         `;
       });
-      
-      html += '</div>';
-      section.innerHTML = html;
-      feed.appendChild(section);
-      
-      section.querySelectorAll('.movie-poster').forEach(card => {
-        card.addEventListener('click', () => {
-          const shortId = card.dataset.shortId;
-          const short = shorts.find(s => s.id === shortId);
-          if(short) startGame(short);
-        });
-      });
-    }
-  }
-  
-  /* 4. 🎟️ BY SITUATION — 상황별 대형 카드 */
-  const situationSection = document.createElement('div');
-  situationSection.className = 'situation-section fade-up';
-  situationSection.style.animationDelay = '0.3s';
-  
-  let situationHtml = `
-    <div class="situation-header">
-      <div class="situation-header-emoji">🎟️</div>
-      <div class="situation-header-title">BY SITUATION</div>
-      <div class="situation-header-sub">상황별 영어 선택</div>
-    </div>
-    <div class="situation-grid">
-  `;
-  
-  /* NOW SHOWING 빼고 나머지 상황 카드 */
-  const situationCats = cats.filter(c => !c.isNowShowing);
-  situationCats.forEach((cat, i) => {
-    const items = shorts.filter(cat.filter);
-    const count = items.length;
-    const themeClass = cat.theme ? 'theme-' + cat.theme : '';
-    situationHtml += `
-      <button class="situation-card ${themeClass}" data-cat-id="${cat.id}" style="animation-delay:${0.35 + i*0.05}s">
-        <div class="situation-card-emoji">${cat.emoji}</div>
-        <div class="situation-card-title">${cat.title}</div>
-        <div class="situation-card-sub">${cat.subtitle || ''}</div>
-        <div class="situation-card-count">${count > 0 ? count + ' 편' : '곧 추가!'}</div>
-        ${count > 0 ? '<div class="situation-card-arrow">▶</div>' : '<div class="situation-card-soon">🚧</div>'}
-      </button>
-    `;
-  });
-  
-  situationHtml += '</div>';
-  situationSection.innerHTML = situationHtml;
-  feed.appendChild(situationSection);
-  
-  /* 상황 카드 클릭 → 2층으로 */
-  situationSection.querySelectorAll('.situation-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const catId = card.dataset.catId;
-      const cat = cats.find(c => c.id === catId);
-      const items = shorts.filter(cat.filter);
-      if(items.length === 0){
-        /* 빈 카테고리는 토스트 */
-        showEmptyCatToast(card, cat);
-        return;
+      /* "더보기" card only if we have items */
+      if(items.length>=3){
+        rowHtml+=`<div class="cat-more"><div class="cat-more-arrow">→</div>더보기</div>`;
       }
-      S.feedLevel = 2;
-      S.selectedCategory = cat;
-      renderFeed();
-    });
-  });
-}
+      rowHtml+='</div>';
+    }
+    if(items.length===0)rowHtml+='</div>'; // close the wrapper (skip this since we used cat-empty)
 
-/* v9.6: 🎬 2층 — 카테고리 상세 (그 상황의 영화들) */
-function renderCategoryDetail(shorts, cat){
-  const feed = document.getElementById('feedScreen');
-  feed.innerHTML = '';
-  const IS_ADMIN = new URLSearchParams(window.location.search).get('admin')==='1';
-  
-  let items = shorts.filter(cat.filter);
-  if(cat.sort) items.sort(cat.sort);
-  
-  /* 헤더 (뒤로가기 + 카테고리 이름) */
-  const header = document.createElement('div');
-  header.className = 'cat-detail-header fade-up';
-  header.innerHTML = `
-    <button class="cat-detail-back" id="catDetailBack">← 매표소로</button>
-    <div class="cat-detail-title-wrap">
-      <div class="cat-detail-emoji">${cat.emoji}</div>
-      <div class="cat-detail-title">${cat.title}</div>
-      <div class="cat-detail-sub">${cat.subtitle || ''}</div>
-    </div>
-    <div class="cat-detail-count-badge">${items.length} 편</div>
-  `;
-  feed.appendChild(header);
-  
-  /* 영화 그리드 */
-  const grid = document.createElement('div');
-  grid.className = 'cat-detail-grid fade-up';
-  grid.style.animationDelay = '0.1s';
-  
-  if(items.length === 0){
-    grid.innerHTML = `
-      <div class="cat-detail-empty">
-        <div class="cat-detail-empty-emoji">🎞️</div>
-        <div class="cat-detail-empty-title">곧 상영 예정!</div>
-        <div class="cat-detail-empty-sub">이 카테고리의 새 영상을 준비중이에요</div>
-      </div>
-    `;
-  } else {
-    items.forEach((s, i) => {
-      const isReview = IS_ADMIN && s.status === 'review';
-      const reviewBadge = isReview 
-        ? `<span class="poster-review-badge">🔒 비공개</span>` 
-        : '';
-      const card = document.createElement('div');
-      card.className = 'movie-poster-large ' + (isReview ? 'movie-poster-review' : '');
-      card.style.animationDelay = (0.1 + i*0.05) + 's';
-      card.dataset.shortId = s.id;
-      card.innerHTML = `
-        <div class="movie-poster-large-img" style="background-image:url('https://img.youtube.com/vi/${s.id}/hqdefault.jpg')">
-          ${reviewBadge}
-          <div class="movie-poster-large-overlay"></div>
-          <div class="movie-poster-large-play">▶</div>
-        </div>
-        <div class="movie-poster-large-info">
-          <div class="movie-poster-large-title">${s.title}</div>
-          <div class="movie-poster-large-meta">
-            <span class="movie-poster-diff diff-${s.diff}">${s.diff}</span>
-            <span class="movie-poster-large-sentences">📝 ${s.sentences.length}</span>
-            <span class="movie-poster-dubs">🎤 ${s.dubs >= 1000 ? Math.floor(s.dubs/1000)+'k' : s.dubs}</span>
-          </div>
-          ${isReview ? `<button class="cat-card-publish-btn" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>` : ''}
-        </div>
-      `;
-      card.addEventListener('click', () => {
-        const short = shorts.find(x => x.id === s.id);
-        if(short) startGame(short);
+    section.innerHTML=header+rowHtml;
+    feed.appendChild(section);
+
+    /* Click handlers for this section's cards */
+    section.querySelectorAll('.cat-card').forEach(card=>{
+      card.addEventListener('click',()=>{
+        const shortId=card.dataset.shortId;
+        const short=shorts.find(s=>s.id===shortId);
+        if(short)startGame(short);
       });
-      grid.appendChild(card);
     });
-  }
-  
-  feed.appendChild(grid);
-  
-  /* 뒤로가기 */
-  document.getElementById('catDetailBack').addEventListener('click', () => {
-    S.feedLevel = 1;
-    S.selectedCategory = null;
-    renderFeed();
   });
-}
-
-/* 빈 카테고리 토스트 */
-function showEmptyCatToast(card, cat){
-  const existing = card.querySelector('.cat-empty-toast');
-  if(existing) return;
-  const toast = document.createElement('div');
-  toast.className = 'cat-empty-toast';
-  toast.innerHTML = `🚧 ${cat.emoji} 곧 오픈!<br><span style="font-size:10px;opacity:.8">새 영상 추가 준비중</span>`;
-  toast.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,15,.95);color:#fbbf24;padding:12px 16px;border-radius:12px;font-size:12px;font-weight:800;z-index:10;border:1px solid rgba(251,191,36,.3);box-shadow:0 8px 24px rgba(0,0,0,.5);text-align:center;animation:soonPop .3s ease-out;white-space:nowrap';
-  card.style.position = 'relative';
-  card.appendChild(toast);
-  setTimeout(() => { if(toast.parentNode) toast.remove(); }, 2000);
 }
 
 /* ═══════════════════════════════════════
@@ -5453,10 +4720,6 @@ function showLobbyHub(){
   /* 영상 컨테이너 숨김 */
   const yt=document.getElementById('ytContainer');
   if(yt)yt.style.display='none';
-  
-  /* v9.5: 로비에서는 속도조절 숨김 (영화관 몰입!) */
-  const playerTop=document.querySelector('.player-top');
-  if(playerTop)playerTop.style.display='none';
   
   /* 상단 배지 (TAKE 번호) 숨김 */
   const lct=document.getElementById('listenCountTop');
@@ -5829,76 +5092,10 @@ function checkPuzzleAnswer(){
       }
     }, 1500);
   } else {
-    /* ❌ 오답 — v9.5: 쌤 아이디어! 단어들 우수수 쏟아져 나오기! */
+    /* ❌ 오답 — 흔들기 */
     slotsEl.classList.add('wrong');
-    
-    /* 슬롯의 단어들을 조각 영역으로 되돌리기 (떨어지는 애니메이션) */
-    setTimeout(() => {
-      const slots = document.querySelectorAll('.puzzle-slot.filled');
-      slots.forEach((slot, i) => {
-        const origIdx = slot.dataset.origIdx;
-        const pieceClass = slot.dataset.pieceClass;
-        
-        /* 슬롯 비우기 (딜레이 다르게) */
-        setTimeout(() => {
-          /* 떨어지는 파티클 효과 */
-          createFallingWord(slot);
-          
-          /* 슬롯 초기화 */
-          slot.className = 'puzzle-slot';
-          slot.textContent = '';
-          delete slot.dataset.word;
-          delete slot.dataset.origIdx;
-          delete slot.dataset.pieceClass;
-          
-          /* 원본 조각 되살리기 */
-          const pieces = document.querySelectorAll('.puzzle-piece');
-          pieces.forEach(p => {
-            if(p.dataset.origIdx == origIdx && p.classList.contains('used')){
-              p.classList.remove('used');
-              /* 되돌아오는 애니메이션 */
-              p.style.animation = 'piecePopBack 0.5s cubic-bezier(.3,1.5,.5,1)';
-              setTimeout(() => { p.style.animation = ''; }, 500);
-            }
-          });
-        }, i * 80); /* 순차적으로 쏟아짐! */
-      });
-      
-      /* placedPieces 배열 리셋 */
-      PUZZLE_STATE.placedPieces = new Array(PUZZLE_STATE.placedPieces.length).fill(null);
-      
-      slotsEl.classList.remove('wrong');
-    }, 500);
+    setTimeout(() => slotsEl.classList.remove('wrong'), 500);
   }
-}
-
-/* v9.5: 단어 쏟아지는 파티클 효과 */
-function createFallingWord(slot){
-  const rect = slot.getBoundingClientRect();
-  const word = slot.dataset.word;
-  const pieceClass = slot.dataset.pieceClass;
-  
-  if(!word) return;
-  
-  const falling = document.createElement('div');
-  falling.className = 'falling-word ' + (pieceClass || 'piece-c1');
-  falling.textContent = word;
-  falling.style.cssText = `
-    position: fixed;
-    left: ${rect.left}px;
-    top: ${rect.top}px;
-    width: ${rect.width}px;
-    padding: 8px 14px;
-    border-radius: 10px;
-    font-size: 15px;
-    font-weight: 800;
-    z-index: 9999;
-    pointer-events: none;
-    text-align: center;
-    animation: wordFallDown 0.8s cubic-bezier(.3,0,.7,1) forwards;
-  `;
-  document.body.appendChild(falling);
-  setTimeout(() => falling.remove(), 900);
 }
 
 /* 탑 렌더 */
@@ -6759,7 +5956,7 @@ function showScreen(id){
   if(hub)hub.style.display='none';
   /* v6.5: HOF 세로바 제거됨 → "이번 주 인기" 섹션으로 통합 */
 }
-document.querySelectorAll('.ctab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.ctab').forEach(x=>x.classList.remove('active'));t.classList.add('active');S.tab=t.dataset.tab;S.feedLevel=1;S.selectedCategory=null;renderFeed()})});
+document.querySelectorAll('.ctab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.ctab').forEach(x=>x.classList.remove('active'));t.classList.add('active');S.tab=t.dataset.tab;renderFeed()})});
 document.querySelectorAll('.nav-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.screen==='feed'){stopSnapReview();showScreen('feed')}if(b.dataset.screen==='room'){renderRoom();showScreen('room')}cleanupPlayer()})});
 
 /* ═══════════════════════════════════════
@@ -9213,9 +8410,6 @@ function goHome(){
   stopSnapReview();
   cleanupPlayer();
   /* v9.3: renderFeed() 호출 필수! (까만 화면 버그 수정) */
-  /* v9.6: 1층 매표소로 리셋 */
-  S.feedLevel = 1;
-  S.selectedCategory = null;
   renderFeed();
   showScreen('feed');
   document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
