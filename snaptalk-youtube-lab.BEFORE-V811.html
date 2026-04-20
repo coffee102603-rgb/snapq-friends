@@ -821,22 +821,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #shadowArea{flex:1;display:flex;flex-direction:column;padding:10px 12px 14px;gap:12px;overflow-y:auto}
 
 /* v8.8: 영상 더 넓게! (좌우 여백 최소화) */
-.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:38vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4);transition:max-height .4s cubic-bezier(.4,0,.2,1)}
-
-/* v8.11: 🎯 긴 문장 대응 — 영상 자동 축소 (쌤 교육철학!) */
-#shadowArea.sentence-medium .shadow-moment{ max-height: 32vh }
-#shadowArea.sentence-long .shadow-moment{ max-height: 26vh }
-#shadowArea.sentence-very-long .shadow-moment{ max-height: 22vh }
-
-/* v8.11: 긴 문장 시 카드 안쪽 간격 타이트하게 */
-#shadowArea.sentence-long .ticket-card{ padding: 14px 16px 12px }
-#shadowArea.sentence-very-long .ticket-card{ padding: 12px 14px 10px }
-#shadowArea.sentence-long .ticket-divider{ margin: 8px 0 }
-#shadowArea.sentence-very-long .ticket-divider{ margin: 6px 0 }
-#shadowArea.sentence-long .shadow-en{ margin-bottom: 6px }
-#shadowArea.sentence-very-long .shadow-en{ margin-bottom: 4px }
-#shadowArea.sentence-long .ticket-footer-row{ margin-top: 8px; padding-top: 8px }
-#shadowArea.sentence-very-long .ticket-footer-row{ margin-top: 6px; padding-top: 6px }
+.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:38vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4)}
 .shadow-moment iframe{width:100%;height:140%;position:absolute;top:-20%;left:0;pointer-events:none}
 .shadow-moment-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;z-index:3;backdrop-filter:blur(4px)}
 .shadow-moment-playbtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
@@ -966,13 +951,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   overflow-wrap: break-word;
   padding: 0;
   margin-bottom: 10px;
-  transition: font-size .3s ease;
 }
-/* v8.11: 4단계 자동 폰트 조정 (쌤 "긴 문장 걱정" 해결!) */
-#shadowArea.sentence-medium .shadow-en{font-size: 18px !important; line-height: 1.5 !important}
-#shadowArea.sentence-long .shadow-en{font-size: 16px !important; line-height: 1.5 !important}
-#shadowArea.sentence-very-long .shadow-en{font-size: 14px !important; line-height: 1.55 !important}
-/* Legacy class (기존 enEl 클래스도 호환) */
 .shadow-en.long{font-size: 18px !important; line-height: 1.5 !important}
 .shadow-en.very-long{font-size: 15px !important; line-height: 1.55 !important}
 .shadow-en .hl{
@@ -1002,12 +981,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   line-height: 1.5;
   margin-top: 0;
   letter-spacing: 0.1px;
-  transition: font-size .3s ease;
 }
-/* v8.11: 긴 문장 한글도 축소 */
-#shadowArea.sentence-medium .shadow-ko{font-size: 13px !important}
-#shadowArea.sentence-long .shadow-ko{font-size: 12px !important; line-height: 1.45}
-#shadowArea.sentence-very-long .shadow-ko{font-size: 11px !important; line-height: 1.4}
 .shadow-ko .hl-ko{
   background: linear-gradient(transparent 55%, rgba(251, 191, 36, 0.22) 55%, rgba(251, 191, 36, 0.22) 95%, transparent 95%);
   padding: 0 3px;
@@ -1015,36 +989,24 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   font-weight: 700;
 }
 
-/* 발음 (토글시만 표시) — v8.10: 컨텐츠(보라) vs 액션(회색) 차별화 */
+/* 발음 (토글시만 표시) */
 .shadow-phonetic{
   display: none;
-  color: #c4b5fd;
+  color: #a78bfa;
   font-size: 14px;
   font-weight: 600;
-  margin-top: 10px;
-  margin-bottom: 0;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.12), 
-    rgba(139, 92, 246, 0.06)
-  );
-  border: 1px solid rgba(139, 92, 246, 0.18);
-  border-radius: 10px 10px 4px 4px;
+  margin-top: 12px;
+  padding: 10px 14px;
+  background: rgba(139, 92, 246, 0.1);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: 10px;
   line-height: 1.5;
-  letter-spacing: 0.2px;
-  text-align: center;
   animation: phoneticSlide 0.3s ease;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
-  transition: font-size .3s ease, padding .3s ease;
 }
-/* v8.11: 긴 문장 발음도 축소 */
-#shadowArea.sentence-medium .shadow-phonetic{font-size: 13px; padding: 10px 14px}
-#shadowArea.sentence-long .shadow-phonetic{font-size: 12px; padding: 8px 12px; line-height: 1.4}
-#shadowArea.sentence-very-long .shadow-phonetic{font-size: 11px; padding: 8px 10px; line-height: 1.35}
 .shadow-phonetic.show{ display: block; }
 @keyframes phoneticSlide{
-  from{ opacity: 0; transform: translateY(-8px); max-height: 0; }
-  to{ opacity: 1; transform: translateY(0); max-height: 300px; }
+  from{ opacity: 0; transform: translateY(-8px); }
+  to{ opacity: 1; transform: translateY(0); }
 }
 
 /* v8.9: 티켓 하단 (발음 토글 + 저장 한 줄!) */
@@ -1052,18 +1014,18 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   display: flex;
   gap: 10px;
   align-items: center;
-  margin-top: 10px;
+  margin-top: 12px;
   padding-top: 10px;
   border-top: 1px dashed rgba(167, 139, 250, 0.15);
 }
 
-/* v8.10: 발음 토글 버튼 — 중립 회색 (액션 느낌!) */
+/* v8.9: 발음 토글 버튼 (왼쪽, flex:1로 넓게) */
 .ticket-phonetic-toggle{
   flex: 1;
   padding: 10px 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(248, 250, 252, 0.6);
+  background: rgba(167, 139, 250, 0.05);
+  border: 1px solid rgba(167, 139, 250, 0.15);
+  color: rgba(167, 139, 250, 0.85);
   font-size: 13px;
   font-weight: 700;
   letter-spacing: 0.2px;
@@ -1072,19 +1034,14 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   border-radius: 10px;
 }
 .ticket-phonetic-toggle:hover{
-  color: rgba(248, 250, 252, 0.85);
-  background: rgba(255, 255, 255, 0.07);
-  border-color: rgba(255, 255, 255, 0.14);
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.1);
+  border-color: rgba(167, 139, 250, 0.3);
 }
 .ticket-phonetic-toggle.active{
-  color: #c4b5fd;
-  background: rgba(139, 92, 246, 0.08);
-  border-color: rgba(139, 92, 246, 0.2);
-}
-/* v8.10: 발음 열렸을 때 상단 모서리 둥글게 연결 */
-.ticket-phonetic-toggle.connected-top{
-  border-radius: 4px 4px 10px 10px;
-  border-top-color: rgba(139, 92, 246, 0.18);
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.12);
+  border-color: rgba(167, 139, 250, 0.35);
 }
 
 /* ═══ v8.8: 하단 버튼 (심플!) ═══ */
@@ -2464,7 +2421,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.11</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.9</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4104,30 +4061,8 @@ function renderShadow(){
   if(totalEl)totalEl.textContent=ss.length;
   const enEl=document.getElementById('shadowEn');
   enEl.innerHTML=highlightEn(s.en,s.highlight);
-  
-  /* v8.11: 🎯 4단계 문장 길이 감지 (쌤 "긴 문장 걱정" 해결!)
-     모든 요소 (영상/영어/한글/발음) 자동 축소
-     
-     기준: 영어 + 한글 + 발음 중 가장 긴 것
-     - 40자 미만: 짧음 (영상 크게, 발음 선택)
-     - 40-80자: 중간 (영상 살짝 축소)
-     - 80-150자: 긴 (영상 축소, 발음 기본 접힘)
-     - 150자+: 매우 긴 (영상 최소화) */
-  const shadowArea = document.getElementById('shadowArea');
-  if(shadowArea){
-    shadowArea.classList.remove('sentence-short','sentence-medium','sentence-long','sentence-very-long');
-    const enLen = (s.en || '').length;
-    const koLen = (s.ko || '').length * 1.8;  /* 한글은 1글자 ≈ 1.8 바이트 */
-    const phLen = (s.phonetic || '').length * 1.8;
-    const maxLen = Math.max(enLen, koLen, phLen);
-    
-    if(maxLen > 150) shadowArea.classList.add('sentence-very-long');
-    else if(maxLen > 80) shadowArea.classList.add('sentence-long');
-    else if(maxLen > 40) shadowArea.classList.add('sentence-medium');
-    else shadowArea.classList.add('sentence-short');
-  }
-  
-  /* v8.4: 긴 문장 자동 축소 — 부모 .cinema-script에 클래스 추가 (legacy) */
+  /* v8.4: 긴 문장 자동 축소 — 부모 .cinema-script에 클래스 추가
+     (EN/KO/Phonetic 3줄 모두 동시 축소돼야 정렬 유지) */
   const cinemaScript = enEl.closest('.cinema-script');
   if(cinemaScript){
     cinemaScript.classList.remove('long-sentence','very-long-sentence');
@@ -4141,28 +4076,21 @@ function renderShadow(){
   if(len>80)enEl.classList.add('very-long');
   else if(len>40)enEl.classList.add('long');
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
-  
-  /* v8.11: 발음 표시 로직 (긴 문장에선 기본 접힘!)
-     - SCRIPT 모드 + 짧은/중간 문장: 자동 표시
-     - SCRIPT 모드 + 긴 문장: 사용자 선택 (기본 접힘!)
-     - 다른 모드: 이전 phoneticVisible 상태 유지 */
+  /* v8.8: SCRIPT 모드(easy)면 발음 자동 표시 (새 class 시스템) */
   const pEl=document.getElementById('shadowPhoneticText');
   const pBtn=document.getElementById('shadowPhonetic');
   const pLbl=document.getElementById('shadowPhoneticLabel');
   const isScriptMode = S.dubLevel==='easy';
-  const isLongSentence = (s.en || '').length > 80;
-  const shouldAutoShow = (isScriptMode && !isLongSentence) || phoneticVisible;
-  
   if(pEl){
-    if(shouldAutoShow){
+    if(isScriptMode || phoneticVisible){
       if(s && s.phonetic){pEl.innerHTML=formatPhoneticWithChunks(s.phonetic);pEl.classList.add('show');}
       else{pEl.textContent='(발음 표기 준비중)';pEl.classList.add('show');}
-      if(isScriptMode && !isLongSentence) phoneticVisible=true;
-      if(pBtn){pBtn.classList.add('active','connected-top');}
+      if(isScriptMode) phoneticVisible=true;
+      if(pBtn){pBtn.classList.add('active');}
       if(pLbl){pLbl.textContent='🔤 발음 숨기기 ▴';}
     }else{
       pEl.classList.remove('show');
-      if(pBtn){pBtn.classList.remove('active','connected-top');}
+      if(pBtn){pBtn.classList.remove('active');}
       if(pLbl){pLbl.textContent='🔤 발음 보기 ▾';}
     }
   }
@@ -4229,17 +4157,17 @@ document.getElementById('shadowPhonetic').addEventListener('click',()=>{
       pEl.innerHTML=formatPhoneticWithChunks(s.phonetic);
       pEl.classList.add('show');
       if(lbl)lbl.textContent='🔤 발음 숨기기 ▴';
-      btn.classList.add('active','connected-top');
+      btn.classList.add('active');
     }else{
       pEl.textContent='(발음 표기 준비중)';
       pEl.classList.add('show');
       if(lbl)lbl.textContent='🔤 발음 숨기기 ▴';
-      btn.classList.add('active','connected-top');
+      btn.classList.add('active');
     }
   }else{
     pEl.classList.remove('show');
     if(lbl)lbl.textContent='🔤 발음 보기 ▾';
-    btn.classList.remove('active','connected-top');
+    btn.classList.remove('active');
   }
 });
 
