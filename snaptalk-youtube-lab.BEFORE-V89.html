@@ -821,7 +821,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #shadowArea{flex:1;display:flex;flex-direction:column;padding:10px 12px 14px;gap:12px;overflow-y:auto}
 
 /* v8.8: 영상 더 넓게! (좌우 여백 최소화) */
-.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:38vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4)}
+.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:44vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4)}
 .shadow-moment iframe{width:100%;height:140%;position:absolute;top:-20%;left:0;pointer-events:none}
 .shadow-moment-label{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.8);color:#fff;font-size:11px;font-weight:700;padding:4px 12px;border-radius:12px;z-index:3;backdrop-filter:blur(4px)}
 .shadow-moment-playbtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:4;width:44px;height:44px;border-radius:50%;background:rgba(0,0,0,.6);border:2px solid rgba(255,255,255,.3);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
@@ -846,7 +846,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   );
   border: 1px solid rgba(167, 139, 250, 0.2);
   border-radius: 18px;
-  padding: 16px 18px 14px;
+  padding: 18px 20px 14px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
@@ -897,25 +897,23 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   font-weight: 900;
 }
 
-/* v8.9: 📒 저장 버튼 (하단 줄에 맞는 크기) */
+/* 📒 저장 버튼 (카드 안 — 쌤의 "필기 느낌"!) */
 .ticket-save-btn{
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 16px;
+  padding: 8px 14px;
   background: linear-gradient(135deg, 
-    rgba(139, 92, 246, 0.18), 
-    rgba(139, 92, 246, 0.1)
+    rgba(139, 92, 246, 0.15), 
+    rgba(139, 92, 246, 0.08)
   );
-  border: 1px solid rgba(139, 92, 246, 0.35);
-  border-radius: 10px;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 20px;
   color: #c4b5fd;
   font-size: 13px;
-  font-weight: 800;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.25s ease;
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 .ticket-save-btn:hover{
   background: linear-gradient(135deg, 
@@ -952,8 +950,8 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   padding: 0;
   margin-bottom: 10px;
 }
-.shadow-en.long{font-size: 18px !important; line-height: 1.5 !important}
-.shadow-en.very-long{font-size: 15px !important; line-height: 1.55 !important}
+.shadow-en.long{font-size: 19px !important}
+.shadow-en.very-long{font-size: 17px !important; line-height: 1.5 !important}
 .shadow-en .hl{
   background: linear-gradient(transparent 55%, rgba(251, 191, 36, 0.5) 55%, rgba(251, 191, 36, 0.5) 95%, transparent 95%);
   padding: 0 3px;
@@ -1009,39 +1007,27 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   to{ opacity: 1; transform: translateY(0); }
 }
 
-/* v8.9: 티켓 하단 (발음 토글 + 저장 한 줄!) */
-.ticket-footer-row{
-  display: flex;
-  gap: 10px;
-  align-items: center;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(167, 139, 250, 0.15);
-}
-
-/* v8.9: 발음 토글 버튼 (왼쪽, flex:1로 넓게) */
+/* 발음 토글 버튼 */
 .ticket-phonetic-toggle{
-  flex: 1;
-  padding: 10px 14px;
-  background: rgba(167, 139, 250, 0.05);
-  border: 1px solid rgba(167, 139, 250, 0.15);
-  color: rgba(167, 139, 250, 0.85);
-  font-size: 13px;
+  width: 100%;
+  margin-top: 12px;
+  padding: 8px;
+  background: transparent;
+  border: none;
+  color: rgba(167, 139, 250, 0.7);
+  font-size: 12px;
   font-weight: 700;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.3px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  border-radius: 10px;
+  transition: color 0.2s ease;
+  border-radius: 8px;
 }
 .ticket-phonetic-toggle:hover{
   color: #a78bfa;
-  background: rgba(167, 139, 250, 0.1);
-  border-color: rgba(167, 139, 250, 0.3);
+  background: rgba(167, 139, 250, 0.05);
 }
 .ticket-phonetic-toggle.active{
   color: #a78bfa;
-  background: rgba(167, 139, 250, 0.12);
-  border-color: rgba(167, 139, 250, 0.35);
 }
 
 /* ═══ v8.8: 하단 버튼 (심플!) ═══ */
@@ -2139,7 +2125,14 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       
       <!-- v8.8: 🎬 영화 티켓 카드 (쌤 철학: 따라 읽기 + 필기!) -->
       <div class="ticket-card" id="ticketCard">
-        <!-- v8.9: 티켓 헤더 제거 (TAKE는 상단에만!) -->
+        <!-- 티켓 상단: TAKE 번호 + 📒 저장 버튼 -->
+        <div class="ticket-header">
+          <span class="ticket-take-label">🎞️ TAKE <span class="cur" id="shadowProgress">1</span></span>
+          <button class="ticket-save-btn" id="shadowSave" title="내 노트에 보관">
+            <span class="ticket-save-icon">📒</span>
+            <span class="ticket-save-text">저장</span>
+          </button>
+        </div>
         
         <!-- 티켓 본문: 영어(크게) + 한글(자막) -->
         <div class="shadow-en-box">
@@ -2149,16 +2142,10 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="shadow-phonetic" id="shadowPhoneticText"></div>
         </div>
         
-        <!-- v8.9: 발음 토글 + 📒 저장 (한 줄로!) -->
-        <div class="ticket-footer-row">
-          <button class="ticket-phonetic-toggle" id="shadowPhonetic">
-            <span id="shadowPhoneticLabel">🔤 발음 보기 ▾</span>
-          </button>
-          <button class="ticket-save-btn" id="shadowSave" title="내 노트에 보관">
-            <span class="ticket-save-icon">📒</span>
-            <span class="ticket-save-text">저장</span>
-          </button>
-        </div>
+        <!-- 티켓 하단: 발음 토글 -->
+        <button class="ticket-phonetic-toggle" id="shadowPhonetic">
+          <span id="shadowPhoneticLabel">🔤 발음 보기 ▾</span>
+        </button>
       </div>
       
       <!-- 숨김 요소들 (JS 호환성) -->
@@ -2421,7 +2408,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.9</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.8</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4054,11 +4041,8 @@ function renderShadow(){
   const label=document.getElementById('shadowMomentLabel');
   label.textContent=`📸 ${Math.round(s.start)}초 — ${Math.round(s.end)}초`;
 
-  /* v8.9: shadowProgress/Total 엘리먼트가 없으므로 null-safe */
-  const progEl=document.getElementById('shadowProgress');
-  if(progEl)progEl.textContent=(i+1);
-  const totalEl=document.getElementById('shadowTotal');
-  if(totalEl)totalEl.textContent=ss.length;
+  document.getElementById('shadowProgress').textContent=(i+1);
+  document.getElementById('shadowTotal').textContent=ss.length;
   const enEl=document.getElementById('shadowEn');
   enEl.innerHTML=highlightEn(s.en,s.highlight);
   /* v8.4: 긴 문장 자동 축소 — 부모 .cinema-script에 클래스 추가
