@@ -289,32 +289,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #ytContainer.gentle-shrink::after,
 #ytContainer.shrink-done::after{display:none}
 
-/* v10.6: 🎬 YouTube iframe 상단/하단 컨트롤 영역 가리기 (▶, ⛶ 버튼 차단!) */
-#ytContainer::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 50px; /* 상단 컨트롤 영역 */
-  background: linear-gradient(180deg, rgba(0,0,0,0.4), transparent);
-  z-index: 10;
-  pointer-events: auto; /* 클릭 막기 */
-}
-/* 하단 컨트롤 영역 */
-#ytContainer > .yt-bottom-cover{
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 60px;
-  background: linear-gradient(0deg, rgba(0,0,0,0.4), transparent);
-  z-index: 10;
-  pointer-events: auto; /* 클릭 막기 */
-}
-#ytContainer.pip::before,
-#ytContainer.gentle-shrink::before{ display: none }
-
 /* v8.6: 가리개 + 이해벽돌 숨김 (쌤 결정: 큰 역할 못 함) */
 .paint-header-group,
 .cover-toggle,
@@ -1476,11 +1450,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 
 /* ═══ STEP 2: 말해봐 (Shadow) ═══ */
-#shadowArea{flex:1;display:flex;flex-direction:column;padding:8px 12px 12px;gap:8px;overflow:hidden;min-height:0}
-/* v10.6: 중앙 영역만 scroll 가능 (버튼은 항상 바닥) */
-#shadowArea .ticket-card{ flex-shrink: 1; min-height: 0; overflow-y: auto }
-#shadowArea .shadow-moment{ flex-shrink: 0 }
-#shadowArea .shadow-bottom-actions{ flex-shrink: 0 }
+#shadowArea{flex:1;display:flex;flex-direction:column;padding:10px 12px 14px;gap:12px;overflow-y:auto}
 
 /* v8.8: 영상 더 넓게! (좌우 여백 최소화) */
 .shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:38vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4);transition:max-height .4s cubic-bezier(.4,0,.2,1)}
@@ -2404,19 +2374,8 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
   animation: modeFadeIn .4s ease-out;
-  min-height: 0; /* v10.6: flex 자식 overflow 방지 */
-  overflow: hidden;
-}
-/* v10.6: quiz 안의 선택지 영역은 남은 공간 활용 */
-.quiz-mode .quiz-choices{
-  flex-shrink: 0;
-}
-.quiz-mode .quiz-hotdog-display{
-  flex: 1;
-  min-height: 80px;
-  overflow: hidden;
 }
 @keyframes modeFadeIn{
   from{ opacity: 0; transform: translateY(10px) }
@@ -2502,36 +2461,23 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 
 .quiz-question{
   text-align: center;
-  padding: 12px 14px;
+  padding: 20px 16px;
   background: linear-gradient(135deg, rgba(26,26,46,.85), rgba(20,20,43,.7));
   border: 1px solid rgba(167,139,250,.2);
   border-radius: 16px;
   box-shadow: 0 8px 32px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.05);
-  flex-shrink: 0;
-  max-height: 110px;
-  overflow: hidden;
 }
-/* v10.6: 🍿 한글 질문 40% 축소 + 고정 (쌤 요청) */
 .quiz-ko{
-  font-size: 17px;
+  font-size: 28px;
   font-weight: 900;
   color: #fff;
-  margin-bottom: 6px;
-  letter-spacing: -0.2px;
-  line-height: 1.3;
-  word-break: keep-all;
-  overflow-wrap: break-word;
-  max-height: 70px;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  margin-bottom: 10px;
+  letter-spacing: -0.3px;
 }
 .quiz-prompt{
-  font-size: 11px;
+  font-size: 13px;
   color: #a1a1aa;
   font-weight: 600;
-  letter-spacing: 0.2px;
 }
 
 /* 🎪 간식 코너 — 4지선다 카드 */
@@ -2767,22 +2713,15 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
  * 7 문장 = 🌈 무지개 탑 완성!
  * ═══════════════════════════════════════════════════ */
 
-/* v10.6: 🧩 퍼즐 그리드 고정 (스크롤 없이 한 화면!) */
 #puzzleMain, #puzzleResult{
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 8px 12px 12px;
-  gap: 8px;
-  overflow: hidden;
-  min-height: 0;
+  padding: 10px 14px 14px;
+  gap: 12px;
+  overflow-y: auto;
   animation: puzzleFadeIn .4s ease-out;
 }
-/* 퍼즐 내부 영역 구조: 헤더(고정) + 질문(고정) + 슬롯(고정) + 조각영역(flex) */
-#puzzleMain .puzzle-header{ flex-shrink: 0 }
-#puzzleMain .puzzle-question{ flex-shrink: 0 }
-#puzzleMain .puzzle-slots-wrap{ flex-shrink: 0 }
-#puzzleMain .puzzle-pieces-wrap{ flex: 1; min-height: 60px; overflow-y: auto }
 @keyframes puzzleFadeIn{
   from{ opacity: 0; transform: translateY(10px) }
   to{ opacity: 1; transform: translateY(0) }
@@ -2814,32 +2753,22 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 /* 한글 힌트 */
 .puzzle-hint{
   text-align: center;
-  padding: 8px 12px;
+  padding: 12px 14px;
   background: linear-gradient(135deg, rgba(26,26,46,.85), rgba(20,20,43,.7));
   border: 1px solid rgba(167,139,250,.2);
   border-radius: 14px;
-  flex-shrink: 0;
-  max-height: 90px;
-  overflow: hidden;
 }
 .puzzle-hint-label{
-  font-size: 10px;
+  font-size: 11px;
   color: #a1a1aa;
   font-weight: 700;
-  margin-bottom: 3px;
+  margin-bottom: 4px;
 }
-/* v10.6: 퍼즐 한글 40% 축소 (공간 고정!) */
 .puzzle-hint-text{
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 900;
   color: #fff;
   letter-spacing: -0.2px;
-  line-height: 1.3;
-  word-break: keep-all;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 /* 정답 슬롯 (드롭 영역) */
@@ -5927,7 +5856,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.6</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.5</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -7908,47 +7837,26 @@ function startPuzzleGame(){
   const savedTowers = db.get('puzzleTowers', {});
   PUZZLE_STATE.tower = savedTowers[S.short.id] || [];
   
-  /* v10.6: 🧩 퍼즐 문장 필터링 (쌤 요청: 길이+구두점+CORE) */
-  function isPuzzleWorthy(s){
-    if(!s || !s.en) return false;
-    const text = String(s.en).trim();
-    /* A. 길이 체크: 3~8 단어 */
-    const words = text.split(/\s+/).filter(w => w.length > 0);
-    if(words.length < 3 || words.length > 8) return false;
-    /* B. 구두점 체크: 문장 끝이 . ! ? 로 명확하게 끝남 */
-    if(!/[.!?]$/.test(text)) return false;
-    /* C. CORE 단어 있음 (학습 가치) */
-    if(!s.core || !String(s.core).trim()) return false;
-    /* D. 복잡한 구조 제외 (쉼표/세미콜론 많으면 복잡) */
-    const complexCount = (text.match(/[,;]/g) || []).length;
-    if(complexCount > 1) return false;
-    return true;
-  }
+  /* 문장 준비 (짧은 것 우선, 최대 5-7개) */
+  const sentences = S.short.sentences
+    .filter(s => s.en && s.en.split(/\s+/).length >= 2 && s.en.split(/\s+/).length <= 10)
+    .slice(0, 7);
   
-  /* 1차: 엄격한 조건 (최대 7개) */
-  const strictSentences = S.short.sentences.filter(isPuzzleWorthy).slice(0, 7);
-  
-  let sentences;
-  if(strictSentences.length >= 2){
-    sentences = strictSentences;
+  if(sentences.length < 2){
+    /* 조건 완화 */
+    const fallback = S.short.sentences.slice(0, 5);
+    PUZZLE_STATE.items = fallback.map(s => ({
+      en: s.en,
+      ko: s.ko || s.koHighlight || '',
+      words: tokenizeForPuzzle(s.en)
+    }));
   } else {
-    /* 조건 완화: 길이만 체크 */
-    sentences = S.short.sentences
-      .filter(s => s.en && s.en.split(/\s+/).length >= 3 && s.en.split(/\s+/).length <= 10)
-      .slice(0, 5);
-    if(sentences.length < 2){
-      /* 마지막 폴백: 아무거나 */
-      sentences = S.short.sentences.slice(0, 5);
-    }
+    PUZZLE_STATE.items = sentences.map(s => ({
+      en: s.en,
+      ko: s.ko || s.koHighlight || '',
+      words: tokenizeForPuzzle(s.en)
+    }));
   }
-  
-  PUZZLE_STATE.items = sentences.map(s => ({
-    en: s.en,
-    ko: s.ko || s.koHighlight || '',
-    core: s.core || '',
-    koHighlight: s.koHighlight || '',
-    words: tokenizeForPuzzle(s.en)
-  }));
   
   PUZZLE_STATE.totalToComplete = PUZZLE_STATE.items.length;
   PUZZLE_STATE.currentIdx = 0;
