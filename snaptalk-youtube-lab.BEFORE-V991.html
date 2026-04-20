@@ -4890,19 +4890,19 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
 
   <!-- BOTTOM NAV -->
   <div id="bottomNav">
-    <button type="button" class="nav-btn active" data-screen="feed">
-      <span class="nav-icon" style="pointer-events:none">🎦</span>
-      <span class="nav-label" style="pointer-events:none">CINEMA</span>
-      <span class="nav-sub" style="pointer-events:none">상영관</span>
+    <button class="nav-btn active" data-screen="feed">
+      <span class="nav-icon">🎦</span>
+      <span class="nav-label">CINEMA</span>
+      <span class="nav-sub">상영관</span>
     </button>
-    <button type="button" class="nav-btn" data-screen="room">
-      <span class="nav-icon" style="pointer-events:none">🎭</span>
-      <span class="nav-label" style="pointer-events:none">GREEN ROOM</span>
-      <span class="nav-sub" style="pointer-events:none">대기실</span>
+    <button class="nav-btn" data-screen="room">
+      <span class="nav-icon">🎭</span>
+      <span class="nav-label">GREEN ROOM</span>
+      <span class="nav-sub">대기실</span>
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.1</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -7673,20 +7673,7 @@ function showScreen(id){
   /* v6.5: HOF 세로바 제거됨 → "이번 주 인기" 섹션으로 통합 */
 }
 document.querySelectorAll('.ctab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.ctab').forEach(x=>x.classList.remove('active'));t.classList.add('active');S.tab=t.dataset.tab;S.feedLevel=1;S.selectedCategory=null;renderFeed()})});
-document.querySelectorAll('.nav-btn').forEach(b=>{
-  b.addEventListener('click',(e)=>{
-    e.preventDefault();
-    e.stopPropagation();
-    /* v9.9 Fix: closest로 안전하게 타겟 찾기 */
-    const btn = e.target.closest('.nav-btn') || b;
-    const screen = btn.dataset.screen;
-    document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
-    btn.classList.add('active');
-    if(screen==='feed'){stopSnapReview();renderFeed();showScreen('feed')}
-    if(screen==='room'){renderRoom();showScreen('room')}
-    cleanupPlayer();
-  });
-});
+document.querySelectorAll('.nav-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');if(b.dataset.screen==='feed'){stopSnapReview();showScreen('feed')}if(b.dataset.screen==='room'){renderRoom();showScreen('room')}cleanupPlayer()})});
 
 /* ═══════════════════════════════════════
  * YOUTUBE PLAYER
