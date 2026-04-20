@@ -1014,54 +1014,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 
 /* 🎦 LOBBY 버튼 (메인 통일!) */
-/* v10.3: 🔔 자동 수집 토스트 (퀴즈/퍼즐에서 틀리면 표시) */
-.auto-collect-toast{
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translate(-50%, -100px);
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 18px;
-  background: linear-gradient(135deg, rgba(40,20,10,0.98) 0%, rgba(30,15,25,0.98) 100%);
-  border: 1px solid rgba(251,191,36,0.4);
-  border-radius: 14px;
-  box-shadow: 
-    0 12px 40px rgba(0,0,0,0.5),
-    0 0 40px rgba(251,191,36,0.2),
-    inset 0 1px 0 rgba(251,191,36,0.2);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(.4,0,.2,1);
-  max-width: 320px;
-  pointer-events: none;
-}
-.auto-collect-toast.show{
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-.auto-collect-toast .act-icon{
-  font-size: 28px;
-  line-height: 1;
-  filter: drop-shadow(0 0 8px rgba(251,191,36,0.4));
-}
-.auto-collect-toast .act-text{
-  flex: 1;
-}
-.auto-collect-toast .act-main{
-  font-size: 13px;
-  font-weight: 900;
-  color: #fbbf24;
-  letter-spacing: 0.3px;
-  margin-bottom: 2px;
-}
-.auto-collect-toast .act-sub{
-  font-size: 11px;
-  color: #cbd5e1;
-  font-weight: 600;
-}
-
 .lobby-btn-big{
   position: relative;
   min-width: 64px;
@@ -1345,7 +1297,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   );
   border: 1px solid rgba(167, 139, 250, 0.2);
   border-radius: 18px;
-  padding: 12px 14px 10px;
+  padding: 16px 18px 14px;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
@@ -1474,28 +1426,9 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
     rgba(167, 139, 250, 0.25) 50%, 
     transparent 100%
   );
-  margin: 6px 0;
+  margin: 12px 0;
   position: relative;
 }
-
-/* v10.3: 💡 인라인 발음 힌트 (영어 바로 아래 작게!) */
-.shadow-phonetic-inline{
-  font-size: 12px;
-  color: rgba(196,181,253,0.75);
-  font-weight: 500;
-  font-style: italic;
-  letter-spacing: 0.3px;
-  margin-top: 4px;
-  margin-bottom: 0;
-  line-height: 1.3;
-  word-break: keep-all;
-  overflow-wrap: break-word;
-  opacity: 0.85;
-}
-.shadow-phonetic-inline:empty{ display: none }
-#shadowArea.sentence-medium .shadow-phonetic-inline{font-size: 11px}
-#shadowArea.sentence-long .shadow-phonetic-inline{font-size: 10px}
-#shadowArea.sentence-very-long .shadow-phonetic-inline{font-size: 10px}
 
 /* 한글 (영화관 자막 느낌!) */
 .shadow-ko{
@@ -5110,21 +5043,27 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <button class="shadow-moment-playbtn" id="shadowMomentPlay" title="이 구간 듣기">▶</button>
       </div>
       
-      <!-- v10.3: 🎬 영화 티켓 카드 (인라인 힌트 + 자동 수집!) -->
+      <!-- v8.8: 🎬 영화 티켓 카드 (쌤 철학: 따라 읽기 + 필기!) -->
       <div class="ticket-card" id="ticketCard">
-        <!-- 티켓 본문: 영어 + 인라인 발음 + 한글 -->
+        <!-- v8.9: 티켓 헤더 제거 (TAKE는 상단에만!) -->
+        
+        <!-- 티켓 본문: 영어(크게) + 한글(자막) -->
         <div class="shadow-en-box">
           <div class="shadow-en" id="shadowEn"></div>
-          <!-- v10.3: 💡 인라인 발음 힌트 (영어 바로 아래 작게!) -->
-          <div class="shadow-phonetic-inline" id="shadowPhoneticText"></div>
           <div class="ticket-divider"></div>
           <div class="shadow-ko" id="shadowKo"></div>
+          <div class="shadow-phonetic" id="shadowPhoneticText"></div>
         </div>
-        <!-- v10.3: ⭐ 저장 버튼 제거! 퀴즈/퍼즐에서 자동 수집! -->
-        <!-- 숨겨진 호환성 요소 -->
-        <div style="display:none">
-          <button id="shadowPhonetic"><span id="shadowPhoneticLabel">💡 힌트 보기 ▾</span></button>
-          <button id="shadowSave">⭐</button>
+        
+        <!-- v10.2: 💡 힌트 + ⭐ 즐겨찾기 (심플 직관!) -->
+        <div class="ticket-footer-row">
+          <button class="ticket-phonetic-toggle" id="shadowPhonetic">
+            <span id="shadowPhoneticLabel">💡 힌트 보기 ▾</span>
+          </button>
+          <button class="ticket-save-btn" id="shadowSave" title="즐겨찾기에 담기">
+            <span class="ticket-save-icon">⭐</span>
+            <span class="ticket-save-text">즐겨찾기</span>
+          </button>
         </div>
       </div>
       
@@ -5143,17 +5082,17 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <button id="shadowMic">🎤</button>
       </div>
       
-      <!-- v10.3: 🎬 직관 영어! AGAIN · NEXT -->
+      <!-- v10.2: 🎬 영화 촬영장 버튼! RETAKE · CUT! -->
       <div class="shadow-bottom-actions">
-        <button class="shadow-replay-btn" id="shadowReplayBtn" title="한번 더 해볼까?">
+        <button class="shadow-replay-btn" id="shadowReplayBtn" title="이 장면 다시 촬영">
           <span class="btn-icon">🔁</span>
-          <span class="btn-label">AGAIN</span>
+          <span class="btn-label">RETAKE</span>
           <span class="btn-sub">한번 더!</span>
         </button>
         <button class="shadow-next-btn" id="shadowSkip">
           <span class="btn-icon">🎬</span>
-          <span class="btn-label">NEXT</span>
-          <span class="btn-sub">잘했어!</span>
+          <span class="btn-label">CUT!</span>
+          <span class="btn-sub">좋아, 다음!</span>
         </button>
         <button class="shadow-home-btn" id="shadowHome" title="매표소로">
           <span class="btn-icon">🎦</span>
@@ -5670,7 +5609,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.3</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.2</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -7467,68 +7406,6 @@ document.addEventListener('click', e=>{
  * 5-7 문장 완성 = 🌈 무지개 탑 완성!
  * ═══════════════════════════════════════════════════ */
 
-/* v10.3: 🎯 자동 수집 시스템! (쌤 혁명 아이디어!)
-   퀴즈/퍼즐에서 틀린 문장을 SCREENPLAY(GREEN ROOM)에 자동 저장
-   → 사용자 부담 제로, 약점만 쌓여서 복습! */
-function autoCollectToNotebook(item, source){
-  if(!item || !item.en) return;
-  try {
-    const nb = db.get('notebook', []);
-    /* 중복 체크 (이미 같은 영어 문장이 있으면 스킵) */
-    if(nb.some(x => x && x.en === item.en)) return;
-    const newItem = {
-      id: 'auto_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-      en: item.en,
-      ko: item.ko || '',
-      highlight: item.highlight || item.core || '',
-      koHighlight: item.koHighlight || '',
-      shortTitle: (S.short && S.short.title) || '',
-      shortId: (S.short && S.short.id) || '',
-      source: source || 'auto',
-      auto: true,
-      date: new Date().toISOString()
-    };
-    nb.unshift(newItem);  /* 맨 앞에 추가 (최신순) */
-    db.set('notebook', nb);
-    showAutoCollectToast(source);
-  } catch(e) {
-    console.warn('[autoCollect]', e);
-  }
-}
-
-/* 🔔 자동 수집 토스트 알림 */
-function showAutoCollectToast(source){
-  try {
-    /* 기존 토스트 제거 */
-    const old = document.getElementById('autoCollectToast');
-    if(old) old.remove();
-    
-    const toast = document.createElement('div');
-    toast.id = 'autoCollectToast';
-    toast.className = 'auto-collect-toast';
-    const sourceIcon = source === 'quiz' ? '🍿' : source === 'puzzle' ? '🧩' : '📝';
-    toast.innerHTML = `
-      <span class="act-icon">${sourceIcon}</span>
-      <div class="act-text">
-        <div class="act-main">📜 대기실 노트에 저장!</div>
-        <div class="act-sub">GREEN ROOM에서 복습해요!</div>
-      </div>
-    `;
-    document.body.appendChild(toast);
-    
-    /* 애니메이션 후 제거 */
-    requestAnimationFrame(() => {
-      toast.classList.add('show');
-    });
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 400);
-    }, 2800);
-  } catch(e) {
-    console.warn('[showAutoCollectToast]', e);
-  }
-}
-
 const PUZZLE_STATE = {
   items: [],          // 문장 배열 [{en, ko, words}]
   currentIdx: 0,
@@ -7799,14 +7676,6 @@ function checkPuzzleAnswer(){
   } else {
     /* ❌ 오답 — v9.5: 쌤 아이디어! 단어들 우수수 쏟아져 나오기! */
     slotsEl.classList.add('wrong');
-    
-    /* v10.3: 🎯 자동 수집! 틀린 문장을 SCREENPLAY에 자동 저장 */
-    autoCollectToNotebook({
-      en: item.en,
-      ko: item.ko || '',
-      highlight: item.core || '',
-      koHighlight: item.koHighlight || ''
-    }, 'puzzle');
     
     /* 슬롯의 단어들을 조각 영역으로 되돌리기 (떨어지는 애니메이션) */
     setTimeout(() => {
@@ -8288,8 +8157,6 @@ function handleSnackAnswer(btn, chosen, correct, item){
     btn.classList.add('wrong');
     QUIZ_STATE.wrong++;
     updateStage(item, false);
-    /* v10.3: 🎯 자동 수집! 틀린 문장을 SCREENPLAY에 자동 저장 */
-    autoCollectToNotebook(item, 'quiz');
     /* 정답 표시 */
     document.querySelectorAll('.quiz-choice').forEach(c => {
       if(c.dataset.answer === correct) c.classList.add('correct');
@@ -8396,8 +8263,6 @@ function handleHotDogAnswer(btn, chosen, correct, item){
     btn.classList.add('wrong');
     QUIZ_STATE.wrong++;
     updateStage(item, false);
-    /* v10.3: 🎯 자동 수집! */
-    autoCollectToNotebook(item, 'quiz');
     document.querySelectorAll('#quizHotDogChoices .quiz-choice').forEach(c => {
       if(c.dataset.answer === correct) c.classList.add('correct');
     });
@@ -9407,28 +9272,40 @@ function renderShadow(){
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
   
   /* v8.11: 발음 표시 로직 (긴 문장에선 기본 접힘!)
-  /* v10.3: 💡 인라인 힌트 — 항상 표시! (영어 바로 아래 작게) */
+     - SCRIPT 모드 + 짧은/중간 문장: 자동 표시
+     - SCRIPT 모드 + 긴 문장: 사용자 선택 (기본 접힘!)
+     - 다른 모드: 이전 phoneticVisible 상태 유지 */
   const pEl=document.getElementById('shadowPhoneticText');
+  const pBtn=document.getElementById('shadowPhonetic');
+  const pLbl=document.getElementById('shadowPhoneticLabel');
+  const isScriptMode = S.dubLevel==='easy';
+  const isLongSentence = (s.en || '').length > 80;
+  const shouldAutoShow = (isScriptMode && !isLongSentence) || phoneticVisible;
+  
   if(pEl){
-    if(s && s.phonetic){
-      pEl.textContent = s.phonetic;
-    } else {
-      pEl.textContent = '';
+    if(shouldAutoShow){
+      if(s && s.phonetic){pEl.innerHTML=formatPhoneticWithChunks(s.phonetic);pEl.classList.add('show');}
+      else{pEl.textContent='(발음 표기 준비중)';pEl.classList.add('show');}
+      if(isScriptMode && !isLongSentence) phoneticVisible=true;
+      if(pBtn){pBtn.classList.add('active','connected-top');}
+      if(pLbl){pLbl.textContent='💡 힌트 숨기기 ▴';}
+    }else{
+      pEl.classList.remove('show');
+      if(pBtn){pBtn.classList.remove('active','connected-top');}
+      if(pLbl){pLbl.textContent='💡 힌트 보기 ▾';}
     }
   }
 
   renderShadowSync();
   const hintEl=document.getElementById('shadowHint');
   if(hintEl)hintEl.textContent='';
-  /* v10.3: ⭐ 저장 버튼 제거 (자동 수집으로 대체!) - 호환성 코드 안전하게 */
+  /* v8.8: 티켓 저장 버튼 상태 초기화 */
   const saveBtn=document.getElementById('shadowSave');
-  if(saveBtn){
-    saveBtn.classList.remove('saved');
-    const saveText=saveBtn.querySelector('.ticket-save-text');
-    const saveIcon=saveBtn.querySelector('.ticket-save-icon');
-    if(saveText)saveText.textContent='저장';
-    if(saveIcon)saveIcon.textContent='📒';
-  }
+  saveBtn.classList.remove('saved');
+  const saveText=saveBtn.querySelector('.ticket-save-text');
+  const saveIcon=saveBtn.querySelector('.ticket-save-icon');
+  if(saveText)saveText.textContent='저장';
+  if(saveIcon)saveIcon.textContent='📒';
 
   speak(s.en);
 }
