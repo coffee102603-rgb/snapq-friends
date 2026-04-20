@@ -1863,7 +1863,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.5</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.4</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4001,147 +4001,101 @@ function finishDub(){
     ytC.classList.remove('gentle-shrink','shrink-done');
   }
   /* ═══════════════════════════════════════════════════
-   * v8.5 · CHUNK-BASED SCORING (쌤의 교육철학!)
-   * 발음 강박 제거 + 끊어읽기 리듬 중심
+   * v6.16 · FAIR SCORING ALGORITHM
+   * 공정한 채점 — 음악/소음 치팅 방지
    *
-   * 쌤 왈: "발음 다른 건 괜찮아 (서울말 vs 대구말)
-   *        청크대로 끊어읽는 게 진짜 영어!"
+   * 핵심 원리: 
+   * - "말"은 음량이 출렁임 (speech envelope)
+   * - "음악"은 음량이 일정함
+   * - 원본 대사 구간과 정확히 맞는 타이밍인가?
+   * - voice activity detection 개선
    *
-   * 새 채점 공식:
-   *   청크 싱크 (45%) × 완주도 (35%) × 목소리 활동 (20%)
-   *
-   * 청크 싱크 = | 마커 기반 타이밍 분석
-   *   → 청크 구간마다 목소리 있는가?
-   *   → 청크 경계에서 짧은 pause 있는가? (끊어읽기!)
-   *
-   * 화면에 보이는 4개 지표는 그대로 유지 (사용자 친근감)
+   * 점수 = voiceRatio × timingMatch × voiceDynamics 
+   *        × completionBonus × diffMult × 100
    * ═══════════════════════════════════════════════════ */
   const ss=S.short.sentences;
   const track=S.volumeTrack||[];
 
-  /* ─────── 도우미: 특정 구간에서 voice 비율 ─────── */
-  function voiceRatioInRange(startT, endT){
-    const samples = track.filter(sm => sm.t >= startT && sm.t <= endT);
-    if(samples.length === 0) return 0;
-    const voiced = samples.filter(sm => sm.v > 40).length;
-    return voiced / samples.length;
-  }
-
-  /* ─────── 도우미: 청크 경계에서 pause 감지 ─────── */
-  function hasPauseAt(time, windowMs = 0.25){
-    const samples = track.filter(sm => 
-      sm.t >= time - windowMs && sm.t <= time + windowMs
-    );
-    if(samples.length === 0) return false;
-    const silent = samples.filter(sm => sm.v < 30).length;
-    return (silent / samples.length) >= 0.4; // 40% 이상 조용하면 pause
-  }
-
-  /* ═══ Factor 1: 청크 싱크 (45%) - 핵심! ═══ */
-  let chunkSyncScores = [];
-  ss.forEach(s => {
-    const markerCount = (s.en || '').split('|').length - 1;
-    const chunkCount = markerCount + 1;
-    const duration = s.end - s.start;
-    
-    if(duration <= 0){ 
-      chunkSyncScores.push(0); 
-      return; 
-    }
-    
-    if(chunkCount === 1){
-      /* 청크 없는 짧은 문장 → 단순 voice coverage */
-      chunkSyncScores.push(voiceRatioInRange(s.start, s.end));
-      return;
-    }
-    
-    /* 청크 구간별 분석 */
-    const chunkDur = duration / chunkCount;
-    let voiceHits = 0;     // 청크 안에서 말했는가?
-    let pauseHits = 0;     // 청크 경계에서 쉬었는가?
-    
-    for(let i = 0; i < chunkCount; i++){
-      const chunkStart = s.start + (i * chunkDur);
-      const chunkEnd = s.start + ((i + 1) * chunkDur);
-      
-      /* 청크 중간 70%에서 voice 체크 (경계 제외) */
-      const coreStart = chunkStart + chunkDur * 0.1;
-      const coreEnd = chunkEnd - chunkDur * 0.2;
-      const voiceRatio = voiceRatioInRange(coreStart, coreEnd);
-      if(voiceRatio > 0.25) voiceHits++; // 청크 안에서 말했음
-      
-      /* 청크 경계에서 짧은 pause (마지막 청크 제외) */
-      if(i < chunkCount - 1){
-        if(hasPauseAt(chunkEnd, chunkDur * 0.2)) pauseHits++;
-      }
-    }
-    
-    /* 청크 싱크 = voice (60%) + pause (40%) */
-    const voiceComponent = chunkHits => chunkHits / chunkCount;
-    const pauseComponent = (chunkCount === 1) ? 1 : pauseHits / (chunkCount - 1);
-    const chunkScore = voiceComponent(voiceHits) * 0.6 + pauseComponent * 0.4;
-    
-    chunkSyncScores.push(chunkScore);
-  });
-  
-  const chunkSync = chunkSyncScores.length > 0
-    ? chunkSyncScores.reduce((a, b) => a + b, 0) / chunkSyncScores.length
-    : 0;
-
-  /* ═══ Factor 2: 완주도 (35%) ═══ */
-  const spokenSentences = chunkSyncScores.filter(c => c > 0.2).length;
-  const completion = spokenSentences / ss.length;
-
-  /* ═══ Factor 3: 목소리 활동 (20%) ═══ */
-  let spokenFrames = 0, totalFrames = 0;
-  track.forEach(sample => {
-    const inSpeechWindow = ss.some(s => sample.t >= s.start && sample.t <= s.end);
+  /* Factor 1: Voice Ratio (0~1)
+     원본 대사 구간 중 말소리가 감지된 비율 */
+  let spokenFrames=0, totalFrames=0;
+  track.forEach(sample=>{
+    const inSpeechWindow=ss.some(s=>sample.t>=s.start&&sample.t<=s.end);
     if(inSpeechWindow){
       totalFrames++;
-      if(sample.v > 40) spokenFrames++;
+      if(sample.v>40)spokenFrames++;
     }
   });
-  const voiceActivity = totalFrames > 0 ? Math.min(1, spokenFrames / totalFrames) : 0;
+  const voiceRatio=totalFrames>0?Math.min(1,spokenFrames/totalFrames):0;
 
-  /* ═══ 난이도 배율 (기존 유지) ═══ */
-  const diffMult = S.dubLevel === 'easy' ? 0.5 : S.dubLevel === 'normal' ? 0.8 : 1.0;
+  /* Factor 2: Timing Match (0~1) */
+  let perSentenceCoverage=[];
+  ss.forEach(s=>{
+    const inWindow=track.filter(sm=>sm.t>=s.start&&sm.t<=s.end);
+    const spoken=inWindow.filter(sm=>sm.v>40).length;
+    perSentenceCoverage.push(inWindow.length>0?spoken/inWindow.length:0);
+  });
+  const timingMatch=perSentenceCoverage.length>0
+    ?perSentenceCoverage.reduce((a,b)=>a+b,0)/perSentenceCoverage.length
+    :0;
 
-  /* ═══ 최종 점수 (청크 45% + 완주 35% + 목소리 20%) × 난이도 ═══ */
-  const rawScore = (chunkSync * 0.45 + completion * 0.35 + voiceActivity * 0.20)
-                   * diffMult * 100;
-  /* 난이도 배율 보정: 쉬운 모드에서도 만점 가능하게 정규화 */
-  const finalScore = Math.max(0, Math.min(100, Math.floor(rawScore / diffMult)));
+  /* Factor 3: 🎯 v6.16 Voice Dynamics (0~1) - 음량 변화율!
+     "말"은 음량이 출렁이고(고-저-고-저), "음악"은 일정함.
+     변동성이 높을수록 → 진짜 말일 확률 ↑ → 고득점
+     변동성이 낮을수록 → 음악/일정 소음 → 저득점 (치팅 방지) */
+  const speechSamples=track.filter(sm=>sm.v>40).map(sm=>sm.v);
+  let voiceDynamics=0.3; /* 기본값: 낮음 (목소리 거의 없을 때) */
+  if(speechSamples.length>10){
+    const avg=speechSamples.reduce((a,b)=>a+b,0)/speechSamples.length;
+    const variance=speechSamples.reduce((acc,v)=>acc+(v-avg)**2,0)/speechSamples.length;
+    const stdDev=Math.sqrt(variance);
+    /* 변화량/평균 비율 (Coefficient of Variation) */
+    const cv=avg>0?stdDev/avg:0;
+    /* 진짜 말: cv 0.25~0.50 (적당히 출렁임) → 고득점
+       음악: cv 0.05~0.15 (거의 일정) → 저득점
+       비명/노이즈: cv 0.60+ (너무 출렁) → 중간 */
+    if(cv<0.15){
+      /* 음악 의심! 거의 일정한 음량 */
+      voiceDynamics=0.35;
+    }else if(cv<0.25){
+      /* 약간 출렁임 - 보통 */
+      voiceDynamics=0.65;
+    }else if(cv<0.50){
+      /* 진짜 말! 자연스러운 말하기 */
+      voiceDynamics=1.0;
+    }else{
+      /* 너무 거센 변화 - 비명 등 */
+      voiceDynamics=0.75;
+    }
+  }
 
-  /* ═══ Legacy 변수 계산 (기존 화면 호환성) ═══ */
-  /* 화면에 보이는 4개 지표 매핑:
-     - "목소리 활동" = voiceActivity
-     - "타이밍 싱크" = chunkSync (새 로직! 사용자는 변화 못 느낌)
-     - "음량 변화" = chunkSync와 voiceActivity의 혼합 (뒤에서는 안 쓰지만 표시용)
-     - "완주도" = completion */
-  const voiceRatio = voiceActivity;
-  const timingMatch = chunkSync;
-  const voiceDynamics = (chunkSync + voiceActivity) / 2; /* 표시용 */
-  const completionBonus = 0.6 + 0.4 * completion; /* 표시용 */
+  /* Factor 4: Completion Bonus (0.6~1.0) */
+  const spokenSentences=perSentenceCoverage.filter(c=>c>0.3).length;
+  const completionBonus=0.6+0.4*(spokenSentences/ss.length);
 
-  /* Store breakdown */
-  S.syncScore = finalScore;
-  S.scoreBreakdown = {
-    voiceRatio: Math.round(voiceRatio * 100),
-    timingMatch: Math.round(timingMatch * 100),
-    volumeConsistency: Math.round(voiceDynamics * 100),
-    completionBonus: Math.round(completionBonus * 100),
-    /* v8.5 새 필드 (내부용, 화면 표시 안 함) */
-    chunkSync: Math.round(chunkSync * 100),
-    completion: Math.round(completion * 100),
-    voiceActivity: Math.round(voiceActivity * 100),
-    difficulty: S.dubLevel,
-    rank: getRank(finalScore),
-    /* v8.5: 더 이상 "치팅 의심" 안 씀 (관대한 채점!) */
-    suspiciousMusic: false
+  /* Factor 5: Difficulty Multiplier */
+  const diffMult=S.dubLevel==='easy'?0.5:S.dubLevel==='normal'?0.8:1.0;
+
+  /* Final score */
+  const rawScore=voiceRatio*timingMatch*voiceDynamics*completionBonus*diffMult*100;
+  const finalScore=Math.max(0,Math.min(100,Math.floor(rawScore)));
+
+  /* Store breakdown — volumeConsistency를 voiceDynamics로 바꿈 
+     (하지만 화면에는 "음량 변화"로 표시) */
+  S.syncScore=finalScore;
+  S.scoreBreakdown={
+    voiceRatio:Math.round(voiceRatio*100),
+    timingMatch:Math.round(timingMatch*100),
+    volumeConsistency:Math.round(voiceDynamics*100),
+    completionBonus:Math.round(completionBonus*100),
+    difficulty:S.dubLevel,
+    rank:getRank(finalScore),
+    /* v6.16: 음악 치팅 감지 플래그 (피드백 멘트용) */
+    suspiciousMusic:voiceDynamics<0.4&&voiceRatio>0.7
   };
 
   /* Need minimum voice activity, otherwise redo */
-  if(spokenFrames < 5){
+  if(spokenFrames<5){
     document.getElementById('dubScoreLive').textContent='🔇 목소리가 안 들려요! 다시 도전!';
     return;
   }
@@ -4366,32 +4320,27 @@ function renderShare(){
     `;
     document.getElementById('scoreBreakdown').innerHTML=sbHtml;
     
-    /* v8.5: 청크 기반 격려 메시지 (쌤의 교육철학!)
-       "발음" 관련 언급 제거 + "끊어읽기 리듬" 칭찬 */
+    /* v6.16: 피드백 멘트 - 음악 감지 또는 실제 말하기 판단 */
     const feedbackEl=document.getElementById('resultFeedback');
     if(feedbackEl){
       let feedback='';
       let warnMode=false;
-      
-      if(bd.voiceRatio < 20){
-        /* 목소리 거의 없음 */
-        feedback='🔇 목소리가 잘 안 들렸어요. 마이크를 확인해주세요!';
+      /* 알고리즘이 음악 의심 플래그를 세팅했는지 확인 */
+      if(bd.suspiciousMusic){
+        feedback='🎵 음량 변화가 거의 없어요. 진짜 목소리로 직접 말해보세요!';
         warnMode=true;
-      }else if(sc >= 90){
-        /* 만점급 — 끊어읽기 완벽! */
-        feedback='🎬 완벽한 끊어읽기! 자연스러운 영어 리듬이에요!';
-      }else if(sc >= 75){
-        /* 우수 — 청크 싱크 좋음 */
-        feedback='🎯 청크대로 잘 끊어서 말했어요! 리듬이 살아있네요!';
-      }else if(sc >= 60){
-        /* 중간 — 완주는 했는데 청크 살짝 */
-        feedback=`✨ 끝까지 잘 따라갔어요! ${bd.chunkSync>=60?'청크 리듬도 좋아요':'청크 경계에서 한 번씩 쉬어봐요'} 👍`;
-      }else if(sc >= 40){
-        /* 기초 — 완주 부족 or 청크 약함 */
-        feedback='💪 시작이 좋아요! 노란 | 마커에서 살짝 쉬면서 다시 해봐요!';
+      }else if(bd.voiceRatio<20){
+        feedback='🔇 목소리가 거의 안 들렸어요. 마이크를 확인해주세요!';
+        warnMode=true;
+      }else if(sc>=85){
+        feedback='🏆 완벽한 더빙! 진짜 성우 같아요!';
+      }else if(sc>=70){
+        feedback='✨ 훌륭해요! 타이밍도 좋고 감정도 살아있네요.';
+      }else if(sc>=50){
+        feedback=`💡 ${bd.timingMatch>=70?'타이밍은 좋아요':'타이밍을 더 맞춰보세요'} — 더 큰 목소리로 한 번 더!`;
       }else{
-        /* 입문 */
-        feedback='🌱 괜찮아요! 📜 SCRIPT 모드부터 차근차근 해봐요!';
+        feedback='🎯 처음엔 어려워요. 📜 SCRIPT부터 차근차근 해봐요!';
+        warnMode=true;
       }
       feedbackEl.textContent=feedback;
       feedbackEl.className=warnMode?'result-feedback warn':'result-feedback';
