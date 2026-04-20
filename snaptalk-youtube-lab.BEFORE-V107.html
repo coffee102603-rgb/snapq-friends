@@ -1188,190 +1188,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   letter-spacing: 0.5px;
 }
 
-/* v10.7: 🎤 노래방 결과 - 스팟 조명 스타일 3버튼! */
-.karaoke-result-actions{
-  display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 10px !important;
-  margin-top: 14px;
-}
-.karaoke-action{
-  display: flex !important;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  padding: 14px 8px !important;
-  border-radius: 14px !important;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
-  position: relative;
-  overflow: hidden;
-  min-height: 78px;
-}
-.karaoke-action .kra-icon{
-  font-size: 22px;
-  line-height: 1;
-  margin-bottom: 2px;
-}
-.karaoke-action .kra-label{
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 0.2px;
-  line-height: 1.2;
-}
-.karaoke-action .kra-sub{
-  font-size: 9px;
-  opacity: 0.75;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-.karaoke-action-retry{
-  background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(139,92,246,0.1)) !important;
-  border: 1.5px solid rgba(168,85,247,0.4) !important;
-  color: #c4b5fd !important;
-}
-.karaoke-action-retry:hover{
-  background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(139,92,246,0.2)) !important;
-  border-color: rgba(168,85,247,0.6) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(168,85,247,0.25);
-}
-.karaoke-action-save{
-  background: linear-gradient(135deg, rgba(0,229,160,0.25), rgba(16,185,129,0.15)) !important;
-  border: 1.5px solid rgba(0,229,160,0.5) !important;
-  color: #6ee7b7 !important;
-  box-shadow: 0 4px 14px rgba(0,229,160,0.15);
-}
-.karaoke-action-save:hover{
-  background: linear-gradient(135deg, rgba(0,229,160,0.35), rgba(16,185,129,0.25)) !important;
-  border-color: rgba(0,229,160,0.7) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,229,160,0.3);
-}
-.karaoke-action-home{
-  background: linear-gradient(135deg, rgba(251,191,36,0.2), rgba(245,158,11,0.1)) !important;
-  border: 1.5px solid rgba(251,191,36,0.4) !important;
-  color: #fcd34d !important;
-}
-.karaoke-action-home:hover{
-  background: linear-gradient(135deg, rgba(251,191,36,0.3), rgba(245,158,11,0.2)) !important;
-  border-color: rgba(251,191,36,0.6) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(251,191,36,0.25);
-}
-
-/* v10.7: 💾 "내 방에 저장됨!" 토스트 */
-.saved-to-room-toast{
-  position: fixed;
-  top: 80px;
-  left: 50%;
-  transform: translate(-50%, -80px);
-  z-index: 10001;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, rgba(0,229,160,0.95), rgba(16,185,129,0.95));
-  border: 2px solid rgba(255,255,255,0.3);
-  border-radius: 16px;
-  box-shadow: 
-    0 12px 40px rgba(0,229,160,0.5),
-    0 0 60px rgba(0,229,160,0.25);
-  opacity: 0;
-  transition: all 0.4s cubic-bezier(.34,1.56,.64,1);
-  font-weight: 900;
-  color: #fff;
-  font-size: 14px;
-  letter-spacing: 0.3px;
-}
-.saved-to-room-toast.show{
-  opacity: 1;
-  transform: translate(-50%, 0);
-}
-.saved-to-room-toast .srt-icon{
-  font-size: 24px;
-  line-height: 1;
-  filter: drop-shadow(0 0 6px rgba(255,255,255,0.5));
-}
-
-/* v10.7: 🏆 노래방 결과 보기 카드 (자동 진행 안 될 때 수동 탈출구!) */
-.karaoke-finish-card{
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  width: 100%;
-  margin-top: 10px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, rgba(168,85,247,0.18), rgba(251,191,36,0.12));
-  border: 1.5px solid rgba(251,191,36,0.4);
-  border-radius: 16px;
-  cursor: pointer;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
-  color: #fff;
-  text-align: left;
-  font-family: inherit;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 
-    0 6px 20px rgba(168,85,247,0.15),
-    0 0 30px rgba(251,191,36,0.08);
-}
-.karaoke-finish-card::before{
-  content: '';
-  position: absolute;
-  top: 0; left: -100%;
-  width: 100%; height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(251,191,36,0.25), transparent);
-  animation: kfcShimmer 3s infinite;
-}
-@keyframes kfcShimmer{
-  0% { left: -100% }
-  100% { left: 100% }
-}
-.karaoke-finish-card:hover{
-  transform: translateY(-2px);
-  box-shadow: 
-    0 10px 30px rgba(168,85,247,0.25),
-    0 0 40px rgba(251,191,36,0.15);
-  border-color: rgba(251,191,36,0.6);
-}
-.karaoke-finish-card:active{
-  transform: translateY(0);
-}
-.karaoke-finish-card .kfc-icon{
-  font-size: 28px;
-  line-height: 1;
-  filter: drop-shadow(0 0 8px rgba(251,191,36,0.5));
-}
-.karaoke-finish-card .kfc-text{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.karaoke-finish-card .kfc-title{
-  font-size: 14px;
-  font-weight: 900;
-  color: #fbbf24;
-  letter-spacing: 0.3px;
-}
-.karaoke-finish-card .kfc-sub{
-  font-size: 11px;
-  color: rgba(255,255,255,0.6);
-  font-weight: 600;
-}
-.karaoke-finish-card .kfc-arrow{
-  font-size: 20px;
-  color: rgba(251,191,36,0.7);
-  font-weight: 900;
-  transition: transform 0.2s;
-}
-.karaoke-finish-card:hover .kfc-arrow{
-  transform: translateX(4px);
-}
-
-/* v10.7: 🎬 자동 수집 토스트 (퀴즈/퍼즐에서 틀리면 표시) */
+/* v10.3: 🔔 자동 수집 토스트 (퀴즈/퍼즐에서 틀리면 표시) */
 .auto-collect-toast{
   position: fixed;
   top: 80px;
@@ -5732,15 +5549,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             <span class="btn-label">HOME</span>
           </button>
         </div>
-        <!-- v10.7: 🏆 결과 보기 카드 (자동 진행 안 될 때도 클릭 가능!) -->
-        <button class="karaoke-finish-card" id="karaokeFinishCard" title="지금까지 점수 보기">
-          <span class="kfc-icon">🏆</span>
-          <div class="kfc-text">
-            <span class="kfc-title">결과 보기!</span>
-            <span class="kfc-sub">지금까지의 점수를 확인해요</span>
-          </div>
-          <span class="kfc-arrow">→</span>
-        </button>
       </div>
       
       <!-- v9.0: 🎯 QUIZ GAME UI -->
@@ -5929,23 +5737,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <button class="share-btn-submit" id="shareSubmit" style="display:none">🏆 출품하기</button>
       </div>
       <div class="share-btn-encourage" id="shareEncourage" style="display:none"></div>
-      <!-- v10.7: 🎤 노래방 결과 - 스팟 조명 + 명확한 저장! -->
-      <div class="share-actions-compact karaoke-result-actions">
-        <button class="share-btn-mini karaoke-action karaoke-action-retry" id="shareRetry">
-          <span class="kra-icon">🎤</span>
-          <span class="kra-label">한번 더!</span>
-          <span class="kra-sub">다시 부르기</span>
-        </button>
-        <button class="share-btn-mini karaoke-action karaoke-action-save" id="shareSave">
-          <span class="kra-icon">💾</span>
-          <span class="kra-label">내 방에 저장</span>
-          <span class="kra-sub">GREEN ROOM</span>
-        </button>
-        <button class="share-btn-mini karaoke-action karaoke-action-home" id="shareHome">
-          <span class="kra-icon">🎦</span>
-          <span class="kra-label">매표소로</span>
-          <span class="kra-sub">다음 영상</span>
-        </button>
+      <!-- v6.16: 작은 보조 버튼 3개 한 줄 -->
+      <div class="share-actions-compact">
+        <button class="share-btn-mini" id="shareRetry">🎤 다시</button>
+        <button class="share-btn-mini" id="shareSave">💾 저장</button>
+        <button class="share-btn-mini" id="shareHome">🎦 매표소</button>
       </div>
       <!-- Duet 숨김 (숨겨진 상태로 파형 계산만) -->
       <div class="duet-compare" style="display:none">
@@ -6131,7 +5927,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.7</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.6</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -6222,117 +6018,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
  * Each short: sentences with timestamps
  * Each sentence: hintWords = keywords revealed per listen
  * ═══════════════════════════════════════ */
-/* ═══════════════════════════════════════
- * v10.7: 🎬 자동 청크 마커 생성 시스템!
- * 기존 영상 문장에 | 청크 마커가 없으면 자동 생성
- * 알고리즘:
- * 1. 쉼표 , 세미콜론 ; 기준 (가장 강력)
- * 2. 접속사 (and, but, or, so, because, if, when) 앞
- * 3. 전치사구 경계 (of, in, on, at, with, for, from, to, by)
- * 4. 3-6 단어 단위로 유지
- * ═══════════════════════════════════════ */
-function autoChunk(sentence){
-  if(!sentence || typeof sentence !== 'string') return sentence;
-  
-  /* 이미 | 마커가 있으면 그대로 사용 (큐레이터가 수동 작업한 것 존중) */
-  if(sentence.includes('|')) return sentence;
-  
-  const text = sentence.trim();
-  const words = text.split(/\s+/).filter(w => w.length > 0);
-  
-  /* 너무 짧으면 청크 불필요 (4단어 이하) */
-  if(words.length <= 4) return text;
-  
-  /* 결과 배열 */
-  const result = [];
-  const breakAfter = new Set(); /* 이 인덱스 뒤에 | 삽입 */
-  
-  /* 접속사/전치사 리스트 (청크 경계 후보) */
-  const connectors = new Set([
-    'and', 'but', 'or', 'so', 'because', 'if', 'when', 'while',
-    'though', 'although', 'since', 'unless', 'until', 'as'
-  ]);
-  const prepositions = new Set([
-    'of', 'in', 'on', 'at', 'with', 'for', 'from', 'to', 'by',
-    'about', 'into', 'onto', 'through', 'during', 'before', 'after'
-  ]);
-  
-  /* 1단계: 쉼표/세미콜론 뒤에 무조건 청크 경계 */
-  for(let i = 0; i < words.length; i++){
-    const w = words[i];
-    if(/[,;]$/.test(w) && i < words.length - 1){
-      breakAfter.add(i);
-    }
-  }
-  
-  /* 2단계: 접속사 앞에 청크 경계 (단, 첫 단어나 이전 경계 바로 뒤 제외) */
-  for(let i = 1; i < words.length; i++){
-    const cleaned = words[i].toLowerCase().replace(/[.,!?;:]/g, '');
-    if(connectors.has(cleaned) && !breakAfter.has(i - 1) && i > 1){
-      breakAfter.add(i - 1);
-    }
-  }
-  
-  /* 3단계: 너무 긴 청크 분할 (5단어 이상 지나면 전치사 앞 끊기) */
-  let lastBreak = -1;
-  for(let i = 0; i < words.length; i++){
-    if(breakAfter.has(i)){
-      lastBreak = i;
-      continue;
-    }
-    if(i - lastBreak >= 5){
-      /* 5단어 동안 경계 없음 → 다음 전치사 앞 찾기 */
-      for(let j = i; j < Math.min(i + 2, words.length - 1); j++){
-        const cleaned = words[j + 1]?.toLowerCase().replace(/[.,!?;:]/g, '') || '';
-        if(prepositions.has(cleaned)){
-          breakAfter.add(j);
-          lastBreak = j;
-          break;
-        }
-      }
-      /* 전치사 못 찾으면 그냥 진행 */
-      if(lastBreak !== i){
-        /* 4단어마다 강제 경계 */
-        if(i - lastBreak >= 6){
-          breakAfter.add(i);
-          lastBreak = i;
-        }
-      }
-    }
-  }
-  
-  /* 결과 조립 */
-  for(let i = 0; i < words.length; i++){
-    result.push(words[i]);
-    if(breakAfter.has(i)){
-      result.push('|');
-    }
-  }
-  
-  return result.join(' ');
-}
-
-/* 데이터 전체에 자동 청크 적용 (한 번만 실행) */
-function applyAutoChunkToAllShorts(){
-  try {
-    if(typeof SHORTS === 'undefined') return;
-    ['us', 'kr'].forEach(locale => {
-      if(!SHORTS[locale]) return;
-      SHORTS[locale].forEach(video => {
-        if(!video.sentences) return;
-        video.sentences.forEach(s => {
-          if(s.en){
-            s.en = autoChunk(s.en);
-          }
-        });
-      });
-    });
-    console.log('[v10.7] ✅ 자동 청크 적용 완료!');
-  } catch(e) {
-    console.warn('[autoChunk apply]', e);
-  }
-}
-
 const SHORTS={us:[
   {id:'K56O5RdE3KM',title:'How Dalgona Candy Is Made',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:100,
    sentences:[{en:"This is Dalgona candy,",ko:"이건 달고나 사탕이에요,",start:0.16,end:1.109,core:'candy',highlight:'Dalgona candy',koHighlight:'달고나 사탕',phonetic:'디스 이즈 달고나 캔디,'},{en:"the popular Korean street snack seen in the TV series Squid Game.",ko:"TV 시리즈 오징어 게임에 나온 인기 있는 한국 길거리 간식이죠.",start:1.191,end:4.033,core:'snack',highlight:'street snack',koHighlight:'길거리 간식',phonetic:'더 파퓰러 코리안 스트릿 스낵 씬 인 더 티비 시리즈 스퀴드 게임.'},{en:"It made by melting down sugar until it turns a caramel color and then",ko:"설탕을 카라멜 색이 될 때까지 녹여서 만들고,",start:4.115,end:7.227,core:'melting',highlight:'melting down sugar',koHighlight:'설탕을 녹여서',phonetic:'잇 메이드 바이 멜팅 다운 슈거 언틸 잇 턴즈 어 카라멜 컬러 앤 덴'},{en:"adding in a few pinches of baking soda,",ko:"베이킹 소다를 몇 꼬집 넣어주면,",start:7.309,end:8.981,core:'adding',highlight:'adding baking soda',koHighlight:'베이킹 소다를 넣어주면',phonetic:'애딩 인 어 퓨 핀치즈 오브 베이킹 소다,'},{en:"where it then becomes very light and foamy.",ko:"아주 가볍고 부풀어 오르게 돼요.",start:9.063,end:10.916,core:'foamy',highlight:'light and foamy',koHighlight:'가볍고 부풀어 오르게',phonetic:'웨어 잇 덴 비컴즈 베리 라이트 앤 포미.'},{en:"This is dropped onto a flat surface where it pressed down and lightly",ko:"이걸 평평한 표면에 떨어뜨려서 눌러주고,",start:10.998,end:14.109,core:'pressed',highlight:'pressed down',koHighlight:'눌러주고',phonetic:'디스 이즈 드롭트 온투 어 플랫 서페이스 웨어 잇 프레스드 다운 앤 라이틀리'},{en:"stamped with a cookie cutter mold.",ko:"쿠키 커터 틀로 가볍게 찍어줘요.",start:14.191,end:15.639,core:'stamped',highlight:'stamped with mold',koHighlight:'틀로 찍어줘요',phonetic:'스탬프드 위드 어 쿠키 커터 몰드.'},{en:"As you can see, I chose the umbrella shape,",ko:"보시다시피, 저는 우산 모양을 선택했어요,",start:15.721,end:17.448,core:'chose',highlight:'chose umbrella shape',koHighlight:'우산 모양을 선택했어요',phonetic:'애즈 유 캔 씨, 아이 초즈 디 엄브렐라 쉐이프,'},{en:"and once you handed the Dalgona,",ko:"그리고 달고나를 받으면,",start:17.53,end:18.92,core:'handed',highlight:'handed the Dalgona',koHighlight:'달고나를 받으면',phonetic:'앤 원스 유 핸디드 더 달고나,'},{en:"the goal is to use a toothpick to carve out the shape in the",ko:"목표는 이쑤시개로 가운데의 모양을 파내는 거예요,",start:19.002,end:21.445,core:'carve',highlight:'carve out shape',koHighlight:'모양을 파내는',phonetic:'더 골 이즈 투 유즈 어 투스픽 투 카브 아웃 더 쉐이프 인 더'},{en:"center so it looks like this,",ko:"이렇게 보이도록 말이죠,",start:21.527,end:22.665,core:'looks',highlight:'looks like this',koHighlight:'이렇게 보이도록',phonetic:'센터 쏘 잇 룩스 라이크 디스,'},{en:"but unfortunately I dropped it on the floor and lost immediately.",ko:"하지만 불행히도 저는 바닥에 떨어뜨려서 바로 졌어요.",start:22.747,end:25.44,core:'dropped',highlight:'dropped on floor',koHighlight:'바닥에 떨어뜨려서',phonetic:'벗 언포춘트리 아이 드롭트 잇 온 더 플로어 앤 로스트 이미디엇틀리.'}]},
@@ -6443,9 +6128,6 @@ const SCENARIOS=[
     ]
   }
 ];
-
-/* v10.7: 🎬 SHORTS 선언 직후 자동 청크 적용! */
-applyAutoChunkToAllShorts();
 
 /* ═══════════════════════════════════════
  * STATE
@@ -10523,24 +10205,7 @@ document.getElementById('dubMic').addEventListener('click',async()=>{
   }
   if(!await startMic())return;
   b.classList.add('recording');
-  /* v10.7: 🎵 마이크 = 영상 동기화! seekTo + playVideo 동시 호출 */
-  if(ytPlayer&&ytPlayer.seekTo){
-    try {
-      ytPlayer.seekTo(0, true);
-      ytPlayer.unMute && ytPlayer.unMute();
-      ytPlayer.playVideo();
-      /* v10.7: 🎵 현재 설정된 속도를 영상에도 그대로 전파! */
-      const currentRate = (typeof S.rate === 'number') ? S.rate : 1.0;
-      if(ytPlayer.setPlaybackRate){
-        ytPlayer.setPlaybackRate(currentRate);
-      }
-    } catch(e) {
-      console.warn('[v10.7 mic sync]', e);
-    }
-  }
-  /* v10.7: 🏆 결과 보기 카드 표시 (녹음 중 수동 탈출구) */
-  const kfc = document.getElementById('karaokeFinishCard');
-  if(kfc) kfc.style.display = 'flex';
+  if(ytPlayer&&ytPlayer.seekTo){ytPlayer.seekTo(0);ytPlayer.playVideo()}
   
   /* v6.15: 📉 녹음 시작과 동시에 단순 축소 시작! (회오리 제거 - 버그 방지) */
   const ytC=document.getElementById('ytContainer');
@@ -10683,9 +10348,6 @@ document.getElementById('dubMic').addEventListener('click',async()=>{
 });
 
 function finishDub(){
-  /* v10.7: 결과보기 카드 숨김 */
-  const kfc = document.getElementById('karaokeFinishCard');
-  if(kfc) kfc.style.display = 'none';
   /* v6.14: 🐛 BUG FIX — 회오리 영상 잔존 문제 해결 */
   const ytC=document.getElementById('ytContainer');
   if(ytC){
@@ -11225,48 +10887,7 @@ document.getElementById('shareRetry').addEventListener('click',()=>{
   ytPlayer=null;
   goStep(2);
 });
-document.getElementById('shareSave').addEventListener('click',()=>{
-  /* v10.7: 🎤 노래방 저장 → "내 방에 저장됨!" 토스트 + localStorage 실저장 */
-  try {
-    /* 실제 저장 (GREEN ROOM 스튜디오 히스토리에) */
-    const snapStudio = db.get('snapStudio', []);
-    const snap = {
-      id: 'snap_' + Date.now(),
-      title: (S.short && S.short.title) || '',
-      shortId: (S.short && S.short.id) || '',
-      score: (S.scoreBreakdown && S.scoreBreakdown.final) || 0,
-      difficulty: S.dubLevel || 'normal',
-      date: new Date().toISOString()
-    };
-    snapStudio.unshift(snap);
-    db.set('snapStudio', snapStudio.slice(0, 50));
-  } catch(e) { console.warn('[v10.7 save]', e); }
-  showSavedToRoomToast();
-});
-
-/* v10.7: "💾 내 방에 저장됨!" 토스트 */
-function showSavedToRoomToast(){
-  try {
-    const old = document.getElementById('savedToRoomToast');
-    if(old) old.remove();
-    const toast = document.createElement('div');
-    toast.id = 'savedToRoomToast';
-    toast.className = 'saved-to-room-toast';
-    toast.innerHTML = `
-      <span class="srt-icon">💾</span>
-      <div>
-        <div style="font-size:14px;font-weight:900">내 방에 저장됨!</div>
-        <div style="font-size:11px;font-weight:700;opacity:0.85;margin-top:2px">🎭 GREEN ROOM에서 다시 볼 수 있어요</div>
-      </div>
-    `;
-    document.body.appendChild(toast);
-    requestAnimationFrame(() => toast.classList.add('show'));
-    setTimeout(() => {
-      toast.classList.remove('show');
-      setTimeout(() => toast.remove(), 400);
-    }, 2800);
-  } catch(e) { console.warn('[savedToRoomToast]', e); }
-}
+document.getElementById('shareSave').addEventListener('click',()=>alert('💾 더빙 카드가 나의 방에 저장되었습니다!'));
 
 /* v6.5.1: 새 버튼들 이벤트 리스너 */
 document.getElementById('shareTopHome').addEventListener('click',goHome);
@@ -11985,26 +11606,6 @@ document.getElementById('shareHome').addEventListener('click',()=>{cleanupPlayer
  * SPEED CONTROL
  * ═══════════════════════════════════════ */
 document.querySelectorAll('.speed-btn').forEach(b=>{b.addEventListener('click',()=>{document.querySelectorAll('.speed-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');S.rate=parseFloat(b.dataset.speed);if(ytPlayer&&ytPlayer.setPlaybackRate)ytPlayer.setPlaybackRate(S.rate)})});
-
-/* v10.7: 🏆 결과 보기 카드 클릭 - 즉시 채점! */
-document.addEventListener('click', (e) => {
-  const kfc = e.target.closest('#karaokeFinishCard');
-  if(!kfc) return;
-  e.preventDefault();
-  /* 녹음 중이면 중단하고 채점 */
-  if(S.rec){
-    stopMic();
-    const micBtn = document.getElementById('dubMic');
-    if(micBtn) micBtn.classList.remove('recording');
-    if(dubInterval){ clearInterval(dubInterval); dubInterval = null; }
-  }
-  /* 영상도 멈춤 */
-  try {
-    if(ytPlayer && ytPlayer.pauseVideo) ytPlayer.pauseVideo();
-  } catch(err) {}
-  /* 즉시 채점 화면으로 */
-  finishDub();
-});
 
 /* ═══════════════════════════════════════
  * BACK BUTTON
