@@ -1531,271 +1531,101 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   padding: 4px 0 0;
 }
 
-/* v10.2: 🎬 영화 촬영장 RETAKE/CUT 버튼! */
+/* v8.8: 🔊 반복 듣기 버튼 (보라 티켓) */
 .shadow-replay-btn{
   position: relative;
-  flex: 0.85;
-  padding: 10px 8px;
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+  flex: 0.75;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   color: #fff;
-  border: 1px solid rgba(196,181,253,0.3);
-  border-radius: 14px;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  transition: all 0.25s ease;
   box-shadow: 
-    0 4px 20px rgba(139, 92, 246, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  min-height: 62px;
-  overflow: hidden;
-}
-.shadow-replay-btn .btn-icon{
-  font-size: 18px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
-}
-.shadow-replay-btn .btn-label{
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 1.3px;
-  line-height: 1;
-  margin-top: 2px;
-}
-.shadow-replay-btn .btn-sub{
-  font-size: 8px;
-  font-weight: 700;
-  opacity: 0.85;
-  margin-top: 1px;
-}
-.shadow-replay-btn:hover{
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 28px rgba(139, 92, 246, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 4px 20px rgba(139, 92, 246, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .shadow-replay-btn:active{
-  transform: scale(0.96) translateY(0);
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
 }
-.shadow-replay-btn::before{
+/* 티켓 홈 */
+.shadow-replay-btn::before,
+.shadow-replay-btn::after{
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0a0a0f;
+  transform: translateY(-50%);
 }
-/* v10.2 (OLD 홈 스타일 제거) */
-.shadow-replay-btn::after{ display: none; }
+.shadow-replay-btn::before{ left: -5px; }
+.shadow-replay-btn::after{ right: -5px; }
 
-/* 🎬 CUT! 버튼 (영화 컷사인 황금!) */
 .shadow-next-btn{
   flex: 1;
   position: relative;
-  padding: 10px 8px;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
-  color: #1a0f05;
-  border: 1px solid rgba(255,255,255,0.2);
-  border-radius: 14px;
+  padding: 14px 20px;
+  background: linear-gradient(135deg, #00e5a0, #00c98a);
+  color: #0a0a0f;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  border: none;
+  border-radius: 12px;
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
+  transition: all 0.25s ease;
   box-shadow: 
-    0 4px 20px rgba(251, 191, 36, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  animation: cutGlow 2.5s ease-in-out infinite;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0;
-  min-height: 62px;
-  overflow: hidden;
-}
-@keyframes cutGlow{
-  0%,100%{ 
-    box-shadow: 
-      0 4px 20px rgba(251, 191, 36, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  }
-  50%{ 
-    box-shadow: 
-      0 4px 32px rgba(251, 191, 36, 0.85),
-      0 0 60px rgba(251, 191, 36, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4);
-  }
-}
-.shadow-next-btn .btn-icon{
-  font-size: 18px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
-}
-.shadow-next-btn .btn-label{
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  line-height: 1;
-  margin-top: 2px;
-}
-.shadow-next-btn .btn-sub{
-  font-size: 8px;
-  font-weight: 700;
-  opacity: 0.85;
-  margin-top: 1px;
-}
-.shadow-next-btn:hover{
-  transform: translateY(-2px);
-  animation: none;
-  box-shadow: 
-    0 8px 28px rgba(251, 191, 36, 0.9),
-    0 0 40px rgba(251, 191, 36, 0.4);
+    0 4px 20px rgba(0, 229, 160, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .shadow-next-btn:active{
-  transform: scale(0.96) translateY(0);
-  animation: none;
+  transform: scale(0.97) translateY(1px);
+  box-shadow: 0 2px 10px rgba(0, 229, 160, 0.4);
 }
-.shadow-next-btn::before{
+/* 티켓 양옆 홈 */
+.shadow-next-btn::before,
+.shadow-next-btn::after{
   content: '';
   position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #0a0a0f;
+  transform: translateY(-50%);
 }
-/* v10.2 OLD 잔여 제거 */
-.shadow-next-btn::after{ display: none; }
+.shadow-next-btn::before{ left: -5px; }
+.shadow-next-btn::after{ right: -5px; }
 
-/* v10.2: 🎦 LOBBY 버튼 (메인 통일 + 라벨 추가!) */
+/* v9.9.2: 🎦 영화관 테마 통일 */
 .shadow-home-btn{
-  width: auto;
-  min-width: 56px;
-  height: 62px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(40,20,10,0.9) 0%, rgba(30,15,25,0.95) 100%);
-  border: 1px solid rgba(251,191,36,0.35);
-  color: #fbbf24;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(217,119,6,0.08));
+  border: 1px solid rgba(251,191,36,0.3);
+  backdrop-filter: blur(10px);
+  font-size: 0; /* 기존 🏠 숨김 */
+  color: transparent;
   cursor: pointer;
   transition: all 0.25s ease;
   flex-shrink: 0;
-  box-shadow: 
-    0 4px 12px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(251,191,36,0.2);
+  box-shadow: 0 2px 8px rgba(251,191,36,0.15);
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 2px;
-  padding: 6px 8px;
-  font-size: 0; /* 기존 🏠 숨김 (구 텍스트만) */
 }
-.shadow-home-btn .btn-icon{
-  font-size: 20px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(251,191,36,0.4));
-}
-.shadow-home-btn .btn-label{
-  font-size: 8px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fbbf24;
-  line-height: 1;
-}
-.shadow-home-btn::before{ display: none !important; }
-.shadow-home-btn::after{ display: none !important; }
-.shadow-home-btn:hover{
-  transform: translateY(-2px);
-  border-color: rgba(251,191,36,0.6);
-  box-shadow: 
-    0 8px 24px rgba(251,191,36,0.3);
-}
-.shadow-home-btn:active{ transform: scale(0.92) }
-
-/* v10.2: 🔴 REC 카운터 (영화 촬영 현장!) */
-.rec-indicator{
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 5px 10px 5px 8px;
-  background: linear-gradient(90deg, rgba(220,38,38,0.15), rgba(30,20,30,0.8));
-  border: 1px solid rgba(239,68,68,0.35);
-  border-radius: 18px;
-  font-family: 'Courier New', monospace;
-  font-weight: 900;
-  font-size: 11px;
-  color: #fecaca;
-  width: fit-content;
-  margin: 8px auto 0;
-  box-shadow: 
-    0 0 15px rgba(239,68,68,0.15),
-    inset 0 1px 0 rgba(239,68,68,0.15);
-  letter-spacing: 1px;
-}
-.rec-dot{
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #ef4444;
-  box-shadow: 
-    0 0 8px #ef4444,
-    0 0 14px rgba(239,68,68,0.5);
-  animation: recBlink 1s ease-in-out infinite;
-}
-@keyframes recBlink{
-  0%,100%{ opacity: 1; transform: scale(1) }
-  50%{ opacity: 0.3; transform: scale(0.85) }
-}
-.rec-label{
-  font-weight: 900;
-  color: #fca5a5;
-  letter-spacing: 1.5px;
-}
-.rec-timer{
-  color: #fff;
-  letter-spacing: 1px;
-}
-
-/* 🎞️ 필름 테두리 효과 (영상 영역에) */
-.shadow-moment{
-  position: relative;
-}
-.shadow-moment::before{
-  content: '';
-  position: absolute;
-  top: -3px;
-  bottom: -3px;
-  left: -3px;
-  width: 3px;
-  background-image: repeating-linear-gradient(
-    180deg,
-    rgba(251,191,36,0.4) 0px,
-    rgba(251,191,36,0.4) 4px,
-    transparent 4px,
-    transparent 10px
-  );
-  border-radius: 3px;
-  pointer-events: none;
-  z-index: 2;
-}
-.shadow-moment::after{
-  content: '';
-  position: absolute;
-  top: -3px;
-  bottom: -3px;
-  right: -3px;
-  width: 3px;
-  background-image: repeating-linear-gradient(
-    180deg,
-    rgba(251,191,36,0.4) 0px,
-    rgba(251,191,36,0.4) 4px,
-    transparent 4px,
-    transparent 10px
-  );
-  border-radius: 3px;
-  pointer-events: none;
-  z-index: 2;
+.shadow-home-btn::before{
+  content: '🎦';
+  font-size: 18px;
+  filter: drop-shadow(0 0 6px rgba(251,191,36,0.4));
 }
 .shadow-home-btn:active{
   transform: scale(0.92);
@@ -5055,14 +4885,14 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="shadow-phonetic" id="shadowPhoneticText"></div>
         </div>
         
-        <!-- v10.2: 💡 힌트 + ⭐ 즐겨찾기 (심플 직관!) -->
+        <!-- v8.9: 발음 토글 + 📒 저장 (한 줄로!) -->
         <div class="ticket-footer-row">
           <button class="ticket-phonetic-toggle" id="shadowPhonetic">
-            <span id="shadowPhoneticLabel">💡 힌트 보기 ▾</span>
+            <span id="shadowPhoneticLabel">🔤 발음 보기 ▾</span>
           </button>
-          <button class="ticket-save-btn" id="shadowSave" title="즐겨찾기에 담기">
-            <span class="ticket-save-icon">⭐</span>
-            <span class="ticket-save-text">즐겨찾기</span>
+          <button class="ticket-save-btn" id="shadowSave" title="내 노트에 보관">
+            <span class="ticket-save-icon">📒</span>
+            <span class="ticket-save-text">저장</span>
           </button>
         </div>
       </div>
@@ -5082,29 +4912,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         <button id="shadowMic">🎤</button>
       </div>
       
-      <!-- v10.2: 🎬 영화 촬영장 버튼! RETAKE · CUT! -->
+      <!-- v8.8: 하단 버튼 — 반복 + 다음 + 홈 (마이크 제거!) -->
       <div class="shadow-bottom-actions">
-        <button class="shadow-replay-btn" id="shadowReplayBtn" title="이 장면 다시 촬영">
-          <span class="btn-icon">🔁</span>
-          <span class="btn-label">RETAKE</span>
-          <span class="btn-sub">한번 더!</span>
-        </button>
-        <button class="shadow-next-btn" id="shadowSkip">
-          <span class="btn-icon">🎬</span>
-          <span class="btn-label">CUT!</span>
-          <span class="btn-sub">좋아, 다음!</span>
-        </button>
-        <button class="shadow-home-btn" id="shadowHome" title="매표소로">
-          <span class="btn-icon">🎦</span>
-          <span class="btn-label">LOBBY</span>
-        </button>
-      </div>
-      
-      <!-- v10.2: 🔴 REC 카운터 (영화 촬영 현장 느낌!) -->
-      <div class="rec-indicator" id="recIndicator">
-        <span class="rec-dot"></span>
-        <span class="rec-label">REC</span>
-        <span class="rec-timer" id="recTimer">00:00</span>
+        <button class="shadow-replay-btn" id="shadowReplayBtn" title="이 문장 다시 듣기">🔊 반복</button>
+        <button class="shadow-next-btn" id="shadowSkip">⏭ 다음 장면</button>
+        <button class="shadow-home-btn" id="shadowHome" title="홈으로">🏠</button>
       </div>
     </div>
 
@@ -5609,7 +5421,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.2</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.1</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -5833,28 +5645,6 @@ const S={
   rate:1,rec:false
 };
 let ytPlayer=null,audioCtx=null,analyser=null,micStream=null,dubInterval=null,shadowInterval=null;
-
-/* v10.2: 🔴 REC 카운터 (영화 촬영 현장 느낌!) */
-let REC_TIMER_STATE = { interval: null, seconds: 0 };
-function startRecTimer(){
-  stopRecTimer();
-  REC_TIMER_STATE.seconds = 0;
-  const timerEl = document.getElementById('recTimer');
-  if(timerEl) timerEl.textContent = '00:00';
-  REC_TIMER_STATE.interval = setInterval(() => {
-    REC_TIMER_STATE.seconds++;
-    const mm = String(Math.floor(REC_TIMER_STATE.seconds / 60)).padStart(2, '0');
-    const ss = String(REC_TIMER_STATE.seconds % 60).padStart(2, '0');
-    const el = document.getElementById('recTimer');
-    if(el) el.textContent = mm + ':' + ss;
-  }, 1000);
-}
-function stopRecTimer(){
-  if(REC_TIMER_STATE.interval){
-    clearInterval(REC_TIMER_STATE.interval);
-    REC_TIMER_STATE.interval = null;
-  }
-}
 
 /* ═══════════════════════════════════════
  * STORAGE
@@ -8823,10 +8613,6 @@ function goStep(step){
   if(step!==3){
     bn.style.display='';
   }
-  /* v10.2: 🔴 Shadow(step 1) 아닌 단계로 가면 REC 카운터 정지 */
-  if(step !== 1){
-    stopRecTimer();
-  }
 
   if(step===0){
     /* STEP 1: LISTEN */
@@ -8866,8 +8652,8 @@ function goStep(step){
   else if(step===1){
     /* STEP 2: 말해봐 — hide video, show moment cards */
     bn.className='step-banner shadow';
-    /* v10.2: 🔥 영화 촬영장 배너! */
-    bn.textContent='🎬 ROLLING · 연기 시작! 🔥';
+    /* v8.8: 쌤 철학 — "따라 읽어봐! + 필기!" */
+    bn.textContent='✏️ 따라 읽어봐! 중요한 건 📒 저장!';
     /* ⚠️ 중요: Step 1 영상 완전 정지 + 음소거 (소리가 계속 나오던 버그 수정) */
     try{
       if(ytPlayer){
@@ -8880,8 +8666,6 @@ function goStep(step){
     tower.classList.remove('show');
     document.getElementById('shadowArea').style.display='flex';
     S.shadowIdx=0;renderShadow();
-    /* v10.2: 🔴 REC 카운터 시작! (영화 촬영 현장 느낌) */
-    startRecTimer();
   }
   else if(step===2){
     /* STEP 3: DUB CHALLENGE — show booth picker first */
@@ -9288,11 +9072,11 @@ function renderShadow(){
       else{pEl.textContent='(발음 표기 준비중)';pEl.classList.add('show');}
       if(isScriptMode && !isLongSentence) phoneticVisible=true;
       if(pBtn){pBtn.classList.add('active','connected-top');}
-      if(pLbl){pLbl.textContent='💡 힌트 숨기기 ▴';}
+      if(pLbl){pLbl.textContent='🔤 발음 숨기기 ▴';}
     }else{
       pEl.classList.remove('show');
       if(pBtn){pBtn.classList.remove('active','connected-top');}
-      if(pLbl){pLbl.textContent='💡 힌트 보기 ▾';}
+      if(pLbl){pLbl.textContent='🔤 발음 보기 ▾';}
     }
   }
 
@@ -9357,17 +9141,17 @@ document.getElementById('shadowPhonetic').addEventListener('click',()=>{
     if(s&&s.phonetic){
       pEl.innerHTML=formatPhoneticWithChunks(s.phonetic);
       pEl.classList.add('show');
-      if(lbl)lbl.textContent='💡 힌트 숨기기 ▴';
+      if(lbl)lbl.textContent='🔤 발음 숨기기 ▴';
       btn.classList.add('active','connected-top');
     }else{
       pEl.textContent='(발음 표기 준비중)';
       pEl.classList.add('show');
-      if(lbl)lbl.textContent='💡 힌트 숨기기 ▴';
+      if(lbl)lbl.textContent='🔤 발음 숨기기 ▴';
       btn.classList.add('active','connected-top');
     }
   }else{
     pEl.classList.remove('show');
-    if(lbl)lbl.textContent='💡 힌트 보기 ▾';
+    if(lbl)lbl.textContent='🔤 발음 보기 ▾';
     btn.classList.remove('active','connected-top');
   }
 });
@@ -11131,7 +10915,6 @@ document.querySelectorAll('.speed-btn').forEach(b=>{b.addEventListener('click',(
 /* Inline Home buttons — all instances use common handler */
 function goHome(){
   stopSnapReview();
-  stopRecTimer();
   cleanupPlayer();
   /* v9.3: renderFeed() 호출 필수! (까만 화면 버그 수정) */
   /* v9.6: 1층 매표소로 리셋 */
