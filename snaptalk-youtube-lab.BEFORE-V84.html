@@ -1470,42 +1470,32 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 
 /* 대본 카드 */
 .cinema-script{margin:12px 16px;padding:16px 20px;background:rgba(26,26,46,.6);backdrop-filter:blur(20px);border-radius:16px;border:1px solid rgba(139,92,246,.15);text-align:center}
-/* v8.4: 긴 문장 자동 대응 - 기본 크기, 긴 문장이면 자동 축소 */
-.cinema-script .shadow-en{font-size:22px;font-weight:700;color:#fff;line-height:1.45;margin-bottom:10px;letter-spacing:-.3px;word-break:keep-all;overflow-wrap:break-word}
-.cinema-script .shadow-ko{font-size:15px;color:#a1a1aa;line-height:1.45;margin-bottom:8px;word-break:keep-all;overflow-wrap:break-word}
-.cinema-script .shadow-phonetic{font-size:14px;color:#a78bfa;font-weight:600;padding:8px 14px;background:rgba(139,92,246,.12);border-radius:10px;display:none;margin-top:6px;animation:phoneticFade .3s ease;word-break:keep-all;overflow-wrap:break-word;line-height:1.45}
-/* v8.4: 긴 문장(40자 이상) 자동 축소 */
-.cinema-script.long-sentence .shadow-en{font-size:18px;line-height:1.5}
-.cinema-script.long-sentence .shadow-ko{font-size:14px;line-height:1.5}
-.cinema-script.long-sentence .shadow-phonetic{font-size:13px;line-height:1.5}
-/* v8.4: 매우 긴 문장(80자 이상) 추가 축소 */
-.cinema-script.very-long-sentence .shadow-en{font-size:16px;line-height:1.55}
-.cinema-script.very-long-sentence .shadow-ko{font-size:13px;line-height:1.55}
-.cinema-script.very-long-sentence .shadow-phonetic{font-size:12px;line-height:1.55}
+.cinema-script .shadow-en{font-size:22px;font-weight:700;color:#fff;line-height:1.4;margin-bottom:10px;letter-spacing:-.3px}
+.cinema-script .shadow-ko{font-size:15px;color:#a1a1aa;line-height:1.4;margin-bottom:8px}
+.cinema-script .shadow-phonetic{font-size:14px;color:#a78bfa;font-weight:600;padding:8px 14px;background:rgba(139,92,246,.12);border-radius:10px;display:none;margin-top:6px;animation:phoneticFade .3s ease}
 .cinema-script .shadow-phonetic.show{display:block}
 @keyframes phoneticFade{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
 
 /* v8.2: 뒤어읽기 마커 (청크 구분) — TOEIC 강사의 핵심 테크닉! */
-/* v8.4: 더 눈에 띄게, 긴 문장에서도 잘 보이게 */
 .chunk-break{
   display:inline-block;
-  color:rgba(251,191,36,.75);  /* 조금 더 진하게 (긴 문장에서 잘 보이게) */
-  font-weight:500;
-  margin:0 3px;
-  opacity:.85;
+  color:rgba(251,191,36,.6);   /* 부드러운 노랑 (accent 계열) */
+  font-weight:400;
+  margin:0 2px;
+  opacity:.7;
   user-select:none;            /* 복사 시 제외 */
-  font-size:1em;               /* 같은 크기 */
-  transform:translateY(-1px);  /* 약간 위로 */
+  font-size:.9em;
+  transform:translateY(-1px);  /* 약간 위로 (시각적 균형) */
 }
 /* 영어 가사(rehearsal/onair)에서는 살짝 더 은은하게 */
 .karaoke-text .chunk-break{
-  color:rgba(251,191,36,.5);
+  color:rgba(251,191,36,.4);
   margin:0 4px;
 }
 /* 숨김 모드일 때도 마커는 살짝 보이도록 (리듬 학습 도움) */
 .karaoke-line.mode-onair .karaoke-text .chunk-break,
 .karaoke-line.mode-rehearsal .karaoke-text .chunk-break{
-  color:rgba(251,191,36,.35);
+  color:rgba(251,191,36,.3);
 }
 
 /* 버튼 영역 - 시네마 스타일! */
@@ -1863,7 +1853,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.4</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.3</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -3440,20 +3430,11 @@ function renderShadow(){
   document.getElementById('shadowTotal').textContent=ss.length;
   const enEl=document.getElementById('shadowEn');
   enEl.innerHTML=highlightEn(s.en,s.highlight);
-  /* v8.4: 긴 문장 자동 축소 — 부모 .cinema-script에 클래스 추가
-     (EN/KO/Phonetic 3줄 모두 동시 축소돼야 정렬 유지) */
-  const cinemaScript = enEl.closest('.cinema-script');
-  if(cinemaScript){
-    cinemaScript.classList.remove('long-sentence','very-long-sentence');
-    const len = s.en.length;
-    if(len > 80) cinemaScript.classList.add('very-long-sentence');
-    else if(len > 40) cinemaScript.classList.add('long-sentence');
-  }
-  /* Legacy: enEl 자체 클래스도 유지 (다른 곳에서 쓸 수 있음) */
+  /* Auto-size EN text so short sentences stay on one line */
   enEl.classList.remove('long','very-long');
   const len=s.en.length;
-  if(len>80)enEl.classList.add('very-long');
-  else if(len>40)enEl.classList.add('long');
+  if(len>45)enEl.classList.add('very-long');
+  else if(len>30)enEl.classList.add('long');
   document.getElementById('shadowKo').innerHTML=highlightKo(s.ko,s.koHighlight);
   /* v7.6: SCRIPT 모드(easy)면 발음 자동 표시! */
   const pEl=document.getElementById('shadowPhoneticText');
