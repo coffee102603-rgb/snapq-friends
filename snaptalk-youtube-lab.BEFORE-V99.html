@@ -3288,7 +3288,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   margin-top: 1px;
 }
 
-/* 📜 SCREENPLAY 노트 (v9.9: 손가락 캔버스!) */
+/* 📜 SCREENPLAY 노트 (영화 시나리오 스타일!) */
 .screenplay-section{
   background: linear-gradient(180deg, 
     rgba(251,243,219,0.03),
@@ -3299,8 +3299,8 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   background: linear-gradient(180deg, 
     #f5e8c8 0%, 
     #e8dab5 100%);
-  padding: 18px 18px;
-  border-radius: 8px;
+  padding: 20px 22px;
+  border-radius: 4px;
   font-family: 'Courier New', 'Consolas', monospace;
   color: #2d1810;
   box-shadow: 
@@ -3308,207 +3308,166 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
     inset 0 1px 0 rgba(255,255,255,0.3),
     inset 0 -2px 0 rgba(0,0,0,0.1);
   position: relative;
+  overflow: hidden;
+}
+/* 종이 질감 */
+.screenplay-paper::before{
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 27px,
+    rgba(0,0,0,0.04) 27px,
+    rgba(0,0,0,0.04) 28px
+  );
+  pointer-events: none;
+}
+/* 왼쪽 빨간 선 (영화 시나리오 마진) */
+.screenplay-paper::after{
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 48px;
+  width: 1px;
+  background: rgba(239,68,68,0.3);
 }
 
-/* 헤더 라인 */
-.screenplay-header-line{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.screenplay-format{
+  font-size: 13px;
+  font-weight: 900;
+  color: #1e293b;
+  letter-spacing: 2px;
   margin-bottom: 14px;
-  padding-bottom: 10px;
-  border-bottom: 2px dashed rgba(30,41,59,0.2);
+  position: relative;
+  z-index: 1;
 }
-.screenplay-day-badge{
+.screenplay-fadeout{
+  margin-top: 14px;
+  margin-bottom: 0;
+  text-align: right;
+}
+.screenplay-scene{
   font-size: 12px;
   font-weight: 900;
-  color: #7c2d12;
-  padding: 4px 10px;
-  background: rgba(217,119,6,0.12);
-  border-radius: 8px;
+  color: #1e293b;
   letter-spacing: 1px;
-}
-.screenplay-memo-tip{
-  font-size: 11px;
-  color: #92400e;
-  font-weight: 800;
-  font-style: italic;
-  animation: tipBlink 2s ease-in-out infinite;
-}
-@keyframes tipBlink{
-  0%,100%{ opacity: 1 }
-  50%{ opacity: 0.6 }
-}
-
-/* 오늘의 대사 박스 */
-.screenplay-dialogue-box{
-  background: rgba(30,41,59,0.06);
-  border-left: 4px solid #d97706;
-  padding: 12px 14px;
-  margin-bottom: 16px;
-  border-radius: 0 8px 8px 0;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
 }
 .screenplay-char{
-  font-size: 10px;
+  text-align: center;
+  font-size: 13px;
   font-weight: 900;
-  color: #92400e;
+  color: #1e293b;
   letter-spacing: 2px;
+  margin-bottom: 2px;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+.screenplay-paren{
+  text-align: center;
+  font-size: 11px;
+  color: #64748b;
+  font-style: italic;
   margin-bottom: 6px;
+  position: relative;
+  z-index: 1;
 }
 .screenplay-dialogue{
-  font-size: 17px;
-  font-weight: 800;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
   color: #1e293b;
-  line-height: 1.4;
-  letter-spacing: 0.2px;
+  margin-bottom: 20px;
+  padding: 0 20px;
+  line-height: 1.5;
+  position: relative;
+  z-index: 1;
 }
 
-/* 캔버스 레이블 */
-.screenplay-canvas-label{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.screenplay-practice-label{
   font-size: 12px;
   font-weight: 900;
   color: #7c2d12;
   margin-bottom: 8px;
-  padding: 0 2px;
-  letter-spacing: 0.3px;
-}
-.canvas-hint{
-  font-size: 16px;
-  animation: hintBounce 1.2s ease-in-out infinite;
-}
-@keyframes hintBounce{
-  0%,100%{ transform: translateY(0) }
-  50%{ transform: translateY(4px) }
-}
-
-/* 🎨 손글씨 캔버스 */
-.screenplay-canvas-wrap{
+  letter-spacing: 0.5px;
   position: relative;
-  background: #fffef7;
-  border: 2px solid rgba(30,41,59,0.15);
-  border-radius: 8px;
-  padding: 0;
-  overflow: hidden;
-  box-shadow: 
-    inset 0 2px 6px rgba(0,0,0,0.08),
-    0 2px 4px rgba(0,0,0,0.1);
-  /* 노트 라인 */
-  background-image: 
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent 35px,
-      rgba(96,165,250,0.15) 35px,
-      rgba(96,165,250,0.15) 36px
-    );
-  touch-action: none; /* 터치 스크롤 방지 */
+  z-index: 1;
 }
-.screenplay-canvas{
-  display: block;
+.screenplay-practice{
   width: 100%;
-  height: 220px;
-  cursor: crosshair;
-  touch-action: none;
+  min-height: 100px;
+  padding: 12px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(30,41,59,0.3);
+  font-family: 'Courier New', 'Consolas', monospace;
+  font-size: 14px;
+  color: #1e293b;
+  font-weight: 600;
+  line-height: 1.8;
+  resize: vertical;
+  outline: none;
+  position: relative;
+  z-index: 1;
+  /* 밑줄 노트 느낌 */
+  background-image: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 27px,
+    rgba(30,41,59,0.2) 27px,
+    rgba(30,41,59,0.2) 28px
+  );
+}
+.screenplay-practice::placeholder{
+  color: rgba(30,41,59,0.4);
+  font-style: italic;
+}
+.screenplay-practice:focus{
+  border-bottom-color: #d97706;
 }
 
-/* 🎨 도구 모음 */
-.screenplay-tools{
-  display: flex;
-  gap: 6px;
-  margin: 12px 0 14px;
-  padding: 8px;
-  background: rgba(30,41,59,0.05);
-  border-radius: 10px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-.canvas-tool{
-  min-width: 42px;
-  height: 42px;
-  border: 2px solid rgba(30,41,59,0.2);
-  border-radius: 10px;
-  background: rgba(255,255,255,0.6);
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1px;
-  padding: 2px;
-}
-.canvas-tool:active{ transform: scale(0.9) }
-.canvas-tool.active{
-  background: linear-gradient(135deg, #fbbf24, #d97706);
-  border-color: #7c2d12;
-  box-shadow: 0 2px 8px rgba(217,119,6,0.4);
-}
-.canvas-tool.active .tool-label{ color: #fff }
-.tool-icon{
-  font-size: 18px;
-  line-height: 1;
-}
-.tool-label{
-  font-size: 9px;
-  font-weight: 800;
-  color: #334155;
-  letter-spacing: 0.3px;
-}
-
-/* 색상 팔레트 */
-.tool-color{
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.5);
-  padding: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-.tool-color.active{
-  transform: scale(1.15);
-  border-color: #fbbf24;
-  box-shadow: 0 0 12px rgba(251,191,36,0.6);
-}
-
-/* 액션 버튼들 */
 .screenplay-actions{
   display: flex;
-  gap: 6px;
-  margin-top: 12px;
+  gap: 8px;
+  margin-top: 14px;
+  position: relative;
+  z-index: 1;
 }
 .screenplay-btn{
   flex: 1;
-  padding: 10px 8px;
+  padding: 10px 14px;
   border: 1px solid rgba(30,41,59,0.2);
   border-radius: 8px;
   font-family: 'Courier New', monospace;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.3px;
+  letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.2s;
   text-transform: uppercase;
-  white-space: nowrap;
 }
 .screenplay-btn:active{ transform: scale(0.96) }
-.screenplay-btn-clear{
-  background: rgba(239,68,68,0.1);
-  color: #991b1b;
-  border-color: rgba(239,68,68,0.3);
-}
 .screenplay-btn-new{
   background: rgba(30,41,59,0.08);
   color: #334155;
 }
+.screenplay-btn-new:hover{ background: rgba(30,41,59,0.15) }
 .screenplay-btn-save{
   background: linear-gradient(135deg, #d97706, #b45309);
   color: #fff;
   border-color: transparent;
   box-shadow: 0 2px 8px rgba(217,119,6,0.3);
+}
+.screenplay-btn-save:hover{ 
+  box-shadow: 0 4px 14px rgba(217,119,6,0.5);
+  transform: translateY(-1px);
 }
 #langModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:200;align-items:center;justify-content:center}
 #langModal.show{display:flex}
@@ -4811,7 +4770,33 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       </div>
     </div>
     
-    <!-- v9.9: 🔄 MY DIALOGUES 먼저 (쌤 요청!) -->
+    <!-- v9.8: 📜 SCREENPLAY NOTE (필기 연습 공간) -->
+    <div class="greenroom-section screenplay-section">
+      <div class="greenroom-section-title">
+        <span class="gr-section-icon">📜</span>
+        <div>
+          <div class="gr-section-name">SCREENPLAY</div>
+          <div class="gr-section-sub">오늘의 대사 연습</div>
+        </div>
+      </div>
+      <div class="screenplay-paper">
+        <div class="screenplay-format">FADE IN:</div>
+        <div class="screenplay-scene">INT. GREEN ROOM — <span id="screenplayDay">DAY 1</span></div>
+        <div class="screenplay-char">CHOI (V.O.)</div>
+        <div class="screenplay-paren">(practicing)</div>
+        <div class="screenplay-dialogue" id="screenplayDialogue">"I can't wait for my next scene!"</div>
+        
+        <div class="screenplay-practice-label">✏️ 내 대사 연습:</div>
+        <textarea class="screenplay-practice" id="screenplayPractice" placeholder="오늘 배운 표현을 써보면서 연습해봐요..." rows="4"></textarea>
+        <div class="screenplay-actions">
+          <button class="screenplay-btn screenplay-btn-new" id="screenplayNew">🎬 새 장면</button>
+          <button class="screenplay-btn screenplay-btn-save" id="screenplaySave">💾 저장</button>
+        </div>
+        <div class="screenplay-format screenplay-fadeout">FADE OUT.</div>
+      </div>
+    </div>
+
+    <!-- 🔄 Snap Review (단어/표현 복습) -->
     <div class="greenroom-section" id="snapReviewSection" style="margin-top:0">
       <div class="greenroom-section-title">
         <span class="gr-section-icon">🔄</span>
@@ -4822,67 +4807,20 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       </div>
       <div id="snapReviewContainer"></div>
     </div>
-    
-    <!-- v9.9: 📜 SCREENPLAY 노트 (손가락으로 쓰는 캔버스!) -->
-    <div class="greenroom-section screenplay-section">
-      <div class="greenroom-section-title">
-        <span class="gr-section-icon">📜</span>
-        <div>
-          <div class="gr-section-name">SCREENPLAY</div>
-          <div class="gr-section-sub">✍️ 쓰면서 외워요!</div>
-        </div>
-      </div>
-      <div class="screenplay-paper">
-        <div class="screenplay-header-line">
-          <span class="screenplay-day-badge">📅 <span id="screenplayDay">DAY 1</span></span>
-          <span class="screenplay-memo-tip">✨ 쓰면서 대사 외우기!</span>
-        </div>
-        
-        <!-- 오늘의 대사 -->
-        <div class="screenplay-dialogue-box">
-          <div class="screenplay-char">TODAY'S LINE</div>
-          <div class="screenplay-dialogue" id="screenplayDialogue">"I can't wait for my next scene!"</div>
-        </div>
-        
-        <!-- ✍️ 손글씨 캔버스 -->
-        <div class="screenplay-canvas-label">
-          <span>✏️ 여기에 손으로 써보세요</span>
-          <span class="canvas-hint">👇</span>
-        </div>
-        <div class="screenplay-canvas-wrap">
-          <canvas id="screenplayCanvas" class="screenplay-canvas"></canvas>
-        </div>
-        
-        <!-- 도구 모음 -->
-        <div class="screenplay-tools">
-          <button class="canvas-tool active" data-tool="pen" id="toolPen">
-            <span class="tool-icon">✏️</span>
-            <span class="tool-label">연필</span>
-          </button>
-          <button class="canvas-tool" data-tool="eraser" id="toolEraser">
-            <span class="tool-icon">🧽</span>
-            <span class="tool-label">지우개</span>
-          </button>
-          <button class="canvas-tool tool-color" data-color="#1e293b" style="background:#1e293b"></button>
-          <button class="canvas-tool tool-color" data-color="#dc2626" style="background:#dc2626"></button>
-          <button class="canvas-tool tool-color" data-color="#2563eb" style="background:#2563eb"></button>
-          <button class="canvas-tool tool-color" data-color="#16a34a" style="background:#16a34a"></button>
-        </div>
-        
-        <div class="screenplay-actions">
-          <button class="screenplay-btn screenplay-btn-clear" id="canvasClear">🗑️ 전체 지우기</button>
-          <button class="screenplay-btn screenplay-btn-new" id="screenplayNew">🎬 새 대사</button>
-          <button class="screenplay-btn screenplay-btn-save" id="screenplaySave">💾 저장</button>
-        </div>
-      </div>
-    </div>
 
-    <!-- v9.9: MY SCENES 삭제됨 (쌤 요청) -->
-    <div class="gallery-section" id="gallerySection" style="display:none">
+    <!-- 🎬 내 더빙 다시 보기 -->
+    <div class="gallery-section greenroom-section" id="gallerySection">
+      <div class="greenroom-section-title">
+        <span class="gr-section-icon">🎬</span>
+        <div>
+          <div class="gr-section-name">MY SCENES</div>
+          <div class="gr-section-sub">내 더빙 다시 보기 <span class="gallery-count" id="galleryCount"></span></div>
+        </div>
+      </div>
       <div id="galleryContainer"></div>
     </div>
 
-    <!-- Snap Studio는 MY STUDIO 카드로 이동! DOM 유지 (호환성) -->
+    <!-- 🎬 Snap Studio는 MY STUDIO 카드로 이동! DOM 유지 (호환성) -->
     <div class="room-section" id="snapStudioSection" style="display:none">
       <div id="snapStudioContainer"></div>
     </div>
@@ -4902,7 +4840,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.8</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -5171,20 +5109,7 @@ function renderRoom(){
   renderScreenplay();
 }
 
-/* v9.9: 📜 SCREENPLAY 노트 로직 (손가락 캔버스!) */
-
-/* 캔버스 상태 */
-const CANVAS_STATE = {
-  ctx: null,
-  canvas: null,
-  drawing: false,
-  tool: 'pen',
-  color: '#1e293b',
-  lineWidth: 3,
-  lastX: 0,
-  lastY: 0,
-};
-
+/* v9.8: 📜 SCREENPLAY 노트 로직 */
 function renderScreenplay(){
   /* Day 카운트 (스트릭 기반) */
   const streak = db.get('streak', {count:0,last:null});
@@ -5203,7 +5128,14 @@ function renderScreenplay(){
     }
   }
   
-  /* 환영 메시지 랜덤 */
+  /* 저장된 연습글 로드 */
+  const saved = db.get('screenplayPractice', '');
+  const textarea = document.getElementById('screenplayPractice');
+  if(textarea && saved){
+    textarea.value = saved;
+  }
+  
+  /* 환영 메시지 업데이트 */
   const subEl = document.getElementById('grGreetingSub');
   if(subEl){
     const messages = [
@@ -5215,197 +5147,25 @@ function renderScreenplay(){
     ];
     subEl.textContent = messages[Math.floor(Math.random() * messages.length)];
   }
-  
-  /* 캔버스 초기화 */
-  initCanvas();
 }
 
-/* 🎨 캔버스 초기화 */
-function initCanvas(){
-  const canvas = document.getElementById('screenplayCanvas');
-  if(!canvas) return;
-  
-  CANVAS_STATE.canvas = canvas;
-  
-  /* 캔버스 크기 설정 (고해상도) */
-  const rect = canvas.getBoundingClientRect();
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-  
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
-  ctx.lineCap = 'round';
-  ctx.lineJoin = 'round';
-  ctx.strokeStyle = CANVAS_STATE.color;
-  ctx.lineWidth = CANVAS_STATE.lineWidth;
-  
-  CANVAS_STATE.ctx = ctx;
-  
-  /* 저장된 그림 로드 */
-  const saved = db.get('screenplayDrawing', null);
-  if(saved){
-    const img = new Image();
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, rect.width, rect.height);
-    };
-    img.src = saved;
-  }
-  
-  /* 이벤트 바인딩 (중복 방지) */
-  if(!canvas.dataset.initialized){
-    bindCanvasEvents(canvas);
-    canvas.dataset.initialized = '1';
-  }
-}
-
-/* 🖐️ 터치/마우스 이벤트 바인딩 */
-function bindCanvasEvents(canvas){
-  /* 좌표 계산 */
-  const getPos = (e) => {
-    const rect = canvas.getBoundingClientRect();
-    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-    return {
-      x: clientX - rect.left,
-      y: clientY - rect.top
-    };
-  };
-  
-  const startDraw = (e) => {
-    e.preventDefault();
-    CANVAS_STATE.drawing = true;
-    const pos = getPos(e);
-    CANVAS_STATE.lastX = pos.x;
-    CANVAS_STATE.lastY = pos.y;
-    /* 점 찍기 */
-    const ctx = CANVAS_STATE.ctx;
-    if(CANVAS_STATE.tool === 'eraser'){
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.lineWidth = 20;
-    } else {
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = CANVAS_STATE.color;
-      ctx.lineWidth = CANVAS_STATE.lineWidth;
-    }
-    ctx.beginPath();
-    ctx.arc(pos.x, pos.y, ctx.lineWidth/2, 0, Math.PI*2);
-    ctx.fillStyle = CANVAS_STATE.color;
-    if(CANVAS_STATE.tool !== 'eraser'){
-      ctx.fill();
-    }
-  };
-  
-  const draw = (e) => {
-    if(!CANVAS_STATE.drawing) return;
-    e.preventDefault();
-    const pos = getPos(e);
-    const ctx = CANVAS_STATE.ctx;
-    
-    if(CANVAS_STATE.tool === 'eraser'){
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.lineWidth = 20;
-    } else {
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.strokeStyle = CANVAS_STATE.color;
-      ctx.lineWidth = CANVAS_STATE.lineWidth;
-    }
-    
-    ctx.beginPath();
-    ctx.moveTo(CANVAS_STATE.lastX, CANVAS_STATE.lastY);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-    
-    CANVAS_STATE.lastX = pos.x;
-    CANVAS_STATE.lastY = pos.y;
-  };
-  
-  const stopDraw = () => {
-    if(CANVAS_STATE.drawing){
-      CANVAS_STATE.drawing = false;
-      /* 자동 저장 */
-      autoSaveCanvas();
-    }
-  };
-  
-  /* 마우스 이벤트 */
-  canvas.addEventListener('mousedown', startDraw);
-  canvas.addEventListener('mousemove', draw);
-  canvas.addEventListener('mouseup', stopDraw);
-  canvas.addEventListener('mouseleave', stopDraw);
-  
-  /* 터치 이벤트 (모바일!) */
-  canvas.addEventListener('touchstart', startDraw, {passive: false});
-  canvas.addEventListener('touchmove', draw, {passive: false});
-  canvas.addEventListener('touchend', stopDraw);
-  canvas.addEventListener('touchcancel', stopDraw);
-}
-
-/* 자동 저장 */
-let canvasSaveTimer;
-function autoSaveCanvas(){
-  clearTimeout(canvasSaveTimer);
-  canvasSaveTimer = setTimeout(() => {
-    if(CANVAS_STATE.canvas){
-      try {
-        const dataUrl = CANVAS_STATE.canvas.toDataURL('image/png');
-        db.set('screenplayDrawing', dataUrl);
-      } catch(err){
-        console.warn('Canvas save failed:', err);
-      }
-    }
-  }, 1000);
-}
-
-/* 🎨 도구 변경 이벤트 */
+/* SCREENPLAY 이벤트 바인딩 */
 document.addEventListener('click', e => {
-  /* 연필 / 지우개 */
-  const tool = e.target.closest('.canvas-tool[data-tool]');
-  if(tool){
-    document.querySelectorAll('.canvas-tool[data-tool]').forEach(t => t.classList.remove('active'));
-    tool.classList.add('active');
-    CANVAS_STATE.tool = tool.dataset.tool;
-    return;
-  }
-  
-  /* 색상 변경 */
-  const colorBtn = e.target.closest('.tool-color');
-  if(colorBtn){
-    document.querySelectorAll('.tool-color').forEach(c => c.classList.remove('active'));
-    colorBtn.classList.add('active');
-    CANVAS_STATE.color = colorBtn.dataset.color;
-    /* 색 선택 시 자동으로 연필 모드 */
-    CANVAS_STATE.tool = 'pen';
-    document.querySelectorAll('.canvas-tool[data-tool]').forEach(t => t.classList.remove('active'));
-    const penBtn = document.getElementById('toolPen');
-    if(penBtn) penBtn.classList.add('active');
-    return;
-  }
-  
-  /* 전체 지우기 */
-  if(e.target && e.target.id === 'canvasClear'){
-    if(CANVAS_STATE.ctx && CANVAS_STATE.canvas){
-      const rect = CANVAS_STATE.canvas.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      CANVAS_STATE.ctx.clearRect(0, 0, CANVAS_STATE.canvas.width, CANVAS_STATE.canvas.height);
-      db.set('screenplayDrawing', null);
-      /* 피드백 */
-      const btn = e.target;
-      const orig = btn.textContent;
-      btn.textContent = '✨ 깨끗!';
-      setTimeout(() => { btn.textContent = orig; }, 800);
-    }
-    return;
-  }
-  
-  /* 🎬 새 대사 */
+  /* 🎬 새 장면 버튼 → 새 대사 랜덤 */
   if(e.target && e.target.id === 'screenplayNew'){
     const notebook = db.get('notebook', []);
     const dialogueEl = document.getElementById('screenplayDialogue');
     if(dialogueEl && notebook.length > 0){
       const randomItem = notebook[Math.floor(Math.random() * notebook.length)];
       dialogueEl.textContent = `"${randomItem.en || randomItem.highlight || 'New scene!'}"`;
+      /* 텍스트 영역 초기화 */
+      const textarea = document.getElementById('screenplayPractice');
+      if(textarea){
+        textarea.value = '';
+        db.set('screenplayPractice', '');
+      }
     } else if(dialogueEl){
+      /* 노트북 비어있을 때 */
       const defaults = [
         '"I can\'t wait for my next scene!"',
         '"Let\'s make this a masterpiece!"',
@@ -5415,26 +5175,34 @@ document.addEventListener('click', e => {
       ];
       dialogueEl.textContent = defaults[Math.floor(Math.random() * defaults.length)];
     }
-    return;
   }
   
-  /* 💾 저장 */
+  /* 💾 저장 버튼 */
   if(e.target && e.target.id === 'screenplaySave'){
-    if(CANVAS_STATE.canvas){
-      try {
-        const dataUrl = CANVAS_STATE.canvas.toDataURL('image/png');
-        db.set('screenplayDrawing', dataUrl);
-      } catch(err){}
+    const textarea = document.getElementById('screenplayPractice');
+    if(textarea){
+      db.set('screenplayPractice', textarea.value);
+      /* 피드백 */
+      const btn = e.target;
+      const orig = btn.textContent;
+      btn.textContent = '✅ 저장됨!';
+      btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+      setTimeout(() => {
+        btn.textContent = orig;
+        btn.style.background = '';
+      }, 1500);
     }
-    const btn = e.target;
-    const orig = btn.textContent;
-    btn.textContent = '✅ 저장됨!';
-    btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
-    setTimeout(() => {
-      btn.textContent = orig;
-      btn.style.background = '';
-    }, 1500);
-    return;
+  }
+});
+
+/* 자동 저장 (2초 입력 멈추면) */
+let screenplayAutoSaveTimer;
+document.addEventListener('input', e => {
+  if(e.target && e.target.id === 'screenplayPractice'){
+    clearTimeout(screenplayAutoSaveTimer);
+    screenplayAutoSaveTimer = setTimeout(() => {
+      db.set('screenplayPractice', e.target.value);
+    }, 2000);
   }
 });
 
