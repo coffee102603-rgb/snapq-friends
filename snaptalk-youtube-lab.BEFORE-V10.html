@@ -1057,69 +1057,122 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 .lobby-btn-big:active{ transform: scale(0.92) }
 
-/* v10.0: 🎯 핵심어 수집 바 (초미니 한 줄!) */
-.core-collect-bar{
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0 4px 10px;
-  padding: 7px 12px;
-  background: linear-gradient(90deg, 
-    rgba(251,191,36,0.1) 0%,
-    rgba(139,92,246,0.08) 100%);
-  border: 1px solid rgba(251,191,36,0.25);
-  border-radius: 20px;
+/* 📊 이해도 게이지 (트레일러 스타일!) */
+.trailer-gauge-wrap{
+  margin: 0 4px 12px;
+  padding: 10px 12px 8px;
+  background: linear-gradient(180deg, 
+    rgba(251,191,36,0.08) 0%,
+    rgba(139,92,246,0.05) 100%);
+  border: 1px solid rgba(251,191,36,0.2);
+  border-radius: 12px;
   box-shadow: 
     inset 0 1px 0 rgba(251,191,36,0.15),
     0 2px 8px rgba(0,0,0,0.2);
-  font-size: 12px;
-  transition: all 0.3s ease;
 }
-.core-collect-icon{
+.trailer-gauge-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+.trailer-gauge-label{
+  font-size: 10px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: 1.5px;
+  text-shadow: 0 0 8px rgba(251,191,36,0.4);
+}
+.trailer-gauge-pct{
   font-size: 14px;
-  line-height: 1;
-  filter: drop-shadow(0 0 6px rgba(251,191,36,0.4));
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 0.5px;
+  font-family: 'Courier New', monospace;
 }
-.core-collect-text{
-  flex: 1;
-  font-weight: 800;
-  color: #e2e8f0;
-  letter-spacing: 0.3px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+.trailer-gauge-track{
+  position: relative;
+  height: 8px;
+  background: rgba(20,15,30,0.8);
+  border-radius: 4px;
+  overflow: visible;
+  border: 1px solid rgba(251,191,36,0.15);
 }
-.core-collect-count{
-  font-size: 13px;
+.trailer-gauge-fill{
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, 
+    #8b5cf6 0%, 
+    #a78bfa 40%,
+    #fbbf24 80%,
+    #f59e0b 100%);
+  box-shadow: 
+    0 0 12px rgba(251,191,36,0.6),
+    inset 0 1px 0 rgba(255,255,255,0.3);
+  transition: width 0.5s cubic-bezier(.4,0,.2,1);
+  position: relative;
+}
+.trailer-gauge-fill::after{
+  content: '';
+  position: absolute;
+  right: 0;
+  top: -2px;
+  bottom: -2px;
+  width: 2px;
+  background: #fff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  opacity: 0.8;
+}
+.trailer-gauge-marker{
+  position: absolute;
+  top: -4px;
+  bottom: -4px;
+  width: 2px;
+  background: rgba(251,191,36,0.5);
+  pointer-events: none;
+}
+.trailer-gauge-marker::before{
+  content: '';
+  position: absolute;
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 8px #fbbf24;
+}
+.trailer-gauge-marker-label{
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
   font-weight: 900;
   color: #fbbf24;
   letter-spacing: 0.5px;
-  font-family: 'Courier New', monospace;
-  text-shadow: 0 0 8px rgba(251,191,36,0.5);
-  padding: 2px 8px;
-  background: rgba(251,191,36,0.12);
-  border-radius: 10px;
-  border: 1px solid rgba(251,191,36,0.2);
+  text-shadow: 0 0 6px rgba(251,191,36,0.6);
+  white-space: nowrap;
 }
-/* 준비 완료 상태 (3개+) */
-.core-collect-bar.ready{
-  background: linear-gradient(90deg, 
-    rgba(251,191,36,0.2) 0%,
-    rgba(245,158,11,0.15) 100%);
-  border-color: rgba(251,191,36,0.5);
-  box-shadow: 
-    inset 0 1px 0 rgba(251,191,36,0.25),
-    0 2px 12px rgba(251,191,36,0.25),
-    0 0 20px rgba(251,191,36,0.15);
-  animation: collectReadyPulse 2s ease-in-out infinite;
+.trailer-gauge-tip{
+  font-size: 10px;
+  font-weight: 700;
+  color: #cbd5e1;
+  letter-spacing: 0.3px;
+  margin-top: 8px;
+  text-align: center;
+  font-style: italic;
 }
-.core-collect-bar.ready .core-collect-text{
+/* 게이지 60%+ 달성 시 */
+.trailer-gauge-wrap.ready .trailer-gauge-tip{
   color: #fbbf24;
   font-weight: 900;
+  animation: tipPulse 1.5s ease-in-out infinite;
 }
-@keyframes collectReadyPulse{
-  0%,100%{ transform: scale(1) }
-  50%{ transform: scale(1.02) }
+@keyframes tipPulse{
+  0%,100%{ opacity: 1; transform: scale(1) }
+  50%{ opacity: 0.7; transform: scale(1.05) }
 }
 
 /* listen-hint-row 스타일 */
@@ -4836,11 +4889,19 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     <div id="listenArea">
       <div class="listen-info" style="display:none"><span class="n" id="listenCount">1</span><span class="bricks" id="brickCount"></span></div>
       
-      <!-- v10.0: 🎯 핵심어 수집 한 줄 (공간 최소화!) -->
-      <div class="core-collect-bar" id="trailerGaugeWrap">
-        <span class="core-collect-icon" id="coreCollectIcon">🎯</span>
-        <span class="core-collect-text" id="coreCollectText">핵심어 수집 중...</span>
-        <span class="core-collect-count" id="coreCollectCount">0/5</span>
+      <!-- v9.9.9: 📊 이해도 게이지 (60%까지 REPLAY 권장) -->
+      <div class="trailer-gauge-wrap" id="trailerGaugeWrap">
+        <div class="trailer-gauge-header">
+          <span class="trailer-gauge-label">📊 이해도</span>
+          <span class="trailer-gauge-pct" id="trailerGaugePct">0%</span>
+        </div>
+        <div class="trailer-gauge-track">
+          <div class="trailer-gauge-fill" id="trailerGaugeFill" style="width:0%"></div>
+          <div class="trailer-gauge-marker" style="left:60%" title="이해 60% 지점">
+            <span class="trailer-gauge-marker-label">60%</span>
+          </div>
+        </div>
+        <div class="trailer-gauge-tip" id="trailerGaugeTip">🎞️ REPLAY로 귀 기울여봐요!</div>
       </div>
       
       <div class="listen-actions">
@@ -4860,7 +4921,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         </button>
       </div>
       <div class="listen-hint-row" id="listenHintRow">
-        💡 <b>핵심어 3개</b> 이상 모으면 TAKE 1! 촬영 시작 🎬
+        💡 <b>이해 60%</b> 되면 TAKE 1! 눌러 촬영 시작하세요 🎬
       </div>
     </div>
 
@@ -5420,7 +5481,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.0</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.9</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -8752,41 +8813,25 @@ function renderListen(){
   if(uFill)uFill.style.height=S.understand+'%';
   if(uPct)uPct.textContent=S.understand+'%';
   
-  /* v10.0: 🎯 핵심어 수집 바 (한 줄로 초미니!) */
-  const collected = S.shownHints.length;
-  const total = totalChunks;
-  const countEl = document.getElementById('coreCollectCount');
-  const textEl = document.getElementById('coreCollectText');
-  const iconEl = document.getElementById('coreCollectIcon');
-  const barEl = document.getElementById('trailerGaugeWrap');
-  if(countEl) countEl.textContent = collected + '/' + total;
-  if(barEl) barEl.classList.toggle('ready', collected >= 3);
-  if(textEl && iconEl){
-    if(collected === 0){
-      iconEl.textContent = '🎯';
-      textEl.textContent = '핵심어 수집 중... REPLAY 눌러요!';
-    } else if(collected === 1){
-      iconEl.textContent = '🎯';
-      textEl.textContent = '좋아요! 한번 더 들어볼까?';
-    } else if(collected === 2){
-      iconEl.textContent = '🎧';
-      textEl.textContent = '조금만 더! 한 개만 더!';
-    } else if(collected === 3){
-      iconEl.textContent = '✨';
-      textEl.textContent = '준비 완료! TAKE 1! 가능!';
-    } else if(collected === 4){
-      iconEl.textContent = '🏆';
-      textEl.textContent = '완벽! 거의 다 모았어요!';
-    } else {
-      iconEl.textContent = '👑';
-      textEl.textContent = '마스터! 완벽히 수집!';
-    }
+  /* v9.9.9: 📊 이해도 게이지 업데이트 */
+  const gaugeFill = document.getElementById('trailerGaugeFill');
+  const gaugePct = document.getElementById('trailerGaugePct');
+  const gaugeTip = document.getElementById('trailerGaugeTip');
+  const gaugeWrap = document.getElementById('trailerGaugeWrap');
+  if(gaugeFill) gaugeFill.style.width = S.understand + '%';
+  if(gaugePct) gaugePct.textContent = S.understand + '%';
+  if(gaugeWrap) gaugeWrap.classList.toggle('ready', S.understand >= 60);
+  if(gaugeTip){
+    if(S.understand < 30) gaugeTip.textContent = '🎞️ REPLAY로 귀 기울여봐요!';
+    else if(S.understand < 60) gaugeTip.textContent = '🎧 조금만 더! 60%까지 힘내요!';
+    else if(S.understand < 90) gaugeTip.textContent = '✨ 완벽! TAKE 1! 촬영 가능해요!';
+    else gaugeTip.textContent = '🏆 마스터! 바로 TAKE 1 고고!';
   }
   
   /* 언제든 따라 읽기 가능 · 힌트만 업데이트 */
   const hint=document.getElementById('listenHintRow');
   if(hint){
-    if(collected < 3) hint.innerHTML='💡 <b>핵심어 3개</b> 이상 모으면 TAKE 1! 촬영 시작 🎬';
+    if(S.understand<60) hint.innerHTML='💡 <b>이해 60%</b> 되면 TAKE 1! 눌러 촬영 시작하세요 🎬';
     else hint.innerHTML='✅ 준비 완료! <b>🎬 TAKE 1!</b> 눌러 촬영 시작!';
   }
 
