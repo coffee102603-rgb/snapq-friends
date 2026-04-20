@@ -792,75 +792,41 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   transition: box-shadow 0.4s ease;
 }
 
-/* v9.9.9: 🎬 TRAILER 배너 - 골드 네온 영화관 */
+/* 🎬 NOW PLAYING 배너 - 고급진 느낌 */
 .step-banner{
   position: relative;
   margin: 8px 16px !important;
-  padding: 12px 20px !important;
-  font-size: 12px !important;
-  font-weight: 900 !important;
-  letter-spacing: 2px !important;
+  padding: 10px 16px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.5px !important;
   text-transform: uppercase;
   border-radius: 12px;
   background: linear-gradient(
     135deg,
-    rgba(251, 191, 36, 0.12) 0%,
-    rgba(30, 20, 40, 0.8) 50%,
-    rgba(139, 92, 246, 0.08) 100%
+    rgba(167, 139, 250, 0.12),
+    rgba(251, 191, 36, 0.08)
   ) !important;
-  border: 1px solid rgba(251, 191, 36, 0.3) !important;
-  color: #fbbf24 !important;
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  color: rgba(248, 250, 252, 0.9) !important;
   backdrop-filter: blur(10px);
   box-shadow: 
-    inset 0 1px 0 rgba(251, 191, 36, 0.2),
-    0 4px 20px rgba(0, 0, 0, 0.35),
-    0 0 30px rgba(251, 191, 36, 0.1);
-  text-shadow: 0 0 12px rgba(251, 191, 36, 0.5);
-  text-align: center;
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 4px 16px rgba(0, 0, 0, 0.2);
 }
-/* 상단 네온 라인 */
-.step-banner::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 15%;
-  right: 15%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(251,191,36,0.7), transparent);
-  box-shadow: 0 0 8px rgba(251,191,36,0.5);
-}
-/* 양쪽 장식 */
+/* 양쪽에 작은 장식 점 (영화관 핀) */
+.step-banner::before,
 .step-banner::after{
-  content: '';
+  content: '•';
   position: absolute;
   top: 50%;
-  right: 14px;
   transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fbbf24;
-  box-shadow: 0 0 10px #fbbf24;
-  animation: bannerBlink 1.8s ease-in-out infinite;
+  color: rgba(251, 191, 36, 0.6);
+  font-size: 16px;
+  font-weight: 900;
 }
-@keyframes bannerBlink{
-  0%,100%{ opacity: 1 }
-  50%{ opacity: 0.4 }
-}
-/* 왼쪽 장식 도트 */
-.step-banner .banner-dot-left{
-  position: absolute;
-  top: 50%;
-  left: 14px;
-  transform: translateY(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fbbf24;
-  box-shadow: 0 0 10px #fbbf24;
-  animation: bannerBlink 1.8s ease-in-out infinite;
-  animation-delay: 0.9s;
-}
+.step-banner::before{ left: 12px; }
+.step-banner::after{ right: 12px; }
 
 /* ═══ STEP 1: LISTEN CHALLENGE ═══ */
 #listenArea{flex-shrink:0;display:flex;flex-direction:column;padding:10px 16px 14px;gap:10px}
@@ -869,331 +835,53 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .listen-info .bricks{color:var(--gold);font-size:12px;margin-left:8px}
 
 /* ═══ 🎟️ 티켓 스타일 버튼 (쌤 아이디어 구현!) ═══ */
-/* v9.9.9: 🎬 TRAILER 상영관 버튼 세트 */
 .listen-actions{
   display: flex;
-  gap: 10px;
-  align-items: stretch;
+  gap: 12px;
+  align-items: center;
   padding: 0 4px;
 }
 
-/* 공통 버튼 베이스 — 영화 티켓 느낌! */
+/* 공통 티켓 베이스 */
 .listen-replay, .listen-next{
   position: relative;
   flex: 1;
-  padding: 12px 10px;
-  font-weight: 900;
-  letter-spacing: 0.5px;
-  text-align: center;
-  transition: all 0.25s cubic-bezier(.4,0,.2,1);
-  border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-height: 68px;
-  cursor: pointer;
-  overflow: hidden;
-}
-.listen-replay .btn-icon,
-.listen-next .btn-icon{
-  font-size: 20px;
-  line-height: 1;
-  margin-bottom: 2px;
-  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
-}
-.listen-replay .btn-label,
-.listen-next .btn-label{
+  padding: 14px 20px;
   font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  line-height: 1;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  text-align: center;
+  transition: all 0.25s ease;
+  border-radius: 12px;
+  /* 양옆 홈 효과는 ::before/::after로 */
 }
-.listen-replay .btn-sub,
-.listen-next .btn-sub{
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  opacity: 0.85;
-  margin-top: 2px;
-}
-
-/* 🎞️ REPLAY (퍼플 네온) */
 .listen-replay{
-  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 50%, #6d28d9 100%);
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
   color: #fff;
   box-shadow: 
-    0 4px 20px rgba(139, 92, 246, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.15);
-  border: 1px solid rgba(196, 181, 253, 0.3);
-}
-.listen-replay::before{
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
-}
-.listen-replay:hover{
-  transform: translateY(-2px);
-  box-shadow: 
-    0 8px 28px rgba(139, 92, 246, 0.6),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    0 4px 20px rgba(139, 92, 246, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
 }
 .listen-replay:active{
-  transform: scale(0.96) translateY(0);
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 0 2px 10px rgba(139, 92, 246, 0.4);
 }
-
-/* 🎬 TAKE 1! (골드 네온 + 펄스!) */
 .listen-next{
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 50%, #d97706 100%);
-  color: #1a0f05;
+  background: linear-gradient(135deg, #00e5a0, #00c98a);
+  color: #0a0a0f;
   box-shadow: 
-    0 4px 20px rgba(251, 191, 36, 0.5),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  animation: takeGlow 2.2s ease-in-out infinite;
-}
-@keyframes takeGlow{
-  0%,100%{ 
-    box-shadow: 
-      0 4px 20px rgba(251, 191, 36, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  }
-  50%{ 
-    box-shadow: 
-      0 4px 32px rgba(251, 191, 36, 0.85),
-      0 0 60px rgba(251, 191, 36, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.4),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.2);
-  }
-}
-.listen-next::before{
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-}
-/* 🎬 액션 씬 필름 구멍 */
-.listen-next::after{
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 8px;
-  right: 8px;
-  height: 3px;
-  background-image: radial-gradient(circle 1.5px at 10% 50%, rgba(0,0,0,0.3), transparent);
-  background-size: 10px 100%;
-  opacity: 0.4;
-  pointer-events: none;
-}
-.listen-next:hover{
-  transform: translateY(-2px);
-  animation: none;
-  box-shadow: 
-    0 8px 28px rgba(251, 191, 36, 0.9),
-    0 0 40px rgba(251, 191, 36, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    0 4px 20px rgba(0, 229, 160, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
 }
 .listen-next:active{
-  transform: scale(0.96) translateY(0);
-  animation: none;
+  transform: scale(0.96) translateY(1px);
+  box-shadow: 0 2px 10px rgba(0, 229, 160, 0.4);
 }
 .listen-next:disabled{
-  background: linear-gradient(135deg, #3a3a4e, #2a2a3e);
-  color: #64748b;
+  background: #2a2a3e;
+  color: #5a5a6e;
   box-shadow: none;
-  animation: none;
   cursor: not-allowed;
-  border-color: rgba(100,100,100,0.2);
-}
-
-/* 🎦 LOBBY 버튼 (메인 통일!) */
-.lobby-btn-big{
-  position: relative;
-  min-width: 64px;
-  padding: 8px 10px;
-  border-radius: 14px;
-  background: linear-gradient(135deg, rgba(40,20,10,0.9) 0%, rgba(30,15,25,0.95) 100%);
-  border: 1px solid rgba(251,191,36,0.35);
-  color: #fbbf24;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  min-height: 68px;
-  transition: all 0.25s ease;
-  box-shadow: 
-    0 4px 12px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(251,191,36,0.2);
-  flex-shrink: 0;
-}
-.lobby-btn-big .btn-icon{
-  font-size: 22px;
-  line-height: 1;
-  filter: drop-shadow(0 2px 6px rgba(251,191,36,0.4));
-}
-.lobby-btn-big .btn-label{
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: 1.2px;
-  color: #fbbf24;
-  line-height: 1;
-  margin-top: 2px;
-}
-.lobby-btn-big:hover{
-  transform: translateY(-2px);
-  border-color: rgba(251,191,36,0.6);
-  box-shadow: 
-    0 8px 24px rgba(251,191,36,0.3),
-    inset 0 1px 0 rgba(251,191,36,0.3);
-}
-.lobby-btn-big:active{ transform: scale(0.92) }
-
-/* 📊 이해도 게이지 (트레일러 스타일!) */
-.trailer-gauge-wrap{
-  margin: 0 4px 12px;
-  padding: 10px 12px 8px;
-  background: linear-gradient(180deg, 
-    rgba(251,191,36,0.08) 0%,
-    rgba(139,92,246,0.05) 100%);
-  border: 1px solid rgba(251,191,36,0.2);
-  border-radius: 12px;
-  box-shadow: 
-    inset 0 1px 0 rgba(251,191,36,0.15),
-    0 2px 8px rgba(0,0,0,0.2);
-}
-.trailer-gauge-header{
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 6px;
-}
-.trailer-gauge-label{
-  font-size: 10px;
-  font-weight: 900;
-  color: #fbbf24;
-  letter-spacing: 1.5px;
-  text-shadow: 0 0 8px rgba(251,191,36,0.4);
-}
-.trailer-gauge-pct{
-  font-size: 14px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: 0.5px;
-  font-family: 'Courier New', monospace;
-}
-.trailer-gauge-track{
-  position: relative;
-  height: 8px;
-  background: rgba(20,15,30,0.8);
-  border-radius: 4px;
-  overflow: visible;
-  border: 1px solid rgba(251,191,36,0.15);
-}
-.trailer-gauge-fill{
-  height: 100%;
-  border-radius: 4px;
-  background: linear-gradient(90deg, 
-    #8b5cf6 0%, 
-    #a78bfa 40%,
-    #fbbf24 80%,
-    #f59e0b 100%);
-  box-shadow: 
-    0 0 12px rgba(251,191,36,0.6),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-  transition: width 0.5s cubic-bezier(.4,0,.2,1);
-  position: relative;
-}
-.trailer-gauge-fill::after{
-  content: '';
-  position: absolute;
-  right: 0;
-  top: -2px;
-  bottom: -2px;
-  width: 2px;
-  background: #fff;
-  box-shadow: 0 0 8px rgba(255,255,255,0.8);
-  opacity: 0.8;
-}
-.trailer-gauge-marker{
-  position: absolute;
-  top: -4px;
-  bottom: -4px;
-  width: 2px;
-  background: rgba(251,191,36,0.5);
-  pointer-events: none;
-}
-.trailer-gauge-marker::before{
-  content: '';
-  position: absolute;
-  top: -4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fbbf24;
-  box-shadow: 0 0 8px #fbbf24;
-}
-.trailer-gauge-marker-label{
-  position: absolute;
-  top: -22px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 9px;
-  font-weight: 900;
-  color: #fbbf24;
-  letter-spacing: 0.5px;
-  text-shadow: 0 0 6px rgba(251,191,36,0.6);
-  white-space: nowrap;
-}
-.trailer-gauge-tip{
-  font-size: 10px;
-  font-weight: 700;
-  color: #cbd5e1;
-  letter-spacing: 0.3px;
-  margin-top: 8px;
-  text-align: center;
-  font-style: italic;
-}
-/* 게이지 60%+ 달성 시 */
-.trailer-gauge-wrap.ready .trailer-gauge-tip{
-  color: #fbbf24;
-  font-weight: 900;
-  animation: tipPulse 1.5s ease-in-out infinite;
-}
-@keyframes tipPulse{
-  0%,100%{ opacity: 1; transform: scale(1) }
-  50%{ opacity: 0.7; transform: scale(1.05) }
-}
-
-/* listen-hint-row 스타일 */
-.listen-hint-row{
-  font-size: 11px;
-  color: #cbd5e1;
-  text-align: center;
-  margin-top: 10px;
-  padding: 6px 10px;
-  background: rgba(251,191,36,0.06);
-  border-radius: 8px;
-  border: 1px dashed rgba(251,191,36,0.2);
-}
-.listen-hint-row b{
-  color: #fbbf24;
-  font-weight: 900;
-}
-
-/* 🎞️ 필름 테두리 보너스 (플레이어 영역) */
-#playerScreen #ytContainer{
-  position: relative;
 }
 
 /* 🎟️ 티켓 양옆 홈 효과 */
@@ -4885,44 +4573,16 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     <div id="coverContainer"></div>
     <div class="step-banner listen" id="stepBanner">👂 리스닝 챌린지 — 귀가 트일 때까지!</div>
 
-    <!-- STEP 1: TRAILER (v9.9.9: 🎬 예고편 상영관 컨셉!) -->
+    <!-- STEP 1: LISTEN -->
     <div id="listenArea">
+      <!-- v8.6: listen-info 제거 (위쪽 step-indicator 옆으로 이동) -->
       <div class="listen-info" style="display:none"><span class="n" id="listenCount">1</span><span class="bricks" id="brickCount"></span></div>
-      
-      <!-- v9.9.9: 📊 이해도 게이지 (60%까지 REPLAY 권장) -->
-      <div class="trailer-gauge-wrap" id="trailerGaugeWrap">
-        <div class="trailer-gauge-header">
-          <span class="trailer-gauge-label">📊 이해도</span>
-          <span class="trailer-gauge-pct" id="trailerGaugePct">0%</span>
-        </div>
-        <div class="trailer-gauge-track">
-          <div class="trailer-gauge-fill" id="trailerGaugeFill" style="width:0%"></div>
-          <div class="trailer-gauge-marker" style="left:60%" title="이해 60% 지점">
-            <span class="trailer-gauge-marker-label">60%</span>
-          </div>
-        </div>
-        <div class="trailer-gauge-tip" id="trailerGaugeTip">🎞️ REPLAY로 귀 기울여봐요!</div>
-      </div>
-      
       <div class="listen-actions">
-        <button class="listen-replay" id="listenReplay">
-          <span class="btn-icon">🎞️</span>
-          <span class="btn-label">REPLAY</span>
-          <span class="btn-sub">한번 더!</span>
-        </button>
-        <button class="listen-next" id="listenNext">
-          <span class="btn-icon">🎬</span>
-          <span class="btn-label">TAKE 1!</span>
-          <span class="btn-sub">촬영 시작!</span>
-        </button>
-        <button class="lobby-btn-big" title="매표소로">
-          <span class="btn-icon">🎦</span>
-          <span class="btn-label">LOBBY</span>
-        </button>
+        <button class="listen-replay" id="listenReplay">🔁 다시 듣기</button>
+        <button class="listen-next" id="listenNext">따라 읽기 →</button>
+        <button class="home-btn-inline" title="홈으로">🏠</button>
       </div>
-      <div class="listen-hint-row" id="listenHintRow">
-        💡 <b>이해 60%</b> 되면 TAKE 1! 눌러 촬영 시작하세요 🎬
-      </div>
+      <div class="listen-hint-row" id="listenHintRow" style="font-size:11px;color:var(--tx2);text-align:center;margin-top:4px;opacity:.75">💡 자신 있으면 바로 "따라 읽기" 눌러도 돼!</div>
     </div>
 
     <!-- STEP 2: 말해봐 (Shadow) -->
@@ -5481,7 +5141,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.9</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.8</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -8678,7 +8338,7 @@ function goStep(step){
     /* STEP 1: LISTEN */
     bn.className='step-banner listen';
     /* v8.7: 🎬 영화관 느낌 배너 */
-    bn.textContent='🎬 TRAILER · 이해해봐요!';
+    bn.textContent='🎬 NOW PLAYING · SCENE 1';
     yt.classList.remove('pip');yt.style.display='';
     tower.classList.remove('show');
     document.getElementById('listenArea').style.display='flex';
@@ -8812,27 +8472,11 @@ function renderListen(){
   const uPct=document.getElementById('understandPct');
   if(uFill)uFill.style.height=S.understand+'%';
   if(uPct)uPct.textContent=S.understand+'%';
-  
-  /* v9.9.9: 📊 이해도 게이지 업데이트 */
-  const gaugeFill = document.getElementById('trailerGaugeFill');
-  const gaugePct = document.getElementById('trailerGaugePct');
-  const gaugeTip = document.getElementById('trailerGaugeTip');
-  const gaugeWrap = document.getElementById('trailerGaugeWrap');
-  if(gaugeFill) gaugeFill.style.width = S.understand + '%';
-  if(gaugePct) gaugePct.textContent = S.understand + '%';
-  if(gaugeWrap) gaugeWrap.classList.toggle('ready', S.understand >= 60);
-  if(gaugeTip){
-    if(S.understand < 30) gaugeTip.textContent = '🎞️ REPLAY로 귀 기울여봐요!';
-    else if(S.understand < 60) gaugeTip.textContent = '🎧 조금만 더! 60%까지 힘내요!';
-    else if(S.understand < 90) gaugeTip.textContent = '✨ 완벽! TAKE 1! 촬영 가능해요!';
-    else gaugeTip.textContent = '🏆 마스터! 바로 TAKE 1 고고!';
-  }
-  
   /* 언제든 따라 읽기 가능 · 힌트만 업데이트 */
   const hint=document.getElementById('listenHintRow');
   if(hint){
-    if(S.understand<60) hint.innerHTML='💡 <b>이해 60%</b> 되면 TAKE 1! 눌러 촬영 시작하세요 🎬';
-    else hint.innerHTML='✅ 준비 완료! <b>🎬 TAKE 1!</b> 눌러 촬영 시작!';
+    if(S.understand<60) hint.textContent='💡 자신 있으면 바로 "따라 읽기" 눌러도 돼!';
+    else hint.textContent='✅ 준비 완료! "따라 읽기"로 진행하자!';
   }
 
   const panel=document.getElementById('rightPanel');
@@ -10975,10 +10619,6 @@ document.querySelectorAll('.home-btn-inline').forEach(b=>{
     if(b.id === 'boothLobbyBtn') return;
     goHome();
   });
-});
-/* v9.9.9: 🎦 LOBBY 버튼 → 홈으로 */
-document.querySelectorAll('.lobby-btn-big').forEach(b=>{
-  b.addEventListener('click', (e)=>{ goHome(); });
 });
 /* v7.5: shadowHome cinema-btn 클릭 */
 (function(){var sh=document.getElementById('shadowHome');if(sh)sh.addEventListener('click',goHome);})();
