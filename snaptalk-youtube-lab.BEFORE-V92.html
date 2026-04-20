@@ -462,7 +462,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .diff-picker.exiting{opacity:0;transform:scale(.9)}
 .diff-picker-title{text-align:center;font-size:14px;font-weight:800;color:#fff;margin-bottom:2px;letter-spacing:.3px}
 .diff-picker-sub{text-align:center;font-size:11px;color:var(--tx2);margin-bottom:10px}
-.booth-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 2px}
+.booth-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:0 2px}
 .booth{aspect-ratio:3/4;border-radius:14px;border:2px solid rgba(255,255,255,.08);padding:8px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;position:relative;cursor:pointer;transition:all .5s cubic-bezier(.4,0,.2,1);background:linear-gradient(180deg,rgba(255,255,255,.04) 0%,#15151f 80%);overflow:hidden}
 .booth:active{transform:scale(.96)}
 .booth-door{width:28px;height:38px;border-radius:50% 50% 0 0;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);margin-top:6px;position:relative;transition:all .3s}
@@ -1221,80 +1221,35 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 /* ═══════════════════════════════════════════════════
  * v9.1 · 🏢 LOBBY HUB (쌤 비전 구현!)
  * "영화 보고 로비에서 놀기" 메타포
- * v9.2 · 🎪 진짜 영화관 로비 분위기 강화!
  * ═══════════════════════════════════════════════════ */
 .lobby-hub{
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 16px 16px 20px;
-  gap: 14px;
-  background: 
-    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251,191,36,0.15), transparent 70%),
-    radial-gradient(ellipse 60% 50% at 50% 100%, rgba(139,92,246,0.1), transparent 70%),
-    linear-gradient(180deg, #0f0a1a 0%, #14102a 50%, #0a0a1f 100%);
+  padding: 20px 16px;
+  gap: 16px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(251, 191, 36, 0.08) 0%,
+    rgba(167, 139, 250, 0.05) 40%,
+    transparent 80%
+  );
   animation: lobbyFadeIn .6s ease-out;
   overflow-y: auto;
-  position: relative;
 }
-
-/* v9.2: 영화관 로비 배경 장식 */
-.lobby-hub::before{
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: 
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 40px,
-      rgba(251,191,36,0.02) 40px,
-      rgba(251,191,36,0.02) 41px
-    );
-  pointer-events: none;
-  opacity: 0.5;
-}
-
 @keyframes lobbyFadeIn{
   from{ opacity: 0; transform: translateY(15px) }
   to{ opacity: 1; transform: translateY(0) }
 }
 
-/* 🎊 축하 헤더 + 네온 CINEMA 사인 */
+/* 🎊 축하 헤더 */
 .lobby-celebration{
   text-align: center;
-  padding: 20px 12px 12px;
-  position: relative;
-  z-index: 1;
+  padding: 16px 12px 8px;
 }
-
-/* v9.2: CINEMA 네온 사인 */
-.lobby-cinema-sign{
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 8px;
-  color: #fbbf24;
-  text-shadow: 
-    0 0 8px rgba(251,191,36,0.8),
-    0 0 16px rgba(251,191,36,0.6),
-    0 0 24px rgba(251,191,36,0.4);
-  margin-bottom: 10px;
-  animation: neonFlicker 4s ease-in-out infinite;
-}
-@keyframes neonFlicker{
-  0%,85%,100%{ opacity: 1 }
-  87%{ opacity: 0.7 }
-  90%{ opacity: 1 }
-  92%{ opacity: 0.5 }
-  94%{ opacity: 1 }
-}
-
 .lobby-emojis{
-  font-size: 36px;
-  margin-bottom: 10px;
+  font-size: 40px;
+  margin-bottom: 12px;
   animation: celebBounce .8s cubic-bezier(.3,1.5,.5,1);
 }
 @keyframes celebBounce{
@@ -1303,15 +1258,14 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   100%{ transform: scale(1) rotate(0); opacity: 1 }
 }
 .lobby-title{
-  font-size: 20px;
+  font-size: 22px;
   font-weight: 900;
   color: #fff;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   letter-spacing: -0.2px;
-  text-shadow: 0 2px 10px rgba(251,191,36,0.3);
 }
 .lobby-subtitle{
-  font-size: 13px;
+  font-size: 14px;
   color: #a1a1aa;
   font-weight: 600;
 }
@@ -1322,8 +1276,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   grid-template-columns: 1fr 1fr;
   gap: 12px;
   padding: 4px 0;
-  position: relative;
-  z-index: 1;
 }
 
 /* 영화 포스터 스타일 카드 */
@@ -1437,38 +1389,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   background: rgba(255,255,255,.03);
 }
 
-/* v9.2: 🎞️ 하단 필름 스트립 */
-.lobby-film-strip{
-  display: flex;
-  justify-content: center;
-  gap: 3px;
-  padding: 6px 0;
-  opacity: 0.35;
-  position: relative;
-  z-index: 1;
-}
-.lobby-film-strip::before,
-.lobby-film-strip::after{
-  content: '';
-  width: 18px;
-  height: 12px;
-  background: #1a1a2e;
-  border: 1px solid rgba(251,191,36,0.2);
-  border-radius: 2px;
-}
-.lobby-film-strip-middle{
-  flex: 1;
-  max-width: 200px;
-  height: 12px;
-  background-image: repeating-linear-gradient(
-    90deg,
-    transparent,
-    transparent 8px,
-    rgba(251,191,36,0.15) 8px,
-    rgba(251,191,36,0.15) 12px
-  );
-}
-
 /* 하단 상태 바 */
 .lobby-status{
   display: flex;
@@ -1478,8 +1398,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   border: 1px solid rgba(167,139,250,.15);
   border-radius: 14px;
   margin-top: auto;
-  position: relative;
-  z-index: 1;
 }
 .lobby-status-item{
   flex: 1;
@@ -1602,45 +1520,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   transition: all .2s ease;
 }
 .quiz-close:active{ transform: scale(.9); background: rgba(255,255,255,.15) }
-
-/* v9.2: 🚪 네비게이션 버튼 (로비/홈) */
-.quiz-nav{
-  display: flex;
-  gap: 6px;
-}
-.quiz-nav-btn{
-  background: rgba(255,255,255,.08);
-  border: 1px solid rgba(255,255,255,.15);
-  color: #e2e8f0;
-  width: 34px;
-  height: 34px;
-  border-radius: 10px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: all .2s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.quiz-nav-btn:hover{
-  background: rgba(167,139,250,.15);
-  border-color: rgba(167,139,250,.3);
-}
-.quiz-nav-btn:active{ transform: scale(.9) }
-
-/* v9.2: 🎭 판매원 캐릭터 */
-.quiz-seller{
-  text-align: center;
-  font-size: 70px;
-  line-height: 1;
-  margin: 8px 0;
-  filter: drop-shadow(0 6px 16px rgba(251,191,36,.25));
-  animation: sellerBob 2.5s ease-in-out infinite;
-}
-@keyframes sellerBob{
-  0%,100%{ transform: translateY(0) rotate(-2deg) }
-  50%{ transform: translateY(-6px) rotate(2deg) }
-}
 
 .quiz-question{
   text-align: center;
@@ -2915,8 +2794,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     <div id="lobbyHub" style="display:none" class="lobby-hub">
       <!-- 🎊 영화 완주 축하 -->
       <div class="lobby-celebration">
-        <!-- v9.2: CINEMA 네온 사인 -->
-        <div class="lobby-cinema-sign">★ CINEMA ★ LOBBY ★</div>
         <div class="lobby-emojis">🎊 🎬 🎊</div>
         <div class="lobby-title">영화 재밌었죠?</div>
         <div class="lobby-subtitle">로비에서 더 놀아볼까요?</div>
@@ -2955,11 +2832,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="lobby-card-desc">새 영상</div>
           <div class="lobby-card-action">▶ 홈으로</div>
         </button>
-      </div>
-      
-      <!-- v9.2: 🎞️ 필름 스트립 장식 -->
-      <div class="lobby-film-strip">
-        <div class="lobby-film-strip-middle"></div>
       </div>
       
       <!-- 하단 상태 (내 노트 / 내 탑) -->
@@ -3004,15 +2876,22 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
-          <!-- v9.2: QUIZ 부스 제거됨 (로비 허브 > 간식 코너에서 접근) -->
+          <div class="booth hard" data-diff="quiz">
+            <span class="booth-led"></span>
+            <span class="booth-mic">🎰</span>
+            <div class="booth-door"></div>
+            <div class="booth-info">
+              <div class="booth-name">🎯 QUIZ</div>
+              <div class="booth-heat">랜덤 간식 게임!</div>
+            </div>
+            <div class="booth-footer"><div class="booth-footer-fill"></div></div>
+          </div>
         </div>
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
           <span id="boothLabel">🟢 SCRIPT · 영어+한글+발음</span>
         </div>
-        <!-- v9.2: 노래방 입장 + 로비 + 홈 3개 버튼 -->
-        <div style="display:flex;gap:8px;align-items:center;margin-top:6px">
-          <button class="listen-next" id="dubStartBtn" style="flex:1">▶ 입장</button>
-          <button class="home-btn-inline" id="boothLobbyBtn" title="로비로" style="background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.3);color:#fbbf24">🏢</button>
+        <div style="display:flex;gap:10px;align-items:center;margin-top:6px">
+          <button class="listen-next" id="dubStartBtn" style="flex:1">▶ 부스 입장</button>
           <button class="home-btn-inline" title="홈으로">🏠</button>
         </div>
       </div>
@@ -3049,13 +2928,8 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="quiz-header">
             <span class="quiz-mode-label">🎪 간식 코너</span>
             <span class="quiz-progress"><span id="quizCur">1</span>/<span id="quizTotal">5</span></span>
-            <div class="quiz-nav">
-              <button class="quiz-nav-btn" data-nav="lobby" title="로비로">🏢</button>
-              <button class="quiz-nav-btn" data-nav="home" title="홈으로">🏠</button>
-            </div>
+            <button class="quiz-close" id="quizClose1" title="나가기">✕</button>
           </div>
-          <!-- v9.2: 판매원 캐릭터 -->
-          <div class="quiz-seller" id="quizSellerSnack">🐻</div>
           <div class="quiz-question">
             <div class="quiz-ko" id="quizSnackKo">묵다</div>
             <div class="quiz-prompt">💬 판매원: "영어로 주세요!" 🎤</div>
@@ -3068,13 +2942,8 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="quiz-header">
             <span class="quiz-mode-label">🌭 핫도그 조립</span>
             <span class="quiz-progress"><span id="quizCur2">1</span>/<span id="quizTotal2">5</span></span>
-            <div class="quiz-nav">
-              <button class="quiz-nav-btn" data-nav="lobby" title="로비로">🏢</button>
-              <button class="quiz-nav-btn" data-nav="home" title="홈으로">🏠</button>
-            </div>
+            <button class="quiz-close" id="quizClose2" title="나가기">✕</button>
           </div>
-          <!-- v9.2: 판매원 캐릭터 -->
-          <div class="quiz-seller" id="quizSellerHotDog">🦊</div>
           <div class="quiz-question">
             <div class="quiz-ko" id="quizHotDogKo">생계를 위해</div>
             <div class="quiz-prompt">🌭 핫도그 재료를 맞춰봐!</div>
@@ -3088,10 +2957,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="quiz-header">
             <span class="quiz-mode-label">🍿 팝콘 샤워</span>
             <span class="quiz-lives" id="quizLives">❤️❤️❤️</span>
-            <div class="quiz-nav">
-              <button class="quiz-nav-btn" data-nav="lobby" title="로비로">🏢</button>
-              <button class="quiz-nav-btn" data-nav="home" title="홈으로">🏠</button>
-            </div>
+            <button class="quiz-close" id="quizClose3" title="나가기">✕</button>
           </div>
           <div class="quiz-popcorn-stage" id="quizPopcornStage">
             <!-- 팝콘들이 여기로 떨어짐 -->
@@ -3109,7 +2975,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="quiz-result-stats" id="quizResultStats"></div>
           <div class="quiz-result-actions">
             <button class="quiz-btn-retry" id="quizRetryBtn">🔁 다시 도전</button>
-            <button class="quiz-btn-home" id="quizLobbyBtn" style="background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.3);color:#fbbf24">🏢 로비로</button>
             <button class="quiz-btn-home" id="quizHomeBtn">🏠 홈으로</button>
           </div>
         </div>
@@ -3286,7 +3151,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.2</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.1</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4506,10 +4371,6 @@ function startQuizGame(){
   const yt = document.getElementById('ytContainer');
   if(yt) yt.style.display = 'none';
   
-  /* v9.2: 상단 player-top 숨김 (속도 조절 불필요) */
-  const playerTop = document.querySelector('.player-top');
-  if(playerTop) playerTop.style.display = 'none';
-  
   /* 배너 업데이트 */
   const bn = document.getElementById('stepBanner');
   if(bn){
@@ -4597,7 +4458,7 @@ function showEmptyQuizMessage(){
       중요한 표현을 📒 저장해보세요!
     </div>
     <button class="quiz-btn-home" style="margin-top:20px;padding:12px 24px" 
-            onclick="exitQuizGame('lobby')">🏢 로비로</button>
+            onclick="exitQuizGame()">🏠 돌아가기</button>
   `;
 }
 
@@ -4615,25 +4476,11 @@ function launchQuizMode(mode){
   else if(mode === 'popcorn') launchPopcorn(item);
 }
 
-/* v9.2: 🎭 귀여운 동물 판매원 캐릭터 풀 */
-const QUIZ_SELLERS = [
-  '🐻','🐰','🦊','🐼','🐨','🐹','🐱','🦝',
-  '🐸','🐵','🐯','🦁','🐮','🐷','🐔','🦄',
-  '🐶','🦔','🐺','🐲','🦉'
-];
-function randomSeller(){
-  return QUIZ_SELLERS[Math.floor(Math.random() * QUIZ_SELLERS.length)];
-}
-
 /* 🎪 간식 코너 모드 */
 function launchSnackCounter(item){
   const snack = document.getElementById('quizSnackCounter');
   document.querySelectorAll('.quiz-mode').forEach(m=>m.style.display='none');
   snack.style.display='flex';
-  
-  /* v9.2: 랜덤 판매원 캐릭터 */
-  const seller = document.getElementById('quizSellerSnack');
-  if(seller) seller.textContent = randomSeller();
   
   document.getElementById('quizCur').textContent = QUIZ_STATE.currentIdx+1;
   document.getElementById('quizTotal').textContent = QUIZ_STATE.items.length;
@@ -4714,10 +4561,6 @@ function launchHotDog(item){
   const hd = document.getElementById('quizHotDog');
   document.querySelectorAll('.quiz-mode').forEach(m=>m.style.display='none');
   hd.style.display='flex';
-  
-  /* v9.2: 랜덤 판매원 캐릭터 */
-  const seller = document.getElementById('quizSellerHotDog');
-  if(seller) seller.textContent = randomSeller();
   
   document.getElementById('quizCur2').textContent = QUIZ_STATE.currentIdx+1;
   document.getElementById('quizTotal2').textContent = QUIZ_STATE.items.length;
@@ -5025,45 +4868,24 @@ function finishQuiz(){
 }
 
 /* QUIZ 나가기 */
-function exitQuizGame(destination){
+function exitQuizGame(){
   if(QUIZ_STATE.popcornInterval){ clearInterval(QUIZ_STATE.popcornInterval); QUIZ_STATE.popcornInterval=null; }
   const quizMain = document.getElementById('quizMain');
   if(quizMain) quizMain.style.display = 'none';
-  
-  /* v9.2: player-top 복원 */
-  const playerTop = document.querySelector('.player-top');
-  if(playerTop) playerTop.style.display = 'flex';
-  
-  if(destination === 'lobby'){
-    /* 🏢 로비 허브로 돌아가기 */
-    showLobbyHub();
-  } else {
-    /* 🏠 홈으로 */
-    showScreen('feed');
-  }
+  /* 부스 선택 화면으로 돌아가기 */
+  showScreen('feedScreen');
 }
-window.exitQuizGame = exitQuizGame;
+window.exitQuizGame = exitQuizGame; /* onclick 용 */
 
-/* v9.2: 모든 QUIZ 모드의 네비게이션 버튼 이벤트 */
-document.addEventListener('click', e => {
-  const navBtn = e.target.closest('.quiz-nav-btn');
-  if(navBtn){
-    const dest = navBtn.dataset.nav;
-    exitQuizGame(dest === 'home' ? 'home' : 'lobby');
-  }
-});
-
-/* 이벤트 바인딩 (기존 close 버튼도 유지, 결과 화면 버튼) */
-['quizClose1','quizClose2','quizClose3'].forEach(id=>{
+/* 이벤트 바인딩 */
+['quizClose1','quizClose2','quizClose3','quizHomeBtn'].forEach(id=>{
   document.addEventListener('click', e => {
-    if(e.target && e.target.id === id) exitQuizGame('lobby');
+    if(e.target && e.target.id === id) exitQuizGame();
   });
 });
-/* 결과 화면 버튼들 */
 document.addEventListener('click', e => {
-  if(e.target && e.target.id === 'quizHomeBtn') exitQuizGame('home');
-  if(e.target && e.target.id === 'quizLobbyBtn') exitQuizGame('lobby');
   if(e.target && e.target.id === 'quizRetryBtn'){
+    /* 다시 QUIZ 시작 */
     startQuizGame();
   }
 });
@@ -6553,13 +6375,6 @@ document.querySelectorAll('.booth').forEach(booth=>{
     S.lastBooth=booth.dataset.diff; /* v7.0+: 다음 시도에서 자동 재선택 */
     document.getElementById('boothLabel').textContent=BOOTH_LABELS[S.dubLevel];
   });
-});
-
-/* v9.2: 부스 화면에서 로비로 */
-document.addEventListener('click', e=>{
-  if(e.target && (e.target.id==='boothLobbyBtn' || e.target.closest('#boothLobbyBtn'))){
-    showLobbyHub();
-  }
 });
 
 /* Start button: booth transition animation → studio mode */
