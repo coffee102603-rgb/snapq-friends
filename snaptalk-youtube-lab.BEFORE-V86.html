@@ -131,32 +131,23 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #ytContainer.pip{position:absolute;bottom:80px;left:12px;width:100px;height:140px;aspect-ratio:auto;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.6);border:2px solid var(--accent);z-index:40}
 #ytContainer.pip iframe{height:150%;top:-15%}
 
-/* ═══ v8.6 · 🎬 영화관 스케일 — 영상 하단 블러 완전 제거! ═══ */
-/* 쌤 왈: "영화관 느낌으로 꽉 찬 영상 보여주자!"
-   → 원본 유튜브 자막이 보여도 OK (더 선명함 > 가려짐) */
+/* ═══ v6.13.1 · 📺 영상 하단 자막 가리개 (박힌 자막 대비) ═══ */
+/* YouTube 영상 자체에 자막이 하드코딩된 경우 하단 블러 처리 */
 #ytContainer::after{
-  display:none;
+  content:'';
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:22%;
+  background:linear-gradient(to top,rgba(0,0,0,.9) 30%,rgba(0,0,0,.5) 80%,transparent 100%);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  pointer-events:none;
+  z-index:2;
 }
-/* PIP/축소 상태에선 가리개 숨김 (기존 유지) */
+/* PIP/축소 상태에선 가리개 숨김 */
 #ytContainer.pip::after,
 #ytContainer.gentle-shrink::after,
 #ytContainer.shrink-done::after{display:none}
-
-/* v8.6: 가리개 + 이해벽돌 숨김 (쌤 결정: 큰 역할 못 함) */
-.paint-header-group,
-.cover-toggle,
-#paintTools,
-#paintCanvas,
-#coverContainer,
-#rightPanel .gauge-section,
-.understand-label-side,
-.understand-gauge{
-  display:none !important;
-}
-/* #rightPanel 전체 숨김 (hintStack만 쓰이면 살림) */
-#rightPanel{
-  display:none !important;
-}
 
 /* ═══ v6.15 · 📉 단순 축소 모드 (회오리 제거!) ═══ */
 /* 영상이 중앙에서 그대로 작아지기만 — 회전/이동 없음 → 버그 ZERO */
@@ -1556,12 +1547,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <div class="screen" id="playerScreen">
     <div class="player-top">
       <div class="speed-ctrl"><button class="speed-btn" data-speed="0.8">0.8x</button><button class="speed-btn active" data-speed="1">1.0x</button><button class="speed-btn" data-speed="1.2">1.2x</button></div>
-      <!-- v8.6: 진행도를 상단으로! (영화관 스케일) -->
-      <div class="step-indicator" id="stepIndicator">
-        <div class="listen-count-top" id="listenCountTop" style="display:none;font-size:13px;font-weight:800;color:var(--accent);padding:4px 10px;background:rgba(0,229,160,.12);border-radius:14px;letter-spacing:.2px">🔁 <span id="listenCountTopNum">1</span>번째</div>
-        <div class="step-dot current" data-s="0"></div><div class="step-dot" data-s="1"></div><div class="step-dot" data-s="2"></div><div class="step-dot" data-s="3"></div>
-      </div>
-      <!-- v8.6: paint-header-group 제거됨 (CSS로 숨김) -->
+      <div class="step-indicator" id="stepIndicator"><div class="step-dot current" data-s="0"></div><div class="step-dot" data-s="1"></div><div class="step-dot" data-s="2"></div><div class="step-dot" data-s="3"></div></div>
       <div class="paint-header-group">
         <button class="cover-toggle" id="paintToggle">🎨 가리개</button>
         <div id="paintTools">
@@ -1601,8 +1587,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
 
     <!-- STEP 1: LISTEN -->
     <div id="listenArea">
-      <!-- v8.6: listen-info 제거 (위쪽 step-indicator 옆으로 이동) -->
-      <div class="listen-info" style="display:none"><span class="n" id="listenCount">1</span><span class="bricks" id="brickCount"></span></div>
+      <div class="listen-info">🔁 <span class="n" id="listenCount">1</span>번째 <span class="bricks" id="brickCount">· 벽돌 0개</span></div>
       <div class="listen-actions">
         <button class="listen-replay" id="listenReplay">🔁 다시 듣기</button>
         <button class="listen-next" id="listenNext">따라 읽기 →</button>
@@ -1878,7 +1863,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.6</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v8.5</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -3126,9 +3111,6 @@ function goStep(step){
   if(playerTop){
     playerTop.style.display=(step===3)?'none':'flex';
   }
-  /* v8.6: listen-count-top은 리스닝 화면(step 0)에서만 표시 */
-  const lct=document.getElementById('listenCountTop');
-  if(lct) lct.style.display=(step===0)?'inline-flex':'none';
   /* v6.16: 결과 화면 외엔 step-banner 복원 (step 3에서 숨기기 때문) */
   if(step!==3){
     bn.style.display='';
@@ -3234,18 +3216,10 @@ function updateDots(c){document.querySelectorAll('.step-dot').forEach(d=>{const 
  * ═══════════════════════════════════════ */
 function renderListen(){
   document.getElementById('listenCount').textContent=S.listenCount;
-  /* v8.6: 상단 진행 표시 동기화 */
-  const topNum=document.getElementById('listenCountTopNum');
-  const topBox=document.getElementById('listenCountTop');
-  if(topNum)topNum.textContent=S.listenCount;
-  if(topBox)topBox.style.display='inline-flex';
   const totalChunks=S.short.sentences.filter(s=>s.core).length;
   document.getElementById('brickCount').textContent='· 핵심어 '+S.shownHints.length+'/'+totalChunks;
-  /* v8.6: understandFill/Pct는 이해벽돌 숨겨졌으므로 존재할 때만 업데이트 */
-  const uFill=document.getElementById('understandFill');
-  const uPct=document.getElementById('understandPct');
-  if(uFill)uFill.style.height=S.understand+'%';
-  if(uPct)uPct.textContent=S.understand+'%';
+  document.getElementById('understandFill').style.height=S.understand+'%';
+  document.getElementById('understandPct').textContent=S.understand+'%';
   /* 언제든 따라 읽기 가능 · 힌트만 업데이트 */
   const hint=document.getElementById('listenHintRow');
   if(hint){
