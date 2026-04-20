@@ -1014,154 +1014,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 
 /* 🎦 LOBBY 버튼 (메인 통일!) */
-/* v10.4: 🎚️ 줄별 × 버튼 + 하단 토글 시스템! */
-
-/* 각 줄 컨테이너 */
-.shadow-line{
-  position: relative;
-  margin-bottom: 4px;
-}
-.shadow-line:last-child{ margin-bottom: 0 }
-
-/* 숨김 상태 */
-.shadow-line.line-hidden{
-  display: none;
-}
-
-/* × 버튼 (호버/탭시 페이드인!) */
-.shadow-line-x{
-  position: absolute;
-  top: 50%;
-  right: -2px;
-  transform: translateY(-50%);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.5);
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 0;
-  line-height: 1;
-  opacity: 0;
-  transition: all 0.2s ease;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.shadow-line:hover .shadow-line-x,
-.shadow-line:active .shadow-line-x,
-.shadow-line-x:focus{
-  opacity: 0.6;
-}
-.shadow-line-x:hover{
-  opacity: 1 !important;
-  background: rgba(239,68,68,0.15);
-  border-color: rgba(239,68,68,0.4);
-  color: #fca5a5;
-  transform: translateY(-50%) scale(1.1);
-}
-.shadow-line-x:active{
-  transform: translateY(-50%) scale(0.9);
-}
-
-/* 모바일: 탭하면 페이드인 */
-@media (hover: none) {
-  .shadow-line-x{
-    opacity: 0.3;
-  }
-  .shadow-line:active .shadow-line-x{
-    opacity: 1;
-  }
-}
-
-/* 🎚️ 하단 미니 토글 바 */
-.shadow-line-toggles{
-  display: flex;
-  gap: 6px;
-  justify-content: center;
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed rgba(255,255,255,0.08);
-}
-.shadow-toggle-btn{
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  padding: 5px 10px;
-  background: rgba(255,255,255,0.04);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 14px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 11px;
-  color: rgba(255,255,255,0.4);
-  opacity: 0.6;
-}
-.shadow-toggle-btn .stb-icon{
-  font-size: 12px;
-  line-height: 1;
-}
-.shadow-toggle-btn .stb-label{
-  font-weight: 700;
-  letter-spacing: 0.3px;
-}
-.shadow-toggle-btn:hover{
-  background: rgba(255,255,255,0.08);
-  border-color: rgba(255,255,255,0.2);
-  opacity: 0.9;
-}
-.shadow-toggle-btn.active{
-  background: linear-gradient(135deg, rgba(0,229,160,0.15), rgba(0,229,160,0.08));
-  border-color: rgba(0,229,160,0.4);
-  color: #00e5a0;
-  opacity: 1;
-  box-shadow: 0 2px 8px rgba(0,229,160,0.15);
-}
-
-/* v10.4: 🔴 배너 안 REC 인라인 */
-.step-banner .banner-main{
-  display: inline-block;
-}
-.step-banner .banner-rec{
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  margin-left: 12px;
-  padding: 3px 10px;
-  background: rgba(239,68,68,0.15);
-  border: 1px solid rgba(239,68,68,0.35);
-  border-radius: 12px;
-  font-size: 10px;
-  font-weight: 900;
-  letter-spacing: 1px;
-  color: #fca5a5;
-  vertical-align: middle;
-  font-family: 'Courier New', monospace;
-}
-.step-banner .rec-dot-mini{
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #ef4444;
-  box-shadow: 0 0 6px #ef4444;
-  animation: recBlink 1s ease-in-out infinite;
-  display: inline-block;
-}
-.step-banner .rec-label-mini{
-  color: #fca5a5;
-  font-weight: 900;
-  letter-spacing: 1.2px;
-}
-.step-banner .rec-timer-inline{
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-}
-
 /* v10.3: 🔔 자동 수집 토스트 (퀴즈/퍼즐에서 틀리면 표시) */
 .auto-collect-toast{
   position: fixed;
@@ -5260,41 +5112,16 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       
       <!-- v10.3: 🎬 영화 티켓 카드 (인라인 힌트 + 자동 수집!) -->
       <div class="ticket-card" id="ticketCard">
-        <!-- 티켓 본문: 영어 + 인라인 발음 + 한글 + 개별 × 버튼 -->
+        <!-- 티켓 본문: 영어 + 인라인 발음 + 한글 -->
         <div class="shadow-en-box">
-          <div class="shadow-line shadow-line-en" id="shadowLineEn">
-            <div class="shadow-en" id="shadowEn"></div>
-            <button class="shadow-line-x" data-target="en" title="영어 숨기기">×</button>
-          </div>
-          <!-- v10.3: 💡 인라인 발음 힌트 -->
-          <div class="shadow-line shadow-line-phonetic" id="shadowLinePhonetic">
-            <div class="shadow-phonetic-inline" id="shadowPhoneticText"></div>
-            <button class="shadow-line-x" data-target="phonetic" title="발음 숨기기">×</button>
-          </div>
+          <div class="shadow-en" id="shadowEn"></div>
+          <!-- v10.3: 💡 인라인 발음 힌트 (영어 바로 아래 작게!) -->
+          <div class="shadow-phonetic-inline" id="shadowPhoneticText"></div>
           <div class="ticket-divider"></div>
-          <div class="shadow-line shadow-line-ko" id="shadowLineKo">
-            <div class="shadow-ko" id="shadowKo"></div>
-            <button class="shadow-line-x" data-target="ko" title="한글 숨기기">×</button>
-          </div>
+          <div class="shadow-ko" id="shadowKo"></div>
         </div>
-        
-        <!-- v10.4: 🎚️ 하단 미니 토글 (꺼진 줄 다시 켜기!) -->
-        <div class="shadow-line-toggles" id="shadowLineToggles">
-          <button class="shadow-toggle-btn active" data-line="en">
-            <span class="stb-icon">🇺🇸</span>
-            <span class="stb-label">영어</span>
-          </button>
-          <button class="shadow-toggle-btn active" data-line="phonetic">
-            <span class="stb-icon">🔤</span>
-            <span class="stb-label">발음</span>
-          </button>
-          <button class="shadow-toggle-btn active" data-line="ko">
-            <span class="stb-icon">🇰🇷</span>
-            <span class="stb-label">한글</span>
-          </button>
-        </div>
-        
-        <!-- 호환성 숨겨진 요소 -->
+        <!-- v10.3: ⭐ 저장 버튼 제거! 퀴즈/퍼즐에서 자동 수집! -->
+        <!-- 숨겨진 호환성 요소 -->
         <div style="display:none">
           <button id="shadowPhonetic"><span id="shadowPhoneticLabel">💡 힌트 보기 ▾</span></button>
           <button id="shadowSave">⭐</button>
@@ -5334,8 +5161,8 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
         </button>
       </div>
       
-      <!-- v10.4: 🔴 REC 카운터 → ROLLING 배너 안으로 이동! 공간 절약! -->
-      <div class="rec-indicator" id="recIndicator" style="display:none">
+      <!-- v10.2: 🔴 REC 카운터 (영화 촬영 현장 느낌!) -->
+      <div class="rec-indicator" id="recIndicator">
         <span class="rec-dot"></span>
         <span class="rec-label">REC</span>
         <span class="rec-timer" id="recTimer">00:00</span>
@@ -5843,7 +5670,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.4</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v10.3</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -6073,20 +5900,14 @@ let REC_TIMER_STATE = { interval: null, seconds: 0 };
 function startRecTimer(){
   stopRecTimer();
   REC_TIMER_STATE.seconds = 0;
-  /* v10.4: 배너 안 인라인 타이머도 업데이트 */
   const timerEl = document.getElementById('recTimer');
-  const timerInline = document.getElementById('recTimerInline');
   if(timerEl) timerEl.textContent = '00:00';
-  if(timerInline) timerInline.textContent = '00:00';
   REC_TIMER_STATE.interval = setInterval(() => {
     REC_TIMER_STATE.seconds++;
     const mm = String(Math.floor(REC_TIMER_STATE.seconds / 60)).padStart(2, '0');
     const ss = String(REC_TIMER_STATE.seconds % 60).padStart(2, '0');
-    const text = mm + ':' + ss;
     const el = document.getElementById('recTimer');
-    const ei = document.getElementById('recTimerInline');
-    if(el) el.textContent = text;
-    if(ei) ei.textContent = text;
+    if(el) el.textContent = mm + ':' + ss;
   }, 1000);
 }
 function stopRecTimer(){
@@ -7646,72 +7467,6 @@ document.addEventListener('click', e=>{
  * 5-7 문장 완성 = 🌈 무지개 탑 완성!
  * ═══════════════════════════════════════════════════ */
 
-/* v10.4: 🎚️ 줄 표시/숨김 시스템 — 사용자 맞춤!
-   영어/발음/한글 각각 개별로 ON/OFF 가능
-   localStorage에 저장돼서 다음에도 유지! */
-function getLineVisibility(){
-  try {
-    const saved = localStorage.getItem('sd_line_visibility');
-    if(saved){
-      const parsed = JSON.parse(saved);
-      return {
-        en: parsed.en !== false,
-        phonetic: parsed.phonetic !== false,
-        ko: parsed.ko !== false,
-      };
-    }
-  } catch(e) {}
-  return { en: true, phonetic: true, ko: true };
-}
-
-function setLineVisibility(target, visible){
-  const state = getLineVisibility();
-  state[target] = visible;
-  try {
-    localStorage.setItem('sd_line_visibility', JSON.stringify(state));
-  } catch(e) {}
-  applyLineVisibility(state);
-}
-
-function applyLineVisibility(state){
-  if(!state) state = getLineVisibility();
-  /* 각 줄 표시/숨김 */
-  ['en', 'phonetic', 'ko'].forEach(key => {
-    const line = document.getElementById('shadowLine' + key.charAt(0).toUpperCase() + key.slice(1));
-    if(line){
-      line.classList.toggle('line-hidden', !state[key]);
-    }
-    /* 하단 토글 버튼 active 상태 */
-    const toggle = document.querySelector(`.shadow-toggle-btn[data-line="${key}"]`);
-    if(toggle){
-      toggle.classList.toggle('active', state[key]);
-    }
-  });
-}
-
-function applyLineVisibilityFromStorage(){
-  applyLineVisibility(getLineVisibility());
-}
-
-/* × 버튼 클릭 (위임) */
-document.addEventListener('click', (e) => {
-  const xBtn = e.target.closest('.shadow-line-x');
-  if(xBtn){
-    e.stopPropagation();
-    const target = xBtn.dataset.target;
-    if(target) setLineVisibility(target, false);
-    return;
-  }
-  const toggleBtn = e.target.closest('.shadow-toggle-btn');
-  if(toggleBtn){
-    e.stopPropagation();
-    const line = toggleBtn.dataset.line;
-    const current = getLineVisibility()[line];
-    if(line) setLineVisibility(line, !current);
-    return;
-  }
-});
-
 /* v10.3: 🎯 자동 수집 시스템! (쌤 혁명 아이디어!)
    퀴즈/퍼즐에서 틀린 문장을 SCREENPLAY(GREEN ROOM)에 자동 저장
    → 사용자 부담 제로, 약점만 쌓여서 복습! */
@@ -9246,15 +9001,8 @@ function goStep(step){
   else if(step===1){
     /* STEP 2: 말해봐 — hide video, show moment cards */
     bn.className='step-banner shadow';
-    /* v10.4: 🔥 ROLLING 배너 안에 REC 카운터 통합! (공간 절약) */
-    bn.innerHTML = `
-      <span class="banner-main">🎬 ROLLING · 연기 시작! 🔥</span>
-      <span class="banner-rec">
-        <span class="rec-dot-mini"></span>
-        <span class="rec-label-mini">REC</span>
-        <span class="rec-timer-inline" id="recTimerInline">00:00</span>
-      </span>
-    `;
+    /* v10.2: 🔥 영화 촬영장 배너! */
+    bn.textContent='🎬 ROLLING · 연기 시작! 🔥';
     /* ⚠️ 중요: Step 1 영상 완전 정지 + 음소거 (소리가 계속 나오던 버그 수정) */
     try{
       if(ytPlayer){
@@ -9269,8 +9017,6 @@ function goStep(step){
     S.shadowIdx=0;renderShadow();
     /* v10.2: 🔴 REC 카운터 시작! (영화 촬영 현장 느낌) */
     startRecTimer();
-    /* v10.4: 저장된 줄 표시 설정 적용 */
-    applyLineVisibilityFromStorage();
   }
   else if(step===2){
     /* STEP 3: DUB CHALLENGE — show booth picker first */
