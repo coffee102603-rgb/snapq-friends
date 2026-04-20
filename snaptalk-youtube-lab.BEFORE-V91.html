@@ -1218,206 +1218,6 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .shadow-mic.recording{animation:pulse-p 1s ease infinite}
 @keyframes pulse-p{0%,100%{box-shadow:0 0 20px rgba(124,107,255,.3)}50%{box-shadow:0 0 40px rgba(124,107,255,.6)}}
 
-/* ═══════════════════════════════════════════════════
- * v9.1 · 🏢 LOBBY HUB (쌤 비전 구현!)
- * "영화 보고 로비에서 놀기" 메타포
- * ═══════════════════════════════════════════════════ */
-.lobby-hub{
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 16px;
-  gap: 16px;
-  background: radial-gradient(
-    ellipse at center,
-    rgba(251, 191, 36, 0.08) 0%,
-    rgba(167, 139, 250, 0.05) 40%,
-    transparent 80%
-  );
-  animation: lobbyFadeIn .6s ease-out;
-  overflow-y: auto;
-}
-@keyframes lobbyFadeIn{
-  from{ opacity: 0; transform: translateY(15px) }
-  to{ opacity: 1; transform: translateY(0) }
-}
-
-/* 🎊 축하 헤더 */
-.lobby-celebration{
-  text-align: center;
-  padding: 16px 12px 8px;
-}
-.lobby-emojis{
-  font-size: 40px;
-  margin-bottom: 12px;
-  animation: celebBounce .8s cubic-bezier(.3,1.5,.5,1);
-}
-@keyframes celebBounce{
-  0%{ transform: scale(0.3) rotate(-30deg); opacity: 0 }
-  60%{ transform: scale(1.2) rotate(10deg); opacity: 1 }
-  100%{ transform: scale(1) rotate(0); opacity: 1 }
-}
-.lobby-title{
-  font-size: 22px;
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 6px;
-  letter-spacing: -0.2px;
-}
-.lobby-subtitle{
-  font-size: 14px;
-  color: #a1a1aa;
-  font-weight: 600;
-}
-
-/* 🏢 카드 그리드 (2x2) */
-.lobby-cards{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  padding: 4px 0;
-}
-
-/* 영화 포스터 스타일 카드 */
-.lobby-card{
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 20px 14px 16px;
-  min-height: 160px;
-  border-radius: 18px;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(.4,0,.2,1);
-  text-align: center;
-  overflow: hidden;
-  border: 1px solid transparent;
-  background: linear-gradient(135deg, rgba(26,26,46,.85), rgba(20,20,43,.7));
-  backdrop-filter: blur(20px);
-}
-.lobby-card::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  padding: 1px;
-  background: linear-gradient(135deg, 
-    rgba(167,139,250,.3), 
-    rgba(251,191,36,.3)
-  );
-  -webkit-mask: 
-    linear-gradient(#fff 0 0) content-box, 
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-}
-.lobby-card:hover,
-.lobby-card:active{
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 40px rgba(167,139,250,.25), 
-              0 0 30px rgba(251,191,36,.15);
-}
-
-/* 카드별 고유 색상 */
-.card-karaoke{
-  background: linear-gradient(135deg, rgba(139,92,246,.2), rgba(26,26,46,.85));
-}
-.card-karaoke:hover{ box-shadow: 0 12px 40px rgba(139,92,246,.4) }
-
-.card-snack{
-  background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(26,26,46,.85));
-}
-.card-snack:hover{ box-shadow: 0 12px 40px rgba(251,191,36,.4) }
-
-.card-puzzle{
-  background: linear-gradient(135deg, rgba(0,229,160,.15), rgba(26,26,46,.85));
-  opacity: 0.65;
-}
-.card-puzzle:hover{ box-shadow: 0 12px 40px rgba(0,229,160,.3) }
-
-.card-home{
-  background: linear-gradient(135deg, rgba(100,116,139,.15), rgba(26,26,46,.85));
-}
-
-/* 카드 내부 요소 */
-.lobby-card-emoji{
-  font-size: 44px;
-  line-height: 1;
-  margin-bottom: 2px;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,.3));
-  animation: cardEmojiFloat 3s ease-in-out infinite;
-}
-@keyframes cardEmojiFloat{
-  0%,100%{ transform: translateY(0) }
-  50%{ transform: translateY(-4px) }
-}
-.card-karaoke .lobby-card-emoji{ animation-delay: 0s }
-.card-snack .lobby-card-emoji{ animation-delay: 0.5s }
-.card-puzzle .lobby-card-emoji{ animation-delay: 1s }
-.card-home .lobby-card-emoji{ animation-delay: 1.5s }
-
-.lobby-card-title{
-  font-size: 15px;
-  font-weight: 900;
-  color: #fff;
-  line-height: 1.25;
-  letter-spacing: -0.2px;
-}
-.lobby-card-desc{
-  font-size: 11px;
-  color: #a1a1aa;
-  font-weight: 600;
-}
-.lobby-card-action{
-  margin-top: 6px;
-  padding: 6px 14px;
-  border-radius: 14px;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.1);
-  color: #c4b5fd;
-}
-.card-snack .lobby-card-action{ color: #fbbf24 }
-.card-home .lobby-card-action{ color: #cbd5e1 }
-.lobby-card-soon{
-  color: rgba(255,255,255,.4) !important;
-  background: rgba(255,255,255,.03);
-}
-
-/* 하단 상태 바 */
-.lobby-status{
-  display: flex;
-  gap: 10px;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, rgba(26,26,46,.6), rgba(20,20,43,.4));
-  border: 1px solid rgba(167,139,250,.15);
-  border-radius: 14px;
-  margin-top: auto;
-}
-.lobby-status-item{
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #cbd5e1;
-}
-.lobby-status-icon{ font-size: 16px }
-.lobby-status-label{ color: #94a3b8 }
-.lobby-status-count{
-  color: #fbbf24;
-  font-weight: 900;
-  font-size: 14px;
-  margin-left: 2px;
-}
-
 /* ═══ STEP 3: DUB CHALLENGE ═══ */
 /* ═══ STEP 3: DUB CHALLENGE ═══ */
 
@@ -2790,65 +2590,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
       </div>
     </div>
 
-    <!-- v9.1: 🏢 영화관 로비 허브 (쌤 비전!) -->
-    <div id="lobbyHub" style="display:none" class="lobby-hub">
-      <!-- 🎊 영화 완주 축하 -->
-      <div class="lobby-celebration">
-        <div class="lobby-emojis">🎊 🎬 🎊</div>
-        <div class="lobby-title">영화 재밌었죠?</div>
-        <div class="lobby-subtitle">로비에서 더 놀아볼까요?</div>
-      </div>
-      
-      <!-- 🏢 4개 카드 허브 -->
-      <div class="lobby-cards">
-        <!-- 🎤 노래방 더빙실 -->
-        <button class="lobby-card card-karaoke" id="lobbyKaraoke">
-          <div class="lobby-card-emoji">🎤</div>
-          <div class="lobby-card-title">노래방<br>더빙실</div>
-          <div class="lobby-card-desc">대본 보고 부르기</div>
-          <div class="lobby-card-action">▶ 입장</div>
-        </button>
-        
-        <!-- 🍿 간식 코너 -->
-        <button class="lobby-card card-snack" id="lobbySnack">
-          <div class="lobby-card-emoji">🍿</div>
-          <div class="lobby-card-title">간식 코너<br>&nbsp;</div>
-          <div class="lobby-card-desc">QUIZ로 놀기</div>
-          <div class="lobby-card-action">▶ 입장</div>
-        </button>
-        
-        <!-- 🧩 퍼즐 게임 (Coming Soon) -->
-        <button class="lobby-card card-puzzle" id="lobbyPuzzle">
-          <div class="lobby-card-emoji">🧩</div>
-          <div class="lobby-card-title">퍼즐 게임<br>탑 쌓기</div>
-          <div class="lobby-card-desc">자막 조립</div>
-          <div class="lobby-card-action lobby-card-soon">🔜 Coming Soon</div>
-        </button>
-        
-        <!-- 🎥 다른 영화 -->
-        <button class="lobby-card card-home" id="lobbyHome">
-          <div class="lobby-card-emoji">🎥</div>
-          <div class="lobby-card-title">다른 영화<br>보기</div>
-          <div class="lobby-card-desc">새 영상</div>
-          <div class="lobby-card-action">▶ 홈으로</div>
-        </button>
-      </div>
-      
-      <!-- 하단 상태 (내 노트 / 내 탑) -->
-      <div class="lobby-status">
-        <div class="lobby-status-item">
-          <span class="lobby-status-icon">📒</span>
-          <span class="lobby-status-label">내 노트</span>
-          <span class="lobby-status-count" id="lobbyNotebookCount">0</span>
-        </div>
-        <div class="lobby-status-item">
-          <span class="lobby-status-icon">🏆</span>
-          <span class="lobby-status-label">내 탑</span>
-          <span class="lobby-status-count" id="lobbyTowerCount">0</span>
-        </div>
-      </div>
-    </div>
-
     <!-- STEP 3: DUB CHALLENGE -->
     <div id="dubArea" style="display:none">
       <!-- Studio Booth Picker: shown first -->
@@ -3151,7 +2892,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
   <!-- BOTTOM NAV -->
   <div id="bottomNav"><button class="nav-btn active" data-screen="feed"><span class="nav-icon">🏠</span>Home</button><button class="nav-btn" data-screen="room"><span class="nav-icon">📁</span>나의 방</button></div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.1</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.0</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -4178,135 +3919,6 @@ function renderFeed(){
 const CURATOR_SECRET_ADMIN = 'sk_curator_snaptalk_2026_a9f8b7c6d5e4f3a2b1c0';
 
 /* ═══════════════════════════════════════════════════
- * v9.1 · 🏢 LOBBY HUB LOGIC (쌤 비전!)
- * Step 2 완료 → 로비 허브 표시
- * 4개 카드 → 각 기능으로 라우팅
- * ═══════════════════════════════════════════════════ */
-
-/* 🏢 로비 허브 표시 */
-function showLobbyHub(){
-  /* 영상 플레이어 정지 */
-  try{
-    if(ytPlayer){
-      if(ytPlayer.pauseVideo)ytPlayer.pauseVideo();
-      if(ytPlayer.mute)ytPlayer.mute();
-    }
-  }catch(err){}
-  
-  /* 모든 에어리어 숨김 */
-  ['listenArea','shadowArea','dubArea','shareArea'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(el)el.style.display='none';
-  });
-  
-  /* 영상 컨테이너 숨김 */
-  const yt=document.getElementById('ytContainer');
-  if(yt)yt.style.display='none';
-  
-  /* 상단 배지 (TAKE 번호) 숨김 */
-  const lct=document.getElementById('listenCountTop');
-  if(lct)lct.style.display='none';
-  
-  /* 배너 업데이트 */
-  const bn=document.getElementById('stepBanner');
-  if(bn){
-    bn.className='step-banner';
-    bn.textContent='🏢 LOBBY · 영화관 로비';
-    bn.style.display='';
-  }
-  
-  /* 로비 허브 표시 */
-  const hub=document.getElementById('lobbyHub');
-  if(hub)hub.style.display='flex';
-  
-  /* 상태 업데이트 */
-  updateLobbyStatus();
-}
-
-/* 📊 로비 상태 업데이트 (노트 수, 탑 수) */
-function updateLobbyStatus(){
-  const nb = db.get('notebook', []);
-  const cnt = document.getElementById('lobbyNotebookCount');
-  if(cnt) cnt.textContent = nb.length;
-  
-  /* 탑은 다음 세션에서 구현 */
-  const towerCnt = document.getElementById('lobbyTowerCount');
-  if(towerCnt){
-    const tower = db.get('tower', []);
-    towerCnt.textContent = tower.length;
-  }
-}
-
-/* 🎤 노래방 더빙실 → 기존 부스 선택 (SCRIPT/REHEARSAL/QUIZ) */
-document.addEventListener('click', e=>{
-  if(e.target && (e.target.id==='lobbyKaraoke' || e.target.closest('#lobbyKaraoke'))){
-    const hub=document.getElementById('lobbyHub');
-    if(hub)hub.style.display='none';
-    /* 기존 더빙실 부스 선택으로! */
-    goStep(2);
-  }
-});
-
-/* 🍿 간식 코너 → QUIZ 바로 시작 */
-document.addEventListener('click', e=>{
-  if(e.target && (e.target.id==='lobbySnack' || e.target.closest('#lobbySnack'))){
-    const hub=document.getElementById('lobbyHub');
-    if(hub)hub.style.display='none';
-    
-    /* dubArea 보이기 + dubDiffPicker 숨김 → QUIZ 바로 */
-    const dubArea=document.getElementById('dubArea');
-    const dubPicker=document.getElementById('dubDiffPicker');
-    const dubMain=document.getElementById('dubMain');
-    if(dubArea)dubArea.style.display='flex';
-    if(dubPicker)dubPicker.style.display='none';
-    if(dubMain)dubMain.style.display='none';
-    
-    /* S.dubLevel = 'quiz' 설정 */
-    S.dubLevel='quiz';
-    
-    /* QUIZ 시작! */
-    startQuizGame();
-  }
-});
-
-/* 🧩 퍼즐 게임 → Coming Soon! */
-document.addEventListener('click', e=>{
-  if(e.target && (e.target.id==='lobbyPuzzle' || e.target.closest('#lobbyPuzzle'))){
-    /* 깜찍한 토스트 메시지 */
-    const card = e.target.closest('#lobbyPuzzle');
-    if(card){
-      const existing = card.querySelector('.soon-popup');
-      if(existing)return;
-      const popup = document.createElement('div');
-      popup.className = 'soon-popup';
-      popup.innerHTML = '🚧 곧 만나요!<br><span style="font-size:11px;opacity:.8">자막 퍼즐 + 탑 쌓기 준비중</span>';
-      popup.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(10,10,15,.95);color:#fbbf24;padding:12px 16px;border-radius:12px;font-size:13px;font-weight:800;z-index:10;border:1px solid rgba(251,191,36,.3);box-shadow:0 8px 24px rgba(0,0,0,.5);text-align:center;animation:soonPop .3s ease-out;';
-      card.style.position='relative';
-      card.appendChild(popup);
-      setTimeout(()=>{ if(popup.parentNode)popup.remove(); }, 2000);
-    }
-  }
-});
-
-/* 🎥 다른 영화 → 홈으로 */
-document.addEventListener('click', e=>{
-  if(e.target && (e.target.id==='lobbyHome' || e.target.closest('#lobbyHome'))){
-    const hub=document.getElementById('lobbyHub');
-    if(hub)hub.style.display='none';
-    /* 홈 피드로! */
-    showScreen('feedScreen');
-  }
-});
-
-/* soon-popup 애니메이션 */
-(function(){
-  const style=document.createElement('style');
-  style.textContent='@keyframes soonPop{from{opacity:0;transform:translate(-50%,-50%) scale(.7)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}';
-  document.head.appendChild(style);
-})();
-
-
-/* ═══════════════════════════════════════════════════
  * v9.0 · 🎯 QUIZ GAME LOGIC (쌤 아이디어 구현!)
  * 노트(saved vocabulary) 기반 시험
  * 3가지 모드 랜덤 · 스테이지 시스템 연동
@@ -4955,9 +4567,6 @@ function showScreen(id){
   /* v6.4: 나의 방에서는 헤더 숨김 (공간 확보) */
   const header=document.getElementById('header');
   if(header)header.style.display=(id==='room')?'none':'flex';
-  /* v9.1: 피드/방으로 이동 시 로비 허브도 정리 */
-  const hub=document.getElementById('lobbyHub');
-  if(hub)hub.style.display='none';
   /* v6.5: HOF 세로바 제거됨 → "이번 주 인기" 섹션으로 통합 */
 }
 document.querySelectorAll('.ctab').forEach(t=>{t.addEventListener('click',()=>{document.querySelectorAll('.ctab').forEach(x=>x.classList.remove('active'));t.classList.add('active');S.tab=t.dataset.tab;renderFeed()})});
@@ -5108,9 +4717,6 @@ function goStep(step){
   S.gameStep=step;
   updateDots(step);
   ['listenArea','shadowArea','dubArea','shareArea'].forEach(id=>document.getElementById(id).style.display='none');
-  /* v9.1: 로비 허브도 숨김 */
-  const hub=document.getElementById('lobbyHub');
-  if(hub)hub.style.display='none';
   const yt=document.getElementById('ytContainer'),bn=document.getElementById('stepBanner'),tower=document.getElementById('rightPanel');
   
   /* v6.16: 결과 화면에선 속도/가리개 UI 숨김 (공간 절약) */
@@ -5485,11 +5091,7 @@ function createShadowFrameAt(videoId,captureSec){
 
 function renderShadow(){
   const ss=S.short.sentences,i=S.shadowIdx;
-  /* v9.1: 영화 완주 → 로비 허브로! (쌤 비전!) */
-  if(i>=ss.length){
-    showLobbyHub();
-    return;
-  }
+  if(i>=ss.length){goStep(2);return}
   const s=ss[i];
   S.shadowSync=0;S.shadowAttempts=0;
   
