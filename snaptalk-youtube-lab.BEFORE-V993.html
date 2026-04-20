@@ -5077,7 +5077,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.3</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(0,229,160,.5);font-weight:700;z-index:200;pointer-events:none">v9.9.2</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -5331,29 +5331,19 @@ function saveResult(sh,sc,att){
   db.set('stats',st);
 }
 function renderRoom(){
-  try {
-    renderStreak();
-    const st=db.get('stats',{total:0,sum:0});
-    const totalDubsEl = document.getElementById('totalDubs');
-    const avgScoreEl = document.getElementById('avgScore');
-    if(totalDubsEl) totalDubsEl.textContent=st.total;
-    if(avgScoreEl) avgScoreEl.textContent=st.total?Math.round(st.sum/st.total)+'%':'0%';
-    const h=db.get('history',[]);
-    const list=document.getElementById('historyList');
-    if(list){
-      if(!h.length){list.innerHTML='<div style="color:var(--tx3);font-size:13px;padding:12px">아직 더빙 기록이 없어요!</div>'}
-      else{list.innerHTML=h.slice(0,10).map(i=>{const d=new Date(i.date);return`<div class="history-item"><div class="history-score">${i.score}%</div><div class="history-info"><div class="history-title">${i.title}</div><div class="history-date">${d.getMonth()+1}/${d.getDate()} · ${i.attempts}번 도전</div></div></div>`}).join('')}
-    }
-    if(typeof renderNotebook === 'function') renderNotebook();
-    if(typeof renderSnapReview === 'function') renderSnapReview();
-    if(typeof renderSnapStudio === 'function') renderSnapStudio();
-    if(typeof renderGallery === 'function') renderGallery();
-    /* v9.8: 🎭 GREEN ROOM - SCREENPLAY 노트 렌더 */
-    renderScreenplay();
-  } catch(err){
-    console.error('[renderRoom] Error:', err);
-    /* 에러 나도 screen 은 꼭 전환되게 */
-  }
+  renderStreak();
+  const st=db.get('stats',{total:0,sum:0});
+  document.getElementById('totalDubs').textContent=st.total;
+  document.getElementById('avgScore').textContent=st.total?Math.round(st.sum/st.total)+'%':'0%';
+  const h=db.get('history',[]),list=document.getElementById('historyList');
+  if(!h.length){list.innerHTML='<div style="color:var(--tx3);font-size:13px;padding:12px">아직 더빙 기록이 없어요!</div>'}
+  else{list.innerHTML=h.slice(0,10).map(i=>{const d=new Date(i.date);return`<div class="history-item"><div class="history-score">${i.score}%</div><div class="history-info"><div class="history-title">${i.title}</div><div class="history-date">${d.getMonth()+1}/${d.getDate()} · ${i.attempts}번 도전</div></div></div>`}).join('')}
+  renderNotebook();
+  renderSnapReview();
+  renderSnapStudio();
+  renderGallery();
+  /* v9.8: 🎭 GREEN ROOM - SCREENPLAY 노트 렌더 */
+  renderScreenplay();
 }
 
 /* v9.9: 📜 SCREENPLAY 노트 로직 (손가락 캔버스!) */
@@ -5371,44 +5361,38 @@ const CANVAS_STATE = {
 };
 
 function renderScreenplay(){
-  try {
-    /* Day 카운트 (스트릭 기반) */
-    const streak = db.get('streak', {count:0,last:null});
-    const dayEl = document.getElementById('screenplayDay');
-    if(dayEl) dayEl.textContent = 'DAY ' + Math.max(1, streak.count || 1);
-    
-    /* 오늘의 대사 — 저장된 노트북에서 랜덤 뽑기 */
-    const notebook = db.get('notebook', []);
-    const dialogueEl = document.getElementById('screenplayDialogue');
-    if(dialogueEl){
-      if(notebook.length > 0){
-        const randomItem = notebook[Math.floor(Math.random() * notebook.length)];
-        dialogueEl.textContent = `"${randomItem.en || randomItem.highlight || 'I can\'t wait for my next scene!'}"`;
-      } else {
-        dialogueEl.textContent = '"I can\'t wait for my next scene!"';
-      }
+  /* Day 카운트 (스트릭 기반) */
+  const streak = db.get('streak', {count:0,last:null});
+  const dayEl = document.getElementById('screenplayDay');
+  if(dayEl) dayEl.textContent = 'DAY ' + Math.max(1, streak.count || 1);
+  
+  /* 오늘의 대사 — 저장된 노트북에서 랜덤 뽑기 */
+  const notebook = db.get('notebook', []);
+  const dialogueEl = document.getElementById('screenplayDialogue');
+  if(dialogueEl){
+    if(notebook.length > 0){
+      const randomItem = notebook[Math.floor(Math.random() * notebook.length)];
+      dialogueEl.textContent = `"${randomItem.en || randomItem.highlight || 'I can\'t wait for my next scene!'}"`;
+    } else {
+      dialogueEl.textContent = '"I can\'t wait for my next scene!"';
     }
-    
-    /* 환영 메시지 랜덤 */
-    const subEl = document.getElementById('grGreetingSub');
-    if(subEl){
-      const messages = [
-        '오늘도 명장면 준비 중? 🎬',
-        '당신만의 영화를 찍어요! 🎞️',
-        '대기실에서 대사 한번 더! 📜',
-        '배우의 준비 시간 ✨',
-        '오늘의 연기는 어떠신가요? 🎭',
-      ];
-      subEl.textContent = messages[Math.floor(Math.random() * messages.length)];
-    }
-    
-    /* 캔버스는 화면 보이고 나서 초기화 (타이밍!) */
-    setTimeout(() => {
-      try { initCanvas(); } catch(e){ console.warn('[initCanvas]', e); }
-    }, 150);
-  } catch(err){
-    console.error('[renderScreenplay] Error:', err);
   }
+  
+  /* 환영 메시지 랜덤 */
+  const subEl = document.getElementById('grGreetingSub');
+  if(subEl){
+    const messages = [
+      '오늘도 명장면 준비 중? 🎬',
+      '당신만의 영화를 찍어요! 🎞️',
+      '대기실에서 대사 한번 더! 📜',
+      '배우의 준비 시간 ✨',
+      '오늘의 연기는 어떠신가요? 🎭',
+    ];
+    subEl.textContent = messages[Math.floor(Math.random() * messages.length)];
+  }
+  
+  /* 캔버스 초기화 */
+  initCanvas();
 }
 
 /* 🎨 캔버스 초기화 */
@@ -5420,14 +5404,11 @@ function initCanvas(){
   
   /* 캔버스 크기 설정 (고해상도) */
   const rect = canvas.getBoundingClientRect();
-  /* v9.9.3: rect 0이면 skip (아직 화면 렌더 전) */
-  if(rect.width < 10 || rect.height < 10) return;
   const dpr = window.devicePixelRatio || 1;
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
   
   const ctx = canvas.getContext('2d');
-  if(!ctx) return;
   ctx.scale(dpr, dpr);
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';
