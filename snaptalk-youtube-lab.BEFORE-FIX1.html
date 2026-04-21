@@ -456,14 +456,17 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   padding-bottom:100px !important;
 }
 /* v10.12: 카테고리 상세 (cat-themed) 일 때는 패딩 제거 + 스크롤 제거 + flex */
-/* 중요: .active일 때만 flex! */
+/* 중요: .active일 때만 flex! (다른 화면 전환 시 숨겨져야 함) */
 #feedScreen.cat-themed.active{
   padding: 0 0 60px !important;  /* 하단 탭 공간만 */
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
 }
-/* .screen{display:none}이 기본이므로 non-active는 자동 숨김 */
+/* cat-themed이지만 non-active면 숨김 (기본 .screen 규칙 준수) */
+#feedScreen.cat-themed:not(.active){
+  display: none !important;
+}
 /* 🎤 말한 단어: 영어는 안 드러남! 밑줄만 녹색으로 */
 .karaoke-line.mode-rehearsal .karaoke-text .ktw.spoken,
 .karaoke-line.mode-onair .karaoke-text .ktw.spoken{
@@ -6080,22 +6083,21 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 .cat-detail-header-themed{
   position: relative;
   z-index: 2;
-  padding: 6px 10px 2px;
+  padding: 8px 12px 4px;
   flex-shrink: 0;
 }
 
-/* 🎬 테마 배너 — 초컴팩트 (모바일 최적!) */
+/* 🎬 테마 배너 — 컴팩트! */
 .cat-themed-banner{
   position: relative;
   margin: 0;
-  padding: 8px 12px;
+  padding: 10px 12px;
   background: var(--cat-banner-bg, linear-gradient(135deg, #a78bfa, #fbbf24));
   border-radius: 14px;
   display: flex;
   align-items: center;
   gap: 10px;
   overflow: hidden;
-  flex-shrink: 0;
   box-shadow: 
     0 6px 20px var(--cat-glow, rgba(251,191,36,0.3)),
     0 0 30px var(--cat-glow, rgba(251,191,36,0.15));
@@ -6115,7 +6117,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   50%     { transform: translateX(10%) scale(1.1) }
 }
 .ctb-emoji-main{
-  font-size: 28px;
+  font-size: 32px;
   line-height: 1;
   flex-shrink: 0;
   filter: drop-shadow(0 4px 8px rgba(0,0,0,0.35));
@@ -6206,11 +6208,10 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   animation: slideFadeIn 0.35s cubic-bezier(.4,0,.2,1);
 }
 
-/* v10.12: 🎬 포스터 영역 — 모바일 최적화 (16vh 매우 작게!) */
+/* v10.12: 🎬 포스터 영역 — 모바일 기준 18vh (매우 작게!) */
 .movie-cinema-slide-themed .mcs-poster{
   flex: 0 0 auto !important;
-  height: 16vh !important; /* 화면의 16%! 공간 더 확보! */
-  max-height: 130px !important; /* 절대 최대치 제한 */
+  height: 18vh !important; /* 화면의 18%! (모바일 폰 기준 영상은 작게) */
   width: 100% !important;
   display: flex;
   align-items: center;
@@ -6219,11 +6220,9 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 .movie-cinema-slide-themed .mcs-poster-img{
   width: 100%;
   height: 100%;
-  max-height: 130px !important;
+  max-height: 18vh !important;
   border-radius: 12px !important;
   aspect-ratio: unset !important;
-  background-size: cover !important;
-  background-position: center !important;
 }
 .mcs-poster-overlay-themed{
   position: absolute;
@@ -6235,10 +6234,10 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   pointer-events: none;
 }
 
-/* 영화 포스터식 카드 — 모든 콘텐츠 한 화면에! */
+/* 영화 포스터식 카드 — 모든 영상 동일 구조 보장! */
 .mcs-poster-card{
   flex: 1 1 auto;
-  min-height: 250px; /* 최소 높이 ↑ (모든 섹션 보임!) */
+  min-height: 230px; /* 최소 높이 보장! 모든 콘텐츠 보임 */
   padding: 8px 10px;
   background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(20,20,43,0.85));
   border: 1px solid var(--cat-accent, rgba(251,191,36,0.4));
@@ -6656,33 +6655,28 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 .mcs-start-icon{ font-size: 16px }
 .mcs-start-label{ font-size: 14px; letter-spacing: 0.3px }
 /* 🔄 네비게이션 */
-/* v10.12: 🎬 슬라이드 네비 — 안정적으로 하단 고정! */
 .movie-showcase-nav{
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  padding: 6px 12px 8px !important;
+  gap: 10px;
+  padding: 8px 14px 14px;
   flex-shrink: 0;
-  margin-top: auto; /* 하단으로! */
-  position: relative;
-  z-index: 3;
 }
 .msn-btn{
-  width: 32px;
-  height: 32px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
   background: rgba(251,191,36,0.12);
   border: 1.5px solid rgba(251,191,36,0.35);
   color: #fbbf24;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 900;
   cursor: pointer;
   transition: all 0.2s;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
 }
 .msn-btn:hover{
   background: rgba(251,191,36,0.25);
@@ -6692,12 +6686,12 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 .msn-btn:active{ transform: scale(0.95) }
 .msn-dots{
   display: flex;
-  gap: 5px;
+  gap: 6px;
   padding: 0 4px;
 }
 .msn-dot{
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: rgba(255,255,255,0.2);
   cursor: pointer;
@@ -6705,72 +6699,17 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 }
 .msn-dot.active{
   background: #fbbf24;
-  width: 18px;
-  border-radius: 3px;
-  box-shadow: 0 0 8px rgba(251,191,36,0.5);
+  width: 24px;
+  border-radius: 4px;
+  box-shadow: 0 0 10px rgba(251,191,36,0.5);
 }
 .msn-page{
-  font-size: 10px;
+  font-size: 11px;
   color: #94a3b8;
   font-weight: 700;
   letter-spacing: 0.3px;
-  min-width: 30px;
+  min-width: 36px;
   text-align: center;
-}
-
-/* v10.12: 📱 모바일 전용 (너비 500px 이하) - 쌤 비전 완성! */
-@media (max-width: 500px){
-  /* 영상 더 작게 */
-  .movie-cinema-slide-themed .mcs-poster{
-    height: 14vh !important;
-    max-height: 110px !important;
-  }
-  .movie-cinema-slide-themed .mcs-poster-img{
-    max-height: 110px !important;
-  }
-  
-  /* 배너 더 작게 */
-  .cat-themed-banner{
-    padding: 6px 10px !important;
-  }
-  .ctb-emoji-main{ font-size: 24px !important }
-  .ctb-name{ font-size: 12px !important }
-  .ctb-slogan{ font-size: 10px !important }
-  .ctb-meta{ margin-top: 2px !important }
-  .ctb-tagline{ font-size: 8px !important }
-  
-  /* 정보 카드 — 모든 섹션 타이트하게! */
-  .mcs-poster-card{
-    min-height: 230px !important;
-    padding: 6px 8px !important;
-    gap: 3px !important;
-  }
-  .mcs-poster-card .mcs-title{
-    font-size: 13px !important;
-  }
-  .mcs-rating-label{ font-size: 8px !important; padding: 1px 5px !important }
-  .mcs-rating{ font-size: 10px !important }
-  .mcs-duration, .mcs-lines{ font-size: 8px !important }
-  .mcs-headline{ padding: 1px 2px !important }
-  .mcs-headline-text{ font-size: 10px !important }
-  .mcs-quote-l, .mcs-quote-r{ font-size: 12px !important }
-  .mcs-stars-label{ font-size: 7px !important; margin-bottom: 2px !important }
-  .mcs-stars-section{ padding: 3px 6px !important }
-  .mcs-star-chip{ font-size: 8px !important; padding: 1px 5px !important }
-  .mcs-tag{ font-size: 7px !important; padding: 1px 4px !important }
-  .mcs-start-btn-themed{ padding: 8px !important }
-  .mcs-start-label{ font-size: 11px !important }
-  .mcs-start-icon{ font-size: 11px !important }
-  
-  /* 슬라이드 네비 — 하단 고정! */
-  .movie-showcase-nav{
-    padding: 4px 10px 8px !important;
-  }
-  .msn-btn{
-    width: 30px !important;
-    height: 30px !important;
-    font-size: 10px !important;
-  }
 }
 
 /* v10.8: 🎬 영화관 배지 (골드/초록/보라 네온!) */
@@ -10666,7 +10605,7 @@ function renderCategoryDetail(shorts, cat){
       if(shortId){
         const short = shorts.find(x => x.id === shortId);
         if(short){
-          /* v10.12: 영상 시작 전 cat-themed 정리만 (innerHTML은 showScreen이 처리) */
+          /* v10.12: 🎯 영상 시작 전 cat-themed 완전 정리! */
           const feedEl = document.getElementById('feedScreen');
           if(feedEl){
             feedEl.classList.remove('cat-themed');
@@ -10675,6 +10614,7 @@ function renderCategoryDetail(shorts, cat){
             feedEl.style.removeProperty('--cat-accent');
             feedEl.style.removeProperty('--cat-glow');
             feedEl.style.removeProperty('--cat-text');
+            feedEl.innerHTML = ''; /* 전체 내용 제거! */
           }
           startGame(short);
         }
