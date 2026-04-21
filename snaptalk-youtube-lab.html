@@ -6351,7 +6351,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   display: flex;
   flex-wrap: wrap;
   gap: 2px;
-  max-height: 38px;
+  max-height: 24px;
   overflow: hidden;
 }
 .mcs-star-chip{
@@ -10518,7 +10518,7 @@ function renderCategoryDetail(shorts, cat){
       const duration = formatVideoDuration(s);
       const diffInfo = getDiffStars(s.diff);
       const headline = generateHeadline(s);
-      const starExprs = extractStarExpressions(s, 4);
+      const starExprs = extractStarExpressions(s, 3); /* v10.13: 최대 3개 제한 */
       const tags = generateTags(s);
       
       /* 커레이터 특별 배지 */
@@ -12191,90 +12191,41 @@ function startPuzzleGame(){
   const savedTowers = db.get('puzzleTowers', {});
   PUZZLE_STATE.tower = savedTowers[S.short.id] || [];
   
-  /* v10.6: 🧩 퍼즐 문장 필터링 (쌤 요청: 길이+구두점+CORE) */
+  /* v10.13: 🧩 퍼즐 = 원본 문장 1개 = 1 퍼즐! 분할 없음! (쌤 결정)
+     구어체 특성상 문장 쪼개면 너무 어렵고 맥락 잃음 */
   function isPuzzleWorthy(s){
     if(!s || !s.en) return false;
     const text = String(s.en).trim();
-    /* A. 길이 체크: 3~8 단어 */
-    const words = text.split(/\s+/).filter(w => w.length > 0);
-    if(words.length < 3 || words.length > 8) return false;
-    /* B. 구두점 체크: 문장 끝이 . ! ? 로 명확하게 끝남 */
-    if(!/[.!?]$/.test(text)) return false;
-    /* C. CORE 단어 있음 (학습 가치) */
+    /* A. 길이: 3~7 단어 (구어체 기준 — 너무 길면 어려움) */
+    const words = text.replace(/\|/g,' ').split(/\s+/).filter(w => w.length > 0);
+    if(words.length < 3 || words.length > 7) return false;
+    /* B. CORE 단어 있음 (학습 가치) */
     if(!s.core || !String(s.core).trim()) return false;
-    /* D. 복잡한 구조 제외 (쉼표/세미콜론 많으면 복잡) */
+    /* C. 복잡한 구조 제외 */
     const complexCount = (text.match(/[,;]/g) || []).length;
     if(complexCount > 1) return false;
     return true;
   }
-  
-  /* 1차: 엄격한 조건 (최대 7개) */
-  const strictSentences = S.short.sentences.filter(isPuzzleWorthy).slice(0, 7);
-  
-  let sentences;
-  if(strictSentences.length >= 7){
-    sentences = strictSentences.slice(0, 7);
-  } else if(strictSentences.length >= 2){
-    sentences = strictSentences.slice();
-  } else {
-    sentences = S.short.sentences
-      .filter(s => s.en && s.en.split(/\s+/).length >= 3 && s.en.split(/\s+/).length <= 10)
-      .slice(0, 7);
-    if(sentences.length < 2){
-      sentences = S.short.sentences.slice(0, 7);
-    }
-  }
-  
-  /* v10.9: 🧩 무조건 7문장 보장! 부족하면 긴 문장 자동 분할 */
-  if(sentences.length < 7){
-    const splitExtras = [];
-    /* 남은 긴 문장들 중 접속사 기준 분할 */
-    const remainingLong = S.short.sentences.filter(s => {
-      if(sentences.includes(s)) return false;
-      const wordCount = (s.en || '').split(/\s+/).length;
-      return wordCount >= 7;
+
+  /* 1차: 엄격한 조건 */
+  let sentences = S.short.sentences.filter(isPuzzleWorthy);
+
+  /* 폴백: 3~9단어 범위로 넓혀서 재시도 */
+  if(sentences.length < 2){
+    sentences = S.short.sentences.filter(s => {
+      if(!s.en) return false;
+      const wc = s.en.replace(/\|/g,' ').split(/\s+/).filter(Boolean).length;
+      return wc >= 3 && wc <= 9;
     });
-    
-    for(const s of remainingLong){
-      if(sentences.length + splitExtras.length >= 7) break;
-      /* and, but, because, so, if 기준 분할 */
-      const parts = (s.en || '').split(/\s+(?:and|but|because|so|if|when|while)\s+/i);
-      if(parts.length >= 2){
-        parts.forEach(p => {
-          if(sentences.length + splitExtras.length >= 7) return;
-          const trimmed = p.trim().replace(/[,;]$/, '').replace(/^[,;]/, '').trim();
-          const words = trimmed.split(/\s+/).filter(Boolean);
-          if(words.length >= 3 && words.length <= 8){
-            /* 문장 끝 마침표 추가 */
-            const finalText = /[.!?]$/.test(trimmed) ? trimmed : trimmed + '.';
-            splitExtras.push({
-              en: finalText,
-              ko: s.ko || s.koHighlight || '',
-              core: s.core || '',
-              koHighlight: s.koHighlight || '',
-              _autoSplit: true
-            });
-          }
-        });
-      }
-    }
-    sentences = sentences.concat(splitExtras);
   }
-  
-  /* 마지막 폴백: 그래도 부족하면 모든 문장 끌어와서 7개 채움 */
-  if(sentences.length < 7){
-    const existingEn = new Set(sentences.map(s => s.en));
-    for(const s of S.short.sentences){
-      if(sentences.length >= 7) break;
-      if(!existingEn.has(s.en) && s.en){
-        sentences.push(s);
-        existingEn.add(s.en);
-      }
-    }
+
+  /* 최후 폴백: 그냥 있는 문장 사용 */
+  if(sentences.length < 2){
+    sentences = S.short.sentences.filter(s => s.en && s.en.trim().length > 0);
   }
-  
-  /* 최대 10개로 제한 (너무 많으면 지침) */
-  sentences = sentences.slice(0, Math.max(7, Math.min(sentences.length, 10)));
+
+  /* 최대 7개 (원본 문장만, 분할 절대 없음!) */
+  sentences = sentences.slice(0, 7);
   
   PUZZLE_STATE.items = sentences.map(s => ({
     en: s.en,
