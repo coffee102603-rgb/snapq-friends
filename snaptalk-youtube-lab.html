@@ -273,7 +273,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .cover-toggle.on{background:var(--accent-d);color:var(--accent);border-color:var(--accent)}
 
 /* ═══ YOUTUBE + PIP ═══ */
-#ytContainer{width:100%;aspect-ratio:9/16;max-height:60vh;background:#111;position:relative;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:20}
+#ytContainer{width:100%;aspect-ratio:9/16;max-height:34vh;background:#111;position:relative;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:20}
 #ytContainer iframe{width:100%;height:115%;position:absolute;top:0;left:0}
 #ytContainer.pip{position:absolute;bottom:80px;left:12px;width:100px;height:140px;aspect-ratio:auto;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.6);border:2px solid var(--accent);z-index:40}
 #ytContainer.pip iframe{height:150%;top:-15%}
@@ -1676,12 +1676,12 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #shadowArea .shadow-bottom-actions{ flex-shrink: 0 }
 
 /* v8.8: 영상 더 넓게! (좌우 여백 최소화) */
-.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:38vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4);transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:26vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4);transition:max-height .4s cubic-bezier(.4,0,.2,1)}
 
 /* v8.11: 🎯 긴 문장 대응 — 영상 자동 축소 (쌤 교육철학!) */
-#shadowArea.sentence-medium .shadow-moment{ max-height: 32vh }
-#shadowArea.sentence-long .shadow-moment{ max-height: 26vh }
-#shadowArea.sentence-very-long .shadow-moment{ max-height: 22vh }
+#shadowArea.sentence-medium .shadow-moment{ max-height: 22vh }
+#shadowArea.sentence-long .shadow-moment{ max-height: 18vh }
+#shadowArea.sentence-very-long .shadow-moment{ max-height: 14vh }
 
 /* v8.11: 긴 문장 시 카드 안쪽 간격 타이트하게 */
 #shadowArea.sentence-long .ticket-card{ padding: 14px 16px 12px }
