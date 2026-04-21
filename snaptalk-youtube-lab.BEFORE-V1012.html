@@ -6022,320 +6022,6 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   transform: translateY(-2px);
 }
 
-/* v10.12: 🎬 카테고리 풀 테마 데코 — 영화관 섹션 분위기! */
-
-/* 테마 적용된 feed 배경 */
-.cat-themed{
-  position: relative;
-  background: var(--cat-gradient, linear-gradient(180deg, rgba(0,0,0,0.3), rgba(10,10,30,0.9))) !important;
-}
-.cat-themed::before{
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 50% 20%, var(--cat-glow, rgba(251,191,36,0.15)), transparent 70%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* 🌟 부유하는 이모지 배경 */
-.cat-floating-bg{
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 1;
-  overflow: hidden;
-}
-.cat-float-emoji{
-  position: absolute;
-  opacity: 0.12;
-  animation: catFloat 8s ease-in-out infinite;
-  will-change: transform;
-  filter: drop-shadow(0 0 8px var(--cat-glow, rgba(251,191,36,0.3)));
-}
-@keyframes catFloat{
-  0%,100% { transform: translateY(0) rotate(0deg); opacity: 0.12 }
-  25%     { opacity: 0.18 }
-  50%     { transform: translateY(-25px) rotate(8deg); opacity: 0.2 }
-  75%     { opacity: 0.15 }
-}
-
-/* 헤더 (z-index로 부유 이모지 위로) */
-.cat-detail-header-themed{
-  position: relative;
-  z-index: 2;
-  padding: 10px 14px 8px;
-  flex-shrink: 0;
-}
-
-/* 🎬 테마 배너 (카테고리 고유 분위기!) */
-.cat-themed-banner{
-  position: relative;
-  margin: 38px 0 0;
-  padding: 16px 18px 14px;
-  background: var(--cat-banner-bg, linear-gradient(135deg, #a78bfa, #fbbf24));
-  border-radius: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  overflow: hidden;
-  box-shadow: 
-    0 10px 30px var(--cat-glow, rgba(251,191,36,0.3)),
-    0 0 40px var(--cat-glow, rgba(251,191,36,0.2));
-}
-.ctb-glow{
-  position: absolute;
-  top: -50%;
-  left: -30%;
-  width: 200%;
-  height: 200%;
-  background: radial-gradient(circle at 30% 50%, rgba(255,255,255,0.25), transparent 60%);
-  animation: ctbGlow 4s ease-in-out infinite;
-  pointer-events: none;
-}
-@keyframes ctbGlow{
-  0%,100% { transform: translateX(0) scale(1) }
-  50%     { transform: translateX(10%) scale(1.1) }
-}
-.ctb-emoji-main{
-  font-size: 46px;
-  line-height: 1;
-  flex-shrink: 0;
-  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.35));
-  position: relative;
-  z-index: 2;
-  animation: ctbEmojiBounce 2.5s ease-in-out infinite;
-}
-@keyframes ctbEmojiBounce{
-  0%,100% { transform: translateY(0) rotate(-3deg) }
-  50%     { transform: translateY(-4px) rotate(3deg) }
-}
-.ctb-info{
-  flex: 1;
-  min-width: 0;
-  position: relative;
-  z-index: 2;
-}
-.ctb-name{
-  font-size: 16px;
-  font-weight: 900;
-  color: var(--cat-text, #fff);
-  letter-spacing: 1.5px;
-  line-height: 1.1;
-  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
-}
-.ctb-slogan{
-  font-size: 13px;
-  color: var(--cat-text, #fff);
-  font-weight: 800;
-  margin-top: 3px;
-  opacity: 0.95;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
-}
-.ctb-meta{
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 6px;
-  flex-wrap: wrap;
-}
-.ctb-tagline{
-  font-size: 10px;
-  color: var(--cat-text, #fff);
-  font-weight: 700;
-  opacity: 0.85;
-  letter-spacing: 0.5px;
-  font-style: italic;
-}
-.ctb-dot{
-  color: var(--cat-text, #fff);
-  opacity: 0.6;
-  font-size: 11px;
-}
-.ctb-count{
-  font-size: 10px;
-  color: var(--cat-text, #fff);
-  font-weight: 900;
-  padding: 2px 8px;
-  background: rgba(255,255,255,0.25);
-  border-radius: 8px;
-  letter-spacing: 0.3px;
-}
-
-/* 📼 movie-showcase-themed (배너 아래 포스터) */
-.movie-showcase-themed{
-  position: relative;
-  z-index: 2;
-}
-
-/* 🎬 테마 포스터 */
-.movie-cinema-slide-themed{
-  position: relative;
-}
-.mcs-poster-overlay-themed{
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(180deg, 
-    rgba(0,0,0,0.1) 0%, 
-    rgba(0,0,0,0.3) 60%, 
-    rgba(0,0,0,0.6) 100%);
-  pointer-events: none;
-}
-
-/* 영화 포스터식 카드 (시놉시스 대체) */
-.mcs-poster-card{
-  flex: 1;
-  padding: 14px 16px;
-  background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(20,20,43,0.85));
-  border: 1px solid var(--cat-accent, rgba(251,191,36,0.4));
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-height: 0;
-  overflow: hidden;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-
-/* ⭐ 별점 + 시간 한 줄 */
-.mcs-rating-row{
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  flex-wrap: wrap;
-  flex-shrink: 0;
-}
-.mcs-rating{
-  font-size: 14px;
-  letter-spacing: 1px;
-  filter: drop-shadow(0 0 4px rgba(251,191,36,0.5));
-}
-.mcs-rating-label{
-  font-size: 10px;
-  padding: 2px 7px;
-  background: var(--cat-accent, #fbbf24);
-  color: #1a1a2e;
-  border-radius: 6px;
-  font-weight: 900;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.mcs-dot{
-  color: rgba(255,255,255,0.3);
-  font-size: 10px;
-}
-.mcs-duration, .mcs-lines{
-  font-size: 10px;
-  color: #cbd5e1;
-  font-weight: 700;
-}
-
-/* 📝 임팩트 헤드라인 */
-.mcs-headline{
-  padding: 10px 4px 8px;
-  position: relative;
-  flex-shrink: 0;
-}
-.mcs-quote-l, .mcs-quote-r{
-  font-size: 24px;
-  font-weight: 900;
-  color: var(--cat-accent, #fbbf24);
-  opacity: 0.7;
-  line-height: 1;
-  vertical-align: top;
-}
-.mcs-quote-l{ margin-right: 2px }
-.mcs-quote-r{ margin-left: 2px }
-.mcs-headline-text{
-  font-size: 13px;
-  color: #fff;
-  font-weight: 800;
-  line-height: 1.4;
-  font-style: italic;
-  letter-spacing: -0.2px;
-}
-
-/* 🎭 주연 표현 섹션 */
-.mcs-stars-section{
-  padding: 8px 10px;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
-  flex-shrink: 0;
-}
-.mcs-stars-label{
-  font-size: 9px;
-  color: var(--cat-accent, #fbbf24);
-  font-weight: 900;
-  letter-spacing: 0.8px;
-  margin-bottom: 4px;
-}
-.mcs-stars-chips{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-.mcs-star-chip{
-  padding: 3px 7px;
-  background: var(--cat-banner-bg, rgba(251,191,36,0.15));
-  border: 1px solid var(--cat-accent, rgba(251,191,36,0.35));
-  border-radius: 8px;
-  font-size: 10px;
-  color: #fff;
-  font-weight: 800;
-  letter-spacing: 0.2px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-
-/* 🏷️ 태그 */
-.mcs-tags{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  flex-shrink: 0;
-}
-.mcs-tag{
-  padding: 2px 6px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 6px;
-  font-size: 9px;
-  color: var(--cat-accent, #fbbf24);
-  font-weight: 700;
-}
-
-/* ▶ 시작하기 (테마 버튼) */
-.mcs-start-btn-themed{
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px;
-  background: var(--cat-banner-bg, linear-gradient(135deg, #fbbf24, #f59e0b));
-  border: none;
-  border-radius: 12px;
-  color: var(--cat-text, #fff);
-  font-weight: 900;
-  cursor: pointer;
-  transition: all 0.2s;
-  box-shadow: 
-    0 6px 20px var(--cat-glow, rgba(251,191,36,0.35)),
-    0 0 30px var(--cat-glow, rgba(251,191,36,0.12));
-  flex-shrink: 0;
-  margin-top: 2px;
-  letter-spacing: 0.3px;
-  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-.mcs-start-btn-themed:hover{
-  transform: translateY(-2px);
-  box-shadow: 
-    0 10px 28px var(--cat-glow, rgba(251,191,36,0.5)),
-    0 0 40px var(--cat-glow, rgba(251,191,36,0.22));
-}
-.mcs-start-btn-themed:active{ transform: translateY(0) }
-.mcs-start-icon{ font-size: 16px }
-.mcs-start-label{ font-size: 14px }
-
 /* v10.9: 🎬 카테고리 상세 — 영화관 1개씩 슬라이드쇼! */
 .cat-detail-header-compact{
   padding: 10px 14px 6px;
@@ -8257,7 +7943,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(251,191,36,.8);font-weight:700;z-index:200;pointer-events:none">v10.12 🎨</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(251,191,36,.7);font-weight:700;z-index:200;pointer-events:none">v10.11 🎭</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -10319,55 +10005,18 @@ function renderCategoryDetail(shorts, cat){
   let items = shorts.filter(cat.filter);
   if(cat.sort) items.sort(cat.sort);
   
-  /* v10.12: 🎬 카테고리 테마 가져오기 */
-  const theme = getCategoryTheme(cat.id || cat.title || '');
-  
-  /* 테마 CSS 변수 세팅 (컨테이너에 적용) */
-  feed.style.setProperty('--cat-gradient', theme.gradient);
-  feed.style.setProperty('--cat-banner-bg', theme.bannerBg);
-  feed.style.setProperty('--cat-accent', theme.accent);
-  feed.style.setProperty('--cat-glow', theme.glow);
-  feed.style.setProperty('--cat-text', theme.textColor);
-  feed.classList.add('cat-themed');
-  
-  /* 🌟 부유하는 이모지 배경 (테마별 데코!) */
-  const floatBg = document.createElement('div');
-  floatBg.className = 'cat-floating-bg';
-  const floatCount = theme.floatingCount || 10;
-  for(let i = 0; i < floatCount; i++){
-    const emoji = theme.emojis[i % theme.emojis.length];
-    const span = document.createElement('span');
-    span.className = 'cat-float-emoji';
-    span.textContent = emoji;
-    /* 랜덤 위치 + 딜레이 + 크기 */
-    const left = Math.random() * 92 + 2;
-    const top = Math.random() * 70 + 15;
-    const delay = Math.random() * 6;
-    const dur = 6 + Math.random() * 6;
-    const size = 20 + Math.random() * 18;
-    const rot = Math.random() * 30 - 15;
-    span.style.cssText = `left:${left}%;top:${top}%;animation-delay:${delay}s;animation-duration:${dur}s;font-size:${size}px;transform:rotate(${rot}deg)`;
-    floatBg.appendChild(span);
-  }
-  feed.appendChild(floatBg);
-  
-  /* 🎬 테마 배너 (카테고리 정체성!) */
+  /* v10.9: 🎬 영화관 스타일 — 20% 축소 간판 */
   const header = document.createElement('div');
-  header.className = 'cat-detail-header-themed fade-up';
+  header.className = 'cat-detail-header-compact fade-up';
   header.innerHTML = `
     <button class="cat-detail-back-sm" id="catDetailBack">← 매표소로</button>
-    <div class="cat-themed-banner">
-      <div class="ctb-glow"></div>
-      <div class="ctb-emoji-main">${cat.emoji}</div>
-      <div class="ctb-info">
-        <div class="ctb-name">${theme.name}</div>
-        <div class="ctb-slogan">${theme.slogan}</div>
-        <div class="ctb-meta">
-          <span class="ctb-tagline">${theme.taglineEn}</span>
-          <span class="ctb-dot">·</span>
-          <span class="ctb-count">${items.length} Shows</span>
-        </div>
+    <div class="cat-detail-banner-compact">
+      <div class="cdbc-emoji">${cat.emoji}</div>
+      <div class="cdbc-info">
+        <div class="cdbc-title">${cat.title}</div>
+        <div class="cdbc-sub">${cat.subtitle || ''}</div>
       </div>
+      <div class="cdbc-count">${items.length}편</div>
     </div>
   `;
   feed.appendChild(header);
@@ -10382,81 +10031,64 @@ function renderCategoryDetail(shorts, cat){
     `;
     feed.appendChild(empty);
   } else {
-    /* v10.12: 🎬 영화 포스터식 슬라이드쇼 (임팩트!) */
+    /* v10.9: 🎬 영화관 1개씩 슬라이드 쇼 */
     const showcase = document.createElement('div');
-    showcase.className = 'movie-showcase movie-showcase-themed fade-up';
+    showcase.className = 'movie-showcase fade-up';
     showcase.style.animationDelay = '0.15s';
     
-    /* 포스터들 렌더링 */
+    /* 자동 시놉시스 생성 (summary 필드 우선, 없으면 ko 3문장) */
+    function makeSynopsis(s){
+      if(s.summary) return s.summary;
+      if(!s.sentences) return '';
+      const koFirst = s.sentences.slice(0, 3).map(x => x.ko || '').filter(Boolean).join(' ');
+      return koFirst || '흥미진진한 영상을 만나보세요!';
+    }
+    
+    function formatDuration(s){
+      if(!s.sentences || s.sentences.length === 0) return '';
+      const last = s.sentences[s.sentences.length - 1];
+      const sec = Math.round(last.end || 0);
+      if(sec <= 0) return '';
+      const mm = Math.floor(sec / 60);
+      const ss = sec % 60;
+      return mm > 0 ? `${mm}:${String(ss).padStart(2,'0')}` : `${sec}초`;
+    }
+    
+    /* 포스터들 랜더링 */
     items.forEach((s, i) => {
       const isReview = IS_ADMIN && s.status === 'review';
       const reviewBadge = isReview 
         ? `<span class="poster-review-badge">🔒 비공개</span>` 
         : '';
       const poster = document.createElement('div');
-      poster.className = 'movie-cinema-slide movie-cinema-slide-themed';
+      poster.className = 'movie-cinema-slide';
       poster.dataset.idx = i;
       poster.dataset.shortId = s.id;
       poster.style.display = i === 0 ? 'flex' : 'none';
       
-      /* v10.12: 영화 포스터식 데이터 */
-      const duration = formatVideoDuration(s);
-      const diffInfo = getDiffStars(s.diff);
-      const headline = generateHeadline(s);
-      const starExprs = extractStarExpressions(s, 4);
-      const tags = generateTags(s);
-      
-      /* 커레이터 특별 배지 */
-      let specialBadge = '';
-      if(s.curatorPick){
-        specialBadge = '<span class="mcs-cinema-badge badge-editor">🎓 쌤 PICK</span>';
-      } else if(s.createdAt){
-        const daysDiff = (Date.now() - new Date(s.createdAt).getTime()) / (1000*60*60*24);
-        if(daysDiff <= 7) specialBadge = '<span class="mcs-cinema-badge badge-new">🆕 NEW</span>';
-      }
+      const duration = formatDuration(s);
+      const synopsis = makeSynopsis(s);
       
       poster.innerHTML = `
         <div class="mcs-poster">
           <div class="mcs-poster-img" style="background-image:url('https://img.youtube.com/vi/${s.id}/hqdefault.jpg')">
             ${reviewBadge}
-            ${specialBadge}
             <div class="mcs-poster-play">▶</div>
-            <div class="mcs-poster-overlay-themed"></div>
+            <div class="mcs-poster-overlay"></div>
           </div>
         </div>
-        <div class="mcs-poster-card">
+        <div class="mcs-synopsis-card">
           <h2 class="mcs-title">${s.title}</h2>
-          
-          <div class="mcs-rating-row">
-            <span class="mcs-rating">${diffInfo.stars}</span>
-            <span class="mcs-rating-label">${diffInfo.label}</span>
-            ${duration ? `<span class="mcs-dot">·</span><span class="mcs-duration">⏱️ ${duration}</span>` : ''}
-            <span class="mcs-dot">·</span>
-            <span class="mcs-lines">🎤 ${s.sentences.length}대사</span>
+          <div class="mcs-meta">
+            ${duration ? `<span class="mcs-meta-item">⏱️ ${duration}</span>` : ''}
+            <span class="mcs-meta-item">🎤 ${s.sentences.length}대사</span>
+            <span class="mcs-diff diff-${s.diff}">${s.diff}</span>
           </div>
-          
-          <div class="mcs-headline">
-            <span class="mcs-quote-l">"</span>
-            <span class="mcs-headline-text">${headline}</span>
-            <span class="mcs-quote-r">"</span>
-          </div>
-          
-          ${starExprs.length > 0 ? `
-          <div class="mcs-stars-section">
-            <div class="mcs-stars-label">🎭 주연 표현</div>
-            <div class="mcs-stars-chips">
-              ${starExprs.map(e => `<span class="mcs-star-chip">${e}</span>`).join('')}
-            </div>
-          </div>` : ''}
-          
-          ${tags.length > 0 ? `
-          <div class="mcs-tags">
-            ${tags.map(t => `<span class="mcs-tag">${t}</span>`).join('')}
-          </div>` : ''}
-          
+          <div class="mcs-synopsis-label">📝 시놉시스</div>
+          <p class="mcs-synopsis-text">${synopsis}</p>
           ${isReview 
             ? `<button class="cat-card-publish-btn" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>` 
-            : `<button class="mcs-start-btn-themed" data-start-id="${s.id}">
+            : `<button class="mcs-start-btn" data-start-id="${s.id}">
                  <span class="mcs-start-icon">▶</span>
                  <span class="mcs-start-label">시작하기</span>
                </button>`
@@ -10539,13 +10171,6 @@ function renderCategoryDetail(shorts, cat){
   
   /* 뒤로가기 */
   document.getElementById('catDetailBack').addEventListener('click', () => {
-    /* v10.12: 테마 클래스 정리 */
-    feed.classList.remove('cat-themed');
-    feed.style.removeProperty('--cat-gradient');
-    feed.style.removeProperty('--cat-banner-bg');
-    feed.style.removeProperty('--cat-accent');
-    feed.style.removeProperty('--cat-glow');
-    feed.style.removeProperty('--cat-text');
     S.feedLevel = 1;
     S.selectedCategory = null;
     renderFeed();
@@ -11063,390 +10688,6 @@ function cleanupStarMode(){
   /* iframe 제거 (재생 중지) */
   const wrap = document.getElementById('spVideoWrap');
   if(wrap) wrap.innerHTML = '';
-}
-
-/* ═══════════════════════════════════════ */
-
-/* ═══════════════════════════════════════
- * v10.12: 🎬 CATEGORY THEMES — 풀 테마 데코!
- * 쌤의 비전: "영화관 섹션별 다른 분위기!"
- * FOODIE다운, CAMPUS다운, TRAVEL다운...
- * ═══════════════════════════════════════ */
-const CATEGORY_THEMES = {
-  food: {
-    name: 'FOODIE CORNER',
-    slogan: '🍴 Bon Appétit!',
-    sub: '맛있는 세계로!',
-    gradient: 'linear-gradient(135deg, rgba(255,107,53,0.25), rgba(251,146,60,0.18))',
-    bannerBg: 'linear-gradient(135deg, #ff6b35, #f59e0b)',
-    accent: '#ff6b35',
-    glow: 'rgba(255,107,53,0.4)',
-    textColor: '#fff',
-    emojis: ['🍔','🍕','🍟','🥟','🌭','🍜','🌮','🍱','🥘','🌯'],
-    floatingCount: 12,
-    taglineEn: 'Delicious Experiences'
-  },
-  people: {
-    name: 'PEOPLE & TALK',
-    slogan: '🎤 Real Voices!',
-    sub: '사람들의 이야기',
-    gradient: 'linear-gradient(135deg, rgba(236,72,153,0.22), rgba(168,85,247,0.15))',
-    bannerBg: 'linear-gradient(135deg, #ec4899, #a855f7)',
-    accent: '#ec4899',
-    glow: 'rgba(236,72,153,0.4)',
-    textColor: '#fff',
-    emojis: ['💬','🎤','👥','🗣️','😊','🤝','💭','✨','🌟','💖'],
-    floatingCount: 10,
-    taglineEn: 'Authentic Conversations'
-  },
-  travel: {
-    name: 'TRAVEL CORNER',
-    slogan: '✈️ Pack Your Bags!',
-    sub: '세계로 떠나는 여행',
-    gradient: 'linear-gradient(135deg, rgba(59,130,246,0.25), rgba(6,182,212,0.18))',
-    bannerBg: 'linear-gradient(135deg, #3b82f6, #06b6d4)',
-    accent: '#38bdf8',
-    glow: 'rgba(56,189,248,0.4)',
-    textColor: '#fff',
-    emojis: ['✈️','🗺️','🎒','🌍','🗽','🏖️','📷','🏔️','🗼','🎢'],
-    floatingCount: 12,
-    taglineEn: 'Adventures Await'
-  },
-  business: {
-    name: 'BUSINESS CLASS',
-    slogan: '💼 Work Smart!',
-    sub: '비즈니스 영어',
-    gradient: 'linear-gradient(135deg, rgba(30,41,59,0.9), rgba(71,85,105,0.5))',
-    bannerBg: 'linear-gradient(135deg, #1e293b, #475569)',
-    accent: '#cbd5e1',
-    glow: 'rgba(203,213,225,0.3)',
-    textColor: '#fff',
-    emojis: ['💼','📊','💰','📈','📰','🏢','📱','💡','📋','🖊️'],
-    floatingCount: 8,
-    taglineEn: 'Executive English'
-  },
-  daily: {
-    name: 'DAILY LIFE',
-    slogan: '☕ Coffee & Chat!',
-    sub: '일상 속 영어',
-    gradient: 'linear-gradient(135deg, rgba(251,191,36,0.22), rgba(245,158,11,0.15))',
-    bannerBg: 'linear-gradient(135deg, #fbbf24, #f59e0b)',
-    accent: '#fcd34d',
-    glow: 'rgba(252,211,77,0.4)',
-    textColor: '#1a1a2e',
-    emojis: ['☕','🏠','🛋️','📱','🌸','🍵','📺','📚','🎨','🌿'],
-    floatingCount: 10,
-    taglineEn: 'Everyday Moments'
-  },
-  shopping: {
-    name: 'SHOPPING SPREE',
-    slogan: '🛍️ Let\'s Shop!',
-    sub: '쇼핑 영어',
-    gradient: 'linear-gradient(135deg, rgba(168,85,247,0.22), rgba(236,72,153,0.15))',
-    bannerBg: 'linear-gradient(135deg, #a855f7, #ec4899)',
-    accent: '#c4b5fd',
-    glow: 'rgba(196,181,253,0.4)',
-    textColor: '#fff',
-    emojis: ['🛍️','👗','👠','💳','🏷️','💄','👜','✨','💎','🎁'],
-    floatingCount: 10,
-    taglineEn: 'Fashion & Finds'
-  },
-  culture: {
-    name: 'K-CULTURE',
-    slogan: '🌟 Stage is Yours!',
-    sub: '한류 컬처',
-    gradient: 'linear-gradient(135deg, rgba(236,72,153,0.25), rgba(139,92,246,0.18))',
-    bannerBg: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
-    accent: '#f472b6',
-    glow: 'rgba(244,114,182,0.5)',
-    textColor: '#fff',
-    emojis: ['🎤','🎵','💃','🌟','🎀','💖','🎁','🎬','⭐','✨'],
-    floatingCount: 14,
-    taglineEn: 'Korean Wave'
-  },
-  fun: {
-    name: 'FUN & GAMES',
-    slogan: '😂 Let\'s Have Fun!',
-    sub: '재미있는 영상',
-    gradient: 'linear-gradient(135deg, rgba(234,179,8,0.22), rgba(20,184,166,0.15))',
-    bannerBg: 'linear-gradient(135deg, #eab308, #14b8a6)',
-    accent: '#facc15',
-    glow: 'rgba(250,204,21,0.4)',
-    textColor: '#1a1a2e',
-    emojis: ['😂','🎉','🎈','🎊','🎢','🎨','🎮','🎯','🎪','🎭'],
-    floatingCount: 12,
-    taglineEn: 'Comedy & Joy'
-  },
-  cars: {
-    name: 'CARS & TECH',
-    slogan: '🚗 Rev It Up!',
-    sub: '자동차·테크',
-    gradient: 'linear-gradient(135deg, rgba(239,68,68,0.22), rgba(251,146,60,0.15))',
-    bannerBg: 'linear-gradient(135deg, #ef4444, #f97316)',
-    accent: '#fca5a5',
-    glow: 'rgba(252,165,165,0.4)',
-    textColor: '#fff',
-    emojis: ['🚗','🏎️','🚙','🔧','⚙️','🛞','🏁','⚡','🔌','📱'],
-    floatingCount: 10,
-    taglineEn: 'Cars & Gadgets'
-  },
-  home: {
-    name: 'HOME & ROUTINE',
-    slogan: '🏠 Sweet Home!',
-    sub: '홈 라이프',
-    gradient: 'linear-gradient(135deg, rgba(16,185,129,0.22), rgba(6,182,212,0.15))',
-    bannerBg: 'linear-gradient(135deg, #10b981, #06b6d4)',
-    accent: '#6ee7b7',
-    glow: 'rgba(110,231,183,0.4)',
-    textColor: '#fff',
-    emojis: ['🏠','🛏️','🧺','🪴','🐕','🐈','🛋️','📚','🌿','☀️'],
-    floatingCount: 10,
-    taglineEn: 'Home Sweet Home'
-  },
-  work: {
-    name: 'WORK & CAREER',
-    slogan: '💼 Career Up!',
-    sub: '직장·커리어',
-    gradient: 'linear-gradient(135deg, rgba(99,102,241,0.22), rgba(139,92,246,0.15))',
-    bannerBg: 'linear-gradient(135deg, #6366f1, #8b5cf6)',
-    accent: '#a5b4fc',
-    glow: 'rgba(165,180,252,0.4)',
-    textColor: '#fff',
-    emojis: ['💼','📊','💻','📝','🏆','📈','🎯','💡','📞','⏰'],
-    floatingCount: 10,
-    taglineEn: 'Professional Growth'
-  },
-  default: {
-    name: 'SHOWCASE',
-    slogan: '🎬 Now Showing!',
-    sub: '영상 컬렉션',
-    gradient: 'linear-gradient(135deg, rgba(167,139,250,0.2), rgba(251,191,36,0.12))',
-    bannerBg: 'linear-gradient(135deg, #a78bfa, #fbbf24)',
-    accent: '#fbbf24',
-    glow: 'rgba(251,191,36,0.4)',
-    textColor: '#fff',
-    emojis: ['🎬','⭐','🎭','🎞️','🎨','✨','🌟','🎪'],
-    floatingCount: 10,
-    taglineEn: 'Featured Content'
-  }
-};
-
-/* 영상 카테고리 → 테마 매핑 (느슨한 매칭) */
-function getCategoryTheme(catId){
-  if(!catId) return CATEGORY_THEMES.default;
-  const key = catId.toLowerCase();
-  
-  /* 직접 매칭 */
-  if(CATEGORY_THEMES[key]) return CATEGORY_THEMES[key];
-  
-  /* 한국어 카테고리 변형 처리 */
-  if(key === 'kfood' || key === 'k_food') return CATEGORY_THEMES.food;
-  if(key === 'ktravel' || key === 'k_travel') return CATEGORY_THEMES.travel;
-  if(key === 'kdaily' || key === 'k_daily') return CATEGORY_THEMES.daily;
-  if(key === 'kpeople' || key === 'k_people') return CATEGORY_THEMES.people;
-  if(key === 'kculture' || key === 'k_culture' || key === 'kpop' || key === 'drama') return CATEGORY_THEMES.culture;
-  if(key === 'casual') return CATEGORY_THEMES.people;
-  if(key === 'campus' || key === 'education' || key === 'school') return CATEGORY_THEMES.work;
-  if(key === 'career' || key === 'interview_job' || key === 'hospital') return CATEGORY_THEMES.work;
-  if(key === 'places') return CATEGORY_THEMES.travel;
-  if(key === 'interview' || key === 'interview_us') return CATEGORY_THEMES.people;
-  
-  /* 패턴 매칭 */
-  if(key.includes('food') || key.includes('먹')) return CATEGORY_THEMES.food;
-  if(key.includes('travel') || key.includes('place') || key.includes('여행')) return CATEGORY_THEMES.travel;
-  if(key.includes('business') || key.includes('career') || key.includes('job')) return CATEGORY_THEMES.business;
-  if(key.includes('daily') || key.includes('routine') || key.includes('일상')) return CATEGORY_THEMES.daily;
-  if(key.includes('shop') || key.includes('쇼핑')) return CATEGORY_THEMES.shopping;
-  if(key.includes('kpop') || key.includes('culture') || key.includes('drama')) return CATEGORY_THEMES.culture;
-  if(key.includes('fun') || key.includes('funny') || key.includes('meme')) return CATEGORY_THEMES.fun;
-  if(key.includes('car') || key.includes('tech')) return CATEGORY_THEMES.cars;
-  if(key.includes('home') || key.includes('pet')) return CATEGORY_THEMES.home;
-  if(key.includes('interview') || key.includes('people') || key.includes('talk')) return CATEGORY_THEMES.people;
-  if(key.includes('work') || key.includes('campus')) return CATEGORY_THEMES.work;
-  
-  return CATEGORY_THEMES.default;
-}
-
-/* ═══════════════════════════════════════
- * v10.12: 🎬 AI 헤드라인 자동 생성
- * "임팩트 있는 한 줄 영화 카피!"
- * ═══════════════════════════════════════ */
-function generateHeadline(short){
-  if(!short) return '흥미진진한 영상을 만나보세요!';
-  
-  /* 1순위: summary 필드 (쌤이 작성한 것) */
-  if(short.summary && short.summary.length > 0){
-    /* 첫 문장 또는 60자까지 */
-    const firstLine = short.summary.split(/[.!?\n]/)[0].trim();
-    if(firstLine.length >= 10) return firstLine + (firstLine.endsWith('!') || firstLine.endsWith('?') ? '' : '!');
-    return short.summary.substring(0, 60) + (short.summary.length > 60 ? '...' : '');
-  }
-  
-  /* 2순위: 제목 기반 자동 생성 (카테고리 맞춤!) */
-  const title = short.title || '영상';
-  const cat = short.cat || '';
-  
-  const templates = {
-    food: [
-      `${title}! 맛의 신세계!`,
-      `${title}, 입안에 퍼지는 미스!`,
-      `놓칠 수 없는 ${title}!`,
-      `${title} — 진짜 맛은 이런 것!`
-    ],
-    travel: [
-      `${title}! 떠나고 싶은 충동!`,
-      `${title} — 인생 버킷리스트!`,
-      `꼭 가봐야 할 ${title}!`,
-      `${title}, 여행의 진짜 모습!`
-    ],
-    business: [
-      `${title} — 프로의 순간!`,
-      `${title}, 비즈니스의 현장!`,
-      `${title}에서 배우는 프로 마인드!`,
-      `${title} 진짜 승부!`
-    ],
-    daily: [
-      `${title} — 소소하지만 확실한 행복!`,
-      `${title}, 내 일상의 한 장면!`,
-      `${title}에서 찾은 소중한 순간!`,
-      `${title} — 평범함의 미학!`
-    ],
-    culture: [
-      `${title}! K-문화의 정수!`,
-      `${title} — 세계를 뒤흔드는 한류!`,
-      `${title}, 반짝이는 순간들!`,
-      `${title} — K-컬쳐의 진수!`
-    ],
-    shopping: [
-      `${title}! 쇼핑의 재미!`,
-      `${title} — 지름신 강림!`,
-      `${title}, 놓칠 수 없는 아이템!`,
-      `${title} 득템 찬스!`
-    ],
-    fun: [
-      `${title} — 빵 터지는 순간!`,
-      `${title}, 웃음 폭발 주의!`,
-      `${title} — 도저히 못 참는 웃음!`,
-      `${title} 엄청난 재미!`
-    ],
-    people: [
-      `${title} — 진짜 이야기!`,
-      `${title}, 사람 사는 이야기!`,
-      `${title}에서 만난 리얼!`,
-      `${title} 진솔한 순간!`
-    ],
-    cars: [
-      `${title}! 심장이 뛰는 순간!`,
-      `${title} — 속도의 미학!`,
-      `${title}, 기술의 최전선!`
-    ],
-    home: [
-      `${title} — 편안한 일상!`,
-      `${title}, 내 집의 특별함!`,
-      `${title}에서 찾은 휴식!`
-    ],
-    work: [
-      `${title} — 커리어의 현장!`,
-      `${title}, 직장인의 공감!`,
-      `${title}에서 배우는 일의 기술!`
-    ]
-  };
-  
-  /* 카테고리 매칭 (느슨하게) */
-  const themeKey = getCategoryTheme(cat) === CATEGORY_THEMES.default ? 'default' : 
-                   Object.keys(CATEGORY_THEMES).find(k => CATEGORY_THEMES[k] === getCategoryTheme(cat)) || 'default';
-  
-  const list = templates[themeKey];
-  if(list && list.length > 0){
-    /* 영상 ID 기반 seed로 일관된 선택 */
-    const seed = (short.id || '').split('').reduce((sum, c) => sum + c.charCodeAt(0), 0);
-    return list[seed % list.length];
-  }
-  
-  return `${title} — 함께 즐겨봐요!`;
-}
-
-/* 주연 표현 추출 (대표 표현 3-5개) */
-function extractStarExpressions(short, limit){
-  limit = limit || 4;
-  if(!short || !short.sentences) return [];
-  const expressions = [];
-  const seen = new Set();
-  
-  /* 1순위: highlight (핵심 표현) */
-  short.sentences.forEach(s => {
-    if(expressions.length >= limit) return;
-    if(s.highlight && !seen.has(s.highlight.toLowerCase())){
-      seen.add(s.highlight.toLowerCase());
-      expressions.push(s.highlight);
-    }
-  });
-  
-  /* 2순위: core 단어 */
-  short.sentences.forEach(s => {
-    if(expressions.length >= limit) return;
-    if(s.core && !seen.has(s.core.toLowerCase())){
-      seen.add(s.core.toLowerCase());
-      expressions.push(s.core);
-    }
-  });
-  
-  return expressions.slice(0, limit);
-}
-
-/* 영상 태그 자동 생성 */
-function generateTags(short){
-  if(!short) return [];
-  const tags = [];
-  const cat = short.cat || '';
-  const title = (short.title || '').toLowerCase();
-  
-  /* 카테고리 기반 */
-  const catTags = {
-    food: ['#먹방','#요리','#맛집','#리뷰'],
-    travel: ['#여행','#관광','#투어','#모험'],
-    business: ['#비즈니스','#프로','#커리어','#오피스'],
-    daily: ['#일상','#데일리','#루틴','#생활'],
-    culture: ['#K-POP','#한류','#컬쳐','#스타'],
-    shopping: ['#쇼핑','#패션','#하울','#아이템'],
-    fun: ['#재미','#웃음','#유쾌','#코미디'],
-    people: ['#인터뷰','#대화','#스토리','#리얼'],
-    cars: ['#자동차','#테크','#기술','#리뷰'],
-    home: ['#홈','#루틴','#인테리어','#반려'],
-    work: ['#직장','#회사','#커리어','#프로페셔널']
-  };
-  
-  /* 느슨한 매칭 */
-  const themeKey = Object.keys(CATEGORY_THEMES).find(k => CATEGORY_THEMES[k] === getCategoryTheme(cat)) || 'default';
-  const themeTags = catTags[themeKey] || ['#영화','#SnapTalk','#영어'];
-  tags.push(...themeTags.slice(0, 3));
-  
-  /* 제목 기반 */
-  if(title.includes('nyc') || title.includes('new york')) tags.push('#NYC');
-  if(title.includes('pizza')) tags.push('#Pizza');
-  if(title.includes('mrbeast')) tags.push('#MrBeast');
-  if(title.includes('kpop')) tags.push('#KPOP');
-  
-  return [...new Set(tags)].slice(0, 4);
-}
-
-/* 영상 난이도 별점 매핑 */
-function getDiffStars(diff){
-  if(diff === 'beginner' || diff === 'easy') return { stars: '⭐☆☆', label: 'Easy', num: 1 };
-  if(diff === 'intermediate' || diff === 'normal') return { stars: '⭐⭐☆', label: 'Mid', num: 2 };
-  if(diff === 'advanced' || diff === 'hard') return { stars: '⭐⭐⭐', label: 'Hard', num: 3 };
-  return { stars: '⭐☆☆', label: 'Easy', num: 1 };
-}
-
-/* 영상 시간 포맷 */
-function formatVideoDuration(short){
-  if(!short || !short.sentences || short.sentences.length === 0) return '';
-  const last = short.sentences[short.sentences.length - 1];
-  const sec = Math.round(last.end || 0);
-  if(sec <= 0) return '';
-  const mm = Math.floor(sec / 60);
-  const ss = sec % 60;
-  return mm > 0 ? `${mm}:${String(ss).padStart(2,'0')}` : `${sec}초`;
 }
 
 /* ═══════════════════════════════════════ */
