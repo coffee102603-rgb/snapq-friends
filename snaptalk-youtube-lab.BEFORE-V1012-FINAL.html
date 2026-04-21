@@ -6203,22 +6203,24 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   animation: slideFadeIn 0.35s cubic-bezier(.4,0,.2,1);
 }
 
-/* v10.12: 🎬 포스터 영역 — 작게! (소개 카드 공간 확보!) */
+/* v10.12: 포스터 영역 — 고정 높이 (28vh)! */
 .movie-cinema-slide-themed .mcs-poster{
   flex: 0 0 auto !important;
-  height: 22vh !important; /* 화면의 22%만! (이전 28%) */
+  height: 28vh !important; /* 화면의 28%만 차지! */
   width: 100% !important;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .movie-cinema-slide-themed .mcs-poster-img{
-  aspect-ratio: 16/10 !important;
-  height: 100%;
-  width: 100%;
-  max-height: 22vh !important;
+  width: 100% !important;
+  height: 100% !important; /* 부모 div를 꽉 채움 */
+  aspect-ratio: unset !important; /* aspect-ratio 제거! */
   border-radius: 12px !important;
+  background-size: cover !important;
+  background-position: center !important;
 }
+
 .mcs-poster-overlay-themed{
   position: absolute;
   inset: 0;
@@ -6229,33 +6231,28 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   pointer-events: none;
 }
 
-/* 영화 포스터식 카드 (시놉시스 대체) — 컴팩트 레이아웃! */
+/* 영화 포스터식 카드 — 명확한 flex로 남은 공간 차지! */
 .mcs-poster-card{
-  flex: 1 1 auto;
-  min-height: 0;
-  padding: 10px 12px;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 10px 12px !important;
   background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(20,20,43,0.85));
   border: 1px solid var(--cat-accent, rgba(251,191,36,0.4));
   border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  overflow: hidden;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  overflow-y: auto !important; /* 내용 넘치면 카드 내부 스크롤! */
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-/* mcs-title override (컴팩트 + 눈에 잘 띔) */
+/* mcs-title override (컴팩트) */
 .mcs-poster-card .mcs-title{
   font-size: 14px !important;
-  line-height: 1.25 !important;
+  line-height: 1.2 !important;
   -webkit-line-clamp: 1 !important;
-  display: -webkit-box !important;
-  -webkit-box-orient: vertical !important;
-  overflow: hidden !important;
-  margin-bottom: 0 !important;
-  color: #fff !important;
-  font-weight: 900 !important;
-  flex-shrink: 0;
+  margin-bottom: 1px !important;
+  flex-shrink: 0 !important;
 }
 
 /* ⭐ 별점 + 시간 한 줄 */
@@ -6291,14 +6288,14 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-weight: 700;
 }
 
-/* 📝 임팩트 헤드라인 — 1줄로! */
+/* 📝 임팩트 헤드라인 — 컴팩트! */
 .mcs-headline{
-  padding: 3px 2px;
+  padding: 4px 2px;
   position: relative;
   flex-shrink: 0;
 }
 .mcs-quote-l, .mcs-quote-r{
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 900;
   color: var(--cat-accent, #fbbf24);
   opacity: 0.6;
@@ -6311,16 +6308,16 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-size: 11px;
   color: #fff;
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.35;
   font-style: italic;
   letter-spacing: -0.1px;
   display: -webkit-box;
-  -webkit-line-clamp: 1;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* 🎭 주연 표현 섹션 — 더 compact */
+/* 🎭 주연 표현 섹션 — 컴팩트 */
 .mcs-stars-section{
   padding: 5px 8px;
   background: rgba(255,255,255,0.04);
@@ -6369,13 +6366,13 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-weight: 700;
 }
 
-/* ▶ 시작하기 (테마 버튼) — 눈에 확 띄게! */
+/* ▶ 시작하기 (테마 버튼) — 컴팩트 */
 .mcs-start-btn-themed{
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 10px;
+  padding: 9px;
   background: var(--cat-banner-bg, linear-gradient(135deg, #fbbf24, #f59e0b));
   border: none;
   border-radius: 10px;
@@ -6398,7 +6395,31 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 }
 .mcs-start-btn-themed:active{ transform: translateY(0) }
 .mcs-start-icon{ font-size: 13px }
-.mcs-start-label{ font-size: 13px }
+.mcs-start-label{ font-size: 12px }
+
+/* 네비게이션 — 컴팩트 */
+.movie-showcase-nav{
+  position: relative;
+  z-index: 2;
+  padding: 4px 12px 8px !important;
+  flex-shrink: 0;
+}
+.msn-btn{
+  width: 30px !important;
+  height: 30px !important;
+  font-size: 11px !important;
+}
+.msn-dot{
+  width: 6px !important;
+  height: 6px !important;
+}
+.msn-dot.active{
+  width: 20px !important;
+}
+.msn-page{
+  font-size: 10px !important;
+  min-width: 32px !important;
+}
 
 /* v10.9: 🎬 카테고리 상세 — 영화관 1개씩 슬라이드쇼! */
 .cat-detail-header-compact{
