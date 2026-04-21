@@ -6085,7 +6085,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 /* 🎬 테마 배너 — 컴팩트! */
 .cat-themed-banner{
   position: relative;
-  margin: 0;
+  margin: 32px 0 0;
   padding: 10px 12px;
   background: var(--cat-banner-bg, linear-gradient(135deg, #a78bfa, #fbbf24));
   border-radius: 14px;
@@ -10430,6 +10430,7 @@ function renderCategoryDetail(shorts, cat){
   const header = document.createElement('div');
   header.className = 'cat-detail-header-themed fade-up';
   header.innerHTML = `
+    <button class="cat-detail-back-sm" id="catDetailBack">← 매표소로</button>
     <div class="cat-themed-banner">
       <div class="ctb-glow"></div>
       <div class="ctb-emoji-main">${cat.emoji}</div>
@@ -10611,8 +10612,19 @@ function renderCategoryDetail(shorts, cat){
     });
   }
   
-  /* v10.12: ← 매표소로 버튼 제거 (하단 CINEMA 탭으로 대체) */
-  /* 대신 feedLevel은 하단 탭 클릭 시 리셋됨 */
+  /* 뒤로가기 */
+  document.getElementById('catDetailBack').addEventListener('click', () => {
+    /* v10.12: 테마 클래스 정리 */
+    feed.classList.remove('cat-themed');
+    feed.style.removeProperty('--cat-gradient');
+    feed.style.removeProperty('--cat-banner-bg');
+    feed.style.removeProperty('--cat-accent');
+    feed.style.removeProperty('--cat-glow');
+    feed.style.removeProperty('--cat-text');
+    S.feedLevel = 1;
+    S.selectedCategory = null;
+    renderFeed();
+  });
 }
 
 /* 빈 카테고리 토스트 */
@@ -13442,16 +13454,6 @@ document.querySelectorAll('.nav-btn').forEach(b=>{
       if(typeof stopTodaysLineTimer === 'function') stopTodaysLineTimer();
       S.feedLevel=1;
       S.selectedCategory=null;
-      /* v10.12: cat-themed 테마 정리 */
-      const feedEl = document.getElementById('feedScreen');
-      if(feedEl){
-        feedEl.classList.remove('cat-themed');
-        feedEl.style.removeProperty('--cat-gradient');
-        feedEl.style.removeProperty('--cat-banner-bg');
-        feedEl.style.removeProperty('--cat-accent');
-        feedEl.style.removeProperty('--cat-glow');
-        feedEl.style.removeProperty('--cat-text');
-      }
       renderFeed();
       showScreen('feed');
     }
@@ -16039,16 +16041,6 @@ function goHome(){
   /* v9.6: 1층 매표소로 리셋 */
   S.feedLevel = 1;
   S.selectedCategory = null;
-  /* v10.12: cat-themed 테마 클래스 정리 */
-  const feed = document.getElementById('feedScreen');
-  if(feed){
-    feed.classList.remove('cat-themed');
-    feed.style.removeProperty('--cat-gradient');
-    feed.style.removeProperty('--cat-banner-bg');
-    feed.style.removeProperty('--cat-accent');
-    feed.style.removeProperty('--cat-glow');
-    feed.style.removeProperty('--cat-text');
-  }
   renderFeed();
   showScreen('feed');
   document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
