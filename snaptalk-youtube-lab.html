@@ -6184,25 +6184,39 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   min-height: 0;
   margin: 8px 12px 4px !important;
   overflow: hidden;
+  display: flex !important;
+  flex-direction: column !important;
 }
 
-/* 🎬 테마 포스터 */
+/* 🎬 테마 포스터 — 명확한 flex 비율! */
 .movie-cinema-slide-themed{
   position: relative;
   flex: 1;
   min-height: 0;
   overflow: hidden;
   gap: 8px !important;
+  display: flex !important;
+  flex-direction: column !important;
 }
+
+/* v10.12: 포스터 영역 — 고정 높이 (28vh)! */
 .movie-cinema-slide-themed .mcs-poster{
-  flex: 0 0 auto;
-  max-height: 35vh; /* 영상 최대 높이 제한! */
+  flex: 0 0 auto !important;
+  height: 28vh !important; /* 화면의 28%만 차지! */
+  width: 100% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .movie-cinema-slide-themed .mcs-poster-img{
-  aspect-ratio: 16/10 !important;
-  max-height: 35vh;
+  width: 100% !important;
+  height: 100% !important; /* 부모 div를 꽉 채움 */
+  aspect-ratio: unset !important; /* aspect-ratio 제거! */
   border-radius: 12px !important;
+  background-size: cover !important;
+  background-position: center !important;
 }
+
 .mcs-poster-overlay-themed{
   position: absolute;
   inset: 0;
@@ -6213,18 +6227,18 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   pointer-events: none;
 }
 
-/* 영화 포스터식 카드 (시놉시스 대체) — 컴팩트! */
+/* 영화 포스터식 카드 — 명확한 flex로 남은 공간 차지! */
 .mcs-poster-card{
-  flex: 1;
-  padding: 10px 12px;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  padding: 10px 12px !important;
   background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(20,20,43,0.85));
   border: 1px solid var(--cat-accent, rgba(251,191,36,0.4));
   border-radius: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-  min-height: 0;
-  overflow: hidden;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 5px !important;
+  overflow-y: auto !important; /* 내용 넘치면 카드 내부 스크롤! */
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
@@ -6234,6 +6248,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   line-height: 1.2 !important;
   -webkit-line-clamp: 1 !important;
   margin-bottom: 1px !important;
+  flex-shrink: 0 !important;
 }
 
 /* ⭐ 별점 + 시간 한 줄 */
