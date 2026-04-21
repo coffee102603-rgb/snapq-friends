@@ -6238,15 +6238,15 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 /* 영화 포스터식 카드 — 모든 콘텐츠 한 화면에! */
 .mcs-poster-card{
   flex: 1 1 auto;
-  min-height: 250px; /* 최소 높이 ↑ (모든 섹션 보임!) */
-  padding: 8px 10px;
-  background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(20,20,43,0.85));
-  border: 1px solid var(--cat-accent, rgba(251,191,36,0.4));
+  min-height: 0;
+  padding: 6px 10px;
+  background: linear-gradient(135deg, rgba(26,26,46,0.98), rgba(15,15,35,0.95));
+  border: 1px solid rgba(255,255,255,0.12);
   border-radius: 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  overflow: visible;
+  gap: 2px;
+  overflow: hidden;
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
@@ -6304,14 +6304,14 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 /* 📝 헤드라인 — 1줄 고정 */
 .mcs-headline{
   padding: 2px 2px;
+  margin-bottom: 0 !important;
   position: relative;
   flex-shrink: 0;
 }
 .mcs-quote-l, .mcs-quote-r{
   font-size: 14px;
   font-weight: 900;
-  color: var(--cat-accent, #fbbf24);
-  opacity: 0.6;
+  color: rgba(255,255,255,0.4);
   line-height: 1;
   vertical-align: top;
 }
@@ -6333,6 +6333,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 /* 🎭 주연 표현 섹션 — 고정 */
 .mcs-stars-section{
   padding: 4px 6px;
+  margin-top: 2px !important;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.06);
   border-radius: 7px;
@@ -6341,7 +6342,7 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 }
 .mcs-stars-label{
   font-size: 8px;
-  color: var(--cat-accent, #fbbf24);
+  color: rgba(255,255,255,0.7);
   font-weight: 900;
   letter-spacing: 0.5px;
   margin-bottom: 2px;
@@ -6355,36 +6356,20 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
 }
 .mcs-star-chip{
   padding: 1px 5px;
-  background: var(--cat-banner-bg, rgba(251,191,36,0.15));
-  border: 1px solid var(--cat-accent, rgba(251,191,36,0.35));
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.25);
   border-radius: 5px;
   font-size: 8px;
   color: #fff;
   font-weight: 800;
   letter-spacing: 0.1px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3);
   white-space: nowrap;
 }
 
-/* 🏷️ 태그 — 고정 */
-.mcs-tags{
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2px;
-  flex-shrink: 0;
-  max-height: 16px;
-  overflow: hidden;
-}
-.mcs-tag{
-  padding: 1px 5px;
-  background: rgba(255,255,255,0.05);
-  border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 4px;
-  font-size: 8px;
-  color: var(--cat-accent, #fbbf24);
-  font-weight: 700;
-  white-space: nowrap;
-}
+/* 🏷️ 태그 — 완전 제거 (v10.13 쌤 결정) */
+.mcs-tags{ display: none !important; }
+.mcs-tag{ display: none !important; }
 
 /* ▶ 시작하기 버튼 — 고정 */
 .mcs-start-btn-themed{
@@ -6741,9 +6726,9 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   
   /* 정보 카드 — 모든 섹션 타이트하게! */
   .mcs-poster-card{
-    min-height: 230px !important;
+    min-height: 0 !important;
     padding: 6px 8px !important;
-    gap: 3px !important;
+    gap: 2px !important;
   }
   .mcs-poster-card .mcs-title{
     font-size: 13px !important;
@@ -10577,11 +10562,6 @@ function renderCategoryDetail(shorts, cat){
             <div class="mcs-stars-chips">
               ${starExprs.map(e => `<span class="mcs-star-chip">${e}</span>`).join('')}
             </div>
-          </div>` : ''}
-          
-          ${tags.length > 0 ? `
-          <div class="mcs-tags">
-            ${tags.map(t => `<span class="mcs-tag">${t}</span>`).join('')}
           </div>` : ''}
           
           ${isReview 
