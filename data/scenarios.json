@@ -1,0 +1,142 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-21",
+  "description": "SnapTalk AI 대화 파트너 시나리오. 카테고리별로 매핑됨.",
+  "scenarios": {
+    "food": {
+      "emoji": "🍔",
+      "label": "레스토랑 주문",
+      "roleAi": "Friendly waiter at Joe's Diner",
+      "roleUser": "Customer ordering food",
+      "opener": "Hi! Welcome to Joe's Diner! What can I get you today?",
+      "openerKo": "환영합니다! 조의 다이너입니다! 뭘 드릴까요?",
+      "hints": [
+        "I'd like...",
+        "Can I have...",
+        "How much is...",
+        "What do you recommend?"
+      ],
+      "vibeColor": "#fbbf24"
+    },
+    "places": {
+      "emoji": "✈️",
+      "label": "공항 체크인",
+      "roleAi": "Airline check-in agent",
+      "roleUser": "Passenger checking in",
+      "opener": "Good morning! May I see your passport and ticket, please?",
+      "openerKo": "안녕하세요! 여권과 티켓 좀 보여주시겠어요?",
+      "hints": [
+        "Here you are",
+        "I have one bag",
+        "Window seat please",
+        "What time is boarding?"
+      ],
+      "vibeColor": "#22d3ee"
+    },
+    "travel": {
+      "emoji": "🗽",
+      "label": "관광 안내",
+      "roleAi": "Local tour guide in NYC",
+      "roleUser": "Tourist asking for directions",
+      "opener": "Hey there! Need some help exploring the city?",
+      "openerKo": "안녕하세요! 도시 구경 도움 드릴까요?",
+      "hints": [
+        "How do I get to...",
+        "Where is the...",
+        "Is it far?",
+        "Can I walk there?"
+      ],
+      "vibeColor": "#fbbf24"
+    },
+    "business": {
+      "emoji": "💼",
+      "label": "비즈니스 미팅",
+      "roleAi": "Potential business partner",
+      "roleUser": "Meeting attendee",
+      "opener": "Thanks for meeting with me today. Shall we get started?",
+      "openerKo": "오늘 만나주셔서 감사합니다. 시작해볼까요?",
+      "hints": [
+        "Absolutely",
+        "I agree",
+        "Let me explain",
+        "What do you think?"
+      ],
+      "vibeColor": "#a78bfa"
+    },
+    "career": {
+      "emoji": "🎯",
+      "label": "영어 면접",
+      "roleAi": "HR manager conducting interview",
+      "roleUser": "Job candidate",
+      "opener": "Hi, thanks for coming in today. Could you tell me about yourself?",
+      "openerKo": "안녕하세요, 와주셔서 감사합니다. 자기소개 해주시겠어요?",
+      "hints": [
+        "I'm passionate about...",
+        "My strength is...",
+        "I have experience in...",
+        "I'm interested because..."
+      ],
+      "vibeColor": "#10b981"
+    },
+    "campus": {
+      "emoji": "🎓",
+      "label": "교수님 상담",
+      "roleAi": "Friendly university professor",
+      "roleUser": "Student asking for help",
+      "opener": "Come on in! How can I help you today?",
+      "openerKo": "들어오세요! 오늘 어떻게 도와드릴까요?",
+      "hints": [
+        "I need help with...",
+        "Can you explain...",
+        "I'm struggling with...",
+        "When is the deadline?"
+      ],
+      "vibeColor": "#f59e0b"
+    },
+    "daily": {
+      "emoji": "🛍️",
+      "label": "일상 대화",
+      "roleAi": "Friendly neighbor at coffee shop",
+      "roleUser": "Local customer",
+      "opener": "Hey! Long time no see! How have you been?",
+      "openerKo": "오랜만이에요! 어떻게 지내셨어요?",
+      "hints": [
+        "Pretty good, thanks!",
+        "Just busy with...",
+        "How about you?",
+        "Let's catch up!"
+      ],
+      "vibeColor": "#f472b6"
+    },
+    "people": {
+      "emoji": "💬",
+      "label": "친구와 수다",
+      "roleAi": "Close friend catching up",
+      "roleUser": "Friend sharing stories",
+      "opener": "Oh my gosh, you won't believe what happened to me yesterday!",
+      "openerKo": "와 진짜, 어제 나한테 무슨 일 있었는지 못 믿을 거야!",
+      "hints": [
+        "No way!",
+        "Tell me more!",
+        "Really?",
+        "That's crazy!"
+      ],
+      "vibeColor": "#ec4899"
+    },
+    "fun": {
+      "emoji": "🎉",
+      "label": "재미있는 수다",
+      "roleAi": "Fun friend at party",
+      "roleUser": "Party guest",
+      "opener": "This party is lit! Are you having fun?",
+      "openerKo": "이 파티 완전 죽인다! 재밌어?",
+      "hints": [
+        "Totally!",
+        "The vibes are great",
+        "Best party ever",
+        "Let's dance!"
+      ],
+      "vibeColor": "#a855f7"
+    }
+  }
+}

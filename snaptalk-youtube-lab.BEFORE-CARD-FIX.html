@@ -273,7 +273,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .cover-toggle.on{background:var(--accent-d);color:var(--accent);border-color:var(--accent)}
 
 /* ═══ YOUTUBE + PIP ═══ */
-#ytContainer{width:100%;aspect-ratio:9/16;max-height:60vh;background:#111;position:relative;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:20}
+#ytContainer{width:100%;aspect-ratio:9/16;max-height:34vh;background:#111;position:relative;overflow:hidden;transition:all .4s cubic-bezier(.4,0,.2,1);z-index:20}
 #ytContainer iframe{width:100%;height:115%;position:absolute;top:0;left:0}
 #ytContainer.pip{position:absolute;bottom:80px;left:12px;width:100px;height:140px;aspect-ratio:auto;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.6);border:2px solid var(--accent);z-index:40}
 #ytContainer.pip iframe{height:150%;top:-15%}
@@ -1676,12 +1676,12 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 #shadowArea .shadow-bottom-actions{ flex-shrink: 0 }
 
 /* v8.8: 영상 더 넓게! (좌우 여백 최소화) */
-.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:38vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4);transition:max-height .4s cubic-bezier(.4,0,.2,1)}
+.shadow-moment{width:100%;margin:0;aspect-ratio:16/10;max-height:26vh;background:#000;border-radius:14px;border:1px solid rgba(167,139,250,.18);position:relative;overflow:hidden;box-shadow:0 0 0 1px rgba(167,139,250,.1),0 0 30px rgba(167,139,250,.08),0 8px 24px rgba(0,0,0,.4);transition:max-height .4s cubic-bezier(.4,0,.2,1)}
 
 /* v8.11: 🎯 긴 문장 대응 — 영상 자동 축소 (쌤 교육철학!) */
-#shadowArea.sentence-medium .shadow-moment{ max-height: 32vh }
-#shadowArea.sentence-long .shadow-moment{ max-height: 26vh }
-#shadowArea.sentence-very-long .shadow-moment{ max-height: 22vh }
+#shadowArea.sentence-medium .shadow-moment{ max-height: 22vh }
+#shadowArea.sentence-long .shadow-moment{ max-height: 18vh }
+#shadowArea.sentence-very-long .shadow-moment{ max-height: 14vh }
 
 /* v8.11: 긴 문장 시 카드 안쪽 간격 타이트하게 */
 #shadowArea.sentence-long .ticket-card{ padding: 14px 16px 12px }
@@ -8479,56 +8479,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
 <div id="langModal"><div class="lang-modal-box"><div class="lang-modal-title">UI 언어 선택</div><div class="lang-grid"><button class="lang-option selected" data-lang="ko">🇰🇷 한국어</button><button class="lang-option" data-lang="en">🇺🇸 English</button><button class="lang-option" data-lang="ja">🇯🇵 日本語</button><button class="lang-option" data-lang="zh">🇨🇳 中文</button></div></div></div>
 
 <script>
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  🗺️  SnapTalk YouTube Lab — JavaScript 코드 목차
- *  ══════════════════════════════════════════════════════════════════════════
- *
- *    섹션 번호       섹션 이름                     설명
- *    ──────    ──────────────────────    ────────────────────────────────
- *    01.  UTILITIES               — chunk 분할 · 문자열 포맷 · 공통 헬퍼
- *    02.  AI CONVERSATION         — AI 대화 시나리오 · 음성 인식 · 어휘 매칭
- *    03.  DATA CONSTANTS          — ⚠️ 하드코딩 fallback 데이터 (실제 데이터는 data/*.json)
- *    05.  RECORDING TIMER         — 녹음 타이머 시작/정지 · 스톱워치 UI
- *    06.  STATS & STREAK          — 학습 통계 · 스트릭 · 결과 저장 · 내 방 렌더링
- *    07.  SCREENPLAY (대기실)        — 오답 자동 수집 · 3초 순환 · 디지털 필기 캔버스 · TTS
- *    08.  MY STUDIO               — 내가 더빙한 영화 갤러리 · 스테이지 관리
- *    09.  SNAP REVIEW & CARD      — SCREENPLAY 카드 렌더링 · 순환 · 필기 · 삭제
- *    10.  NOTEBOOK                — 노트북 탭 렌더링 (학습 기록 브라우징)
- *    11.  FEED & CATEGORY         — 메인 피드 · 카테고리 상세 · NOW SHOWING 큐레이션
- *    12.  LOBBY & STAR MODE       — 시네마 로비 허브 · STAR MODE 더빙 · 시사회
- *    13.  CATEGORY THEMES         — 카테고리별 시각 테마 · 헤드라인 자동 생성
- *    14.  AI CHAT ENGINE          — AI 대화 파트너 · 메시지 렌더링 · 음성 인식 · Fallback 응답
- *    15.  LINE VISIBILITY         — 문장 가시성 토글 (영어/발음/한글 3종 개별 제어) · 오답 자동수집
- *    16.  PUZZLE GAME             — 자막 조립 퍼즐 · 색깔 벽돌 탑 쌓기 · 오답 → SCREENPLAY
- *    17.  QUIZ GAME               — 영상 내 퀴즈 자동 생성 · SOLD OUT 알고리즘 · 3종 미니게임
- *    18.  SCREEN & PLAYER         — 화면 전환 · YouTube IFrame · 마이크 · TTS 래퍼
- *    19.  LEARN FLOW              — 학습 플로우 (goStep) · 듣기 렌더링 · 하이라이트 · 청크 포맷
- *    20.  SHADOW PLAYER           — ROLLING 섀도우 영상 · 음성 싱크 분석 (5요소 채점)
- *    21.  DUB & KARAOKE           — 더빙 녹음 · 가라오케 모드 · 열도 시각화 · 파티클
- *    22.  RESULTS & SHARE         — 결과 점수 · 등급 계산 · Hall of Fame · 공유
- *    23.  DECORATE                — 스티커 · 프레임 · 필터 · 내 얼굴 꾸미기
- *    24.  ARTWORK & GALLERY       — 완성 영상 플레이어 · 카카오 공유 · 다운로드 · 갤러리
- *    25.  HOME & NAV              — 홈 화면 · 네비게이션 · 앱 초기화
- *    26.  QUICK REVIEW            — QR 빠른 복습 · 오답 바로 다시 풀기
- *    27.  SCENARIO PICKER         — 시나리오 선택 · 시나리오 턴 렌더링 · 가든 공유
- *
- *  ──────────────────────────────────────────────────────────────────────────
- *  데이터 외부화:
- *    · 영상 콘텐츠     → data/shorts.json
- *    · 카테고리 정의   → data/categories.json
- *    · AI 시나리오     → data/scenarios.json
- *    · 플랫폼 메타     → data/meta.json
- *
- *  다국어 확장:
- *    shorts.json 의 각 sentence.translations.{ja,zh,es,...} 필드에
- *    번역을 추가하면 자동으로 해당 언어 지원. HTML 수정 불필요.
- *
- *  안전 장치:
- *    DATA LOADER (섹션 04) 실패 시 DATA CONSTANTS (섹션 03) 사용
- *    → 절대 깨지지 않는 fallback 구조
- * ══════════════════════════════════════════════════════════════════════════ */
-
 /* ═══════════════════════════════════════
  * CONTENT DATABASE
  * Each short: sentences with timestamps
@@ -8543,12 +8493,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
  * 3. 전치사구 경계 (of, in, on, at, with, for, from, to, by)
  * 4. 3-6 단어 단위로 유지
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  01 · UTILITIES
- *  ──────────────────────────────────────────────────────────────────────────
- *  chunk 분할 · 문자열 포맷 · 공통 헬퍼
- * ══════════════════════════════════════════════════════════════════════════ */
 function autoChunk(sentence){
   if(!sentence || typeof sentence !== 'string') return sentence;
   
@@ -8665,12 +8609,6 @@ function applyAutoChunkToAllShorts(){
  * ═══════════════════════════════════════ */
 
 /* 상황별 역할극 시나리오 DB */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  02 · AI CONVERSATION
- *  ──────────────────────────────────────────────────────────────────────────
- *  AI 대화 시나리오 · 음성 인식 · 어휘 매칭
- * ══════════════════════════════════════════════════════════════════════════ */
 const CONVERSATION_SCENARIOS = {
   food: {
     emoji: '🍔',
@@ -8970,12 +8908,6 @@ function getConversationVocabMatches(sentences, limit){
   return matched.slice(0, limit);
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  03 · DATA CONSTANTS
- *  ──────────────────────────────────────────────────────────────────────────
- *  ⚠️ 하드코딩 fallback 데이터 (실제 데이터는 data/*.json)
- * ══════════════════════════════════════════════════════════════════════════ */
 const SHORTS={us:[
   {id:'K56O5RdE3KM',title:'How Dalgona Candy Is Made',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:100,
    sentences:[{en:"This is Dalgona candy,",ko:"이건 달고나 사탕이에요,",start:0.16,end:1.109,core:'candy',highlight:'Dalgona candy',koHighlight:'달고나 사탕',phonetic:'디스 이즈 달고나 캔디,'},{en:"the popular Korean street snack seen in the TV series Squid Game.",ko:"TV 시리즈 오징어 게임에 나온 인기 있는 한국 길거리 간식이죠.",start:1.191,end:4.033,core:'snack',highlight:'street snack',koHighlight:'길거리 간식',phonetic:'더 파퓰러 코리안 스트릿 스낵 씬 인 더 티비 시리즈 스퀴드 게임.'},{en:"It made by melting down sugar until it turns a caramel color and then",ko:"설탕을 카라멜 색이 될 때까지 녹여서 만들고,",start:4.115,end:7.227,core:'melting',highlight:'melting down sugar',koHighlight:'설탕을 녹여서',phonetic:'잇 메이드 바이 멜팅 다운 슈거 언틸 잇 턴즈 어 카라멜 컬러 앤 덴'},{en:"adding in a few pinches of baking soda,",ko:"베이킹 소다를 몇 꼬집 넣어주면,",start:7.309,end:8.981,core:'adding',highlight:'adding baking soda',koHighlight:'베이킹 소다를 넣어주면',phonetic:'애딩 인 어 퓨 핀치즈 오브 베이킹 소다,'},{en:"where it then becomes very light and foamy.",ko:"아주 가볍고 부풀어 오르게 돼요.",start:9.063,end:10.916,core:'foamy',highlight:'light and foamy',koHighlight:'가볍고 부풀어 오르게',phonetic:'웨어 잇 덴 비컴즈 베리 라이트 앤 포미.'},{en:"This is dropped onto a flat surface where it pressed down and lightly",ko:"이걸 평평한 표면에 떨어뜨려서 눌러주고,",start:10.998,end:14.109,core:'pressed',highlight:'pressed down',koHighlight:'눌러주고',phonetic:'디스 이즈 드롭트 온투 어 플랫 서페이스 웨어 잇 프레스드 다운 앤 라이틀리'},{en:"stamped with a cookie cutter mold.",ko:"쿠키 커터 틀로 가볍게 찍어줘요.",start:14.191,end:15.639,core:'stamped',highlight:'stamped with mold',koHighlight:'틀로 찍어줘요',phonetic:'스탬프드 위드 어 쿠키 커터 몰드.'},{en:"As you can see, I chose the umbrella shape,",ko:"보시다시피, 저는 우산 모양을 선택했어요,",start:15.721,end:17.448,core:'chose',highlight:'chose umbrella shape',koHighlight:'우산 모양을 선택했어요',phonetic:'애즈 유 캔 씨, 아이 초즈 디 엄브렐라 쉐이프,'},{en:"and once you handed the Dalgona,",ko:"그리고 달고나를 받으면,",start:17.53,end:18.92,core:'handed',highlight:'handed the Dalgona',koHighlight:'달고나를 받으면',phonetic:'앤 원스 유 핸디드 더 달고나,'},{en:"the goal is to use a toothpick to carve out the shape in the",ko:"목표는 이쑤시개로 가운데의 모양을 파내는 거예요,",start:19.002,end:21.445,core:'carve',highlight:'carve out shape',koHighlight:'모양을 파내는',phonetic:'더 골 이즈 투 유즈 어 투스픽 투 카브 아웃 더 쉐이프 인 더'},{en:"center so it looks like this,",ko:"이렇게 보이도록 말이죠,",start:21.527,end:22.665,core:'looks',highlight:'looks like this',koHighlight:'이렇게 보이도록',phonetic:'센터 쏘 잇 룩스 라이크 디스,'},{en:"but unfortunately I dropped it on the floor and lost immediately.",ko:"하지만 불행히도 저는 바닥에 떨어뜨려서 바로 졌어요.",start:22.747,end:25.44,core:'dropped',highlight:'dropped on floor',koHighlight:'바닥에 떨어뜨려서',phonetic:'벗 언포춘트리 아이 드롭트 잇 온 더 플로어 앤 로스트 이미디엇틀리.'}]},
@@ -9044,68 +8976,6 @@ const CATEGORIES={
   ]
 };
 
-/* ═══════════════════════════════════════════════════════════════════════════
- *  📦 DATA LOADER (data/*.json 외부 파일 로드)
- * ═══════════════════════════════════════════════════════════════════════════
- *  목적  : 영상·카테고리·시나리오 데이터를 외부 JSON에서 로드하여
- *          HTML 파일 크기 안정화 + 영상 추가 시 HTML 수정 불필요
- *
- *  동작  : 1) 페이지 로드 → fetch('data/shorts.json') 등 병렬 로드
- *          2) 성공 시  : 전역 SHORTS / CATEGORIES / CONVERSATION_SCENARIOS 덮어쓰기
- *          3) 실패 시  : 하드코딩된 fallback 데이터 그대로 사용 (앱 정상 작동)
- *
- *  안전  : fetch 실패해도 기존 하드코딩 데이터로 동작 → 절대 깨지지 않음
- *  확장  : data/shorts.json에 영상만 추가하면 HTML 수정 없이 반영
- *  다국어: 각 sentence의 translations{ja,zh,...} 필드에 번역 추가 가능
- * ═══════════════════════════════════════════════════════════════════════════ */
-(async function loadExternalData() {
-  const base = 'data/';
-  async function safeLoad(file) {
-    try {
-      const res = await fetch(base + file);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return await res.json();
-    } catch (e) {
-      console.warn('[DataLoader] ' + file + ' 로드 실패, fallback 사용:', e.message);
-      return null;
-    }
-  }
-
-  try {
-    const [shortsData, catsData, scenData] = await Promise.all([
-      safeLoad('shorts.json'),
-      safeLoad('categories.json'),
-      safeLoad('scenarios.json'),
-    ]);
-
-    // 전역 데이터 덮어쓰기 (window.* 로 접근 가능한 const는 아니지만, 선언된 변수를 갱신하기 위해 window 속성 활용)
-    if (shortsData && shortsData.shorts) {
-      // SHORTS는 const라 재할당 불가 → 내용을 clear하고 복사
-      if (typeof SHORTS !== 'undefined') {
-        SHORTS.us.length = 0; SHORTS.kr.length = 0;
-        (shortsData.shorts.us || []).forEach(s => SHORTS.us.push(s));
-        (shortsData.shorts.kr || []).forEach(s => SHORTS.kr.push(s));
-        console.log('[DataLoader] ✅ shorts.json 로드 (US ' + SHORTS.us.length + ' / KR ' + SHORTS.kr.length + ')');
-      }
-    }
-
-    if (catsData && catsData.categories && typeof CATEGORIES !== 'undefined') {
-      Object.keys(CATEGORIES).forEach(k => delete CATEGORIES[k]);
-      Object.assign(CATEGORIES, catsData.categories);
-      console.log('[DataLoader] ✅ categories.json 로드');
-    }
-
-    if (scenData && scenData.scenarios && typeof CONVERSATION_SCENARIOS !== 'undefined') {
-      Object.keys(CONVERSATION_SCENARIOS).forEach(k => delete CONVERSATION_SCENARIOS[k]);
-      Object.assign(CONVERSATION_SCENARIOS, scenData.scenarios);
-      console.log('[DataLoader] ✅ scenarios.json 로드');
-    }
-  } catch (e) {
-    console.warn('[DataLoader] 전체 로드 실패, fallback 사용:', e.message);
-  }
-})();
-
-
 /* ═══ SCENARIO SCRIPTS (Phase B) ═══ */
 const SCENARIOS=[
   {
@@ -9173,12 +9043,6 @@ const S={
 let ytPlayer=null,audioCtx=null,analyser=null,micStream=null,dubInterval=null,shadowInterval=null;
 
 /* v10.2: 🔴 REC 카운터 (영화 촬영 현장 느낌!) */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  05 · RECORDING TIMER
- *  ──────────────────────────────────────────────────────────────────────────
- *  녹음 타이머 시작/정지 · 스톱워치 UI
- * ══════════════════════════════════════════════════════════════════════════ */
 let REC_TIMER_STATE = { interval: null, seconds: 0 };
 function startRecTimer(){
   stopRecTimer();
@@ -9214,12 +9078,6 @@ const db={get:(k,d)=>{try{return JSON.parse(localStorage.getItem('sd_'+k))||d}ca
 /* ═══════════════════════════════════════
  * STREAK & STATS
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  06 · STATS & STREAK
- *  ──────────────────────────────────────────────────────────────────────────
- *  학습 통계 · 스트릭 · 결과 저장 · 내 방 렌더링
- * ══════════════════════════════════════════════════════════════════════════ */
 function getStreak(){const s=db.get('streak',{count:0,last:null});if(s.last){const d=Math.floor((new Date(new Date().toDateString())-new Date(s.last))/864e5);if(d>1)s.count=0}return s}
 function updateStreak(){const s=getStreak(),t=new Date().toDateString();if(s.last!==t){s.count++;s.last=t;db.set('streak',s)}renderStreak()}
 function renderStreak(){const s=getStreak();const b=document.getElementById('streakBadge');if(b)b.textContent='🔥 '+s.count+'일';document.getElementById('roomStreak').textContent=s.count}
@@ -9269,12 +9127,6 @@ function renderRoom(){
 /* v9.9: 📜 SCREENPLAY 노트 로직 (손가락 캔버스!) */
 
 /* 캔버스 상태 */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  07 · SCREENPLAY (대기실)
- *  ──────────────────────────────────────────────────────────────────────────
- *  오답 자동 수집 · 3초 순환 · 디지털 필기 캔버스 · TTS
- * ══════════════════════════════════════════════════════════════════════════ */
 const CANVAS_STATE = {
   ctx: null,
   canvas: null,
@@ -9729,12 +9581,6 @@ document.addEventListener('click', e => {
 });
 
 /* Growth stage config */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  08 · MY STUDIO
- *  ──────────────────────────────────────────────────────────────────────────
- *  내가 더빙한 영화 갤러리 · 스테이지 관리
- * ══════════════════════════════════════════════════════════════════════════ */
 const STAGES={
   seed:    {icon:'🌱',label:'Seed',  color:'#64748b',next:'sprout', threshold:{say:1,use:0}},
   sprout:  {icon:'🌿',label:'Sprout',color:'#22c55e',next:'tree',   threshold:{say:3,use:0}},
@@ -9881,12 +9727,6 @@ function getGradeColor(grade){
   return colors[grade]||'#888';
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  09 · SNAP REVIEW & CARD
- *  ──────────────────────────────────────────────────────────────────────────
- *  SCREENPLAY 카드 렌더링 · 순환 · 필기 · 삭제
- * ══════════════════════════════════════════════════════════════════════════ */
 function openSnapDrawer(){
   SnapStudio.drawerOpen=true;
   renderSnapStudio();
@@ -10275,12 +10115,6 @@ function incrementSnapWrite(){
 }
 
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  10 · NOTEBOOK
- *  ──────────────────────────────────────────────────────────────────────────
- *  노트북 탭 렌더링 (학습 기록 브라우징)
- * ══════════════════════════════════════════════════════════════════════════ */
 function renderNotebook(){
   const nb=db.get('notebook',[]);
   const nbList=document.getElementById('notebookList');
@@ -10354,12 +10188,6 @@ function renderNotebook(){
 /* ═══════════════════════════════════════
  * FEED
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  11 · FEED & CATEGORY
- *  ──────────────────────────────────────────────────────────────────────────
- *  메인 피드 · 카테고리 상세 · NOW SHOWING 큐레이션
- * ══════════════════════════════════════════════════════════════════════════ */
 function renderFeed(){
   const feed=document.getElementById('feedScreen');
   const IS_ADMIN = new URLSearchParams(window.location.search).get('admin')==='1';
@@ -10881,12 +10709,6 @@ const CURATOR_SECRET_ADMIN = 'sk_curator_snaptalk_2026_a9f8b7c6d5e4f3a2b1c0';
  * ═══════════════════════════════════════════════════ */
 
 /* 🏢 로비 허브 표시 */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  12 · LOBBY & STAR MODE
- *  ──────────────────────────────────────────────────────────────────────────
- *  시네마 로비 허브 · STAR MODE 더빙 · 시사회
- * ══════════════════════════════════════════════════════════════════════════ */
 function showLobbyHub(){
   /* 영상 플레이어 정지 */
   try{
@@ -11381,12 +11203,6 @@ function cleanupStarMode(){
  * 쌤의 비전: "영화관 섹션별 다른 분위기!"
  * FOODIE다운, CAMPUS다운, TRAVEL다운...
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  13 · CATEGORY THEMES
- *  ──────────────────────────────────────────────────────────────────────────
- *  카테고리별 시각 테마 · 헤드라인 자동 생성
- * ══════════════════════════════════════════════════════════════════════════ */
 const CATEGORY_THEMES = {
   food: {
     name: 'FOODIE CORNER',
@@ -11778,12 +11594,6 @@ document.addEventListener('click', e => {
   }
 });
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  14 · AI CHAT ENGINE
- *  ──────────────────────────────────────────────────────────────────────────
- *  AI 대화 파트너 · 메시지 렌더링 · 음성 인식 · Fallback 응답
- * ══════════════════════════════════════════════════════════════════════════ */
 function openAiChat(){
   const hub = document.getElementById('lobbyHub');
   if(hub) hub.style.display = 'none';
@@ -12226,12 +12036,6 @@ document.addEventListener('click', e=>{
 /* v10.4: 🎚️ 줄 표시/숨김 시스템 — 사용자 맞춤!
    영어/발음/한글 각각 개별로 ON/OFF 가능
    localStorage에 저장돼서 다음에도 유지! */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  15 · LINE VISIBILITY
- *  ──────────────────────────────────────────────────────────────────────────
- *  문장 가시성 토글 (영어/발음/한글 3종 개별 제어) · 오답 자동수집
- * ══════════════════════════════════════════════════════════════════════════ */
 function getLineVisibility(){
   try {
     const saved = localStorage.getItem('sd_line_visibility');
@@ -12357,12 +12161,6 @@ function showAutoCollectToast(source){
   }
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  16 · PUZZLE GAME
- *  ──────────────────────────────────────────────────────────────────────────
- *  자막 조립 퍼즐 · 색깔 벽돌 탑 쌓기 · 오답 → SCREENPLAY
- * ══════════════════════════════════════════════════════════════════════════ */
 const PUZZLE_STATE = {
   items: [],          // 문장 배열 [{en, ko, words}]
   currentIdx: 0,
@@ -12947,12 +12745,6 @@ document.addEventListener('click', e=>{
  * 3가지 모드 랜덤 · 스테이지 시스템 연동
  * ═══════════════════════════════════════════════════ */
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  17 · QUIZ GAME
- *  ──────────────────────────────────────────────────────────────────────────
- *  영상 내 퀴즈 자동 생성 · SOLD OUT 알고리즘 · 3종 미니게임
- * ══════════════════════════════════════════════════════════════════════════ */
 const QUIZ_STATE = {
   mode: null,        // 'snack' | 'hotdog' | 'popcorn'
   items: [],         // 시험 대상 [{id, en, ko, highlight, koHighlight, stage, sayCount, ...}]
@@ -12968,54 +12760,62 @@ const QUIZ_STATE = {
 
 /* 노트에서 시험할 단어 뽑기 (v10.12: 쌤 요청 - 4개!) */
 function pickQuizItems(){
-  /* v10.12: 🎯 영상 CORE/HIGHLIGHT 우선! (쌤 원칙: 각 영상 핵심 표현!) */
-  const nb = db.get('notebook', []);
-  const chosen = [];
-  const seenEn = new Set();
-  const QUIZ_COUNT = 4; /* 쌤 요청: 4개 문제 */
-  
-  /* 1순위: 노트북 (현재 영상) — 사용자가 저장한 것 */
-  const fromCurrent = nb.filter(n => n.shortId === S.short?.id && n.stage !== 'mastered');
-  fromCurrent.slice(0, 2).forEach(n => {
-    if(!seenEn.has(n.en)){ chosen.push(n); seenEn.add(n.en); }
-  });
-  
-  /* 2순위 ⭐ 영상 문장의 CORE/HIGHLIGHT (영상 핵심 표현 우선!) */
-  if(S.short && S.short.sentences){
-    for(const s of S.short.sentences){
-      if(chosen.length >= QUIZ_COUNT) break;
-      if(!s.highlight && !s.core) continue;
-      const enKey = s.en || '';
-      if(seenEn.has(enKey)) continue;
-      chosen.push({
-        en: s.en,
-        ko: s.ko,
-        highlight: s.highlight || s.core,
-        koHighlight: s.koHighlight || s.ko,
-        core: s.core,
-        shortId: S.short.id,
-        shortTitle: S.short.title
-      });
-      seenEn.add(enKey);
-    }
+  /* v10.13: 🎯 현재 영상에서만! 고유명사 제외! SOLD OUT 지원! */
+  if(!S.short || !S.short.sentences) return null;
+
+  /* 고유명사 판별 — 사람 이름, 지명 등 제외 */
+  const COMMON_CAPS = new Set([
+    'I','The','A','An','In','On','At','For','To','Of','It','Is','Was','Are','Be',
+    'Do','Did','Get','Got','Go','Okay','Yeah','No','Yes','Oh','So','But','And',
+    'Or','If','When','What','How','Why','Who','Where','This','That','My','Your',
+    'His','Her','We','They','You','He','She','Not','Just','Now','Then','Here',
+    'There','All','One','Two','Up','Out','With','From','By','About','Would',
+    'Could','Should','Well','Still','Even','Only','Also','Like','Make','Take',
+    'Want','Need','Know','Think','See','Come','Bring','Look','Say','Tell'
+  ]);
+
+  function isProperNoun(text){
+    if(!text) return false;
+    const t = String(text).trim();
+    const words = t.split(/\s+/);
+    /* 단어 1개 + 대문자 시작 + 일반 단어 목록에 없으면 고유명사 */
+    if(words.length === 1 && /^[A-Z]/.test(t) && !COMMON_CAPS.has(t)) return true;
+    return false;
   }
-  
-  /* 3순위: 노트북 (다른 영상) */
-  if(chosen.length < QUIZ_COUNT){
-    const others = nb.filter(n => n.shortId !== S.short?.id && n.stage !== 'mastered');
-    for(const n of others.sort(() => Math.random() - 0.5)){
-      if(chosen.length >= QUIZ_COUNT) break;
-      if(!seenEn.has(n.en)){
-        chosen.push(n);
-        seenEn.add(n.en);
-      }
-    }
+
+  /* 현재 영상 문장에서 유효한 highlight만 수집 */
+  const sentences = S.short.sentences;
+  const validItems = [];
+  const seenHighlight = new Set();
+
+  for(const s of sentences){
+    const h = s.highlight || s.core;
+    if(!h) continue;
+    const hLower = String(h).toLowerCase().trim();
+    if(seenHighlight.has(hLower)) continue;     /* 중복 제거 */
+    if(isProperNoun(h)) continue;               /* 고유명사 제외 */
+    if(hLower.length < 2) continue;             /* 너무 짧은 것 제외 */
+
+    seenHighlight.add(hLower);
+    validItems.push({
+      en: s.en,
+      ko: s.ko,
+      highlight: h,
+      koHighlight: s.koHighlight || s.ko,
+      core: s.core,
+      shortId: S.short.id,
+      shortTitle: S.short.title
+    });
   }
-  
-  /* 최소 1개라도 없으면 원래대로 */
-  if(chosen.length === 0) return [];
-  
-  return chosen.slice(0, QUIZ_COUNT);
+
+  /* 오답 후보 수 확인 (정답 외 최소 1개 필요) */
+  const hasEnoughDistractors = validItems.length >= 2;
+
+  /* SOLD OUT 조건: 유효한 문제 2개 미만 */
+  if(!hasEnoughDistractors) return null;
+
+  /* 랜덤 섞어서 최대 4개 */
+  return validItems.sort(() => Math.random() - 0.5).slice(0, 4);
 }
 
 /* 🎰 슬롯머신 → QUIZ 게임 시작! */
@@ -13057,9 +12857,13 @@ function startQuizGame(){
   QUIZ_STATE.wrong = 0;
   QUIZ_STATE.score = 0;
   QUIZ_STATE.lives = 3;
-  
+
+  /* v10.13: null = SOLD OUT (문제 부족), [] = 저장 없음 */
+  if(QUIZ_STATE.items === null){
+    showSoldOutMessage();
+    return;
+  }
   if(QUIZ_STATE.items.length === 0){
-    /* 저장된 단어 없음 */
     showEmptyQuizMessage();
     return;
   }
@@ -13117,8 +12921,25 @@ function startQuizGame(){
 }
 
 /* 저장 단어 없을 때 */
+function showSoldOutMessage(){
+  /* v10.13: 🚫 SOLD OUT — 이 영상은 문제 출제 불가! */
+  document.querySelectorAll('.quiz-mode').forEach(m=>m.style.display='none');
+  const slot = document.getElementById('quizSlotMachine');
+  slot.style.display='flex';
+  slot.innerHTML = `
+    <div class="quiz-slot-title">🎪 간식 품절!</div>
+    <div style="font-size:72px;margin:8px 0">🚫</div>
+    <div style="font-size:26px;font-weight:900;color:#fbbf24;letter-spacing:3px;margin-bottom:6px">SOLD OUT</div>
+    <div style="font-size:13px;color:#a1a1aa;text-align:center;line-height:1.9">
+      이 영상은 간식 재료가 부족해요 😅<br>
+      <span style="color:#fbbf24">퍼즐 게임</span>은 할 수 있어요! 🧩
+    </div>
+    <button class="quiz-btn-home" style="margin-top:20px;padding:12px 24px;background:linear-gradient(135deg,#fbbf24,#f59e0b);color:#1a1a2e;font-weight:900"
+            onclick="exitQuizGame('lobby')">🏢 로비로</button>
+  `;
+}
+
 function showEmptyQuizMessage(){
-  const quizMain = document.getElementById('quizMain');
   document.querySelectorAll('.quiz-mode').forEach(m=>m.style.display='none');
   const slot = document.getElementById('quizSlotMachine');
   slot.style.display='flex';
@@ -13174,9 +12995,11 @@ function launchSnackCounter(item){
   const displayKo = item.koHighlight || item.ko || '이 표현!';
   document.getElementById('quizSnackKo').textContent = displayKo;
   
-  /* 4지선다 생성 — v10.12: 🎯 쌤 원칙 - 모두 같은 영상 highlight만! */
+  /* v10.13: 4지선다 — 같은 영상 highlight만 + 고유명사 제외! */
   const correct = item.highlight || item.en;
   const correctLower = String(correct).toLowerCase();
+  /* 고유명사 판별 (간식 코너용) */
+  function isPN(t){ const w=String(t||'').trim().split(/\s+/); return w.length===1&&/^[A-Z]/.test(t)&&!['I','The','A','An','In','On','At','For','To','Of','It','Is','Was','Are','Be','Okay','Yeah','No','Yes','Oh','So'].includes(t); }
   
   /* 현재 영상의 모든 highlight 수집 (정답 제외) */
   const currentVideoOptions = [];
@@ -13184,6 +13007,7 @@ function launchSnackCounter(item){
     S.short.sentences.forEach(s => {
       const h = s.highlight || s.core;
       if(!h) return;
+      if(isPN(h)) return;  /* v10.13: 고유명사 제외 */
       const hLower = String(h).toLowerCase();
       if(hLower === correctLower) return;
       if(!currentVideoOptions.some(x => String(x).toLowerCase() === hLower)){
@@ -13192,8 +13016,9 @@ function launchSnackCounter(item){
     });
   }
   
-  /* 쌤 원칙: 같은 영상만! 오답 3개 뽑기 */
+  /* v10.13: 같은 영상만! 고유명사 제외 + 오답 3개 뽑기 */
   let distractors = currentVideoOptions
+    .filter(x => !isPN(x))
     .sort(() => Math.random()-0.5)
     .slice(0, 3);
   
@@ -13462,7 +13287,12 @@ function launchPopcorn(item){
     else break;
   }
   
-  const allWords = [correct, correct, correct, ...distractors.slice(0,5)]; /* 정답은 3번 */
+  /* v10.13: 정답은 2번만, 오답은 중복 없이! */
+  const uniqueDistractors = [...new Set(distractors.map(d=>String(d).toLowerCase()))]
+    .map(d => distractors.find(x => String(x).toLowerCase() === d))
+    .filter(Boolean)
+    .slice(0, 5);
+  const allWords = [correct, correct, ...uniqueDistractors];
   
   /* 팝콘 떨어뜨리기 (간격 두고) */
   let idx = 0;
@@ -13748,12 +13578,6 @@ async function publishVideo(videoId){
 /* ═══════════════════════════════════════
  * SCREEN NAVIGATION
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  18 · SCREEN & PLAYER
- *  ──────────────────────────────────────────────────────────────────────────
- *  화면 전환 · YouTube IFrame · 마이크 · TTS 래퍼
- * ══════════════════════════════════════════════════════════════════════════ */
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id+'Screen').classList.add('active');
@@ -13957,12 +13781,6 @@ function activateAudioAndStart(){
   goStep(0);
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  19 · LEARN FLOW
- *  ──────────────────────────────────────────────────────────────────────────
- *  학습 플로우 (goStep) · 듣기 렌더링 · 하이라이트 · 청크 포맷
- * ══════════════════════════════════════════════════════════════════════════ */
 function goStep(step){
   S.gameStep=step;
   updateDots(step);
@@ -14327,12 +14145,6 @@ function wrapWordsForKaraoke(en,mode){
 let shadowPlayer=null;
 let shadowPlayerBusy=false; /* Lock to prevent race conditions */
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  20 · SHADOW PLAYER
- *  ──────────────────────────────────────────────────────────────────────────
- *  ROLLING 섀도우 영상 · 음성 싱크 분석 (5요소 채점)
- * ══════════════════════════════════════════════════════════════════════════ */
 function destroyShadowPlayer(){
   if(shadowPlayer){
     try{shadowPlayer.destroy()}catch(e){}
@@ -14691,12 +14503,6 @@ document.getElementById('shadowSkip').addEventListener('click',()=>{
  * ═══════════════════════════════════════ */
 
 /* Heat level mapping: sync% → temperature stage */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  21 · DUB & KARAOKE
- *  ──────────────────────────────────────────────────────────────────────────
- *  더빙 녹음 · 가라오케 모드 · 열도 시각화 · 파티클
- * ══════════════════════════════════════════════════════════════════════════ */
 function setHeatLevel(pct){
   const container=document.getElementById('ytContainer');
   const overlay=document.getElementById('heatOverlay');
@@ -15232,12 +15038,6 @@ function finishDub(){
 }
 
 /* Determine rank from score — matches 노래방 grading */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  22 · RESULTS & SHARE
- *  ──────────────────────────────────────────────────────────────────────────
- *  결과 점수 · 등급 계산 · Hall of Fame · 공유
- * ══════════════════════════════════════════════════════════════════════════ */
 function getRank(score){
   if(score>=100)return{letter:'LEGEND',emoji:'🏆',color:'#ec4899',desc:'전설의 경지!',stars:5};
   if(score>=90)return{letter:'SS',emoji:'🎖',color:'#fbbf24',desc:'극강의 실력!',stars:5};
@@ -15680,12 +15480,6 @@ document.getElementById('shareSubmit').addEventListener('click',()=>{
  * ═══════════════════════════════════════ */
 
 /* 꾸미기 데이터 */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  23 · DECORATE
- *  ──────────────────────────────────────────────────────────────────────────
- *  스티커 · 프레임 · 필터 · 내 얼굴 꾸미기
- * ══════════════════════════════════════════════════════════════════════════ */
 const DECO_FRAMES=[
   {id:'none',icon:'🚫',label:'없음',cls:''},
   {id:'polaroid',icon:'📷',label:'폴라로이드',cls:'deco-frame-polaroid'},
@@ -16099,12 +15893,6 @@ function pickTutorMessageForScore(){return ''}
 /* ═══════════════════════════════════════
  * 🎬 v7.0 · ARTWORK PLAYER (내 작품 감상) - 깔끔 버전
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  24 · ARTWORK & GALLERY
- *  ──────────────────────────────────────────────────────────────────────────
- *  완성 영상 플레이어 · 카카오 공유 · 다운로드 · 갤러리
- * ══════════════════════════════════════════════════════════════════════════ */
 function openArtworkPlayer(item){
   const modal=document.getElementById('artworkPlayModal');
   const preview=document.getElementById('artworkPlayPreview');
@@ -16418,12 +16206,6 @@ document.addEventListener('click', (e) => {
  * BACK BUTTON
  * ═══════════════════════════════════════ */
 /* Inline Home buttons — all instances use common handler */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  25 · HOME & NAV
- *  ──────────────────────────────────────────────────────────────────────────
- *  홈 화면 · 네비게이션 · 앱 초기화
- * ══════════════════════════════════════════════════════════════════════════ */
 function goHome(){
   stopSnapReview();
   stopRecTimer();
@@ -16664,12 +16446,6 @@ document.getElementById('soundPrompt').addEventListener('click',()=>{
  * ═══════════════════════════════════════ */
 
 const qr={overlay:null,content:null,close:null,session:null,recInterval:null};
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  26 · QUICK REVIEW
- *  ──────────────────────────────────────────────────────────────────────────
- *  QR 빠른 복습 · 오답 바로 다시 풀기
- * ══════════════════════════════════════════════════════════════════════════ */
 function qrInit(){
   if(qr.overlay)return;
   qr.overlay=document.getElementById('qrOverlay');
@@ -16783,12 +16559,6 @@ function startNoteSay(noteId){
 }
 
 /* ── SCENARIO PICKER ── */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  27 · SCENARIO PICKER
- *  ──────────────────────────────────────────────────────────────────────────
- *  시나리오 선택 · 시나리오 턴 렌더링 · 가든 공유
- * ══════════════════════════════════════════════════════════════════════════ */
 function openScenarioPicker(){
   const nb=db.get('notebook',[]);
   const trees=nb.filter(n=>['tree','live','mastered'].includes(n.stage||'seed')).length;

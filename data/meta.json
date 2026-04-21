@@ -1,0 +1,29 @@
+{
+  "platform": "SnapTalk",
+  "version": "10.13",
+  "lastUpdated": "2026-04-21",
+  "slogan": "Talk Changes Everything",
+  "description": "YouTube 영상 기반 AI 외국어 학습 플랫폼",
+  "supportedLanguages": {
+    "ui": [
+      "ko",
+      "en",
+      "ja",
+      "zh"
+    ],
+    "content": [
+      "en",
+      "ko"
+    ],
+    "translations": [
+      "ko",
+      "ja",
+      "zh"
+    ]
+  },
+  "dataFiles": {
+    "shorts": "data/shorts.json",
+    "categories": "data/categories.json",
+    "scenarios": "data/scenarios.json"
+  }
+}

@@ -8479,56 +8479,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
 <div id="langModal"><div class="lang-modal-box"><div class="lang-modal-title">UI 언어 선택</div><div class="lang-grid"><button class="lang-option selected" data-lang="ko">🇰🇷 한국어</button><button class="lang-option" data-lang="en">🇺🇸 English</button><button class="lang-option" data-lang="ja">🇯🇵 日本語</button><button class="lang-option" data-lang="zh">🇨🇳 中文</button></div></div></div>
 
 <script>
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  🗺️  SnapTalk YouTube Lab — JavaScript 코드 목차
- *  ══════════════════════════════════════════════════════════════════════════
- *
- *    섹션 번호       섹션 이름                     설명
- *    ──────    ──────────────────────    ────────────────────────────────
- *    01.  UTILITIES               — chunk 분할 · 문자열 포맷 · 공통 헬퍼
- *    02.  AI CONVERSATION         — AI 대화 시나리오 · 음성 인식 · 어휘 매칭
- *    03.  DATA CONSTANTS          — ⚠️ 하드코딩 fallback 데이터 (실제 데이터는 data/*.json)
- *    05.  RECORDING TIMER         — 녹음 타이머 시작/정지 · 스톱워치 UI
- *    06.  STATS & STREAK          — 학습 통계 · 스트릭 · 결과 저장 · 내 방 렌더링
- *    07.  SCREENPLAY (대기실)        — 오답 자동 수집 · 3초 순환 · 디지털 필기 캔버스 · TTS
- *    08.  MY STUDIO               — 내가 더빙한 영화 갤러리 · 스테이지 관리
- *    09.  SNAP REVIEW & CARD      — SCREENPLAY 카드 렌더링 · 순환 · 필기 · 삭제
- *    10.  NOTEBOOK                — 노트북 탭 렌더링 (학습 기록 브라우징)
- *    11.  FEED & CATEGORY         — 메인 피드 · 카테고리 상세 · NOW SHOWING 큐레이션
- *    12.  LOBBY & STAR MODE       — 시네마 로비 허브 · STAR MODE 더빙 · 시사회
- *    13.  CATEGORY THEMES         — 카테고리별 시각 테마 · 헤드라인 자동 생성
- *    14.  AI CHAT ENGINE          — AI 대화 파트너 · 메시지 렌더링 · 음성 인식 · Fallback 응답
- *    15.  LINE VISIBILITY         — 문장 가시성 토글 (영어/발음/한글 3종 개별 제어) · 오답 자동수집
- *    16.  PUZZLE GAME             — 자막 조립 퍼즐 · 색깔 벽돌 탑 쌓기 · 오답 → SCREENPLAY
- *    17.  QUIZ GAME               — 영상 내 퀴즈 자동 생성 · SOLD OUT 알고리즘 · 3종 미니게임
- *    18.  SCREEN & PLAYER         — 화면 전환 · YouTube IFrame · 마이크 · TTS 래퍼
- *    19.  LEARN FLOW              — 학습 플로우 (goStep) · 듣기 렌더링 · 하이라이트 · 청크 포맷
- *    20.  SHADOW PLAYER           — ROLLING 섀도우 영상 · 음성 싱크 분석 (5요소 채점)
- *    21.  DUB & KARAOKE           — 더빙 녹음 · 가라오케 모드 · 열도 시각화 · 파티클
- *    22.  RESULTS & SHARE         — 결과 점수 · 등급 계산 · Hall of Fame · 공유
- *    23.  DECORATE                — 스티커 · 프레임 · 필터 · 내 얼굴 꾸미기
- *    24.  ARTWORK & GALLERY       — 완성 영상 플레이어 · 카카오 공유 · 다운로드 · 갤러리
- *    25.  HOME & NAV              — 홈 화면 · 네비게이션 · 앱 초기화
- *    26.  QUICK REVIEW            — QR 빠른 복습 · 오답 바로 다시 풀기
- *    27.  SCENARIO PICKER         — 시나리오 선택 · 시나리오 턴 렌더링 · 가든 공유
- *
- *  ──────────────────────────────────────────────────────────────────────────
- *  데이터 외부화:
- *    · 영상 콘텐츠     → data/shorts.json
- *    · 카테고리 정의   → data/categories.json
- *    · AI 시나리오     → data/scenarios.json
- *    · 플랫폼 메타     → data/meta.json
- *
- *  다국어 확장:
- *    shorts.json 의 각 sentence.translations.{ja,zh,es,...} 필드에
- *    번역을 추가하면 자동으로 해당 언어 지원. HTML 수정 불필요.
- *
- *  안전 장치:
- *    DATA LOADER (섹션 04) 실패 시 DATA CONSTANTS (섹션 03) 사용
- *    → 절대 깨지지 않는 fallback 구조
- * ══════════════════════════════════════════════════════════════════════════ */
-
 /* ═══════════════════════════════════════
  * CONTENT DATABASE
  * Each short: sentences with timestamps
@@ -8543,12 +8493,6 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
  * 3. 전치사구 경계 (of, in, on, at, with, for, from, to, by)
  * 4. 3-6 단어 단위로 유지
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  01 · UTILITIES
- *  ──────────────────────────────────────────────────────────────────────────
- *  chunk 분할 · 문자열 포맷 · 공통 헬퍼
- * ══════════════════════════════════════════════════════════════════════════ */
 function autoChunk(sentence){
   if(!sentence || typeof sentence !== 'string') return sentence;
   
@@ -8665,12 +8609,6 @@ function applyAutoChunkToAllShorts(){
  * ═══════════════════════════════════════ */
 
 /* 상황별 역할극 시나리오 DB */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  02 · AI CONVERSATION
- *  ──────────────────────────────────────────────────────────────────────────
- *  AI 대화 시나리오 · 음성 인식 · 어휘 매칭
- * ══════════════════════════════════════════════════════════════════════════ */
 const CONVERSATION_SCENARIOS = {
   food: {
     emoji: '🍔',
@@ -8970,12 +8908,6 @@ function getConversationVocabMatches(sentences, limit){
   return matched.slice(0, limit);
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  03 · DATA CONSTANTS
- *  ──────────────────────────────────────────────────────────────────────────
- *  ⚠️ 하드코딩 fallback 데이터 (실제 데이터는 data/*.json)
- * ══════════════════════════════════════════════════════════════════════════ */
 const SHORTS={us:[
   {id:'K56O5RdE3KM',title:'How Dalgona Candy Is Made',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:100,
    sentences:[{en:"This is Dalgona candy,",ko:"이건 달고나 사탕이에요,",start:0.16,end:1.109,core:'candy',highlight:'Dalgona candy',koHighlight:'달고나 사탕',phonetic:'디스 이즈 달고나 캔디,'},{en:"the popular Korean street snack seen in the TV series Squid Game.",ko:"TV 시리즈 오징어 게임에 나온 인기 있는 한국 길거리 간식이죠.",start:1.191,end:4.033,core:'snack',highlight:'street snack',koHighlight:'길거리 간식',phonetic:'더 파퓰러 코리안 스트릿 스낵 씬 인 더 티비 시리즈 스퀴드 게임.'},{en:"It made by melting down sugar until it turns a caramel color and then",ko:"설탕을 카라멜 색이 될 때까지 녹여서 만들고,",start:4.115,end:7.227,core:'melting',highlight:'melting down sugar',koHighlight:'설탕을 녹여서',phonetic:'잇 메이드 바이 멜팅 다운 슈거 언틸 잇 턴즈 어 카라멜 컬러 앤 덴'},{en:"adding in a few pinches of baking soda,",ko:"베이킹 소다를 몇 꼬집 넣어주면,",start:7.309,end:8.981,core:'adding',highlight:'adding baking soda',koHighlight:'베이킹 소다를 넣어주면',phonetic:'애딩 인 어 퓨 핀치즈 오브 베이킹 소다,'},{en:"where it then becomes very light and foamy.",ko:"아주 가볍고 부풀어 오르게 돼요.",start:9.063,end:10.916,core:'foamy',highlight:'light and foamy',koHighlight:'가볍고 부풀어 오르게',phonetic:'웨어 잇 덴 비컴즈 베리 라이트 앤 포미.'},{en:"This is dropped onto a flat surface where it pressed down and lightly",ko:"이걸 평평한 표면에 떨어뜨려서 눌러주고,",start:10.998,end:14.109,core:'pressed',highlight:'pressed down',koHighlight:'눌러주고',phonetic:'디스 이즈 드롭트 온투 어 플랫 서페이스 웨어 잇 프레스드 다운 앤 라이틀리'},{en:"stamped with a cookie cutter mold.",ko:"쿠키 커터 틀로 가볍게 찍어줘요.",start:14.191,end:15.639,core:'stamped',highlight:'stamped with mold',koHighlight:'틀로 찍어줘요',phonetic:'스탬프드 위드 어 쿠키 커터 몰드.'},{en:"As you can see, I chose the umbrella shape,",ko:"보시다시피, 저는 우산 모양을 선택했어요,",start:15.721,end:17.448,core:'chose',highlight:'chose umbrella shape',koHighlight:'우산 모양을 선택했어요',phonetic:'애즈 유 캔 씨, 아이 초즈 디 엄브렐라 쉐이프,'},{en:"and once you handed the Dalgona,",ko:"그리고 달고나를 받으면,",start:17.53,end:18.92,core:'handed',highlight:'handed the Dalgona',koHighlight:'달고나를 받으면',phonetic:'앤 원스 유 핸디드 더 달고나,'},{en:"the goal is to use a toothpick to carve out the shape in the",ko:"목표는 이쑤시개로 가운데의 모양을 파내는 거예요,",start:19.002,end:21.445,core:'carve',highlight:'carve out shape',koHighlight:'모양을 파내는',phonetic:'더 골 이즈 투 유즈 어 투스픽 투 카브 아웃 더 쉐이프 인 더'},{en:"center so it looks like this,",ko:"이렇게 보이도록 말이죠,",start:21.527,end:22.665,core:'looks',highlight:'looks like this',koHighlight:'이렇게 보이도록',phonetic:'센터 쏘 잇 룩스 라이크 디스,'},{en:"but unfortunately I dropped it on the floor and lost immediately.",ko:"하지만 불행히도 저는 바닥에 떨어뜨려서 바로 졌어요.",start:22.747,end:25.44,core:'dropped',highlight:'dropped on floor',koHighlight:'바닥에 떨어뜨려서',phonetic:'벗 언포춘트리 아이 드롭트 잇 온 더 플로어 앤 로스트 이미디엇틀리.'}]},
@@ -8983,6 +8915,9 @@ const SHORTS={us:[
    sentences:[{en:"This is the world largest pizza, but",ko:"이게 세계에서 가장 큰 피자인데",start:0.16,end:3.76,core:'largest',highlight:'largest pizza',koHighlight:'가장 큰 피자',phonetic:'디스 이즈 더 월드 라지스트 피자, 벗'},{en:"how much does it cost? Can I order the",ko:"얼마나 할까요? 제가 주문할 수 있을까요",start:2.32,end:5.759,core:'cost',highlight:'how much cost',koHighlight:'얼마나 하다',phonetic:'하우 머치 더즈 잇 코스트? 캔 아이 오더 더'},{en:"giant Sicilian and put everything you",ko:"자이언트 시실리안에 있는 모든 걸",start:3.76,end:7.44,core:'giant',highlight:'giant Sicilian',koHighlight:'자이언트 시실리안',phonetic:'자이언트 시실리안 앤 풋 에브리씽 유'},{en:"have on it? Bankrupt me. Sure.",ko:"다 올려주세요? 파산시켜 주세요. 알겠습니다.",start:5.759,end:8.72,core:'bankrupt',highlight:'bankrupt me',koHighlight:'파산시키다',phonetic:'해브 온 잇? 뱅크럽트 미. 슈어.'},{en:"Yeah, I am sure. Do you mind if I put",ko:"네, 확실해요. 제가 달아도 될까요",start:7.44,end:10.24,core:'mind',highlight:'do you mind',koHighlight:'괜찮으세요',phonetic:'예, 아이 엠 슈어. 두 유 마인드 이프 아이 풋'},{en:"this camera on your hat? Yeah. Thank you",ko:"이 카메라를 모자에? 네. 감사합니다",start:8.72,end:12.24,core:'camera',highlight:'camera on hat',koHighlight:'카메라를 모자에',phonetic:'디스 캐머라 온 유어 햇? 예. 땡큐'},{en:"so much. All right. Good luck, man. That",ko:"정말 감사해요. 좋아요. 잘 부탁드려요. 그게",start:10.24,end:14.24,core:'luck',highlight:'good luck',koHighlight:'행운을 빌어요',phonetic:'쏘 머치. 올 라잇. 굿 럭, 맨. 댓'},{en:"was so incredibly expensive. I will tell",ko:"엄청나게 비쌌어요. 제가 말씀드릴게요",start:12.24,end:15.519,core:'expensive',highlight:'incredibly expensive',koHighlight:'엄청나게 비싸다',phonetic:'워즈 쏘 인크레더블리 익스펜시브. 아이 윌 텔'},{en:"you guys what the price was at the end.",ko:"여러분께 가격이 얼마였는지 마지막에 알려드릴게요.",start:14.24,end:16.72,core:'price',highlight:'the price',koHighlight:'가격',phonetic:'유 가이즈 왓 더 프라이스 워즈 앳 디 엔드.'},{en:"Oh, he going. Dude, he playing the",ko:"오, 시작했어요. 이봐요, 그가 치고 있어요",start:15.519,end:18.24,core:'playing',highlight:'playing drums',koHighlight:'드럼을 치다',phonetic:'오, 히 고잉. 듀드, 히 플레잉 더'},{en:"drums on the dough right now. He doing",ko:"지금 반죽 위에서 드럼을요.",start:16.72,end:19.76,core:'dough',highlight:'drums on dough',koHighlight:'반죽 위에서 드럼',phonetic:'드럼즈 온 더 도우 라잇 나우. 히 두잉'},{en:"the stretchy thing with his hand. Such a",ko:"손으로 늘리는 거를요. 정말",start:18.24,end:20.8,core:'stretchy',highlight:'stretchy thing',koHighlight:'늘리는 것',phonetic:'더 스트레치 씽 위드 히즈 핸드. 서치 어'},{en:"professional. Normally, it would be",ko:"프로페셔널이에요. 보통은",start:19.76,end:22.24,core:'professional',highlight:'such professional',koHighlight:'정말 전문가',phonetic:'프로페셔널. 노멀리, 잇 우드 비'},{en:"impossible for me to see what going on",ko:"제가 무슨 일이 일어나는지 보는 게 불가능할 텐데",start:20.8,end:23.439,core:'impossible',highlight:'impossible to see',koHighlight:'볼 수 없다',phonetic:'임파시블 포 미 투 씨 왓 고잉 온'},{en:"in the back of the kitchen, but thanks",ko:"주방 뒤쪽에서요, 하지만 감사하게도",start:22.24,end:25.68,core:'kitchen',highlight:'back of kitchen',koHighlight:'주방 뒤쪽',phonetic:'인 더 백 오브 더 키친, 벗 땡스'}]},
   {id:'8UpxiFOnNj8',title:'MrBeast Perfect Steak',cat:'food',catIcon:'🍔',diff:'intermediate',dubs:200,curatorPick:true,summary:'미스터 비스트 형제의 완벽한 스테이크 모험! 짧지만 강렬한 일상 대화 속에 "what is up", "thank you", "last time" 같은 핵심 회화 표현이 가득!',
    sentences:[{en:"Nick.",ko:"닉.",start:4.94,end:5.77,core:'Nick',highlight:'Nick',koHighlight:'닉',phonetic:'닉.'},{en:"Jimmy, what is up?",ko:"지미, 무슨 일이야?",start:5.852,end:6.682,core:'up',highlight:'what is up',koHighlight:'무슨 일이야',phonetic:'지미, 왓 이즈 업?'},{en:"It happened again.",ko:"또 일어났어.",start:6.764,end:7.594,core:'happened',highlight:'happened again',koHighlight:'또 일어났어',phonetic:'잇 해픈드 어겐.'},{en:"Wait right there.",ko:"거기서 기다려.",start:7.676,end:8.506,core:'wait',highlight:'wait right there',koHighlight:'거기서 기다려',phonetic:'웨잇 라잇 데어.'},{en:"Okay.",ko:"알겠어.",start:8.68,end:9.66,core:'Okay',highlight:'Okay',koHighlight:'알겠어',phonetic:'오케이.'},{en:"That is me.",ko:"그게 나야.",start:13.36,end:14.19,core:'me',highlight:'that is me',koHighlight:'그게 나야',phonetic:'댓 이즈 미.'},{en:"Where is he?",ko:"그 사람 어디 있어?",start:21.41,end:23.143,core:'where',highlight:'where is',koHighlight:'어디 있어',phonetic:'웨어 이즈 히?'},{en:"Yes. Thank you, man.",ko:"그래. 고마워, 친구.",start:33.231,end:35.243,core:'thank',highlight:'thank you',koHighlight:'고마워',phonetic:'예스. 땡큐, 맨.'},{en:"Jimmy, I am serious, this is the last time. I am not doing this again.",ko:"지미, 진심이야, 이게 마지막이야. 다시는 안 해.",start:35.243,end:37.364,core:'last',highlight:'the last time',koHighlight:'마지막',phonetic:'지미, 아이 엠 시리어스, 디스 이즈 더 라스트 타임. 아이 엠 낫 두잉 디스 어겐.'},{en:"Okay. Hopefully I do not run out.",ko:"알겠어. 다 떨어지지 않길 바라.",start:37.364,end:38.76,core:'run',highlight:'run out',koHighlight:'다 떨어지다',phonetic:'오케이. 호프풀리 아이 두 낫 런 아웃.'},{en:"Do not be lazy like Mr Beast. Just go to your local Walmart instead.",ko:"미스터 비스트처럼 게으르게 굴지 마. 그냥 동네 월마트에 가.",start:38.842,end:41.941,core:'lazy',highlight:'be lazy',koHighlight:'게으르게 굴다',phonetic:'두 낫 비 레이지 라이크 미스터 비스트. 저스트 고 투 유어 로컬 월마트 인스테드.'}]}
+,
+  {"id":"aCD5JC-52Lo","title":"How To Stay in Ronaldo’s Hotel For FREE! 🤫","status":"live","cat":"places","catIcon":"✈️","diff":"intermediate","dubs":0,"sentences":[{"en":"this is how you can stay in Ronaldo's","start":0.12,"end":4.5200000000000005,"core":"stay","highlight":"stay in","phonetic":"디스 이즈 하우 유 캔 스테이 인 로날도스","translations":{"ko":{"text":"이렇게 하면 로날두의 호텔에 묵을 수 있어요","highlight":"묵다"}}},{"en":"hotel for free usually this hotel costs","start":1.959,"end":7.439,"core":"free","highlight":"for free","phonetic":"호텔 포 프리 유주얼리 디스 호텔 코스츠","translations":{"ko":{"text":"호텔을 무료로 이용할 수 있어요 보통 이 호텔은","highlight":"무료로"}}},{"en":"$250 a night so it's not cheap and to","start":4.52,"end":9.04,"core":"cheap","highlight":"not cheap","phonetic":"투 헌드레드 피프티 달러스 어 나잇 소 잇츠 낫 칩 앤 투","translations":{"ko":{"text":"하룻밤에 250달러라서 저렴하지 않아요 그리고","highlight":"저렴하지 않은"}}},{"en":"get a night for free you need to stay","start":7.439,"end":10.639,"core":"need","highlight":"need to stay","phonetic":"겟 어 나잇 포 프리 유 니드 투 스테이","translations":{"ko":{"text":"하룻밤을 무료로 받으려면 묵어야 해요","highlight":"묵어야 한다"}}},{"en":"for three nights because they're going","start":9.04,"end":13.16,"core":"nights","highlight":"three nights","phonetic":"포 쓰리 나잇츠 비코즈 데어 고잉","translations":{"ko":{"text":"3박을 해야 하는데 왜냐하면 그들이","highlight":"3박"}}},{"en":"to give you an absolutely crazy gift","start":10.639,"end":15.36,"core":"gift","highlight":"crazy gift","phonetic":"투 기브 유 언 앱솔루틀리 크레이지 기프트","translations":{"ko":{"text":"정말 놀라운 선물을 줄 거예요","highlight":"놀라운 선물"}}},{"en":"when you leave but first I need to see","start":13.16,"end":17.560000000000002,"core":"leave","highlight":"when you leave","phonetic":"웬 유 리브 벗 퍼스트 아이 니드 투 씨","translations":{"ko":{"text":"떠날 때 주는데 먼저 확인해 봐야겠어요","highlight":"떠날 때"}}},{"en":"if this hotel is even worth staying in","start":15.36,"end":20,"core":"worth","highlight":"worth staying in","phonetic":"이프 디스 호텔 이즈 이븐 워쓰 스테잉 인","translations":{"ko":{"text":"이 호텔이 묵을 가치가 있는지를","highlight":"묵을 가치가 있는"}}},{"en":"the room is nice and the bathroom is","start":17.56,"end":22.759999999999998,"core":"nice","highlight":"room is nice","phonetic":"더 룸 이즈 나이스 앤 더 배쓰룸 이즈","translations":{"ko":{"text":"방은 좋고 욕실도","highlight":"방이 좋은"}}},{"en":"clean and it even says CR7 on the soap","start":20,"end":24.240000000000002,"core":"clean","highlight":"is clean","phonetic":"클린 앤 잇 이븐 세즈 씨알세븐 온 더 솝","translations":{"ko":{"text":"깨끗하고 비누에는 CR7이라고 쓰여 있어요","highlight":"깨끗한"}}},{"en":"but the only other football thing are","start":22.76,"end":26.279000000000003,"core":"football","highlight":"football thing","phonetic":"벗 디 온리 아더 풋볼 씽 아","translations":{"ko":{"text":"하지만 다른 축구 관련된 건","highlight":"축구 관련된 것"}}},{"en":"these stud marks on the carpet but down","start":24.24,"end":27.88,"core":"marks","highlight":"stud marks","phonetic":"디즈 스터드 막스 온 더 카펫 벗 다운","translations":{"ko":{"text":"카펫에 있는 스터드 자국뿐이에요 하지만 아래","highlight":"스터드 자국"}}},{"en":"in the lobby is where things get","start":26.279,"end":29.84,"core":"lobby","highlight":"in the lobby","phonetic":"인 더 라비 이즈 웨어 씽즈 겟","translations":{"ko":{"text":"로비에는 흥미로운 게","highlight":"로비에"}}},{"en":"exciting they have signed Ronaldo shirts","start":27.88,"end":31.799999999999997,"core":"signed","highlight":"signed Ronaldo shirts","phonetic":"익사이팅 데이 해브 사인드 로날도 셔츠","translations":{"ko":{"text":"많아요 로날두가 사인한 유니폼이","highlight":"사인한 유니폼"}}},{"en":"for from every Club he's ever played for","start":29.84,"end":33.719,"core":"played","highlight":"ever played for","phonetic":"포 프롬 에브리 클럽 히즈 에버 플레이드 포","translations":{"ko":{"text":"그가 뛰었던 모든 클럽의 것이 있어요","highlight":"뛰었던"}}},{"en":"including his country these must be","start":31.8,"end":35.68,"core":"country","highlight":"his country","phonetic":"인클루딩 히즈 컨트리 디즈 머스트 비","translations":{"ko":{"text":"국가대표 유니폼도 포함해서 이건","highlight":"그의 나라"}}},{"en":"worth thousands and they have glass","start":33.719,"end":37.68,"core":"thousands","highlight":"worth thousands","phonetic":"워쓰 싸우전즈 앤 데이 해브 글래스","translations":{"ko":{"text":"수천 달러의 가치가 있을 거예요 그리고 유리","highlight":"수천 달러의 가치"}}},{"en":"cabinets filled with Ronaldo products","start":35.68,"end":40.36,"core":"filled","highlight":"filled with","phonetic":"캐비넷츠 필드 위드 로날도 프로덕츠","translations":{"ko":{"text":"진열장에는 로날두 제품들이 가득해요","highlight":"가득 찬"}}},{"en":"like perfume and even underwear but my","start":37.68,"end":43.039,"core":"perfume","highlight":"perfume and underwear","phonetic":"라이크 퍼퓸 앤 이븐 언더웨어 벗 마이","translations":{"ko":{"text":"향수나 심지어 속옷까지요 하지만 제","highlight":"향수와 속옷"}}},{"en":"$250 gift was waiting for me behind the","start":40.36,"end":44.8,"core":"waiting","highlight":"waiting for me","phonetic":"투 헌드레드 피프티 달러스 기프트 워즈 웨이팅 포 미 비하인드 더","translations":{"ko":{"text":"250달러짜리 선물이 카운터 뒤에서 저를 기다리고 있었어요","highlight":"기다리고 있는"}}},{"en":"counter and once I had stayed three","start":43.039,"end":46.760000000000005,"core":"stayed","highlight":"had stayed","phonetic":"카운터 앤 원스 아이 해드 스테이드 쓰리","translations":{"ko":{"text":"카운터에요 그리고 3박을 하고 나서","highlight":"묵었던"}}},{"en":"nights in Portugal it was time to leave","start":44.8,"end":48.839999999999996,"core":"Portugal","highlight":"nights in Portugal","phonetic":"나잇츠 인 포르투갈 잇 워즈 타임 투 리브","translations":{"ko":{"text":"포르투갈에서의 밤이 지나고 떠날 시간이 됐어요","highlight":"포르투갈에서의 밤"}}},{"en":"and get my gift which I'm going to give","start":46.76,"end":51.28,"core":"give","highlight":"going to give","phonetic":"앤 겟 마이 기프트 위치 아임 고잉 투 기브","translations":{"ko":{"text":"그리고 선물을 받았는데 이걸 줄 거예요","highlight":"줄 예정인"}}},{"en":"to a subscriber a gold football that's","start":48.84,"end":54.68000000000001,"core":"subscriber","highlight":"to a subscriber","phonetic":"투 어 섭스크라이버 어 골드 풋볼 댓츠","translations":{"ko":{"text":"구독자에게 금색 축구공을","highlight":"구독자에게"}}},{"en":"signed by Ronaldo","start":51.28,"end":54.68,"core":"signed","highlight":"signed by Ronaldo","phonetic":"사인드 바이 로날도","translations":{"ko":{"text":"로날두가 사인한 걸요","highlight":"로날두가 사인한"}}}],"duration":53,"tags":[],"createdAt":"2026-04-20","curatedBy":"jungeun"},
+  {"id":"5BNJipDUICo","title":"Kindergarten in the UK 🇬🇧 vs America 🇺🇸 #shorts","status":"review","cat":"culture","catIcon":"💃","diff":"intermediate","dubs":0,"sentences":[{"en":"Kindergarten in the UK, | stand up, stand up!","start":0,"end":2.8,"core":"stand","highlight":"stand up","phonetic":"킨더가튼 인 더 유케이, | 스탠드 업, 스탠드 업!","translations":{"ko":{"text":"영국의 유치원, | 일어나세요, 일어나세요!","highlight":"일어나세요"}}},{"en":"Very good, | and we sit down.","start":2.8,"end":6.1,"core":"sit","highlight":"sit down","phonetic":"베리 굿, | 앤드 위 싯 다운.","translations":{"ko":{"text":"아주 좋아요, | 그리고 우리는 앉아요.","highlight":"앉아요"}}},{"en":"Versus the US.","start":6.1,"end":7.5,"core":"versus","highlight":"versus the US","phonetic":"버서스 더 유에스.","translations":{"ko":{"text":"미국과 비교하면.","highlight":"미국과 비교하면"}}},{"en":"Roll the dice, | be careful.","start":8.7,"end":10.8,"core":"dice","highlight":"roll the dice","phonetic":"롤 더 다이스, | 비 케어풀.","translations":{"ko":{"text":"주사위를 굴려요, | 조심하세요.","highlight":"주사위를 굴려요"}}},{"en":"Meanwhile in China.","start":11.8,"end":13.6,"core":"China","highlight":"meanwhile in China","phonetic":"민와일 인 차이나.","translations":{"ko":{"text":"한편 중국에서는.","highlight":"한편 중국에서는"}}}],"duration":24,"tags":[],"createdAt":"2026-04-20","curatedBy":"jungeun"}
 ],kr:[
 ]};
 
@@ -9043,68 +8978,6 @@ const CATEGORIES={
     {id:'my_studio',emoji:'🎤',title:'✨ MY STUDIO 내 녹음실',subtitle:'내가 만든 영화들',filter:()=>false,limit:0,theme:'studio',isMyStudio:true}
   ]
 };
-
-/* ═══════════════════════════════════════════════════════════════════════════
- *  📦 DATA LOADER (data/*.json 외부 파일 로드)
- * ═══════════════════════════════════════════════════════════════════════════
- *  목적  : 영상·카테고리·시나리오 데이터를 외부 JSON에서 로드하여
- *          HTML 파일 크기 안정화 + 영상 추가 시 HTML 수정 불필요
- *
- *  동작  : 1) 페이지 로드 → fetch('data/shorts.json') 등 병렬 로드
- *          2) 성공 시  : 전역 SHORTS / CATEGORIES / CONVERSATION_SCENARIOS 덮어쓰기
- *          3) 실패 시  : 하드코딩된 fallback 데이터 그대로 사용 (앱 정상 작동)
- *
- *  안전  : fetch 실패해도 기존 하드코딩 데이터로 동작 → 절대 깨지지 않음
- *  확장  : data/shorts.json에 영상만 추가하면 HTML 수정 없이 반영
- *  다국어: 각 sentence의 translations{ja,zh,...} 필드에 번역 추가 가능
- * ═══════════════════════════════════════════════════════════════════════════ */
-(async function loadExternalData() {
-  const base = 'data/';
-  async function safeLoad(file) {
-    try {
-      const res = await fetch(base + file);
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      return await res.json();
-    } catch (e) {
-      console.warn('[DataLoader] ' + file + ' 로드 실패, fallback 사용:', e.message);
-      return null;
-    }
-  }
-
-  try {
-    const [shortsData, catsData, scenData] = await Promise.all([
-      safeLoad('shorts.json'),
-      safeLoad('categories.json'),
-      safeLoad('scenarios.json'),
-    ]);
-
-    // 전역 데이터 덮어쓰기 (window.* 로 접근 가능한 const는 아니지만, 선언된 변수를 갱신하기 위해 window 속성 활용)
-    if (shortsData && shortsData.shorts) {
-      // SHORTS는 const라 재할당 불가 → 내용을 clear하고 복사
-      if (typeof SHORTS !== 'undefined') {
-        SHORTS.us.length = 0; SHORTS.kr.length = 0;
-        (shortsData.shorts.us || []).forEach(s => SHORTS.us.push(s));
-        (shortsData.shorts.kr || []).forEach(s => SHORTS.kr.push(s));
-        console.log('[DataLoader] ✅ shorts.json 로드 (US ' + SHORTS.us.length + ' / KR ' + SHORTS.kr.length + ')');
-      }
-    }
-
-    if (catsData && catsData.categories && typeof CATEGORIES !== 'undefined') {
-      Object.keys(CATEGORIES).forEach(k => delete CATEGORIES[k]);
-      Object.assign(CATEGORIES, catsData.categories);
-      console.log('[DataLoader] ✅ categories.json 로드');
-    }
-
-    if (scenData && scenData.scenarios && typeof CONVERSATION_SCENARIOS !== 'undefined') {
-      Object.keys(CONVERSATION_SCENARIOS).forEach(k => delete CONVERSATION_SCENARIOS[k]);
-      Object.assign(CONVERSATION_SCENARIOS, scenData.scenarios);
-      console.log('[DataLoader] ✅ scenarios.json 로드');
-    }
-  } catch (e) {
-    console.warn('[DataLoader] 전체 로드 실패, fallback 사용:', e.message);
-  }
-})();
-
 
 /* ═══ SCENARIO SCRIPTS (Phase B) ═══ */
 const SCENARIOS=[
@@ -9173,12 +9046,6 @@ const S={
 let ytPlayer=null,audioCtx=null,analyser=null,micStream=null,dubInterval=null,shadowInterval=null;
 
 /* v10.2: 🔴 REC 카운터 (영화 촬영 현장 느낌!) */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  05 · RECORDING TIMER
- *  ──────────────────────────────────────────────────────────────────────────
- *  녹음 타이머 시작/정지 · 스톱워치 UI
- * ══════════════════════════════════════════════════════════════════════════ */
 let REC_TIMER_STATE = { interval: null, seconds: 0 };
 function startRecTimer(){
   stopRecTimer();
@@ -9214,12 +9081,6 @@ const db={get:(k,d)=>{try{return JSON.parse(localStorage.getItem('sd_'+k))||d}ca
 /* ═══════════════════════════════════════
  * STREAK & STATS
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  06 · STATS & STREAK
- *  ──────────────────────────────────────────────────────────────────────────
- *  학습 통계 · 스트릭 · 결과 저장 · 내 방 렌더링
- * ══════════════════════════════════════════════════════════════════════════ */
 function getStreak(){const s=db.get('streak',{count:0,last:null});if(s.last){const d=Math.floor((new Date(new Date().toDateString())-new Date(s.last))/864e5);if(d>1)s.count=0}return s}
 function updateStreak(){const s=getStreak(),t=new Date().toDateString();if(s.last!==t){s.count++;s.last=t;db.set('streak',s)}renderStreak()}
 function renderStreak(){const s=getStreak();const b=document.getElementById('streakBadge');if(b)b.textContent='🔥 '+s.count+'일';document.getElementById('roomStreak').textContent=s.count}
@@ -9269,12 +9130,6 @@ function renderRoom(){
 /* v9.9: 📜 SCREENPLAY 노트 로직 (손가락 캔버스!) */
 
 /* 캔버스 상태 */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  07 · SCREENPLAY (대기실)
- *  ──────────────────────────────────────────────────────────────────────────
- *  오답 자동 수집 · 3초 순환 · 디지털 필기 캔버스 · TTS
- * ══════════════════════════════════════════════════════════════════════════ */
 const CANVAS_STATE = {
   ctx: null,
   canvas: null,
@@ -9729,12 +9584,6 @@ document.addEventListener('click', e => {
 });
 
 /* Growth stage config */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  08 · MY STUDIO
- *  ──────────────────────────────────────────────────────────────────────────
- *  내가 더빙한 영화 갤러리 · 스테이지 관리
- * ══════════════════════════════════════════════════════════════════════════ */
 const STAGES={
   seed:    {icon:'🌱',label:'Seed',  color:'#64748b',next:'sprout', threshold:{say:1,use:0}},
   sprout:  {icon:'🌿',label:'Sprout',color:'#22c55e',next:'tree',   threshold:{say:3,use:0}},
@@ -9881,12 +9730,6 @@ function getGradeColor(grade){
   return colors[grade]||'#888';
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  09 · SNAP REVIEW & CARD
- *  ──────────────────────────────────────────────────────────────────────────
- *  SCREENPLAY 카드 렌더링 · 순환 · 필기 · 삭제
- * ══════════════════════════════════════════════════════════════════════════ */
 function openSnapDrawer(){
   SnapStudio.drawerOpen=true;
   renderSnapStudio();
@@ -10275,12 +10118,6 @@ function incrementSnapWrite(){
 }
 
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  10 · NOTEBOOK
- *  ──────────────────────────────────────────────────────────────────────────
- *  노트북 탭 렌더링 (학습 기록 브라우징)
- * ══════════════════════════════════════════════════════════════════════════ */
 function renderNotebook(){
   const nb=db.get('notebook',[]);
   const nbList=document.getElementById('notebookList');
@@ -10354,12 +10191,6 @@ function renderNotebook(){
 /* ═══════════════════════════════════════
  * FEED
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  11 · FEED & CATEGORY
- *  ──────────────────────────────────────────────────────────────────────────
- *  메인 피드 · 카테고리 상세 · NOW SHOWING 큐레이션
- * ══════════════════════════════════════════════════════════════════════════ */
 function renderFeed(){
   const feed=document.getElementById('feedScreen');
   const IS_ADMIN = new URLSearchParams(window.location.search).get('admin')==='1';
@@ -10881,12 +10712,6 @@ const CURATOR_SECRET_ADMIN = 'sk_curator_snaptalk_2026_a9f8b7c6d5e4f3a2b1c0';
  * ═══════════════════════════════════════════════════ */
 
 /* 🏢 로비 허브 표시 */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  12 · LOBBY & STAR MODE
- *  ──────────────────────────────────────────────────────────────────────────
- *  시네마 로비 허브 · STAR MODE 더빙 · 시사회
- * ══════════════════════════════════════════════════════════════════════════ */
 function showLobbyHub(){
   /* 영상 플레이어 정지 */
   try{
@@ -11381,12 +11206,6 @@ function cleanupStarMode(){
  * 쌤의 비전: "영화관 섹션별 다른 분위기!"
  * FOODIE다운, CAMPUS다운, TRAVEL다운...
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  13 · CATEGORY THEMES
- *  ──────────────────────────────────────────────────────────────────────────
- *  카테고리별 시각 테마 · 헤드라인 자동 생성
- * ══════════════════════════════════════════════════════════════════════════ */
 const CATEGORY_THEMES = {
   food: {
     name: 'FOODIE CORNER',
@@ -11778,12 +11597,6 @@ document.addEventListener('click', e => {
   }
 });
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  14 · AI CHAT ENGINE
- *  ──────────────────────────────────────────────────────────────────────────
- *  AI 대화 파트너 · 메시지 렌더링 · 음성 인식 · Fallback 응답
- * ══════════════════════════════════════════════════════════════════════════ */
 function openAiChat(){
   const hub = document.getElementById('lobbyHub');
   if(hub) hub.style.display = 'none';
@@ -12226,12 +12039,6 @@ document.addEventListener('click', e=>{
 /* v10.4: 🎚️ 줄 표시/숨김 시스템 — 사용자 맞춤!
    영어/발음/한글 각각 개별로 ON/OFF 가능
    localStorage에 저장돼서 다음에도 유지! */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  15 · LINE VISIBILITY
- *  ──────────────────────────────────────────────────────────────────────────
- *  문장 가시성 토글 (영어/발음/한글 3종 개별 제어) · 오답 자동수집
- * ══════════════════════════════════════════════════════════════════════════ */
 function getLineVisibility(){
   try {
     const saved = localStorage.getItem('sd_line_visibility');
@@ -12357,12 +12164,6 @@ function showAutoCollectToast(source){
   }
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  16 · PUZZLE GAME
- *  ──────────────────────────────────────────────────────────────────────────
- *  자막 조립 퍼즐 · 색깔 벽돌 탑 쌓기 · 오답 → SCREENPLAY
- * ══════════════════════════════════════════════════════════════════════════ */
 const PUZZLE_STATE = {
   items: [],          // 문장 배열 [{en, ko, words}]
   currentIdx: 0,
@@ -12947,12 +12748,6 @@ document.addEventListener('click', e=>{
  * 3가지 모드 랜덤 · 스테이지 시스템 연동
  * ═══════════════════════════════════════════════════ */
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  17 · QUIZ GAME
- *  ──────────────────────────────────────────────────────────────────────────
- *  영상 내 퀴즈 자동 생성 · SOLD OUT 알고리즘 · 3종 미니게임
- * ══════════════════════════════════════════════════════════════════════════ */
 const QUIZ_STATE = {
   mode: null,        // 'snack' | 'hotdog' | 'popcorn'
   items: [],         // 시험 대상 [{id, en, ko, highlight, koHighlight, stage, sayCount, ...}]
@@ -13748,12 +13543,6 @@ async function publishVideo(videoId){
 /* ═══════════════════════════════════════
  * SCREEN NAVIGATION
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  18 · SCREEN & PLAYER
- *  ──────────────────────────────────────────────────────────────────────────
- *  화면 전환 · YouTube IFrame · 마이크 · TTS 래퍼
- * ══════════════════════════════════════════════════════════════════════════ */
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id+'Screen').classList.add('active');
@@ -13957,12 +13746,6 @@ function activateAudioAndStart(){
   goStep(0);
 }
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  19 · LEARN FLOW
- *  ──────────────────────────────────────────────────────────────────────────
- *  학습 플로우 (goStep) · 듣기 렌더링 · 하이라이트 · 청크 포맷
- * ══════════════════════════════════════════════════════════════════════════ */
 function goStep(step){
   S.gameStep=step;
   updateDots(step);
@@ -14327,12 +14110,6 @@ function wrapWordsForKaraoke(en,mode){
 let shadowPlayer=null;
 let shadowPlayerBusy=false; /* Lock to prevent race conditions */
 
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  20 · SHADOW PLAYER
- *  ──────────────────────────────────────────────────────────────────────────
- *  ROLLING 섀도우 영상 · 음성 싱크 분석 (5요소 채점)
- * ══════════════════════════════════════════════════════════════════════════ */
 function destroyShadowPlayer(){
   if(shadowPlayer){
     try{shadowPlayer.destroy()}catch(e){}
@@ -14691,12 +14468,6 @@ document.getElementById('shadowSkip').addEventListener('click',()=>{
  * ═══════════════════════════════════════ */
 
 /* Heat level mapping: sync% → temperature stage */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  21 · DUB & KARAOKE
- *  ──────────────────────────────────────────────────────────────────────────
- *  더빙 녹음 · 가라오케 모드 · 열도 시각화 · 파티클
- * ══════════════════════════════════════════════════════════════════════════ */
 function setHeatLevel(pct){
   const container=document.getElementById('ytContainer');
   const overlay=document.getElementById('heatOverlay');
@@ -15232,12 +15003,6 @@ function finishDub(){
 }
 
 /* Determine rank from score — matches 노래방 grading */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  22 · RESULTS & SHARE
- *  ──────────────────────────────────────────────────────────────────────────
- *  결과 점수 · 등급 계산 · Hall of Fame · 공유
- * ══════════════════════════════════════════════════════════════════════════ */
 function getRank(score){
   if(score>=100)return{letter:'LEGEND',emoji:'🏆',color:'#ec4899',desc:'전설의 경지!',stars:5};
   if(score>=90)return{letter:'SS',emoji:'🎖',color:'#fbbf24',desc:'극강의 실력!',stars:5};
@@ -15680,12 +15445,6 @@ document.getElementById('shareSubmit').addEventListener('click',()=>{
  * ═══════════════════════════════════════ */
 
 /* 꾸미기 데이터 */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  23 · DECORATE
- *  ──────────────────────────────────────────────────────────────────────────
- *  스티커 · 프레임 · 필터 · 내 얼굴 꾸미기
- * ══════════════════════════════════════════════════════════════════════════ */
 const DECO_FRAMES=[
   {id:'none',icon:'🚫',label:'없음',cls:''},
   {id:'polaroid',icon:'📷',label:'폴라로이드',cls:'deco-frame-polaroid'},
@@ -16099,12 +15858,6 @@ function pickTutorMessageForScore(){return ''}
 /* ═══════════════════════════════════════
  * 🎬 v7.0 · ARTWORK PLAYER (내 작품 감상) - 깔끔 버전
  * ═══════════════════════════════════════ */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  24 · ARTWORK & GALLERY
- *  ──────────────────────────────────────────────────────────────────────────
- *  완성 영상 플레이어 · 카카오 공유 · 다운로드 · 갤러리
- * ══════════════════════════════════════════════════════════════════════════ */
 function openArtworkPlayer(item){
   const modal=document.getElementById('artworkPlayModal');
   const preview=document.getElementById('artworkPlayPreview');
@@ -16418,12 +16171,6 @@ document.addEventListener('click', (e) => {
  * BACK BUTTON
  * ═══════════════════════════════════════ */
 /* Inline Home buttons — all instances use common handler */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  25 · HOME & NAV
- *  ──────────────────────────────────────────────────────────────────────────
- *  홈 화면 · 네비게이션 · 앱 초기화
- * ══════════════════════════════════════════════════════════════════════════ */
 function goHome(){
   stopSnapReview();
   stopRecTimer();
@@ -16664,12 +16411,6 @@ document.getElementById('soundPrompt').addEventListener('click',()=>{
  * ═══════════════════════════════════════ */
 
 const qr={overlay:null,content:null,close:null,session:null,recInterval:null};
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  26 · QUICK REVIEW
- *  ──────────────────────────────────────────────────────────────────────────
- *  QR 빠른 복습 · 오답 바로 다시 풀기
- * ══════════════════════════════════════════════════════════════════════════ */
 function qrInit(){
   if(qr.overlay)return;
   qr.overlay=document.getElementById('qrOverlay');
@@ -16783,12 +16524,6 @@ function startNoteSay(noteId){
 }
 
 /* ── SCENARIO PICKER ── */
-
-/* ══════════════════════════════════════════════════════════════════════════
- *  27 · SCENARIO PICKER
- *  ──────────────────────────────────────────────────────────────────────────
- *  시나리오 선택 · 시나리오 턴 렌더링 · 가든 공유
- * ══════════════════════════════════════════════════════════════════════════ */
 function openScenarioPicker(){
   const nb=db.get('notebook',[]);
   const trees=nb.filter(n=>['tree','live','mastered'].includes(n.stage||'seed')).length;

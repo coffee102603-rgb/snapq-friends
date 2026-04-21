@@ -1,0 +1,141 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-04-21",
+  "description": "SnapTalk 카테고리 정의. 지역별(us/kr) 카테고리 목록.",
+  "categories": {
+    "us": [
+      {
+        "id": "now_showing",
+        "emoji": "🎬",
+        "title": "✨ NOW SHOWING 지금 상영중",
+        "subtitle": "🎓 쌤 추천 · 🆕 최신 · 🎰 오늘의 픽",
+        "limit": 3,
+        "isNowShowing": true
+      },
+      {
+        "id": "travel",
+        "emoji": "✈️",
+        "title": "✨ TRAVEL 여행",
+        "subtitle": "공항 · 호텔 · 관광",
+        "limit": 10,
+        "theme": "travel"
+      },
+      {
+        "id": "campus",
+        "emoji": "🎓",
+        "title": "✨ CAMPUS 캠퍼스",
+        "subtitle": "유학 · 강의 · 도서관",
+        "limit": 10,
+        "theme": "campus"
+      },
+      {
+        "id": "business",
+        "emoji": "💼",
+        "title": "✨ BUSINESS 비즈니스",
+        "subtitle": "회의 · 미팅 · 협상",
+        "limit": 10,
+        "theme": "business"
+      },
+      {
+        "id": "career",
+        "emoji": "🏥",
+        "title": "✨ CAREER 해외 취업",
+        "subtitle": "면접 · 간호사 · IT",
+        "limit": 10,
+        "theme": "career"
+      },
+      {
+        "id": "daily",
+        "emoji": "🛍️",
+        "title": "✨ DAILY 생활 영어",
+        "subtitle": "쇼핑 · 은행 · 병원",
+        "limit": 10,
+        "theme": "daily"
+      },
+      {
+        "id": "food",
+        "emoji": "🍔",
+        "title": "✨ FOODIE 먹방",
+        "subtitle": "식당 · 요리 · 리뷰",
+        "limit": 10,
+        "theme": "food"
+      },
+      {
+        "id": "casual",
+        "emoji": "💬",
+        "title": "✨ CASUAL 일상 회화",
+        "subtitle": "수다 · 감정 · 친구",
+        "limit": 10,
+        "theme": "casual"
+      },
+      {
+        "id": "my_studio",
+        "emoji": "🎤",
+        "title": "✨ MY STUDIO 내 녹음실",
+        "subtitle": "내가 만든 영화들",
+        "limit": 0,
+        "theme": "studio",
+        "isMyStudio": true
+      }
+    ],
+    "kr": [
+      {
+        "id": "now_showing",
+        "emoji": "🎬",
+        "title": "✨ NOW SHOWING 지금 상영중",
+        "subtitle": "🎓 쌤 추천 · 🆕 최신 · 🎰 오늘의 픽",
+        "limit": 3,
+        "isNowShowing": true
+      },
+      {
+        "id": "kculture",
+        "emoji": "💃",
+        "title": "✨ K-CULTURE 한류",
+        "subtitle": "K-POP · 드라마 · 예능",
+        "limit": 10,
+        "theme": "kculture"
+      },
+      {
+        "id": "kfood",
+        "emoji": "🍜",
+        "title": "✨ K-FOOD 한식 먹방",
+        "subtitle": "한식 · 카페 · 맛집",
+        "limit": 10,
+        "theme": "food"
+      },
+      {
+        "id": "ktravel",
+        "emoji": "✈️",
+        "title": "✨ K-TRAVEL 여행 한국어",
+        "subtitle": "관광 · 숙박 · 교통",
+        "limit": 10,
+        "theme": "travel"
+      },
+      {
+        "id": "kdaily",
+        "emoji": "🏠",
+        "title": "✨ DAILY 일상 한국어",
+        "subtitle": "쇼핑 · 홈 · 일상",
+        "limit": 10,
+        "theme": "daily"
+      },
+      {
+        "id": "kpeople",
+        "emoji": "💬",
+        "title": "✨ CASUAL 수다 한국어",
+        "subtitle": "대화 · 챌린지",
+        "limit": 10,
+        "theme": "casual"
+      },
+      {
+        "id": "my_studio",
+        "emoji": "🎤",
+        "title": "✨ MY STUDIO 내 녹음실",
+        "subtitle": "내가 만든 영화들",
+        "limit": 0,
+        "theme": "studio",
+        "isMyStudio": true
+      }
+    ]
+  }
+}
