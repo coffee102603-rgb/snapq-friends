@@ -12776,16 +12776,11 @@ function startQuizGame(){
   const dubArea = document.getElementById('dubArea');
   const dubMain = document.getElementById('dubMain');
   const quizMain = document.getElementById('quizMain');
-  const puzzleMain = document.getElementById('puzzleMain');
-  const puzzleResult = document.getElementById('puzzleResult');
   
   if(!quizMain) return;
   
   dubArea.style.display = 'flex';
   if(dubMain) dubMain.style.display = 'none';
-  /* v10.12: PUZZLE 완전히 숨김 (겹침 방지!) */
-  if(puzzleMain) puzzleMain.style.display = 'none';
-  if(puzzleResult) puzzleResult.style.display = 'none';
   quizMain.style.display = 'flex';
   
   /* 영상 숨김 */
@@ -12925,44 +12920,17 @@ function launchSnackCounter(item){
   document.getElementById('quizTotal').textContent = QUIZ_STATE.items.length;
   document.getElementById('quizSnackKo').textContent = item.koHighlight || item.ko || '';
   
-  /* 4지선다 생성 — v10.12: 🎯 같은 영상의 다른 표현들로 3개 오답 */
+  /* 4지선다 생성 */
   const correct = item.highlight || item.en;
-  const correctLower = String(correct).toLowerCase();
-  
-  /* 1순위: 현재 영상의 다른 highlight들 (쌤 비전!) */
-  const currentVideoOptions = [];
-  if(S.short && S.short.sentences){
-    S.short.sentences.forEach(s => {
-      const h = s.highlight || s.core;
-      if(!h) return;
-      const hLower = String(h).toLowerCase();
-      if(hLower === correctLower) return;
-      if(!currentVideoOptions.some(x => String(x).toLowerCase() === hLower)){
-        currentVideoOptions.push(h);
-      }
-    });
-  }
-  
-  /* 섞어서 3개 뽑기 */
-  let distractors = currentVideoOptions
+  const nb = db.get('notebook', []);
+  const distractors = nb
+    .filter(n => (n.highlight || n.en) !== correct)
+    .map(n => n.highlight || n.en)
+    .filter((v,i,a) => a.indexOf(v)===i)
     .sort(() => Math.random()-0.5)
     .slice(0, 3);
   
-  /* 2순위: 부족하면 노트북의 다른 영상에서 */
-  if(distractors.length < 3){
-    const nb = db.get('notebook', []);
-    const nbOptions = nb
-      .filter(n => (n.highlight || n.en) !== correct)
-      .map(n => n.highlight || n.en)
-      .filter(v => v && !distractors.includes(v))
-      .sort(() => Math.random()-0.5);
-    for(const v of nbOptions){
-      if(distractors.length >= 3) break;
-      distractors.push(v);
-    }
-  }
-  
-  /* 3순위: fallback (정말 부족할 때만) */
+  /* 부족하면 기본 오답 추가 */
   const fallback = ['stay in','go out','walk in','arrive','leave','look up'];
   while(distractors.length < 3){
     const f = fallback[Math.floor(Math.random()*fallback.length)];
