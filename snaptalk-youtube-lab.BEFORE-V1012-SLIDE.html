@@ -6188,19 +6188,15 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   flex-direction: column !important;
 }
 
-/* 🎬 테마 포스터 — 슬라이드쇼! (명확한 display 제어) */
+/* 🎬 테마 포스터 — 명확한 flex 비율! */
 .movie-cinema-slide-themed{
   position: relative;
   flex: 1;
   min-height: 0;
   overflow: hidden;
   gap: 8px !important;
-  display: none !important;
-  flex-direction: column !important;
-}
-.movie-cinema-slide-themed.active{
   display: flex !important;
-  animation: slideFadeIn 0.35s cubic-bezier(.4,0,.2,1);
+  flex-direction: column !important;
 }
 
 /* v10.12: 포스터 영역 — 고정 높이 (28vh)! */
@@ -10472,9 +10468,10 @@ function renderCategoryDetail(shorts, cat){
         ? `<span class="poster-review-badge">🔒 비공개</span>` 
         : '';
       const poster = document.createElement('div');
-      poster.className = 'movie-cinema-slide movie-cinema-slide-themed' + (i === 0 ? ' active' : '');
+      poster.className = 'movie-cinema-slide movie-cinema-slide-themed';
       poster.dataset.idx = i;
       poster.dataset.shortId = s.id;
+      poster.style.display = i === 0 ? 'flex' : 'none';
       
       /* v10.12: 영화 포스터식 데이터 */
       const duration = formatVideoDuration(s);
@@ -10560,14 +10557,14 @@ function renderCategoryDetail(shorts, cat){
       `;
       feed.appendChild(nav);
       
-      /* 슬라이드 전환 로직 — active 클래스 방식 */
+      /* 슬라이드 전환 로직 */
       let currentIdx = 0;
       function showSlide(newIdx){
         if(newIdx < 0) newIdx = items.length - 1;
         if(newIdx >= items.length) newIdx = 0;
-        const slides = showcase.querySelectorAll('.movie-cinema-slide-themed');
+        const slides = showcase.querySelectorAll('.movie-cinema-slide');
         slides.forEach((sl, i) => {
-          sl.classList.toggle('active', i === newIdx);
+          sl.style.display = i === newIdx ? 'flex' : 'none';
         });
         const dots = nav.querySelectorAll('.msn-dot');
         dots.forEach((d, i) => d.classList.toggle('active', i === newIdx));
