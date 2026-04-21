@@ -2254,21 +2254,19 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
  * "영화 보고 로비에서 놀기" 메타포
  * v9.2 · 🎪 진짜 영화관 로비 분위기 강화!
  * ═══════════════════════════════════════════════════ */
-/* v10.12: 🏢 로비 — 모바일 한 화면 완벽 피트! (스크롤 제거!) */
 .lobby-hub{
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 10px 14px 10px;
-  gap: 8px;
+  padding: 16px 16px 20px;
+  gap: 14px;
   background: 
     radial-gradient(ellipse 80% 60% at 50% 0%, rgba(251,191,36,0.15), transparent 70%),
     radial-gradient(ellipse 60% 50% at 50% 100%, rgba(139,92,246,0.1), transparent 70%),
     linear-gradient(180deg, #0f0a1a 0%, #14102a 50%, #0a0a1f 100%);
   animation: lobbyFadeIn .6s ease-out;
-  overflow: hidden; /* 스크롤 제거! */
+  overflow-y: auto;
   position: relative;
-  min-height: 0;
 }
 
 /* v9.2: 영화관 로비 배경 장식 */
@@ -2296,25 +2294,25 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   to{ opacity: 1; transform: translateY(0) }
 }
 
-/* 🎊 축하 헤더 — 축소! */
+/* 🎊 축하 헤더 + 네온 CINEMA 사인 */
 .lobby-celebration{
   text-align: center;
-  padding: 6px 10px 4px;
+  padding: 20px 12px 12px;
   position: relative;
   z-index: 1;
-  flex-shrink: 0;
 }
 
 /* v9.2: CINEMA 네온 사인 */
 .lobby-cinema-sign{
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 6px;
+  letter-spacing: 8px;
   color: #fbbf24;
   text-shadow: 
     0 0 8px rgba(251,191,36,0.8),
-    0 0 16px rgba(251,191,36,0.6);
-  margin-bottom: 4px;
+    0 0 16px rgba(251,191,36,0.6),
+    0 0 24px rgba(251,191,36,0.4);
+  margin-bottom: 10px;
   animation: neonFlicker 4s ease-in-out infinite;
 }
 @keyframes neonFlicker{
@@ -2326,9 +2324,8 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 
 .lobby-emojis{
-  font-size: 24px;
-  margin-bottom: 3px;
-  line-height: 1;
+  font-size: 36px;
+  margin-bottom: 10px;
   animation: celebBounce .8s cubic-bezier(.3,1.5,.5,1);
 }
 @keyframes celebBounce{
@@ -2337,43 +2334,40 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   100%{ transform: scale(1) rotate(0); opacity: 1 }
 }
 .lobby-title{
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 900;
   color: #fff;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
   letter-spacing: -0.2px;
   text-shadow: 0 2px 10px rgba(251,191,36,0.3);
 }
 .lobby-subtitle{
-  font-size: 10px;
+  font-size: 13px;
   color: #a1a1aa;
   font-weight: 600;
 }
 
-/* 🏢 카드 그리드 (2x2) — 남은 공간 다 차지! */
+/* 🏢 카드 그리드 (2x2) */
 .lobby-cards{
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr 1fr;
-  gap: 8px;
-  padding: 0;
+  gap: 12px;
+  padding: 4px 0;
   position: relative;
   z-index: 1;
-  flex: 1; /* 남은 공간 모두 차지 */
-  min-height: 0;
 }
 
-/* 영화 포스터 스타일 카드 — 유연하게! */
+/* 영화 포스터 스타일 카드 */
 .lobby-card{
   position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  padding: 10px 10px 10px;
-  min-height: 0;
-  border-radius: 16px;
+  gap: 8px;
+  padding: 20px 14px 16px;
+  min-height: 160px;
+  border-radius: 18px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(.4,0,.2,1);
   text-align: center;
@@ -2386,7 +2380,7 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 16px;
+  border-radius: 18px;
   padding: 1px;
   background: linear-gradient(135deg, 
     rgba(167,139,250,.3), 
@@ -2401,16 +2395,16 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 }
 .lobby-card:hover,
 .lobby-card:active{
-  transform: translateY(-2px) scale(1.01);
-  box-shadow: 0 8px 24px rgba(167,139,250,.25), 
-              0 0 20px rgba(251,191,36,.15);
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(167,139,250,.25), 
+              0 0 30px rgba(251,191,36,.15);
 }
 
 /* 카드별 고유 색상 */
 .card-karaoke{
   background: linear-gradient(135deg, rgba(139,92,246,.2), rgba(26,26,46,.85));
 }
-.card-karaoke:hover{ box-shadow: 0 8px 24px rgba(139,92,246,.4) }
+.card-karaoke:hover{ box-shadow: 0 12px 40px rgba(139,92,246,.4) }
 
 .card-snack{
   background: linear-gradient(135deg, rgba(251,191,36,.18), rgba(26,26,46,.85));
@@ -2426,17 +2420,17 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   background: linear-gradient(135deg, rgba(100,116,139,.15), rgba(26,26,46,.85));
 }
 
-/* 카드 내부 요소 — 컴팩트! */
+/* 카드 내부 요소 */
 .lobby-card-emoji{
-  font-size: 32px;
+  font-size: 44px;
   line-height: 1;
-  margin-bottom: 0;
+  margin-bottom: 2px;
   filter: drop-shadow(0 4px 12px rgba(0,0,0,.3));
   animation: cardEmojiFloat 3s ease-in-out infinite;
 }
 @keyframes cardEmojiFloat{
   0%,100%{ transform: translateY(0) }
-  50%{ transform: translateY(-3px) }
+  50%{ transform: translateY(-4px) }
 }
 .card-karaoke .lobby-card-emoji{ animation-delay: 0s }
 .card-snack .lobby-card-emoji{ animation-delay: 0.5s }
@@ -2444,25 +2438,22 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
 .card-home .lobby-card-emoji{ animation-delay: 1.5s }
 
 .lobby-card-title{
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 900;
   color: #fff;
-  line-height: 1.2;
+  line-height: 1.25;
   letter-spacing: -0.2px;
-  margin: 0;
 }
 .lobby-card-desc{
-  font-size: 10px;
+  font-size: 11px;
   color: #a1a1aa;
   font-weight: 600;
-  line-height: 1.3;
-  margin: 0;
 }
 .lobby-card-action{
-  margin-top: 2px;
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 10px;
+  margin-top: 6px;
+  padding: 6px 14px;
+  border-radius: 14px;
+  font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.3px;
   background: rgba(255,255,255,.06);
@@ -2476,9 +2467,15 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   background: rgba(255,255,255,.03);
 }
 
-/* v9.2: 🎞️ 하단 필름 스트립 — 숨김 (공간 절약!) */
+/* v9.2: 🎞️ 하단 필름 스트립 */
 .lobby-film-strip{
-  display: none;
+  display: flex;
+  justify-content: center;
+  gap: 3px;
+  padding: 6px 0;
+  opacity: 0.35;
+  position: relative;
+  z-index: 1;
 }
 .lobby-film-strip::before,
 .lobby-film-strip::after{
@@ -2502,36 +2499,35 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   );
 }
 
-/* v10.12: 하단 상태 바 — 컴팩트! */
+/* 하단 상태 바 */
 .lobby-status{
   display: flex;
-  gap: 6px;
-  padding: 6px 10px;
+  gap: 10px;
+  padding: 12px 16px;
   background: linear-gradient(135deg, rgba(26,26,46,.6), rgba(20,20,43,.4));
   border: 1px solid rgba(167,139,250,.15);
-  border-radius: 10px;
-  margin-top: 4px;
+  border-radius: 14px;
+  margin-top: auto;
   position: relative;
   z-index: 1;
-  flex-shrink: 0;
 }
 .lobby-status-item{
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 4px;
-  font-size: 11px;
+  gap: 6px;
+  font-size: 13px;
   font-weight: 700;
   color: #cbd5e1;
 }
-.lobby-status-icon{ font-size: 13px }
-.lobby-status-label{ color: #94a3b8; font-size: 10px }
+.lobby-status-icon{ font-size: 16px }
+.lobby-status-label{ color: #94a3b8 }
 .lobby-status-count{
   color: #fbbf24;
   font-weight: 900;
-  font-size: 12px;
-  margin-left: 1px;
+  font-size: 14px;
+  margin-left: 2px;
 }
 
 /* ═══ STEP 3: DUB CHALLENGE ═══ */
@@ -7531,10 +7527,15 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="lobby-card-desc">자막 조립</div>
           <div class="lobby-card-action">▶ 입장</div>
         </button>
+        
+        <!-- 🎥 다른 영화 -->
+        <button class="lobby-card card-home" id="lobbyHome">
+          <div class="lobby-card-emoji">🎥</div>
+          <div class="lobby-card-title">다른 영화<br>보기</div>
+          <div class="lobby-card-desc">새 영상</div>
+          <div class="lobby-card-action">▶ 홈으로</div>
+        </button>
       </div>
-      
-      <!-- v10.12: 🎥 홈 버튼은 상단 헤더에 통합 (로비 스크롤 제거!) -->
-      <button class="lobby-home-compact" id="lobbyHome" style="display:none">홈으로</button>
       
       <!-- v9.2: 🎞️ 필름 스트립 장식 -->
       <div class="lobby-film-strip">
@@ -10199,6 +10200,7 @@ function renderFeed(){
               <div class="movie-poster-title">${s.title}</div>
               <div class="movie-poster-meta">
                 <span class="movie-poster-diff diff-${s.diff}">${s.diff}</span>
+                <span class="movie-poster-badge-sub">${badgeInfo.sub}</span>
               </div>
               ${isReview ? `<button class="cat-card-publish-btn" onclick="event.stopPropagation();publishVideo('${s.id}')">🚀 공개하기</button>` : ''}
             </div>
