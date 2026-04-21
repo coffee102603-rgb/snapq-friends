@@ -456,16 +456,11 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   padding-bottom:100px !important;
 }
 /* v10.12: 카테고리 상세 (cat-themed) 일 때는 패딩 제거 + 스크롤 제거 + flex */
-/* 중요: .active일 때만 flex! (다른 화면 전환 시 숨겨져야 함) */
-#feedScreen.cat-themed.active{
+#feedScreen.cat-themed{
   padding: 0 0 60px !important;  /* 하단 탭 공간만 */
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
-}
-/* cat-themed이지만 non-active면 숨김 (기본 .screen 규칙 준수) */
-#feedScreen.cat-themed:not(.active){
-  display: none !important;
 }
 /* 🎤 말한 단어: 영어는 안 드러남! 밑줄만 녹색으로 */
 .karaoke-line.mode-rehearsal .karaoke-text .ktw.spoken,
@@ -10604,20 +10599,7 @@ function renderCategoryDetail(shorts, cat){
       }
       if(shortId){
         const short = shorts.find(x => x.id === shortId);
-        if(short){
-          /* v10.12: 🎯 영상 시작 전 cat-themed 완전 정리! */
-          const feedEl = document.getElementById('feedScreen');
-          if(feedEl){
-            feedEl.classList.remove('cat-themed');
-            feedEl.style.removeProperty('--cat-gradient');
-            feedEl.style.removeProperty('--cat-banner-bg');
-            feedEl.style.removeProperty('--cat-accent');
-            feedEl.style.removeProperty('--cat-glow');
-            feedEl.style.removeProperty('--cat-text');
-            feedEl.innerHTML = ''; /* 전체 내용 제거! */
-          }
-          startGame(short);
-        }
+        if(short) startGame(short);
       }
     });
   }
