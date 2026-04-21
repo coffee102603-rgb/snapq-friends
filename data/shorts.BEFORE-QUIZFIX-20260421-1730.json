@@ -614,9 +614,9 @@
             "ko": "닉.",
             "start": 4.94,
             "end": 5.77,
-            "core": "",
-            "highlight": "",
-            "koHighlight": "",
+            "core": "Nick",
+            "highlight": "Nick",
+            "koHighlight": "닉",
             "phonetic": "닉.",
             "translations": {
               "ja": {
@@ -694,9 +694,9 @@
             "ko": "알겠어.",
             "start": 8.68,
             "end": 9.66,
-            "core": "",
-            "highlight": "",
-            "koHighlight": "",
+            "core": "Okay",
+            "highlight": "Okay",
+            "koHighlight": "알겠어",
             "phonetic": "오케이.",
             "translations": {
               "ja": {
