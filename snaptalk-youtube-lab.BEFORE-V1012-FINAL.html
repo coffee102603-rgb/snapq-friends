@@ -456,11 +456,16 @@ button{font-family:inherit;cursor:pointer;border:none;outline:none;background:no
   padding-bottom:100px !important;
 }
 /* v10.12: 카테고리 상세 (cat-themed) 일 때는 패딩 제거 + 스크롤 제거 + flex */
-#feedScreen.cat-themed{
+/* 중요: .active일 때만 flex! (다른 화면 전환 시 숨겨져야 함) */
+#feedScreen.cat-themed.active{
   padding: 0 0 60px !important;  /* 하단 탭 공간만 */
   overflow: hidden !important;
   display: flex !important;
   flex-direction: column !important;
+}
+/* cat-themed이지만 non-active면 숨김 (기본 .screen 규칙 준수) */
+#feedScreen.cat-themed:not(.active){
+  display: none !important;
 }
 /* 🎤 말한 단어: 영어는 안 드러남! 밑줄만 녹색으로 */
 .karaoke-line.mode-rehearsal .karaoke-text .ktw.spoken,
@@ -6182,8 +6187,8 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   z-index: 2;
   flex: 1;
   min-height: 0;
-  margin: 8px 12px 4px !important;
-  overflow: hidden;
+  margin: 6px 10px 2px !important;
+  overflow: visible;
   display: flex !important;
   flex-direction: column !important;
 }
@@ -6193,8 +6198,8 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   position: relative;
   flex: 1;
   min-height: 0;
-  overflow: hidden;
-  gap: 8px !important;
+  overflow: visible;
+  gap: 6px !important;
   display: none !important;
   flex-direction: column !important;
 }
@@ -6203,24 +6208,22 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   animation: slideFadeIn 0.35s cubic-bezier(.4,0,.2,1);
 }
 
-/* v10.12: 포스터 영역 — 고정 높이 (28vh)! */
+/* v10.12: 🎬 포스터 영역 — 모바일 기준 18vh (매우 작게!) */
 .movie-cinema-slide-themed .mcs-poster{
   flex: 0 0 auto !important;
-  height: 28vh !important; /* 화면의 28%만 차지! */
+  height: 18vh !important; /* 화면의 18%! (모바일 폰 기준 영상은 작게) */
   width: 100% !important;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .movie-cinema-slide-themed .mcs-poster-img{
-  width: 100% !important;
-  height: 100% !important; /* 부모 div를 꽉 채움 */
-  aspect-ratio: unset !important; /* aspect-ratio 제거! */
+  width: 100%;
+  height: 100%;
+  max-height: 18vh !important;
   border-radius: 12px !important;
-  background-size: cover !important;
-  background-position: center !important;
+  aspect-ratio: unset !important;
 }
-
 .mcs-poster-overlay-themed{
   position: absolute;
   inset: 0;
@@ -6231,37 +6234,43 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   pointer-events: none;
 }
 
-/* 영화 포스터식 카드 — 명확한 flex로 남은 공간 차지! */
+/* 영화 포스터식 카드 — 모든 영상 동일 구조 보장! */
 .mcs-poster-card{
-  flex: 1 1 auto !important;
-  min-height: 0 !important;
-  padding: 10px 12px !important;
+  flex: 1 1 auto;
+  min-height: 230px; /* 최소 높이 보장! 모든 콘텐츠 보임 */
+  padding: 8px 10px;
   background: linear-gradient(135deg, rgba(26,26,46,0.95), rgba(20,20,43,0.85));
   border: 1px solid var(--cat-accent, rgba(251,191,36,0.4));
   border-radius: 14px;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 5px !important;
-  overflow-y: auto !important; /* 내용 넘치면 카드 내부 스크롤! */
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  overflow: visible;
   box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-/* mcs-title override (컴팩트) */
+/* mcs-title — 1줄 고정 */
 .mcs-poster-card .mcs-title{
   font-size: 14px !important;
   line-height: 1.2 !important;
   -webkit-line-clamp: 1 !important;
-  margin-bottom: 1px !important;
-  flex-shrink: 0 !important;
+  display: -webkit-box !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  margin: 0 !important;
+  color: #fff !important;
+  font-weight: 900 !important;
+  flex-shrink: 0;
 }
 
-/* ⭐ 별점 + 시간 한 줄 */
+/* ⭐ 별점 행 — 고정 높이 */
 .mcs-rating-row{
   display: flex;
   align-items: center;
   gap: 4px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .mcs-rating{
   font-size: 11px;
@@ -6277,25 +6286,28 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-weight: 900;
   letter-spacing: 0.3px;
   text-transform: uppercase;
+  flex-shrink: 0;
 }
 .mcs-dot{
   color: rgba(255,255,255,0.3);
   font-size: 9px;
+  flex-shrink: 0;
 }
 .mcs-duration, .mcs-lines{
   font-size: 9px;
   color: #cbd5e1;
   font-weight: 700;
+  white-space: nowrap;
 }
 
-/* 📝 임팩트 헤드라인 — 컴팩트! */
+/* 📝 헤드라인 — 1줄 고정 */
 .mcs-headline{
-  padding: 4px 2px;
+  padding: 2px 2px;
   position: relative;
   flex-shrink: 0;
 }
 .mcs-quote-l, .mcs-quote-r{
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 900;
   color: var(--cat-accent, #fbbf24);
   opacity: 0.6;
@@ -6308,74 +6320,81 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-size: 11px;
   color: #fff;
   font-weight: 800;
-  line-height: 1.35;
+  line-height: 1.25;
   font-style: italic;
   letter-spacing: -0.1px;
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-/* 🎭 주연 표현 섹션 — 컴팩트 */
+/* 🎭 주연 표현 섹션 — 고정 */
 .mcs-stars-section{
-  padding: 5px 8px;
+  padding: 4px 6px;
   background: rgba(255,255,255,0.04);
   border: 1px solid rgba(255,255,255,0.06);
-  border-radius: 8px;
+  border-radius: 7px;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .mcs-stars-label{
   font-size: 8px;
   color: var(--cat-accent, #fbbf24);
   font-weight: 900;
-  letter-spacing: 0.6px;
-  margin-bottom: 3px;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
 }
 .mcs-stars-chips{
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: 2px;
+  max-height: 38px;
+  overflow: hidden;
 }
 .mcs-star-chip{
-  padding: 2px 6px;
+  padding: 1px 5px;
   background: var(--cat-banner-bg, rgba(251,191,36,0.15));
   border: 1px solid var(--cat-accent, rgba(251,191,36,0.35));
-  border-radius: 6px;
-  font-size: 9px;
+  border-radius: 5px;
+  font-size: 8px;
   color: #fff;
   font-weight: 800;
   letter-spacing: 0.1px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  white-space: nowrap;
 }
 
-/* 🏷️ 태그 */
+/* 🏷️ 태그 — 고정 */
 .mcs-tags{
   display: flex;
   flex-wrap: wrap;
-  gap: 3px;
+  gap: 2px;
   flex-shrink: 0;
+  max-height: 16px;
+  overflow: hidden;
 }
 .mcs-tag{
   padding: 1px 5px;
   background: rgba(255,255,255,0.05);
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 5px;
+  border-radius: 4px;
   font-size: 8px;
   color: var(--cat-accent, #fbbf24);
   font-weight: 700;
+  white-space: nowrap;
 }
 
-/* ▶ 시작하기 (테마 버튼) — 컴팩트 */
+/* ▶ 시작하기 버튼 — 고정 */
 .mcs-start-btn-themed{
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   padding: 9px;
   background: var(--cat-banner-bg, linear-gradient(135deg, #fbbf24, #f59e0b));
   border: none;
-  border-radius: 10px;
+  border-radius: 9px;
   color: var(--cat-text, #fff);
   font-weight: 900;
   cursor: pointer;
@@ -6394,32 +6413,8 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
     0 8px 20px var(--cat-glow, rgba(251,191,36,0.5));
 }
 .mcs-start-btn-themed:active{ transform: translateY(0) }
-.mcs-start-icon{ font-size: 13px }
+.mcs-start-icon{ font-size: 12px }
 .mcs-start-label{ font-size: 12px }
-
-/* 네비게이션 — 컴팩트 */
-.movie-showcase-nav{
-  position: relative;
-  z-index: 2;
-  padding: 4px 12px 8px !important;
-  flex-shrink: 0;
-}
-.msn-btn{
-  width: 30px !important;
-  height: 30px !important;
-  font-size: 11px !important;
-}
-.msn-dot{
-  width: 6px !important;
-  height: 6px !important;
-}
-.msn-dot.active{
-  width: 20px !important;
-}
-.msn-page{
-  font-size: 10px !important;
-  min-width: 32px !important;
-}
 
 /* v10.9: 🎬 카테고리 상세 — 영화관 1개씩 슬라이드쇼! */
 .cat-detail-header-compact{
@@ -10609,7 +10604,20 @@ function renderCategoryDetail(shorts, cat){
       }
       if(shortId){
         const short = shorts.find(x => x.id === shortId);
-        if(short) startGame(short);
+        if(short){
+          /* v10.12: 🎯 영상 시작 전 cat-themed 완전 정리! */
+          const feedEl = document.getElementById('feedScreen');
+          if(feedEl){
+            feedEl.classList.remove('cat-themed');
+            feedEl.style.removeProperty('--cat-gradient');
+            feedEl.style.removeProperty('--cat-banner-bg');
+            feedEl.style.removeProperty('--cat-accent');
+            feedEl.style.removeProperty('--cat-glow');
+            feedEl.style.removeProperty('--cat-text');
+            feedEl.innerHTML = ''; /* 전체 내용 제거! */
+          }
+          startGame(short);
+        }
       }
     });
   }
@@ -12768,11 +12776,16 @@ function startQuizGame(){
   const dubArea = document.getElementById('dubArea');
   const dubMain = document.getElementById('dubMain');
   const quizMain = document.getElementById('quizMain');
+  const puzzleMain = document.getElementById('puzzleMain');
+  const puzzleResult = document.getElementById('puzzleResult');
   
   if(!quizMain) return;
   
   dubArea.style.display = 'flex';
   if(dubMain) dubMain.style.display = 'none';
+  /* v10.12: PUZZLE 완전히 숨김 (겹침 방지!) */
+  if(puzzleMain) puzzleMain.style.display = 'none';
+  if(puzzleResult) puzzleResult.style.display = 'none';
   quizMain.style.display = 'flex';
   
   /* 영상 숨김 */
@@ -12912,17 +12925,44 @@ function launchSnackCounter(item){
   document.getElementById('quizTotal').textContent = QUIZ_STATE.items.length;
   document.getElementById('quizSnackKo').textContent = item.koHighlight || item.ko || '';
   
-  /* 4지선다 생성 */
+  /* 4지선다 생성 — v10.12: 🎯 같은 영상의 다른 표현들로 3개 오답 */
   const correct = item.highlight || item.en;
-  const nb = db.get('notebook', []);
-  const distractors = nb
-    .filter(n => (n.highlight || n.en) !== correct)
-    .map(n => n.highlight || n.en)
-    .filter((v,i,a) => a.indexOf(v)===i)
+  const correctLower = String(correct).toLowerCase();
+  
+  /* 1순위: 현재 영상의 다른 highlight들 (쌤 비전!) */
+  const currentVideoOptions = [];
+  if(S.short && S.short.sentences){
+    S.short.sentences.forEach(s => {
+      const h = s.highlight || s.core;
+      if(!h) return;
+      const hLower = String(h).toLowerCase();
+      if(hLower === correctLower) return;
+      if(!currentVideoOptions.some(x => String(x).toLowerCase() === hLower)){
+        currentVideoOptions.push(h);
+      }
+    });
+  }
+  
+  /* 섞어서 3개 뽑기 */
+  let distractors = currentVideoOptions
     .sort(() => Math.random()-0.5)
     .slice(0, 3);
   
-  /* 부족하면 기본 오답 추가 */
+  /* 2순위: 부족하면 노트북의 다른 영상에서 */
+  if(distractors.length < 3){
+    const nb = db.get('notebook', []);
+    const nbOptions = nb
+      .filter(n => (n.highlight || n.en) !== correct)
+      .map(n => n.highlight || n.en)
+      .filter(v => v && !distractors.includes(v))
+      .sort(() => Math.random()-0.5);
+    for(const v of nbOptions){
+      if(distractors.length >= 3) break;
+      distractors.push(v);
+    }
+  }
+  
+  /* 3순위: fallback (정말 부족할 때만) */
   const fallback = ['stay in','go out','walk in','arrive','leave','look up'];
   while(distractors.length < 3){
     const f = fallback[Math.floor(Math.random()*fallback.length)];

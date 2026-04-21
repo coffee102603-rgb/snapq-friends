@@ -12701,45 +12701,45 @@ const QUIZ_STATE = {
   answered: false,
 };
 
-/* 노트에서 시험할 단어 뽑기 (현재 영상 3개 + 전체 2개) */
+/* 노트에서 시험할 단어 뽑기 (v10.12: 쌤 요청 - 4개!) */
 function pickQuizItems(){
-  /* v10.9: 🍿 8개 강제 — 영상 단어 × 회화 핵심 DB 교집합! */
+  /* v10.12: 🎯 영상 CORE/HIGHLIGHT 우선! (쌤 원칙: 각 영상 핵심 표현!) */
   const nb = db.get('notebook', []);
   const chosen = [];
   const seenEn = new Set();
+  const QUIZ_COUNT = 4; /* 쌤 요청: 4개 문제 */
   
   /* 1순위: 노트북 (현재 영상) — 사용자가 저장한 것 */
   const fromCurrent = nb.filter(n => n.shortId === S.short?.id && n.stage !== 'mastered');
-  fromCurrent.slice(0, 3).forEach(n => {
+  fromCurrent.slice(0, 2).forEach(n => {
     if(!seenEn.has(n.en)){ chosen.push(n); seenEn.add(n.en); }
   });
   
-  /* 2순위 ⭐ CONVERSATION_VOCAB 교집합 (쌤의 교육학 비전!) */
+  /* 2순위 ⭐ 영상 문장의 CORE/HIGHLIGHT (영상 핵심 표현 우선!) */
   if(S.short && S.short.sentences){
-    const vocabMatches = getConversationVocabMatches(S.short.sentences, 8);
-    vocabMatches.forEach(v => {
-      if(chosen.length >= 8) return;
-      if(seenEn.has(v.en)) return;
+    for(const s of S.short.sentences){
+      if(chosen.length >= QUIZ_COUNT) break;
+      if(!s.highlight && !s.core) continue;
+      const enKey = s.en || '';
+      if(seenEn.has(enKey)) continue;
       chosen.push({
-        en: v.en,
-        ko: v.ko,
-        highlight: v.highlight,
-        koHighlight: v.koHighlight,
-        core: v.core,
+        en: s.en,
+        ko: s.ko,
+        highlight: s.highlight || s.core,
+        koHighlight: s.koHighlight || s.ko,
+        core: s.core,
         shortId: S.short.id,
-        shortTitle: S.short.title,
-        _vocabCategory: v.category,  /* 표시용 (expression/action/food 등) */
-        _fromVocab: true
+        shortTitle: S.short.title
       });
-      seenEn.add(v.en);
-    });
+      seenEn.add(enKey);
+    }
   }
   
   /* 3순위: 노트북 (다른 영상) */
-  if(chosen.length < 8){
+  if(chosen.length < QUIZ_COUNT){
     const others = nb.filter(n => n.shortId !== S.short?.id && n.stage !== 'mastered');
     for(const n of others.sort(() => Math.random() - 0.5)){
-      if(chosen.length >= 8) break;
+      if(chosen.length >= QUIZ_COUNT) break;
       if(!seenEn.has(n.en)){
         chosen.push(n);
         seenEn.add(n.en);
@@ -12747,28 +12747,10 @@ function pickQuizItems(){
     }
   }
   
-  /* 4순위 폴백: 영상의 남은 문장 CORE */
-  if(chosen.length < 8 && S.short && S.short.sentences){
-    for(const s of S.short.sentences){
-      if(chosen.length >= 8) break;
-      if(!s.core || seenEn.has(s.en)) continue;
-      chosen.push({
-        en: s.en,
-        ko: s.ko,
-        highlight: s.highlight || s.core,
-        koHighlight: s.koHighlight,
-        core: s.core,
-        shortId: S.short?.id || '',
-        shortTitle: S.short?.title || ''
-      });
-      seenEn.add(s.en);
-    }
-  }
-  
   /* 최소 1개라도 없으면 원래대로 */
   if(chosen.length === 0) return [];
   
-  return chosen.slice(0, 8);
+  return chosen.slice(0, QUIZ_COUNT);
 }
 
 /* 🎰 슬롯머신 → QUIZ 게임 시작! */
@@ -12923,13 +12905,15 @@ function launchSnackCounter(item){
   
   document.getElementById('quizCur').textContent = QUIZ_STATE.currentIdx+1;
   document.getElementById('quizTotal').textContent = QUIZ_STATE.items.length;
-  document.getElementById('quizSnackKo').textContent = item.koHighlight || item.ko || '';
+  /* v10.12: 🎯 쌤 원칙 - koHighlight 우선! (짧은 한국어) */
+  const displayKo = item.koHighlight || item.ko || '이 표현!';
+  document.getElementById('quizSnackKo').textContent = displayKo;
   
-  /* 4지선다 생성 — v10.12: 🎯 같은 영상의 다른 표현들로 3개 오답 */
+  /* 4지선다 생성 — v10.12: 🎯 쌤 원칙 - 모두 같은 영상 highlight만! */
   const correct = item.highlight || item.en;
   const correctLower = String(correct).toLowerCase();
   
-  /* 1순위: 현재 영상의 다른 highlight들 (쌤 비전!) */
+  /* 현재 영상의 모든 highlight 수집 (정답 제외) */
   const currentVideoOptions = [];
   if(S.short && S.short.sentences){
     S.short.sentences.forEach(s => {
@@ -12943,30 +12927,60 @@ function launchSnackCounter(item){
     });
   }
   
-  /* 섞어서 3개 뽑기 */
+  /* 쌤 원칙: 같은 영상만! 오답 3개 뽑기 */
   let distractors = currentVideoOptions
     .sort(() => Math.random()-0.5)
     .slice(0, 3);
   
-  /* 2순위: 부족하면 노트북의 다른 영상에서 */
-  if(distractors.length < 3){
-    const nb = db.get('notebook', []);
-    const nbOptions = nb
-      .filter(n => (n.highlight || n.en) !== correct)
-      .map(n => n.highlight || n.en)
-      .filter(v => v && !distractors.includes(v))
-      .sort(() => Math.random()-0.5);
-    for(const v of nbOptions){
+  /* 영상에 highlight가 부족하면 (예: 3개 미만) — CORE 단어도 활용 */
+  if(distractors.length < 3 && S.short && S.short.sentences){
+    const coreOptions = [];
+    S.short.sentences.forEach(s => {
+      if(!s.core) return;
+      const cLower = String(s.core).toLowerCase();
+      if(cLower === correctLower) return;
+      if(distractors.some(d => String(d).toLowerCase() === cLower)) return;
+      if(!coreOptions.some(x => String(x).toLowerCase() === cLower)){
+        coreOptions.push(s.core);
+      }
+    });
+    coreOptions.sort(() => Math.random()-0.5);
+    for(const c of coreOptions){
       if(distractors.length >= 3) break;
-      distractors.push(v);
+      distractors.push(c);
     }
   }
   
-  /* 3순위: fallback (정말 부족할 때만) */
-  const fallback = ['stay in','go out','walk in','arrive','leave','look up'];
-  while(distractors.length < 3){
-    const f = fallback[Math.floor(Math.random()*fallback.length)];
-    if(!distractors.includes(f) && f !== correct) distractors.push(f);
+  /* 그래도 부족하면 — 영상 문장 전체에서 단어 뽑기 */
+  if(distractors.length < 3 && S.short && S.short.sentences){
+    const wordOptions = new Set();
+    S.short.sentences.forEach(s => {
+      if(!s.en) return;
+      /* 2~3단어 구문 추출 */
+      const words = String(s.en).split(/\s+/).filter(w => w.length > 2);
+      for(let i = 0; i < words.length - 1; i++){
+        const pair = words[i] + ' ' + words[i+1];
+        const pLower = pair.toLowerCase();
+        if(pLower === correctLower) continue;
+        if(distractors.some(d => String(d).toLowerCase() === pLower)) continue;
+        wordOptions.add(pair);
+      }
+    });
+    const wordArr = [...wordOptions].sort(() => Math.random()-0.5);
+    for(const w of wordArr){
+      if(distractors.length >= 3) break;
+      distractors.push(w);
+    }
+  }
+  
+  /* 최후의 수단: 같은 영상 문장 전체라도 추가 */
+  while(distractors.length < 3 && S.short && S.short.sentences){
+    const idx = Math.floor(Math.random() * S.short.sentences.length);
+    const s = S.short.sentences[idx];
+    const fallback = s.en || 'practice more';
+    if(String(fallback).toLowerCase() !== correctLower && !distractors.includes(fallback)){
+      distractors.push(fallback);
+    } else break;
   }
   
   const choices = [correct, ...distractors].sort(() => Math.random()-0.5);
@@ -13148,16 +13162,39 @@ function launchPopcorn(item){
   stage.innerHTML = '';
   
   const correct = item.highlight || item.en;
-  const nb = db.get('notebook', []);
-  const distractors = nb
-    .filter(n => (n.highlight || n.en) !== correct)
-    .map(n => n.highlight || n.en)
-    .filter((v,i,a) => a.indexOf(v)===i)
-    .slice(0, 5);
-  const fallback = ['stay in','go out','walk in','arrive','leave','look up','come back','sit down'];
+  const correctLower = String(correct).toLowerCase();
+  
+  /* v10.12: 쌤 원칙 - 같은 영상의 다른 highlight로 오답! */
+  const distractors = [];
+  if(S.short && S.short.sentences){
+    S.short.sentences.forEach(s => {
+      const h = s.highlight || s.core;
+      if(!h) return;
+      const hLower = String(h).toLowerCase();
+      if(hLower === correctLower) return;
+      if(!distractors.some(d => String(d).toLowerCase() === hLower)){
+        distractors.push(h);
+      }
+    });
+  }
+  distractors.sort(() => Math.random()-0.5);
+  /* 부족하면 영상 CORE 단어로 채움 */
+  if(distractors.length < 5 && S.short && S.short.sentences){
+    S.short.sentences.forEach(s => {
+      if(distractors.length >= 5) return;
+      if(!s.core) return;
+      const cLower = String(s.core).toLowerCase();
+      if(cLower === correctLower) return;
+      if(distractors.some(d => String(d).toLowerCase() === cLower)) return;
+      distractors.push(s.core);
+    });
+  }
+  /* 여전히 부족하면 fallback */
+  const fallback = ['practice','learn','remember','good','nice'];
   while(distractors.length < 5){
     const f = fallback[Math.floor(Math.random()*fallback.length)];
     if(!distractors.includes(f) && f !== correct) distractors.push(f);
+    else break;
   }
   
   const allWords = [correct, correct, correct, ...distractors.slice(0,5)]; /* 정답은 3번 */
