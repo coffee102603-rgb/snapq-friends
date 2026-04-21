@@ -7190,11 +7190,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="ai-chat-badge">NEW!</div>
         </button>
         
-        <!-- 🎬 영화 녹음실 -->
+        <!-- 🎤 RECORDING STUDIO -->
         <button class="lobby-card card-karaoke" id="lobbyKaraoke">
-          <div class="lobby-card-emoji">🎬</div>
-          <div class="lobby-card-title">영화<br>녹음실</div>
-          <div class="lobby-card-desc">🎤 따라 or 🎭 주인공!</div>
+          <div class="lobby-card-emoji">🎤</div>
+          <div class="lobby-card-title">RECORDING<br>STUDIO</div>
+          <div class="lobby-card-desc">🎤 노래방 or 🎭 주인공!</div>
           <div class="lobby-card-action">▶ 입장</div>
         </button>
         
@@ -7477,16 +7477,16 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     <div id="dubArea" style="display:none">
       <!-- Studio Booth Picker: shown first -->
       <div id="dubDiffPicker" class="diff-picker">
-        <div class="diff-picker-title">🎬 영화 녹음실 · 어떻게 할까요?</div>
-        <div class="diff-picker-sub">🎤 따라 부르거나 🎭 주인공이 되거나!</div>
+        <div class="diff-picker-title">🎤 RECORDING STUDIO · 어떻게 할까요?</div>
+        <div class="diff-picker-sub">🎤 노래방처럼 or 🎭 주인공 되기!</div>
         <div class="booth-row">
           <div class="booth easy active" data-diff="easy">
             <span class="booth-led"></span>
             <span class="booth-mic">🎤</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">🎤 따라 부르기</div>
-              <div class="booth-heat">가사 보면서 연습!</div>
+              <div class="booth-name">🎤 KARAOKE</div>
+              <div class="booth-heat">가사 보면서 부르기!</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
@@ -7504,7 +7504,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           </div>
         </div>
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
-          <span id="boothLabel">🎤 따라 부르기 · 대본 있음 (초보 모드)</span>
+          <span id="boothLabel">🎤 KARAOKE · 가사 보면서 부르기 (노래방 모드)</span>
         </div>
         <!-- v10.5: 🎦 로비 + 매표소 버튼 (메인 통일!) -->
         <div style="display:flex;gap:8px;align-items:stretch;margin-top:6px">
@@ -10260,7 +10260,7 @@ function updateLobbyStatus(){
   }
 }
 
-/* 🎬 영화 녹음실 → 기존 부스 선택 (이름만 변경, 라우팅 동일) */
+/* 🎤 RECORDING STUDIO → 기존 부스 선택 (KARAOKE + STAR MODE) */
 document.addEventListener('click', e=>{
   if(e.target && (e.target.id==='lobbyKaraoke' || e.target.closest('#lobbyKaraoke'))){
     const hub=document.getElementById('lobbyHub');
@@ -14079,17 +14079,17 @@ document.getElementById('dubRetry').addEventListener('click',()=>{
   goStep(2);
 });
 
-/* Booth picker: v10.11 영화 녹음실 네이밍 */
+/* Booth picker: v10.11 RECORDING STUDIO 네이밍 */
 const BOOTH_LABELS={
-  easy:'🎤 따라 부르기 · 가사 보기 (초보 모드)',
-  normal:'🎤 따라 부르기 · 가사 보기 (초보 모드)',
+  easy:'🎤 KARAOKE · 가사 보면서 부르기 (노래방 모드)',
+  normal:'🎤 KARAOKE · 가사 보면서 부르기 (노래방 모드)',
   star:'🎭 STAR MODE · 내가 주인공 (영상 더빙!)',
   hard:'🎯 QUIZ · 🎰 랜덤 간식 게임!',
   quiz:'🎯 QUIZ · 🎰 랜덤 간식 게임!'
 };
 const BOOTH_STUDIO_LABEL={
-  easy:'🎤 따라 모드',
-  normal:'🎤 따라 모드',
+  easy:'🎤 KARAOKE',
+  normal:'🎤 KARAOKE',
   star:'🎭 STAR MODE',
   hard:'🎯 QUIZ',
   quiz:'🎯 QUIZ'
@@ -14161,12 +14161,12 @@ document.getElementById('dubStartBtn').addEventListener('click',()=>{
     if(banner){
       banner.className='step-banner dub';
       const boothBannerText={
-        easy:'🎤 따라 부르기 — 가사 보면서 편하게!',
-        normal:'🎤 따라 부르기 — 가사 보면서 편하게!',
+        easy:'🎤 KARAOKE — 가사 보면서 편하게 불러봐!',
+        normal:'🎤 KARAOKE — 가사 보면서 편하게 불러봐!',
         star:'🎭 STAR MODE — 내가 주인공!',
         hard:'🎬 TAKE 1 — 나도 주인공!'
       };
-      banner.textContent=boothBannerText[selectedDiff]||'🎬 영화 녹음실 — 목청 풀고 가자!';
+      banner.textContent=boothBannerText[selectedDiff]||'🎤 RECORDING STUDIO — 목청 풀고 가자!';
     }
     document.getElementById('ytContainer').style.display='';
     document.getElementById('ytContainer').classList.remove('pip');

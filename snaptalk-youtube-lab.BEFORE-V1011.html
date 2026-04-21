@@ -4823,6 +4823,731 @@ mark.snap-hl-en,mark.snap-hl-ko{color:inherit}
   font-weight: 600;
 }
 
+/* v10.11: 🎭 STAR MODE — 영상 주인공 되기! (특허 #2) */
+.booth.star-booth{
+  position: relative;
+  background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.08)) !important;
+  border-color: rgba(251,191,36,0.5) !important;
+  overflow: visible;
+}
+.booth.star-booth::before{
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b, #fbbf24);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s;
+  filter: blur(6px);
+}
+.booth.star-booth:hover::before{
+  opacity: 0.5;
+}
+.booth.star-booth .booth-name{
+  color: #fbbf24 !important;
+  text-shadow: 0 0 10px rgba(251,191,36,0.5);
+  font-weight: 900;
+}
+.booth.star-booth .booth-heat{
+  color: #fcd34d !important;
+  font-weight: 800;
+}
+.booth.star-booth .booth-mic{
+  filter: drop-shadow(0 0 8px rgba(251,191,36,0.7));
+  animation: starMicPulse 2s ease-in-out infinite;
+}
+@keyframes starMicPulse{
+  0%,100% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(251,191,36,0.7)) }
+  50%     { transform: scale(1.08); filter: drop-shadow(0 0 14px rgba(251,191,36,1)) }
+}
+.booth.star-booth.active{
+  background: linear-gradient(135deg, rgba(251,191,36,0.28), rgba(245,158,11,0.18)) !important;
+  border-color: rgba(251,191,36,0.9) !important;
+  box-shadow: 
+    0 10px 30px rgba(251,191,36,0.4),
+    0 0 40px rgba(251,191,36,0.2) !important;
+}
+.star-led{
+  background: #fbbf24 !important;
+  box-shadow: 0 0 10px #fbbf24 !important;
+  animation: starLedGlow 1.4s ease-in-out infinite !important;
+}
+@keyframes starLedGlow{
+  0%,100% { box-shadow: 0 0 10px #fbbf24, 0 0 20px rgba(251,191,36,0.6) }
+  50%     { box-shadow: 0 0 18px #fbbf24, 0 0 35px rgba(251,191,36,0.9) }
+}
+.star-door{
+  background: linear-gradient(135deg, rgba(251,191,36,0.15), transparent) !important;
+}
+.star-fill{
+  background: linear-gradient(90deg, #fbbf24, #f59e0b) !important;
+}
+.star-booth-badge{
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  padding: 3px 8px;
+  background: linear-gradient(135deg, #ef4444, #f59e0b);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.8px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(239,68,68,0.6);
+  animation: starBadgePulse 1.6s ease-in-out infinite;
+  z-index: 3;
+}
+@keyframes starBadgePulse{
+  0%,100% { transform: scale(1) rotate(-6deg) }
+  50%     { transform: scale(1.15) rotate(6deg) }
+}
+
+/* v10.11: 🎭 STAR MODE STUDIO — 영상 주인공 되기! (특허 #2) */
+.star-mode-area{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(251,191,36,0.08) 0%, rgba(15,10,30,0.9) 100%);
+}
+
+/* 헤더 */
+.star-header{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(251,191,36,0.2);
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.4);
+}
+.star-back, .star-home{
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.star-back:hover, .star-home:hover{
+  background: rgba(251,191,36,0.15);
+  border-color: rgba(251,191,36,0.6);
+}
+.star-title-wrap{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+.star-title{
+  font-size: 14px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: 1px;
+  text-shadow: 0 0 12px rgba(251,191,36,0.6);
+}
+.star-subtitle{
+  font-size: 10px;
+  color: #fcd34d;
+  font-weight: 700;
+}
+
+/* 인트로 */
+.star-intro{
+  flex: 1;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  overflow-y: auto;
+  min-height: 0;
+  text-align: center;
+}
+.si-spotlight{
+  position: relative;
+  width: 110px;
+  height: 110px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 8px;
+}
+.si-spotlight-circle{
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(251,191,36,0.4), transparent 70%);
+  animation: spotlightPulse 2.5s ease-in-out infinite;
+}
+@keyframes spotlightPulse{
+  0%,100% { transform: scale(1); opacity: 0.6 }
+  50%     { transform: scale(1.15); opacity: 1 }
+}
+.si-emoji{
+  font-size: 56px;
+  filter: drop-shadow(0 0 20px rgba(251,191,36,0.8));
+  z-index: 2;
+  animation: starEmojiFloat 3s ease-in-out infinite;
+}
+@keyframes starEmojiFloat{
+  0%,100% { transform: translateY(0) rotate(0) }
+  50%     { transform: translateY(-6px) rotate(5deg) }
+}
+.si-title{
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -0.3px;
+  text-shadow: 0 0 12px rgba(251,191,36,0.3);
+}
+.si-desc{
+  font-size: 13px;
+  color: #cbd5e1;
+  line-height: 1.55;
+  max-width: 360px;
+}
+.si-desc b{ color: #fbbf24 }
+.si-steps{
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 360px;
+  justify-content: center;
+}
+.si-step{
+  flex: 1;
+  padding: 10px 6px;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.si-step-num{
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  color: #1a1a2e;
+  font-size: 13px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.si-step-text{
+  font-size: 10px;
+  color: #fcd34d;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
+}
+.si-stats{
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 360px;
+}
+.si-stat{
+  padding: 5px 10px;
+  background: rgba(251,191,36,0.08);
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: 10px;
+  font-size: 11px;
+  color: #fcd34d;
+  font-weight: 700;
+}
+.si-stat b{ color: #fff }
+.si-start-btn{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 32px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 14px;
+  color: #1a1a2e;
+  font-size: 16px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 
+    0 10px 30px rgba(251,191,36,0.5),
+    0 0 40px rgba(251,191,36,0.2);
+  margin-top: 6px;
+  letter-spacing: 0.3px;
+}
+.si-start-btn:hover{
+  transform: translateY(-3px);
+  box-shadow: 
+    0 16px 40px rgba(251,191,36,0.65),
+    0 0 55px rgba(251,191,36,0.3);
+}
+.si-start-icon{ font-size: 22px }
+
+/* 녹음 영역 */
+.star-recording{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  gap: 12px;
+  min-height: 0;
+}
+.sr-progress{
+  flex-shrink: 0;
+}
+.sr-progress-label{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #ef4444;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 5px;
+}
+.sr-progress-label span:first-child{
+  animation: recBlink 1s ease-in-out infinite;
+}
+@keyframes recBlink{
+  0%,100% { opacity: 1 }
+  50%     { opacity: 0.4 }
+}
+.sr-progress-bar{
+  height: 6px;
+  background: rgba(251,191,36,0.15);
+  border-radius: 3px;
+  overflow: hidden;
+}
+.sr-progress-fill{
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  border-radius: 3px;
+  transition: width 0.35s ease;
+  box-shadow: 0 0 10px rgba(251,191,36,0.6);
+}
+
+.sr-current-line{
+  flex: 1;
+  padding: 16px;
+  background: rgba(0,0,0,0.4);
+  border: 1.5px solid rgba(251,191,36,0.35);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+  min-height: 0;
+  text-align: center;
+}
+.sr-line-label{
+  font-size: 10px;
+  color: #fbbf24;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+.sr-line-en{
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.4;
+  letter-spacing: -0.3px;
+}
+.sr-line-ko{
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 600;
+}
+
+.sr-mic-section{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+.sr-mic-btn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  width: 120px;
+  height: 120px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 50%;
+  color: #1a1a2e;
+  cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 
+    0 10px 30px rgba(251,191,36,0.5),
+    0 0 40px rgba(251,191,36,0.15);
+}
+.sr-mic-btn:hover{
+  transform: scale(1.05);
+}
+.sr-mic-btn.recording{
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: #fff;
+  animation: srMicPulse 1s ease-in-out infinite;
+}
+@keyframes srMicPulse{
+  0%,100% { transform: scale(1); box-shadow: 0 10px 30px rgba(239,68,68,0.5) }
+  50%     { transform: scale(1.08); box-shadow: 0 14px 40px rgba(239,68,68,0.8), 0 0 50px rgba(239,68,68,0.4) }
+}
+.sr-mic-icon{ font-size: 40px }
+.sr-mic-label{
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.5px;
+}
+.sr-timer{
+  font-size: 14px;
+  color: #ef4444;
+  font-weight: 900;
+  letter-spacing: 1px;
+}
+
+.sr-playback{
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sr-play-btn, .sr-rerec-btn{
+  padding: 8px 14px;
+  background: rgba(251,191,36,0.12);
+  border: 1px solid rgba(251,191,36,0.35);
+  border-radius: 10px;
+  color: #fcd34d;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sr-play-btn:hover, .sr-rerec-btn:hover{
+  background: rgba(251,191,36,0.25);
+}
+
+.sr-nav{
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.sr-skip-btn{
+  flex: 1;
+  padding: 12px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sr-skip-btn:hover{
+  background: rgba(255,255,255,0.08);
+}
+.sr-next-btn{
+  flex: 2;
+  padding: 12px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 12px;
+  color: #1a1a2e;
+  font-size: 14px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 6px 20px rgba(251,191,36,0.35);
+}
+.sr-next-btn:hover:not(:disabled){
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(251,191,36,0.5);
+}
+.sr-next-btn:disabled{
+  opacity: 0.4;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* 편집 중 */
+.star-editing{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  padding: 30px;
+  text-align: center;
+}
+.se-title{
+  font-size: 20px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 12px rgba(251,191,36,0.5);
+}
+.se-spinner{
+  width: 60px;
+  height: 60px;
+  border: 4px solid rgba(251,191,36,0.2);
+  border-top-color: #fbbf24;
+  border-radius: 50%;
+  animation: seSpinner 1s linear infinite;
+}
+@keyframes seSpinner{
+  to { transform: rotate(360deg) }
+}
+.se-progress{
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 700;
+}
+
+/* 🎥 시사회! */
+.star-premiere{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 12px;
+  overflow: hidden;
+  min-height: 0;
+}
+.sp-marquee{
+  padding: 6px 0;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(251,191,36,0.3);
+  flex-shrink: 0;
+}
+.sp-marquee span{
+  display: inline-block;
+  color: #fbbf24;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  padding-left: 100%;
+  animation: spMarquee 15s linear infinite;
+  text-shadow: 0 0 8px rgba(251,191,36,0.5);
+}
+@keyframes spMarquee{
+  from { transform: translateX(0) }
+  to   { transform: translateX(-100%) }
+}
+.sp-header{
+  text-align: center;
+  flex-shrink: 0;
+}
+.sp-title{
+  font-size: 15px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: 0.5px;
+}
+.sp-sub{
+  font-size: 10px;
+  color: #cbd5e1;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.sp-stage{
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  padding: 6px 0;
+}
+.sp-popcorn{
+  position: absolute;
+  top: 0;
+  left: 4px;
+  font-size: 22px;
+  z-index: 2;
+  animation: popcornBounce 1.6s ease-in-out infinite;
+}
+@keyframes popcornBounce{
+  0%,100% { transform: translateY(0) rotate(-10deg) }
+  50%     { transform: translateY(-6px) rotate(10deg) }
+}
+.sp-curtain-l, .sp-curtain-r{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 10%;
+  background: linear-gradient(90deg, #7f1d1d, #991b1b);
+  z-index: 1;
+  pointer-events: none;
+}
+.sp-curtain-l{ left: 0; border-radius: 0 12px 12px 0 }
+.sp-curtain-r{ right: 0; border-radius: 12px 0 0 12px; background: linear-gradient(-90deg, #7f1d1d, #991b1b) }
+
+.sp-screen-wrap{
+  width: 100%;
+  max-width: 100%;
+  padding: 0 12%;
+  position: relative;
+  z-index: 2;
+}
+.sp-screen{
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid rgba(251,191,36,0.5);
+  box-shadow: 
+    0 0 30px rgba(251,191,36,0.4),
+    0 0 60px rgba(251,191,36,0.2);
+}
+#spVideoWrap{ width: 100%; height: 100% }
+#spVideoWrap iframe{ width: 100% !important; height: 100% !important; border: 0 }
+
+.sp-audience{
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 14px;
+  letter-spacing: 2px;
+  animation: audienceClap 1s ease-in-out infinite;
+  z-index: 2;
+}
+@keyframes audienceClap{
+  0%,100% { transform: translateX(-50%) scale(1) }
+  50%     { transform: translateX(-50%) scale(1.08) }
+}
+
+.sp-controls{
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+.sp-play-btn{
+  padding: 12px 28px;
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  border: none;
+  border-radius: 14px;
+  color: #1a1a2e;
+  font-size: 15px;
+  font-weight: 900;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 8px 24px rgba(251,191,36,0.5);
+  letter-spacing: 0.3px;
+}
+.sp-play-btn:hover{
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(251,191,36,0.7);
+}
+
+/* 결과 */
+.star-result{
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.sres-title{
+  font-size: 26px;
+  font-weight: 900;
+  color: #fbbf24;
+  letter-spacing: -0.3px;
+  text-shadow: 0 0 20px rgba(251,191,36,0.6);
+}
+.sres-emoji{
+  font-size: 64px;
+  filter: drop-shadow(0 0 20px rgba(251,191,36,0.5));
+  animation: starEmojiFloat 3s ease-in-out infinite;
+}
+.sres-stats{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.sres-stat{
+  padding: 8px 14px;
+  background: rgba(251,191,36,0.1);
+  border: 1px solid rgba(251,191,36,0.3);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fcd34d;
+}
+.sres-stat b{ color: #fff }
+.sres-buttons{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 6px;
+}
+.sres-btn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 8px;
+  border: 1.5px solid;
+  border-radius: 14px;
+  font-weight: 900;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: transparent;
+}
+.sres-btn span:first-child{ font-size: 22px }
+.sres-retry{
+  background: rgba(168,85,247,0.15);
+  border-color: rgba(168,85,247,0.4);
+  color: #c4b5fd;
+}
+.sres-save{
+  background: rgba(0,229,160,0.15);
+  border-color: rgba(0,229,160,0.4);
+  color: #6ee7b7;
+}
+.sres-home{
+  background: rgba(251,191,36,0.15);
+  border-color: rgba(251,191,36,0.4);
+  color: #fcd34d;
+}
+.sres-btn:hover{
+  transform: translateY(-2px);
+}
+
 /* v10.10: 🤖 AI REAL-TIME CONVERSATION PARTNER (특허 대상!) */
 
 /* 로비 AI 대화 카드 (강조!) */
@@ -6465,11 +7190,11 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
           <div class="ai-chat-badge">NEW!</div>
         </button>
         
-        <!-- 🎤 노래방 -->
+        <!-- 🎬 영화 녹음실 -->
         <button class="lobby-card card-karaoke" id="lobbyKaraoke">
-          <div class="lobby-card-emoji">🎤</div>
-          <div class="lobby-card-title">노래방<br>&nbsp;</div>
-          <div class="lobby-card-desc">가사 보기 or 외워서!</div>
+          <div class="lobby-card-emoji">🎬</div>
+          <div class="lobby-card-title">영화<br>녹음실</div>
+          <div class="lobby-card-desc">🎤 따라 or 🎭 주인공!</div>
           <div class="lobby-card-action">▶ 입장</div>
         </button>
         
@@ -6519,6 +7244,151 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </div>
 
     <!-- STEP 3: DUB CHALLENGE -->
+    <!-- v10.11: 🎭 STAR MODE STUDIO — 영상 주인공 되기! (특허 #2) -->
+    <div id="starModeArea" style="display:none" class="star-mode-area">
+      <!-- 헤더 -->
+      <div class="star-header">
+        <button class="star-back" id="starBack">← 로비로</button>
+        <div class="star-title-wrap">
+          <span class="star-title">🎭 STAR MODE</span>
+          <span class="star-subtitle" id="starSubtitle">내가 주인공!</span>
+        </div>
+        <button class="star-home" id="starHome">🎦</button>
+      </div>
+      
+      <!-- 인트로 (시작 전) -->
+      <div class="star-intro" id="starIntro">
+        <div class="si-spotlight">
+          <div class="si-spotlight-circle"></div>
+          <div class="si-emoji">🎭</div>
+        </div>
+        <div class="si-title">주인공이 되어보세요!</div>
+        <div class="si-desc">
+          대사를 하나씩 녹음해서<br>
+          <b>내 목소리로 영화를 만들어보세요!</b>
+        </div>
+        <div class="si-steps">
+          <div class="si-step">
+            <span class="si-step-num">1</span>
+            <span class="si-step-text">🎤 대사별 녹음</span>
+          </div>
+          <div class="si-step">
+            <span class="si-step-num">2</span>
+            <span class="si-step-text">🎬 AI가 편집</span>
+          </div>
+          <div class="si-step">
+            <span class="si-step-num">3</span>
+            <span class="si-step-text">🎥 내 영화 시사회!</span>
+          </div>
+        </div>
+        <div class="si-stats" id="siStats">
+          <span class="si-stat">🎬 <b id="siVideoTitle">-</b></span>
+          <span class="si-stat">📝 <b id="siLineCount">-</b> 대사</span>
+          <span class="si-stat">⏱️ <b id="siDuration">-</b></span>
+        </div>
+        <button class="si-start-btn" id="siStartBtn">
+          <span class="si-start-icon">🎤</span>
+          <span class="si-start-text">오디션 시작!</span>
+        </button>
+      </div>
+      
+      <!-- 녹음 영역 -->
+      <div class="star-recording" id="starRecording" style="display:none">
+        <!-- 진행 상태 -->
+        <div class="sr-progress">
+          <div class="sr-progress-label">
+            <span>🎤 REC</span>
+            <span id="srCurrentIdx">1</span>
+            <span>/</span>
+            <span id="srTotalCount">11</span>
+          </div>
+          <div class="sr-progress-bar">
+            <div class="sr-progress-fill" id="srProgressFill"></div>
+          </div>
+        </div>
+        
+        <!-- 현재 대사 -->
+        <div class="sr-current-line">
+          <div class="sr-line-label">지금 녹음할 대사</div>
+          <div class="sr-line-en" id="srLineEn">Loading...</div>
+          <div class="sr-line-ko" id="srLineKo"></div>
+        </div>
+        
+        <!-- 녹음 버튼 + 컨트롤 -->
+        <div class="sr-mic-section">
+          <button class="sr-mic-btn" id="srMicBtn">
+            <span class="sr-mic-icon">🎤</span>
+            <span class="sr-mic-label" id="srMicLabel">탭해서 녹음!</span>
+          </button>
+          <div class="sr-timer" id="srTimer" style="display:none">
+            <span class="sr-timer-text">0.0초</span>
+          </div>
+        </div>
+        
+        <!-- 이전 녹음 재생/삭제 -->
+        <div class="sr-playback" id="srPlayback" style="display:none">
+          <button class="sr-play-btn" id="srPlayBtn">▶ 들어보기</button>
+          <button class="sr-rerec-btn" id="srRerecBtn">🔄 다시 녹음</button>
+        </div>
+        
+        <!-- 하단 네비 -->
+        <div class="sr-nav">
+          <button class="sr-skip-btn" id="srSkipBtn">⏭ 건너뛰기</button>
+          <button class="sr-next-btn" id="srNextBtn" disabled>다음 ➡</button>
+        </div>
+      </div>
+      
+      <!-- 편집 중 화면 -->
+      <div class="star-editing" id="starEditing" style="display:none">
+        <div class="se-title">🎬 AI 편집 중...</div>
+        <div class="se-spinner"></div>
+        <div class="se-progress" id="seProgress">타이밍 맞추는 중...</div>
+      </div>
+      
+      <!-- 🎥 시사회 (프리미어!) -->
+      <div class="star-premiere" id="starPremiere" style="display:none">
+        <div class="sp-marquee">
+          <span>🎬 NOW PREMIERING · 🎥 MY MOVIE · 🎬 NOW PREMIERING · 🎥 MY MOVIE</span>
+        </div>
+        <div class="sp-header">
+          <div class="sp-title" id="spTitle">🎬 My Premiere</div>
+          <div class="sp-sub">내 목소리로 완성한 영화!</div>
+        </div>
+        <div class="sp-stage">
+          <div class="sp-popcorn">🍿</div>
+          <div class="sp-curtain-l"></div>
+          <div class="sp-curtain-r"></div>
+          <div class="sp-screen-wrap">
+            <div class="sp-screen" id="spScreen">
+              <div id="spVideoWrap"></div>
+            </div>
+          </div>
+          <div class="sp-audience">👏 👥 🎉 👥 👏</div>
+        </div>
+        <div class="sp-controls">
+          <button class="sp-play-btn" id="spPlayBtn">▶ 시사회 시작!</button>
+        </div>
+      </div>
+      
+      <!-- 결과 화면 -->
+      <div class="star-result" id="starResult" style="display:none">
+        <div class="sres-title">🏆 영화 완성!</div>
+        <div class="sres-emoji">🎬</div>
+        <div class="sres-stats" id="sresStats"></div>
+        <div class="sres-buttons">
+          <button class="sres-btn sres-retry" id="sresRetry">
+            <span>🎤</span><span>다시 하기</span>
+          </button>
+          <button class="sres-btn sres-save" id="sresSave">
+            <span>💾</span><span>내 방에 저장</span>
+          </button>
+          <button class="sres-btn sres-home" id="sresHome">
+            <span>🎦</span><span>매표소로</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
     <!-- v10.10: 🤖 AI REAL-TIME CONVERSATION PARTNER (특허 대상!) -->
     <div id="aiChatArea" style="display:none" class="ai-chat-area">
       <!-- 상단 헤더 -->
@@ -6607,33 +7477,34 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     <div id="dubArea" style="display:none">
       <!-- Studio Booth Picker: shown first -->
       <div id="dubDiffPicker" class="diff-picker">
-        <div class="diff-picker-title">🎤 KARAOKE · 모드를 선택하세요</div>
-        <div class="diff-picker-sub">노래방처럼 즐겁게! 🎵</div>
+        <div class="diff-picker-title">🎬 영화 녹음실 · 어떻게 할까요?</div>
+        <div class="diff-picker-sub">🎤 따라 부르거나 🎭 주인공이 되거나!</div>
         <div class="booth-row">
           <div class="booth easy active" data-diff="easy">
-            <span class="booth-led"></span>
-            <span class="booth-mic">🎙</span>
-            <div class="booth-door"></div>
-            <div class="booth-info">
-              <div class="booth-name">🎵 가사 보기</div>
-              <div class="booth-heat">초보자 모드</div>
-            </div>
-            <div class="booth-footer"><div class="booth-footer-fill"></div></div>
-          </div>
-          <div class="booth normal" data-diff="normal">
             <span class="booth-led"></span>
             <span class="booth-mic">🎤</span>
             <div class="booth-door"></div>
             <div class="booth-info">
-              <div class="booth-name">🎤 외워서 부르기</div>
-              <div class="booth-heat">도전 모드!</div>
+              <div class="booth-name">🎤 따라 부르기</div>
+              <div class="booth-heat">가사 보면서 연습!</div>
             </div>
             <div class="booth-footer"><div class="booth-footer-fill"></div></div>
           </div>
-          <!-- v9.2: QUIZ 부스 제거됨 (로비 허브 > 간식 코너에서 접근) -->
+          <!-- v10.11: 🎭 STAR MODE 부스 (특허 #2 대상!) -->
+          <div class="booth star-booth" data-diff="star" id="boothStar">
+            <span class="booth-led star-led"></span>
+            <span class="booth-mic">🎭</span>
+            <div class="booth-door star-door"></div>
+            <div class="booth-info">
+              <div class="booth-name">🎭 STAR MODE</div>
+              <div class="booth-heat">내가 주인공!</div>
+            </div>
+            <div class="booth-footer"><div class="booth-footer-fill star-fill"></div></div>
+            <span class="star-booth-badge">NEW!</span>
+          </div>
         </div>
         <div style="text-align:center;font-size:11px;color:var(--tx3);margin-top:2px">
-          <span id="boothLabel">🎵 가사 보기 · 대본 있음 (초보 모드)</span>
+          <span id="boothLabel">🎤 따라 부르기 · 대본 있음 (초보 모드)</span>
         </div>
         <!-- v10.5: 🎦 로비 + 매표소 버튼 (메인 통일!) -->
         <div style="display:flex;gap:8px;align-items:stretch;margin-top:6px">
@@ -7072,7 +7943,7 @@ body.cinema-mode{background:linear-gradient(180deg,#0a0a0f 0%,#15151f 100%) !imp
     </button>
   </div>
   <!-- Version marker — remove before production -->
-  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(34,211,238,.6);font-weight:700;z-index:200;pointer-events:none">v10.10 🤖</div>
+  <div style="position:absolute;bottom:2px;right:4px;font-size:9px;color:rgba(251,191,36,.7);font-weight:700;z-index:200;pointer-events:none">v10.11 🎭</div>
 </div>
 
 <!-- 🤳 v6.7: 나&친구 선택 모달 -->
@@ -9389,7 +10260,7 @@ function updateLobbyStatus(){
   }
 }
 
-/* 🎤 노래방 더빙실 → 기존 부스 선택 (SCRIPT/REHEARSAL/QUIZ) */
+/* 🎬 영화 녹음실 → 기존 부스 선택 (이름만 변경, 라우팅 동일) */
 document.addEventListener('click', e=>{
   if(e.target && (e.target.id==='lobbyKaraoke' || e.target.closest('#lobbyKaraoke'))){
     const hub=document.getElementById('lobbyHub');
@@ -9398,6 +10269,428 @@ document.addEventListener('click', e=>{
     goStep(2);
   }
 });
+
+/* ═══════════════════════════════════════
+ * v10.11: 🎭 STAR MODE STUDIO — 영상 주인공 되기! (특허 #2)
+ * 쌤의 Big 3 특허 전략 #2!
+ * ═══════════════════════════════════════ */
+
+const STAR_STATE = {
+  active: false,
+  shortData: null,
+  sentences: [],
+  currentIdx: 0,
+  recordings: {},     /* {idx: Blob} */
+  audioURLs: {},      /* {idx: URL} */
+  audioElements: {},  /* {idx: HTMLAudioElement} */
+  mediaRecorder: null,
+  mediaStream: null,
+  chunks: [],
+  recording: false,
+  timerInterval: null,
+  recordStartTime: 0
+};
+
+/* 부스 선택 화면에서 🎭 STAR MODE 부스 클릭 감지 */
+document.addEventListener('click', e => {
+  const boothEl = e.target && e.target.closest('[data-diff="star"]');
+  if(!boothEl) return;
+  
+  /* 다른 부스의 active 제거 */
+  document.querySelectorAll('.booth').forEach(b => b.classList.remove('active'));
+  boothEl.classList.add('active');
+  
+  /* 부스 라벨 업데이트 */
+  const lbl = document.getElementById('boothLabel');
+  if(lbl) lbl.textContent = '🎭 STAR MODE · 내가 주인공 (영상 더빙!)';
+});
+
+/* 🎭 STAR MODE 시작 (dubStartBtn 누를 때 star부스면 starMode 진입) */
+(function hookStarStartBtn(){
+  const originalStart = document.getElementById('dubStartBtn');
+  if(!originalStart) return;
+  originalStart.addEventListener('click', (e) => {
+    /* 현재 선택된 부스가 star인지 확인 */
+    const activeStar = document.querySelector('.booth.star-booth.active');
+    if(activeStar){
+      e.preventDefault();
+      e.stopPropagation();
+      /* 기본 dubStart 로직 중단하고 Star Mode로! */
+      setTimeout(() => openStarMode(), 10);
+    }
+  }, true); /* capture phase */
+})();
+
+function openStarMode(){
+  /* 다른 화면 숨김 */
+  ['dubArea','listenArea','shadowArea','roomScreen','aiChatArea'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.style.display = 'none';
+  });
+  
+  const area = document.getElementById('starModeArea');
+  if(area) area.style.display = 'flex';
+  
+  STAR_STATE.active = true;
+  STAR_STATE.shortData = S.short;
+  STAR_STATE.sentences = (S.short && S.short.sentences) ? S.short.sentences.slice() : [];
+  STAR_STATE.currentIdx = 0;
+  STAR_STATE.recordings = {};
+  STAR_STATE.audioURLs = {};
+  STAR_STATE.audioElements = {};
+  
+  /* 인트로 표시, 나머지 숨김 */
+  document.getElementById('starIntro').style.display = 'flex';
+  document.getElementById('starRecording').style.display = 'none';
+  document.getElementById('starEditing').style.display = 'none';
+  document.getElementById('starPremiere').style.display = 'none';
+  document.getElementById('starResult').style.display = 'none';
+  
+  /* 인트로 통계 */
+  const vt = document.getElementById('siVideoTitle');
+  if(vt) vt.textContent = (S.short && S.short.title) ? (S.short.title.length > 20 ? S.short.title.substring(0, 20) + '...' : S.short.title) : '-';
+  const lc = document.getElementById('siLineCount');
+  if(lc) lc.textContent = STAR_STATE.sentences.length;
+  const dur = document.getElementById('siDuration');
+  if(dur && STAR_STATE.sentences.length > 0){
+    const lastEnd = STAR_STATE.sentences[STAR_STATE.sentences.length - 1].end || 0;
+    const mm = Math.floor(lastEnd / 60);
+    const ss = Math.round(lastEnd % 60);
+    dur.textContent = mm > 0 ? mm + ':' + String(ss).padStart(2, '0') : Math.round(lastEnd) + '초';
+  }
+}
+
+/* 🎤 오디션 시작! */
+document.addEventListener('click', e => {
+  if(e.target && (e.target.id === 'siStartBtn' || e.target.closest('#siStartBtn'))){
+    startStarRecording();
+  }
+});
+
+function startStarRecording(){
+  document.getElementById('starIntro').style.display = 'none';
+  document.getElementById('starRecording').style.display = 'flex';
+  STAR_STATE.currentIdx = 0;
+  renderStarRecording();
+}
+
+function renderStarRecording(){
+  const idx = STAR_STATE.currentIdx;
+  const total = STAR_STATE.sentences.length;
+  const sentence = STAR_STATE.sentences[idx];
+  if(!sentence){
+    /* 모두 완료! 편집 단계로 */
+    finishStarRecording();
+    return;
+  }
+  
+  document.getElementById('srCurrentIdx').textContent = (idx + 1);
+  document.getElementById('srTotalCount').textContent = total;
+  document.getElementById('srProgressFill').style.width = ((idx / total) * 100) + '%';
+  document.getElementById('srLineEn').textContent = sentence.en || '';
+  document.getElementById('srLineKo').textContent = sentence.ko || '';
+  
+  /* 녹음 버튼 초기화 */
+  const micBtn = document.getElementById('srMicBtn');
+  const micLabel = document.getElementById('srMicLabel');
+  micBtn.classList.remove('recording');
+  micLabel.textContent = '탭해서 녹음!';
+  
+  /* 이미 녹음한 경우 재생 옵션 */
+  const playback = document.getElementById('srPlayback');
+  const nextBtn = document.getElementById('srNextBtn');
+  if(STAR_STATE.recordings[idx]){
+    playback.style.display = 'flex';
+    nextBtn.disabled = false;
+  } else {
+    playback.style.display = 'none';
+    nextBtn.disabled = true;
+  }
+  
+  document.getElementById('srTimer').style.display = 'none';
+}
+
+/* 🎤 녹음 버튼 */
+document.addEventListener('click', e => {
+  if(e.target && (e.target.id === 'srMicBtn' || e.target.closest('#srMicBtn'))){
+    toggleStarRecording();
+  }
+});
+
+async function toggleStarRecording(){
+  if(STAR_STATE.recording){
+    stopStarRecording();
+  } else {
+    await startStarMicRecording();
+  }
+}
+
+async function startStarMicRecording(){
+  try {
+    if(!STAR_STATE.mediaStream){
+      STAR_STATE.mediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    }
+    const rec = new MediaRecorder(STAR_STATE.mediaStream);
+    STAR_STATE.mediaRecorder = rec;
+    STAR_STATE.chunks = [];
+    
+    rec.ondataavailable = e => {
+      if(e.data && e.data.size > 0) STAR_STATE.chunks.push(e.data);
+    };
+    rec.onstop = () => {
+      const blob = new Blob(STAR_STATE.chunks, { type: 'audio/webm' });
+      const idx = STAR_STATE.currentIdx;
+      STAR_STATE.recordings[idx] = blob;
+      STAR_STATE.audioURLs[idx] = URL.createObjectURL(blob);
+      /* 녹음 완료 → UI 업데이트 */
+      document.getElementById('srPlayback').style.display = 'flex';
+      document.getElementById('srNextBtn').disabled = false;
+    };
+    rec.start();
+    STAR_STATE.recording = true;
+    STAR_STATE.recordStartTime = Date.now();
+    
+    const micBtn = document.getElementById('srMicBtn');
+    const micLabel = document.getElementById('srMicLabel');
+    micBtn.classList.add('recording');
+    micLabel.textContent = '녹음 중...';
+    
+    /* 타이머 표시 */
+    const timerEl = document.getElementById('srTimer');
+    timerEl.style.display = 'block';
+    STAR_STATE.timerInterval = setInterval(() => {
+      const elapsed = (Date.now() - STAR_STATE.recordStartTime) / 1000;
+      timerEl.querySelector('.sr-timer-text').textContent = elapsed.toFixed(1) + '초';
+      /* 최대 20초 자동 정지 */
+      if(elapsed >= 20) stopStarRecording();
+    }, 100);
+  } catch(err){
+    console.warn('[Star Mic Error]', err);
+    alert('🎤 마이크 권한이 필요해요!');
+  }
+}
+
+function stopStarRecording(){
+  if(STAR_STATE.mediaRecorder && STAR_STATE.mediaRecorder.state !== 'inactive'){
+    STAR_STATE.mediaRecorder.stop();
+  }
+  STAR_STATE.recording = false;
+  if(STAR_STATE.timerInterval){
+    clearInterval(STAR_STATE.timerInterval);
+    STAR_STATE.timerInterval = null;
+  }
+  const micBtn = document.getElementById('srMicBtn');
+  const micLabel = document.getElementById('srMicLabel');
+  micBtn.classList.remove('recording');
+  micLabel.textContent = '🔄 다시 녹음';
+  document.getElementById('srTimer').style.display = 'none';
+}
+
+/* ▶ 들어보기 */
+document.addEventListener('click', e => {
+  if(e.target && (e.target.id === 'srPlayBtn' || e.target.closest('#srPlayBtn'))){
+    const idx = STAR_STATE.currentIdx;
+    const url = STAR_STATE.audioURLs[idx];
+    if(url){
+      const audio = new Audio(url);
+      audio.play().catch(err => console.warn('[Play Error]', err));
+    }
+  }
+  if(e.target && (e.target.id === 'srRerecBtn' || e.target.closest('#srRerecBtn'))){
+    /* 다시 녹음 → 기존 것 삭제 */
+    const idx = STAR_STATE.currentIdx;
+    delete STAR_STATE.recordings[idx];
+    if(STAR_STATE.audioURLs[idx]){
+      URL.revokeObjectURL(STAR_STATE.audioURLs[idx]);
+      delete STAR_STATE.audioURLs[idx];
+    }
+    renderStarRecording();
+  }
+  if(e.target && (e.target.id === 'srNextBtn' || e.target.closest('#srNextBtn'))){
+    STAR_STATE.currentIdx++;
+    renderStarRecording();
+  }
+  if(e.target && (e.target.id === 'srSkipBtn' || e.target.closest('#srSkipBtn'))){
+    /* 건너뛰기: 원본 오디오 사용 */
+    STAR_STATE.currentIdx++;
+    renderStarRecording();
+  }
+});
+
+/* 🎬 녹음 완료 → 편집 → 시사회! */
+function finishStarRecording(){
+  /* 최소 1개 녹음 요구 */
+  const recordedCount = Object.keys(STAR_STATE.recordings).length;
+  if(recordedCount === 0){
+    alert('🎤 최소 1개 이상 녹음해주세요!');
+    STAR_STATE.currentIdx = 0;
+    renderStarRecording();
+    return;
+  }
+  
+  /* 편집 중 화면 */
+  document.getElementById('starRecording').style.display = 'none';
+  document.getElementById('starEditing').style.display = 'flex';
+  
+  /* 시뮬레이션 (진짜 편집은 없지만 dramatic!) */
+  const steps = [
+    '🎬 영상 분석 중...',
+    '🎤 오디오 타이밍 맞추는 중...',
+    '✨ 프리미엄 이펙트 적용 중...',
+    '🎥 최종 렌더링 중...',
+    '🎊 완성!'
+  ];
+  let stepIdx = 0;
+  const progressEl = document.getElementById('seProgress');
+  const stepTimer = setInterval(() => {
+    if(stepIdx < steps.length){
+      progressEl.textContent = steps[stepIdx];
+      stepIdx++;
+    } else {
+      clearInterval(stepTimer);
+      /* 시사회 진입! */
+      enterPremiere();
+    }
+  }, 900);
+}
+
+function enterPremiere(){
+  document.getElementById('starEditing').style.display = 'none';
+  document.getElementById('starPremiere').style.display = 'flex';
+  
+  /* 제목 */
+  const title = document.getElementById('spTitle');
+  if(title && S.short) title.textContent = '🎬 ' + (S.short.title || 'My Movie');
+  
+  /* YouTube iframe 삽입 */
+  const wrap = document.getElementById('spVideoWrap');
+  if(wrap && S.short){
+    wrap.innerHTML = '<iframe id="spYtFrame" src="https://www.youtube.com/embed/' + S.short.id + 
+      '?enablejsapi=1&controls=0&modestbranding=1&rel=0&playsinline=1&mute=1" allow="autoplay; encrypted-media" frameborder="0"></iframe>';
+  }
+}
+
+/* ▶ 시사회 시작! */
+document.addEventListener('click', e => {
+  if(e.target && (e.target.id === 'spPlayBtn' || e.target.closest('#spPlayBtn'))){
+    playPremiere();
+  }
+});
+
+function playPremiere(){
+  const frame = document.getElementById('spYtFrame');
+  if(!frame) return;
+  
+  /* YouTube 재생 (muted) */
+  try {
+    frame.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+  } catch(e){}
+  
+  /* 버튼 숨김 */
+  const btn = document.getElementById('spPlayBtn');
+  if(btn) btn.style.display = 'none';
+  
+  /* 각 대사별 녹음을 start 시간에 맞춰 재생 */
+  const sentences = STAR_STATE.sentences;
+  const recordings = STAR_STATE.recordings;
+  const startTime = Date.now();
+  
+  sentences.forEach((s, idx) => {
+    if(!recordings[idx]) return; /* 녹음 없으면 skip (영상 원본 오디오 쓰지 못하니 무음) */
+    const url = STAR_STATE.audioURLs[idx];
+    if(!url) return;
+    const delay = (s.start || 0) * 1000;
+    setTimeout(() => {
+      try {
+        const audio = new Audio(url);
+        audio.volume = 1.0;
+        audio.play().catch(err => console.warn('[Premiere Play]', err));
+      } catch(err){
+        console.warn('[Premiere Audio]', err);
+      }
+    }, delay);
+  });
+  
+  /* 시사회 종료 시점에 결과 화면 */
+  const lastSentence = sentences[sentences.length - 1];
+  const endTime = lastSentence ? (lastSentence.end || 60) * 1000 : 60000;
+  setTimeout(() => {
+    enterStarResult();
+  }, endTime + 1500);
+}
+
+function enterStarResult(){
+  document.getElementById('starPremiere').style.display = 'none';
+  document.getElementById('starResult').style.display = 'flex';
+  
+  const recordedCount = Object.keys(STAR_STATE.recordings).length;
+  const totalCount = STAR_STATE.sentences.length;
+  
+  document.getElementById('sresStats').innerHTML = `
+    <span class="sres-stat">🎤 녹음 <b>${recordedCount}/${totalCount}</b></span>
+    <span class="sres-stat">🎬 <b>${(S.short && S.short.title) ? (S.short.title.length > 15 ? S.short.title.substring(0, 15) + '...' : S.short.title) : ''}</b></span>
+    <span class="sres-stat">🏆 <b>주인공 완성!</b></span>
+  `;
+}
+
+/* 결과 버튼들 */
+document.addEventListener('click', e => {
+  if(e.target && (e.target.id === 'sresRetry' || e.target.closest('#sresRetry'))){
+    openStarMode();
+  }
+  if(e.target && (e.target.id === 'sresSave' || e.target.closest('#sresSave'))){
+    try {
+      const snapStudio = db.get('snapStudio', []);
+      snapStudio.unshift({
+        id: 'star_' + Date.now(),
+        title: '🎭 STAR: ' + ((S.short && S.short.title) || 'My Movie'),
+        shortId: (S.short && S.short.id) || '',
+        score: Object.keys(STAR_STATE.recordings).length * 10,
+        type: 'star_mode',
+        recordedCount: Object.keys(STAR_STATE.recordings).length,
+        totalCount: STAR_STATE.sentences.length,
+        date: new Date().toISOString()
+      });
+      db.set('snapStudio', snapStudio.slice(0, 50));
+    } catch(err){}
+    showSavedToRoomToast();
+  }
+  if(e.target && (e.target.id === 'sresHome' || e.target.closest('#sresHome'))){
+    cleanupStarMode();
+    goHome();
+  }
+  if(e.target && (e.target.id === 'starBack' || e.target.closest('#starBack'))){
+    cleanupStarMode();
+    document.getElementById('starModeArea').style.display = 'none';
+    showLobbyHub();
+  }
+  if(e.target && (e.target.id === 'starHome' || e.target.closest('#starHome'))){
+    cleanupStarMode();
+    goHome();
+  }
+});
+
+function cleanupStarMode(){
+  STAR_STATE.active = false;
+  stopStarRecording();
+  /* 스트림 종료 */
+  if(STAR_STATE.mediaStream){
+    STAR_STATE.mediaStream.getTracks().forEach(t => t.stop());
+    STAR_STATE.mediaStream = null;
+  }
+  /* URL 해제 */
+  Object.values(STAR_STATE.audioURLs).forEach(url => {
+    try { URL.revokeObjectURL(url); } catch(e){}
+  });
+  STAR_STATE.recordings = {};
+  STAR_STATE.audioURLs = {};
+  STAR_STATE.audioElements = {};
+  /* iframe 제거 (재생 중지) */
+  const wrap = document.getElementById('spVideoWrap');
+  if(wrap) wrap.innerHTML = '';
+}
+
+/* ═══════════════════════════════════════ */
 
 /* ═══════════════════════════════════════
  * v10.10: 🤖 AI REAL-TIME CONVERSATION PARTNER
@@ -12786,16 +14079,18 @@ document.getElementById('dubRetry').addEventListener('click',()=>{
   goStep(2);
 });
 
-/* Booth picker: v9.3 노래방 감성 네이밍 */
+/* Booth picker: v10.11 영화 녹음실 네이밍 */
 const BOOTH_LABELS={
-  easy:'🎵 가사 보기 · 대본 있음 (초보 모드)',
-  normal:'🎤 외워서 부르기 · 무대 위! (도전 모드)',
+  easy:'🎤 따라 부르기 · 가사 보기 (초보 모드)',
+  normal:'🎤 따라 부르기 · 가사 보기 (초보 모드)',
+  star:'🎭 STAR MODE · 내가 주인공 (영상 더빙!)',
   hard:'🎯 QUIZ · 🎰 랜덤 간식 게임!',
   quiz:'🎯 QUIZ · 🎰 랜덤 간식 게임!'
 };
 const BOOTH_STUDIO_LABEL={
-  easy:'🎵 가사 모드',
-  normal:'🎤 무대 모드',
+  easy:'🎤 따라 모드',
+  normal:'🎤 따라 모드',
+  star:'🎭 STAR MODE',
   hard:'🎯 QUIZ',
   quiz:'🎯 QUIZ'
 };
@@ -12866,11 +14161,12 @@ document.getElementById('dubStartBtn').addEventListener('click',()=>{
     if(banner){
       banner.className='step-banner dub';
       const boothBannerText={
-        easy:'🎵 가사 보기 — 편하게 노래해봐!',
-        normal:'🎤 외워서 부르기 — 무대의 주인공!',
+        easy:'🎤 따라 부르기 — 가사 보면서 편하게!',
+        normal:'🎤 따라 부르기 — 가사 보면서 편하게!',
+        star:'🎭 STAR MODE — 내가 주인공!',
         hard:'🎬 TAKE 1 — 나도 주인공!'
       };
-      banner.textContent=boothBannerText[selectedDiff]||'🎤 노래방 — 목청 풀고 가자!';
+      banner.textContent=boothBannerText[selectedDiff]||'🎬 영화 녹음실 — 목청 풀고 가자!';
     }
     document.getElementById('ytContainer').style.display='';
     document.getElementById('ytContainer').classList.remove('pip');
